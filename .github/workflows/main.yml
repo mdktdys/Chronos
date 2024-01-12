@@ -16,6 +16,10 @@ jobs:
       - uses: subosito/flutter-action@v2
         with:
           channel: 'stable'
+
+      - run: cd Application
+      - run: cd Mobile
+      - run: cd zameny_flutter
       - run: flutter pub get
       - run: flutter build apk --debug --split-per-abi
 
