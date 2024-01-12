@@ -44,7 +44,7 @@ class GroupChooser extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Data dat = GetIt.I.get<Data>();
-    Group? group = null;
+    Group? group;
     if (dat.groups.isNotEmpty) {
       group = dat.groups.where((element) => element.id == dat.seekGroup).first;
     }

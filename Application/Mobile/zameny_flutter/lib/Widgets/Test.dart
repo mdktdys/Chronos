@@ -35,7 +35,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
                   blurStyle: BlurStyle.outer,
                   blurRadius: 12)
             ]),
-        child: Center(
+        child: const Center(
             child: Text(
           "втф чзх",
           style: TextStyle(

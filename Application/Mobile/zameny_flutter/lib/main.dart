@@ -60,7 +60,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    // TODO: implement initState
     pageController = PageController(initialPage: 0);
 
     super.initState();
@@ -99,20 +98,17 @@ class _MainScreenState extends State<MainScreen> {
                           index: 0,
                           onTap: _setPage,
                           icon: Icons.school_rounded,
-                          text: "Schedule",
-                          selected: false),
+                          text: "Schedule",),
                       bottomNavigationItem(
                           index: 1,
                           onTap: _setPage,
                           icon: Icons.code_rounded,
-                          text: "Exams",
-                          selected: false),
+                          text: "Exams",),
                       bottomNavigationItem(
                           index: 2,
                           onTap: _setPage,
                           icon: Icons.settings,
-                          text: "Settings",
-                          selected: false),
+                          text: "Settings",),
                     ],
                   ),
                 ),
@@ -132,9 +128,8 @@ class bottomNavigationItem extends StatelessWidget {
       {super.key,
       required this.index,
       required this.onTap,
-      required IconData this.icon,
-      required String this.text,
-      required bool selected});
+      required this.icon,
+      required this.text});
 
   @override
   Widget build(BuildContext context) {

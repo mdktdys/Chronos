@@ -184,7 +184,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 //       maxHeight: 80,
                 //     )),
                 SliverPadding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverToBoxAdapter(
                     child: BlocBuilder<ScheduleBloc, ScheduleState>(
                       builder: (context, state) {
@@ -201,7 +201,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             funcReload: _loadWeekSchedule,
                           );
                         } else if (state is ScheduleLoading) {
-                          return Container(
+                          return const SizedBox(
                             height: 550,
                             child: Center(
                               child: Column(
@@ -229,8 +229,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                     ),
                   ),
                 ),
-                SliverToBoxAdapter(
-                  child: const SizedBox(
+                const SliverToBoxAdapter(
+                  child: SizedBox(
                     height: 80,
                   ),
                 )
@@ -275,8 +275,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       BuildContext context, Function(int) onGroupSelected, seekGroup) {
     Data dat = GetIt.I.get<Data>();
 
-    Group? group = null;
-    if (!dat.groups.isEmpty) {
+    Group? group;
+    if (dat.groups.isNotEmpty) {
       group = dat.groups.where((element) => element.id == seekGroup).first;
     }
 
@@ -431,8 +431,8 @@ class DateHeader extends StatelessWidget {
       required this.currentWeek,
       required this.parentWidget});
 
-  final todayWeek;
-  final currentWeek;
+  final DateTime todayWeek;
+  final DateTime currentWeek;
 
   @override
   Widget build(BuildContext context) {
@@ -467,14 +467,14 @@ class DateHeader extends StatelessWidget {
                 const SizedBox(
                   height: 5,
                 ),
-                Container(
+                SizedBox(
                   height: 32,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Week ${currentWeek}",
+                        "Week $currentWeek",
                         style: const TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Ubuntu',
@@ -544,14 +544,12 @@ Widget LessonList(
           zamena.date.isAfter(startDate) &&
           zamena.date.isBefore(startDate.add(const Duration(days: 6))))
       .toList();
-  return Container(
-    child: Column(children: [
-      !zamenas.isEmpty ? Container() : SearchBannerMessageWidget(),
-      Column(
-          children: ScheduleList(data, groupID, zamenas, DaysKeys, startDate,
-              currentDay, todayWeek, currentWeek)),
-    ]),
-  );
+  return Column(children: [
+    zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
+    Column(
+        children: ScheduleList(data, groupID, zamenas, DaysKeys, startDate,
+            currentDay, todayWeek, currentWeek)),
+  ]);
 }
 
 class SearchBannerMessageWidget extends StatelessWidget {
@@ -562,41 +560,39 @@ class SearchBannerMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: Container(
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 59, 64, 82),
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 43, 43, 58),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
-        child: const Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Row(
-            children: [
-              Icon(
-                Icons.info_outline_rounded,
-                size: 42,
-                color: Colors.blue,
-                shadows: [
-                  Shadow(
-                    color: Color.fromARGB(255, 28, 95, 182),
-                    blurRadius: 6,
-                  )
-                ],
-              ),
-              SizedBox(
-                width: 10,
-              ),
-              Text(
-                "Loaded default",
-                style: TextStyle(
-                    fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
-              )
-            ],
-          ),
+      decoration: const BoxDecoration(
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Color.fromARGB(255, 59, 64, 82),
+          boxShadow: [
+            BoxShadow(
+                color: Color.fromARGB(255, 43, 43, 58),
+                blurStyle: BlurStyle.outer,
+                blurRadius: 12)
+          ]),
+      child: const Padding(
+        padding: EdgeInsets.all(8.0),
+        child: Row(
+          children: [
+            Icon(
+              Icons.info_outline_rounded,
+              size: 42,
+              color: Colors.blue,
+              shadows: [
+                Shadow(
+                  color: Color.fromARGB(255, 28, 95, 182),
+                  blurRadius: 6,
+                )
+              ],
+            ),
+            SizedBox(
+              width: 10,
+            ),
+            Text(
+              "Loaded default",
+              style: TextStyle(
+                  fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+            )
+          ],
         ),
       ),
     );
@@ -863,7 +859,6 @@ class ToggleWeekButton extends StatelessWidget {
           const Duration(seconds: 1); // имитация загрузки данных
 
           widget.currentWeek += next ? 1 : -1;
-          print(widget.NavigationDate);
           if (widget.currentWeek < 1) {
             widget.currentWeek = 1;
           } else {

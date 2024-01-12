@@ -10,10 +10,10 @@ class Api {
     List<dynamic> data = await client.from('Teachers').select('*');
 
     dat.teachers = [];
-    data.forEach((element) {
+    for (var element in data) {
       Teacher teacher = Teacher.fromMap(element);
       dat.teachers.add(teacher);
-    });
+    }
   }
 
   Future<void> loadCabinets() async {
@@ -23,10 +23,10 @@ class Api {
     List<dynamic> data = await client.from('Cabinets').select('*');
 
     dat.cabinets = [];
-    data.forEach((element) {
+    for (var element in data) {
       Cabinet cab = Cabinet.fromMap(element);
       dat.cabinets.add(cab);
-    });
+    }
   }
 
   Future<void> loadTimings() async {
@@ -35,10 +35,10 @@ class Api {
 
     List<dynamic> data = await client.from('scheduleTimetable').select('*');
 
-    data.forEach((element) {
+    for (var element in data) {
       LessonTimings timing = LessonTimings.fromMap(element);
       dat.timings.add(timing);
-    });
+    }
   }
 
   Future<void> loadZamenasTypes(
@@ -55,10 +55,10 @@ class Api {
         .gte('date', start.toIso8601String())
         .order('date');
 
-    data.forEach((element) {
+    for (var element in data) {
       ZamenasType zamenaType = ZamenasType.fromMap(element);
       dat.zamenaTypes.add(zamenaType);
-    });
+    }
   }
 
   Future<List<Zamena>> loadZamenas(
@@ -76,13 +76,13 @@ class Api {
         .order('date');
 
     List<Zamena> zamenaBuffer = [];
-    data.forEach((element) {
+    for (var element in data) {
       Zamena zamena = Zamena.fromMap(element);
       zamenaBuffer.add(zamena);
       if (!dat.zamenas.any((element) => element.id == zamena.id)) {
         dat.zamenas.add(zamena);
       }
-    });
+    }
     return zamenaBuffer;
   }
 
@@ -95,10 +95,10 @@ class Api {
 
     Group group = dat.groups.where((element) => element.id == groupID).first;
     group.lessons = [];
-    data.forEach((element) {
+    for (var element in data) {
       Lesson lesson = Lesson.fromMap(element);
       group.lessons.add(lesson);
-    });
+    }
   }
 
   Future<void> loadCourses(List<int> coursesID) async {
@@ -109,10 +109,10 @@ class Api {
         await client.from('Courses').select('*').in_('id', coursesID);
 
     dat.courses = [];
-    data.forEach((element) {
+    for (var element in data) {
       Course course = Course.fromMap(element);
       dat.courses.add(course);
-    });
+    }
   }
 
   Future<void> loadGroups() async {
@@ -122,10 +122,10 @@ class Api {
     List<dynamic> data = await client.from('Groups').select('*');
 
     dat.groups = [];
-    data.forEach((element) {
+    for (var element in data) {
       Group groupName = Group.fromMap(element);
       dat.groups.add(groupName);
-    });
+    }
   }
 
   Future<void> loadDepartments() async {
@@ -135,9 +135,9 @@ class Api {
     List<dynamic> data = await client.from('Departments').select('*');
 
     dat.departments = [];
-    data.forEach((element) {
+    for (var element in data) {
       Department department = Department.fromMap(element);
       dat.departments.add(department);
-    });
+    }
   }
 }

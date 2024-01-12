@@ -129,7 +129,7 @@ class CourseTile extends StatelessWidget {
             top: 0,
             right: 0,
             child: swaped
-                ? Padding(
+                ? const Padding(
                     padding: EdgeInsets.all(8),
                     child: Align(
                       alignment: Alignment.topRight,

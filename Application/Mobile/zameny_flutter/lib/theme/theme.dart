@@ -4,7 +4,7 @@ class MyTheme {
   final backgroundColor = const Color.fromARGB(255, 18, 21, 37);
   final accentColor = const Color.fromARGB(255, 30, 118, 233);
 
-  final TextStyle defaultText = TextStyle(
+  final TextStyle defaultText = const TextStyle(
       color: Colors.white,
       fontSize: 24,
       fontFamily: 'Ubuntu');
