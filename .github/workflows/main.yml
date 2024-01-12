@@ -17,9 +17,7 @@ jobs:
         with:
           channel: 'stable'
 
-      - run: cd Application
-      - run: cd Mobile
-      - run: cd zameny_flutter
+      - run: cd Application/Mobile/ameny_flutter
       - run: flutter pub get
       - run: flutter build apk --debug --split-per-abi
 
