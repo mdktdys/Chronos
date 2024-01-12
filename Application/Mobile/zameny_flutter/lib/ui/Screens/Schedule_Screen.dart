@@ -4,9 +4,9 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
-import 'package:zameny_flutter/Widgets/CourseTile.dart';
-import 'package:zameny_flutter/Widgets/GroupTile.dart';
-import 'package:zameny_flutter/blocs/schedule_bloc.dart';
+import 'package:zameny_flutter/ui/Widgets/CourseTile.dart';
+import 'package:zameny_flutter/ui/Widgets/GroupTile.dart';
+import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -431,8 +431,8 @@ class DateHeader extends StatelessWidget {
       required this.currentWeek,
       required this.parentWidget});
 
-  final DateTime todayWeek;
-  final DateTime currentWeek;
+  final int todayWeek;
+  final int currentWeek;
 
   @override
   Widget build(BuildContext context) {

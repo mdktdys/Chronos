@@ -4,12 +4,14 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart' as pr; 
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Sreens/Schedule_Screen.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:zameny_flutter/Sreens/examsSreen.dart';
+import 'package:zameny_flutter/ui/Screens/Schedule_Screen.dart';
+import 'package:zameny_flutter/ui/Screens/examsSreen.dart';
 import 'package:zameny_flutter/theme/theme.dart';
+import 'package:zameny_flutter/ui/Screens/settings_screen/Settings_Screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,10 +39,16 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      theme: MyTheme().themeData,
-      home: MainScreen(title: 'Flutter Demo Home Page'),
+    return pr.ChangeNotifierProvider(
+      create: (context) => ThemeProvider(),
+      builder: (context, child) {
+        final provider = pr.Provider.of<ThemeProvider>(context);
+        return MaterialApp(
+        debugShowCheckedModeBanner: false,
+        theme: provider.theme,
+        home: MainScreen(title: 'Flutter Demo Home Page'),
+      );
+      },
     );
   }
 }
@@ -77,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
       body: Stack(children: [
         PageView(
           controller: pageController,
-          children: const [ScheduleScreen(), ExamsScreen(), Placeholder()],
+          children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
         ),
         Align(
             alignment: Alignment.bottomCenter,

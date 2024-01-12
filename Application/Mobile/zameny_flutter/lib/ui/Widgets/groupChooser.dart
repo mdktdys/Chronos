@@ -2,7 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Widgets/GroupTile.dart';
+import 'package:zameny_flutter/ui/Widgets/GroupTile.dart';
 
 class GroupChooser extends StatelessWidget {
   final Function(int) onGroupSelected;
