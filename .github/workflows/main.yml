@@ -19,12 +19,13 @@ jobs:
 
       - run: ls -l
       - run: cd Application/Mobile/zameny_flutter
-      - run: flutter pub get
-      - run: flutter build apk --debug --split-per-abi
+      - run: ls -l
+      # - run: flutter pub get
+      # - run: flutter build apk --debug --split-per-abi
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/apk/debug/*"
-          tag: v0.0.1
-          token: ${{ secrets.TOKEN }}
+      # - name: Push to Releases
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: "build/app/outputs/apk/debug/*"
+      #     tag: v0.0.1
+      #     token: ${{ secrets.TOKEN }}
