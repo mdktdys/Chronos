@@ -1,34 +1,39 @@
-on: push
+name: Flutter PR
 
-name: Build
+on:
+ pull_request:
+   branches:
+     - "main"
+   paths-ignore:
+     - "docs/**"
+     - "openapi/**"
+     - ".vscode/**"
 
 jobs:
-  build:
-    name: Build and Release new apk
-    runs-on: ubuntu-latest
-    defaults:
-      run:
-        working-directory: ./Application/Mobile/zameny_flutter
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'zulu'
-          java-version: '12'
+ build:
+   runs-on: ubuntu-latest
+   defaults:
+    run:
+      working-directory: ./Application/Mobile/zameny_flutter
+   steps:
+     - uses: actions/checkout@v1
+     - uses: actions/setup-java@v1
+       with:
+         java-version: "12.x"
 
-      - uses: subosito/flutter-action@v2
-        with:
-          channel: 'stable'
+     - uses: subosito/flutter-action@v1
+       with:
+         channel: "stable"
 
-      - run: flutter clean
-      - run: flutter pub get
-      
-      - run: flutter build apk --debug
-      - run: ls -R build/app/outputs/apk/debug/
+    #  - run: sh ./scripts/flutter_pub_get.sh
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: "build/app/outputs/apk/debug/*"
-          tag: ${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}
+    #  - run: sh ./scripts/flutter_analyze.sh
+
+     - run: flutter test
+
+     - run: flutter build apk --release
+
+     - uses: actions/upload-artifact@v1
+       with:
+         name: APK for QA
+         path: build/app/outputs/apk/dev/debug/apk_name.apk
