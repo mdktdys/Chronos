@@ -22,6 +22,7 @@ jobs:
 
       - run: flutter clean
       - run: flutter pub get
+      
       - run: flutter build apk --debug
       - run: ls -R build/app/outputs/apk/debug/
 
