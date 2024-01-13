@@ -31,7 +31,9 @@ jobs:
 
     # - run: flutter test
 
-     - run: flutter build apk --release
+     - run: flutter pub get
+
+     - run: flutter build apk --debug
 
      - uses: actions/upload-artifact@v1
        with:
