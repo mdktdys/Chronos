@@ -30,6 +30,13 @@ class MyTheme {
 }
 
 ThemeData lightTheme = ThemeData(
+  textTheme: const TextTheme(
+    titleLarge: TextStyle(
+      fontSize: 25,
+      fontWeight: FontWeight.bold,
+      color: Colors.black
+    )
+  ),
   primaryColorLight: Colors.black,
     colorScheme: const ColorScheme(
         brightness: Brightness.light,
@@ -44,6 +51,7 @@ ThemeData lightTheme = ThemeData(
         surface: Colors.red,
         onSurface: Colors.white70),
     useMaterial3: true);
+
 
 ThemeData darkTheme = ThemeData(
   primaryColorLight: Colors.white,

@@ -20,8 +20,10 @@ jobs:
         with:
           channel: 'stable'
 
+      - run: flutter clean
       - run: flutter pub get
-      - run: flutter build apk --debug --split-per-abi
+      - run: flutter build apk --debug
+      - run: ls -R build/app/outputs/apk/debug/
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1

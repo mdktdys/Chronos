@@ -1,10 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/theme/theme.dart';
-import 'package:zameny_flutter/ui/Widgets/groupChooser.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -65,7 +62,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                           color: Theme.of(context).colorScheme.primary,
                           width: 1),
                       color: Theme.of(context).colorScheme.background,
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
                   child: Padding(
                     padding: EdgeInsets.all(20),
                     child: Row(
@@ -96,7 +93,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     ),
                   ),
                 ),
-                Container(
+                SizedBox(
                     height: 40,
                     width: double.infinity,
                     child: CupertinoSlidingSegmentedControl(
