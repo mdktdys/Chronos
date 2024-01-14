@@ -8,10 +8,10 @@ import 'package:provider/provider.dart' as pr;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/ui/Screens/Schedule_Screen.dart';
-import 'package:zameny_flutter/ui/Screens/examsSreen.dart';
+import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_screen.dart';
+import 'package:zameny_flutter/ui/Screens/exams_screen/exams_screen/exams_screen.dart';
 import 'package:zameny_flutter/theme/theme.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/Settings_Screen.dart';
+import 'package:zameny_flutter/ui/Screens/settings_screen/settings_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();

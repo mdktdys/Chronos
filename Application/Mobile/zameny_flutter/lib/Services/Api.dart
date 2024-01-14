@@ -1,13 +1,22 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 
 class Api {
   Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
+    List<dynamic> data = List.empty();
 
-    List<dynamic> data = await client.from('Teachers').select('*');
+    try {
+      data = await client
+          .from('Teachers')
+          .select('*')
+          .timeout(const Duration(seconds: 10));
+    } catch (err) {
+      GetIt.I.get<Talker>().critical(err);
+    }
 
     dat.teachers = [];
     for (var element in data) {
