@@ -1,12 +1,14 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:lottie/lottie.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
+import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
+import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_header/schedule_header.dart';
 import 'package:zameny_flutter/ui/Widgets/CourseTile.dart';
-import 'package:zameny_flutter/ui/Widgets/GroupTile.dart';
 import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
+import 'package:zameny_flutter/ui/Widgets/groupChooser.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -34,20 +36,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     super.initState();
 
     scrollController = ScrollController();
-
-    // scrollController.addListener(() {
-    //   double ScrollPosition = scrollController.position.pixels;
-
-    //   keys.forEach((element) {
-    //     RenderObject? renderObject = element.currentContext?.findRenderObject();
-    //     if (renderObject != null && renderObject is RenderBox) {
-    //       Offset widgetPosition = renderObject.localToGlobal(Offset.zero);
-    //       // widgetPosition - это координаты верхнего левого угла виджета на экране
-
-    //       print('Координаты виджета с ключом ${element}: $widgetPosition');
-    //     }
-    //   });
-    // });
 
     groupIDSeek = GetIt.I.get<Data>().seekGroup;
     currentWeek = ((NavigationDate.difference(septemberFirst).inDays +
@@ -90,7 +78,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     ));
   }
 
-  void _loadWeekSchedule() {
+  void _loadWeekSchedule() async {
     setState(() {});
     DateTime monday =
         NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
@@ -121,8 +109,10 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _groupSelected(int groupID) {
-    groupIDSeek = groupID;
-    _loadWeekSchedule();
+    setState(() {
+      GetIt.I.get<Data>().seekGroup = groupID;
+      _loadWeekSchedule();
+    });
   }
 
   @override
@@ -139,50 +129,26 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 dateEnd: getEndOfWeek(NavigationDate))),
             child: CustomScrollView(
               controller: scrollController,
-              //physics: AlwaysScrollableScrollPhysics(),
               slivers: [
                 SliverToBoxAdapter(
                   child: Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 20.0),
                     child: Column(
                       children: [
-                        Header(),
+                        const ScheduleHeader(),
                         const SizedBox(height: 10),
-                        BlocBuilder<ScheduleBloc, ScheduleState>(
-                          builder: (context, state) {
-                            if (state is ScheduleLoaded) {
-                              return GroupChooser(
-                                context,
-                                _groupSelected,
-                                groupIDSeek,
-                              );
-                            } else if (state is ScheduleFailedLoading) {
-                              return const Text("Failed");
-                            } else if (state is ScheduleLoading) {
-                              return const Text("Loading");
-                            } else if (state is ScheduleInitial) {
-                              return const Text("Starting");
-                            } else {
-                              return const SizedBox(); // or some default widget
-                            }
-                          },
-                        ),
+                        GroupChooser(onGroupSelected: _groupSelected),
                         const SizedBox(height: 10),
                         DateHeader(
                           parentWidget: this,
                           todayWeek: todayWeek,
                           currentWeek: currentWeek,
                         ),
+                        const SizedBox(height: 10),
                       ],
                     ),
                   ),
                 ),
-                // SliverPersistentHeader(
-                //     pinned: true,
-                //     delegate: CustomSliverPersistentHeader(
-                //       minHeight: 50,
-                //       maxHeight: 80,
-                //     )),
                 SliverPadding(
                   padding: const EdgeInsets.symmetric(horizontal: 20),
                   sliver: SliverToBoxAdapter(
@@ -201,14 +167,18 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             funcReload: _loadWeekSchedule,
                           );
                         } else if (state is ScheduleLoading) {
-                          return const SizedBox(
+                          return SizedBox(
                             height: 550,
                             child: Center(
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.center,
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
-                                  Text(
+                                  SizedBox(
+                                      height: 200,
+                                      child: Lottie.asset(
+                                          'assets/lottie/loading.json')),
+                                  const Text(
                                     "Loading...",
                                     style: TextStyle(
                                         color: Colors.blue,
@@ -242,132 +212,103 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     );
   }
 
-  Row Header() {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.school_rounded,
-          color: Colors.white,
-          size: 36,
-        ),
-        const Text(
-          "Schedule",
-          style: TextStyle(
-              color: Colors.white,
-              fontSize: 24,
-              fontWeight: FontWeight.bold,
-              fontFamily: 'Ubuntu'),
-        ),
-        IconButton(
-            onPressed: () {},
-            icon: const Icon(
-              Icons.more_horiz_rounded,
-              size: 36,
-              color: Colors.white,
-            ))
-      ],
-    );
-  }
+  // GestureDetector GroupChooser(
+  //     BuildContext context, Function(int) onGroupSelected, seekGroup) {
+  //   Data dat = GetIt.I.get<Data>();
 
-  GestureDetector GroupChooser(
-      BuildContext context, Function(int) onGroupSelected, seekGroup) {
-    Data dat = GetIt.I.get<Data>();
+  //   Group? group;
+  //   if (dat.groups.isNotEmpty) {
+  //     group = dat.groups.where((element) => element.id == seekGroup).first;
+  //   }
 
-    Group? group;
-    if (dat.groups.isNotEmpty) {
-      group = dat.groups.where((element) => element.id == seekGroup).first;
-    }
+  //   return GestureDetector(
+  //     onTap: () {
+  //       final data = GetIt.I.get<Data>();
+  //       List<Group> groups = data.groups;
+  //       ShowGroupChooserBottomSheet(context, groups, onGroupSelected);
+  //     },
+  //     child: Container(
+  //       width: double.infinity,
+  //       decoration: const BoxDecoration(
+  //           borderRadius: BorderRadius.all(Radius.circular(20)),
+  //           color: Color.fromARGB(255, 59, 64, 82),
+  //           boxShadow: [
+  //             BoxShadow(
+  //                 color: Color.fromARGB(255, 43, 43, 58),
+  //                 blurStyle: BlurStyle.outer,
+  //                 blurRadius: 12)
+  //           ]),
+  //       child: Padding(
+  //         padding: const EdgeInsets.all(8.0),
+  //         child: Container(
+  //           padding: const EdgeInsets.symmetric(horizontal: 5),
+  //           child: Row(
+  //             children: [
+  //               const Icon(
+  //                 Icons.person_search_rounded,
+  //                 color: Colors.white,
+  //                 size: 30,
+  //               ),
+  //               const SizedBox(
+  //                 width: 8,
+  //               ),
+  //               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+  //                 const Text(
+  //                   "Selected study group",
+  //                   style: TextStyle(
+  //                       fontFamily: 'Ubuntu',
+  //                       fontSize: 16,
+  //                       color: Colors.white),
+  //                 ),
+  //                 Text(
+  //                   group != null ? group.name : "No found",
+  //                   style: const TextStyle(
+  //                       fontFamily: 'Ubuntu',
+  //                       fontWeight: FontWeight.bold,
+  //                       color: Colors.white,
+  //                       fontSize: 18),
+  //                 )
+  //               ])
+  //             ],
+  //           ),
+  //         ),
+  //       ),
+  //     ),
+  //   );
+  // }
 
-    return GestureDetector(
-      onTap: () {
-        final data = GetIt.I.get<Data>();
-        List<Group> groups = data.groups;
-        ShowGroupChooserBottomSheet(context, groups, onGroupSelected);
-      },
-      child: Container(
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 59, 64, 82),
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 43, 43, 58),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
-        child: Padding(
-          padding: const EdgeInsets.all(8.0),
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: 5),
-            child: Row(
-              children: [
-                const Icon(
-                  Icons.person_search_rounded,
-                  color: Colors.white,
-                  size: 30,
-                ),
-                const SizedBox(
-                  width: 8,
-                ),
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  const Text(
-                    "Selected study group",
-                    style: TextStyle(
-                        fontFamily: 'Ubuntu',
-                        fontSize: 16,
-                        color: Colors.white),
-                  ),
-                  Text(
-                    group != null ? group.name : "No found",
-                    style: const TextStyle(
-                        fontFamily: 'Ubuntu',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18),
-                  )
-                ])
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
-
-  Future<dynamic> ShowGroupChooserBottomSheet(
-      BuildContext context, List<Group> groups, Function(int) onGroupSelected) {
-    return showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-            child: Container(
-                decoration: const BoxDecoration(
-                    backgroundBlendMode: BlendMode.screen,
-                    color: Color.fromARGB(255, 18, 21, 37),
-                    border: Border(top: BorderSide(color: Colors.amber))),
-                width: double.infinity,
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      children: groups
-                          .map((e) => GroupTile(
-                                group: e,
-                                context: context,
-                                onGroupSelected: onGroupSelected,
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                )),
-          );
-        });
-  }
+  // Future<dynamic> ShowGroupChooserBottomSheet(
+  //     BuildContext context, List<Group> groups, Function(int) onGroupSelected) {
+  //   return showModalBottomSheet(
+  //       backgroundColor: Colors.transparent,
+  //       context: context,
+  //       builder: (BuildContext context) {
+  //         return BackdropFilter(
+  //           filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+  //           child: Container(
+  //               decoration: const BoxDecoration(
+  //                   backgroundBlendMode: BlendMode.screen,
+  //                   color: Color.fromARGB(255, 18, 21, 37),
+  //                   border: Border(top: BorderSide(color: Colors.amber))),
+  //               width: double.infinity,
+  //               height: double.infinity,
+  //               child: SingleChildScrollView(
+  //                 child: Padding(
+  //                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
+  //                   child: Column(
+  //                     children: groups
+  //                         .map((e) => GroupTile(
+  //                               group: e,
+  //                               context: context,
+  //                               onGroupSelected: onGroupSelected,
+  //                             ))
+  //                         .toList(),
+  //                   ),
+  //                 ),
+  //               )),
+  //         );
+  //       });
+  // }
 }
 
 class FailedLoadWidget extends StatelessWidget {
@@ -419,105 +360,6 @@ class FailedLoadWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class DateHeader extends StatelessWidget {
-  final parentWidget;
-
-  const DateHeader(
-      {super.key,
-      required this.todayWeek,
-      required this.currentWeek,
-      required this.parentWidget});
-
-  final int todayWeek;
-  final int currentWeek;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        height: 80,
-        width: double.infinity,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 59, 64, 82),
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 43, 43, 58),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            ToggleWeekButton(next: false, widget: parentWidget),
-            Column(
-              children: [
-                const Text(
-                  "Осенний семестр 2023/2024",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu',
-                      fontSize: 16,
-                      color: Colors.white),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  height: 32,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Week $currentWeek",
-                        style: const TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 16,
-                            color: Colors.white),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      todayWeek == currentWeek
-                          ? Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 30, 118, 233),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 28, 95, 182),
-                                      blurStyle: BlurStyle.outer,
-                                      blurRadius: 6,
-                                    )
-                                  ],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: const Padding(
-                                padding: EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Current",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold),
-                                ),
-                              ),
-                            )
-                          : Container()
-                    ],
-                  ),
-                )
-              ],
-            ),
-            ToggleWeekButton(next: true, widget: parentWidget),
-          ],
-        ));
   }
 }
 
@@ -816,67 +658,6 @@ class DayScheduleWidget extends StatelessWidget {
             }
           }())
         ],
-      ),
-    );
-  }
-}
-
-// if (DayZamenas.any((element) =>
-//                         element.LessonTimingsID == lesson.number)) {
-//                       final course = getCourseById(DayZamenas.where((element) =>
-//                               element.LessonTimingsID == lesson.number)
-//                           .first
-//                           .courseID);
-//                       print("Swapped");
-//                       return CourseTile(
-//                         course: course,
-//                         lesson: lesson,
-//                         swaped: true,
-//                       );
-//                     } else {
-
-class ToggleWeekButton extends StatelessWidget {
-  final bool next;
-  final widget;
-
-  const ToggleWeekButton({super.key, required this.next, required this.widget});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: const BoxDecoration(
-          color: Colors.blue,
-          boxShadow: [
-            BoxShadow(
-              color: Color.fromARGB(255, 28, 95, 182),
-              blurStyle: BlurStyle.outer,
-              blurRadius: 6,
-            )
-          ],
-          borderRadius: BorderRadius.all(Radius.circular(20))),
-      child: GestureDetector(
-        onTap: () {
-          const Duration(seconds: 1); // имитация загрузки данных
-
-          widget.currentWeek += next ? 1 : -1;
-          if (widget.currentWeek < 1) {
-            widget.currentWeek = 1;
-          } else {
-            widget.NavigationDate =
-                widget.NavigationDate.add(Duration(days: next ? 7 : -7));
-            widget.setState(() {
-              // обновление состояния страницы
-            });
-          }
-        },
-        child: Padding(
-          padding: const EdgeInsets.all(2.0),
-          child: Icon(
-            next ? Icons.arrow_right_rounded : Icons.arrow_left_rounded,
-            color: Colors.white,
-            size: 36,
-          ),
-        ),
       ),
     );
   }
