@@ -4,14 +4,16 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart' as pr; 
+import 'package:provider/provider.dart' as pr;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_screen.dart';
-import 'package:zameny_flutter/ui/Screens/exams_screen/exams_screen/exams_screen.dart';
 import 'package:zameny_flutter/theme/theme.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_screen.dart';
+
+import 'presentation/Screens/exams_screen/exams_screen/exams_screen.dart';
+import 'presentation/Screens/schedule_screen/schedule_screen.dart';
+import 'presentation/Screens/settings_screen/settings_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,11 +27,14 @@ Future<void> main() async {
   SupabaseClient client = Supabase.instance.client;
   GetIt.I.registerSingleton<SupabaseClient>(client);
 
-  Data data = Data();
-  GetIt.I.registerSingleton<Data>(data);
-
   Talker talker = Talker();
   GetIt.I.registerSingleton<Talker>(talker);
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  GetIt.I.registerSingleton<SharedPreferences>(prefs);
+
+  Data data = Data.fromShared();
+  GetIt.I.registerSingleton<Data>(data);
 
   runApp(MyApp());
 }
@@ -39,22 +44,25 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return pr.ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
+    return pr.MultiProvider(
+      providers: [
+        pr.ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider(),
+        ),
+      ],
       builder: (context, child) {
-        final provider = pr.Provider.of<ThemeProvider>(context);
         return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: provider.theme,
-        home: MainScreen(title: 'Flutter Demo Home Page'),
-      );
+          debugShowCheckedModeBanner: false,
+          theme: pr.Provider.of<ThemeProvider>(context).theme,
+          home: MainScreen(title: 'Flutter Demo Home Page'),
+        );
       },
     );
   }
 }
 
 class MainScreen extends StatefulWidget {
-  MainScreen({super.key, required this.title});
+  const MainScreen({super.key, required this.title});
 
   final String title;
 
@@ -103,20 +111,23 @@ class _MainScreenState extends State<MainScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       bottomNavigationItem(
-                          index: 0,
-                          onTap: _setPage,
-                          icon: Icons.school_rounded,
-                          text: "Schedule",),
+                        index: 0,
+                        onTap: _setPage,
+                        icon: Icons.school_rounded,
+                        text: "Schedule",
+                      ),
                       bottomNavigationItem(
-                          index: 1,
-                          onTap: _setPage,
-                          icon: Icons.code_rounded,
-                          text: "Exams",),
+                        index: 1,
+                        onTap: _setPage,
+                        icon: Icons.code_rounded,
+                        text: "Exams",
+                      ),
                       bottomNavigationItem(
-                          index: 2,
-                          onTap: _setPage,
-                          icon: Icons.settings,
-                          text: "Settings",),
+                        index: 2,
+                        onTap: _setPage,
+                        icon: Icons.settings,
+                        text: "Settings",
+                      ),
                     ],
                   ),
                 ),
@@ -144,7 +155,9 @@ class bottomNavigationItem extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.all(10.0),
       child: GestureDetector(
-        onTap: () { onTap.call(index); },
+        onTap: () {
+          onTap.call(index);
+        },
         child: Container(
             height: 50,
             decoration: const BoxDecoration(
@@ -159,7 +172,8 @@ class bottomNavigationItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              child:
+                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
                 Icon(
                   icon,
                   color: Colors.white,

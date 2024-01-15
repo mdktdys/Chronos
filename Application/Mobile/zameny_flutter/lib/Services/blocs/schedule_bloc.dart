@@ -31,24 +31,15 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<FetchData>((event, emit) async {
       emit(ScheduleLoading());
       try {
-        await Api().loadTeachers().timeout(const Duration(seconds: 10));
-        await Api().loadCourses([1, 2, 3, 4, 5, 6, 7]).timeout(
-            const Duration(seconds: 10));
-        await Api().loadCabinets().timeout(const Duration(seconds: 10));
-        await Api().loadTimings().timeout(const Duration(seconds: 10));
-        
-        await Api().loadGroups().timeout(const Duration(seconds: 10));
-        
-        await Api().loadDepartments().timeout(const Duration(seconds: 10));
-        
-        await Api()
-            .loadDefaultSchedule(groupID: event.groupID)
-            .timeout(const Duration(seconds: 10));
-        
-        await Api().loadZamenas(
-            groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
-        await Api().loadZamenasTypes(
-            groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+        await Api().loadTeachers();
+        await Api().loadCourses([1, 2, 3, 4, 5, 6, 7]);
+        await Api().loadCabinets();
+        await Api().loadTimings();
+        await Api().loadGroups();
+        await Api().loadDepartments();
+        await Api().loadDefaultSchedule(groupID: event.groupID);
+        await Api().loadZamenas(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+        await Api().loadZamenasTypes(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded());
       } catch (error) {
         GetIt.I.get<Talker>().critical(error);

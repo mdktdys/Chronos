@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zameny_flutter/presentation/Screens/settings_screen/settings_logo_block/settings_logo_block.dart';
 import 'package:zameny_flutter/theme/theme.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_header/settings_header.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_logo_block/settings_logo_block.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_switch_theme_block/settings_switch_theme.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_version_block/settings_version_block.dart';
+
+import 'settings_header/settings_header.dart';
+import 'settings_switch_theme_block/settings_switch_theme.dart';
+import 'settings_version_block/settings_version_block.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -18,12 +19,11 @@ class _SettingsScreenState extends State<SettingsScreen> {
   int _sliding = 0;
   @override
   Widget build(BuildContext context) {
-    final provider = Provider.of<ThemeProvider>(context);
 
     void onSwitch(int index) {
       setState(() {
         _sliding = index;
-        provider.toggleTheme();
+        context.read<ThemeProvider>().toggleTheme();
       });
     }
 

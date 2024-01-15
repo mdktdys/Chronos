@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_date_header/schedule_date_header_toggle_week_button.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header_toggle_week_button.dart';
 
 class DateHeader extends StatelessWidget {
   final parentWidget;
