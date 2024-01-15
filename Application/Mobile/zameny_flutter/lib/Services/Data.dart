@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,8 +16,8 @@ class Data {
 
   int? seekGroup = -1;
 
-  Data.fromShared() {
-    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup');
+  Data.fromShared(context) {
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup')??-1;
   }
 }
 
@@ -322,4 +321,8 @@ class Lesson {
 
   factory Lesson.fromJson(String source) =>
       Lesson.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
+void setChoosedTheme(int index) {
+  GetIt.I.get<SharedPreferences>().setInt("Theme", index);
 }

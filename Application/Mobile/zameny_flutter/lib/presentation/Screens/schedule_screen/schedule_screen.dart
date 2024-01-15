@@ -122,7 +122,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return BlocProvider(
       create: (context) => bloc,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 18, 21, 37),
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async => bloc.add(FetchData(

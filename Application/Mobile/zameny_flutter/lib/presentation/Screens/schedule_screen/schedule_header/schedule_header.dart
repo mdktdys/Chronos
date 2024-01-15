@@ -11,25 +11,25 @@ class ScheduleHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Icon(
+        Icon(
           Icons.school_rounded,
-          color: Colors.white,
+          color: Theme.of(context).primaryColorLight,
           size: 36,
         ),
-        const Text(
+        Text(
           "Schedule",
           style: TextStyle(
-              color: Colors.white,
+              color: Theme.of(context).primaryColorLight,
               fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Ubuntu'),
         ),
         IconButton(
             onPressed: () {},
-            icon: const Icon(
+            icon: Icon(
               Icons.more_horiz_rounded,
               size: 36,
-              color: Colors.white,
+              color: Theme.of(context).primaryColorLight,
             ))
       ],
     );

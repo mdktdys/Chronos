@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Screens/settings_screen/settings_logo_block/settings_logo_block.dart';
 import 'package:zameny_flutter/theme/theme.dart';
 
@@ -17,13 +18,20 @@ class SettingsScreen extends StatefulWidget {
 
 class _SettingsScreenState extends State<SettingsScreen> {
   int _sliding = 0;
+
+  @override
+  void initState() {
+    _sliding = context.read<ThemeProvider>().getCurrentIndex();
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
-
     void onSwitch(int index) {
       setState(() {
         _sliding = index;
         context.read<ThemeProvider>().toggleTheme();
+        setChoosedTheme(index);
       });
     }
 
