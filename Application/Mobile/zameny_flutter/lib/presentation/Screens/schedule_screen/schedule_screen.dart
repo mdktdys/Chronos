@@ -4,11 +4,11 @@ import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
-import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
-import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_header/schedule_header.dart';
-import 'package:zameny_flutter/ui/Widgets/CourseTile.dart';
 import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
-import 'package:zameny_flutter/ui/Widgets/groupChooser.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
+import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/groupChooser.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -37,7 +37,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
     scrollController = ScrollController();
 
-    groupIDSeek = GetIt.I.get<Data>().seekGroup;
+    groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
     currentWeek = ((NavigationDate.difference(septemberFirst).inDays +
                 septemberFirst.weekday) ~/
             7) +
@@ -54,11 +54,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    bloc.add(FetchData(
-      groupID: groupIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek,
-    ));
+    if (groupIDSeek != -1) {
+      bloc.add(FetchData(
+        groupID: groupIDSeek,
+        dateStart: startOfWeek,
+        dateEnd: endOfWeek,
+      ));
+    }
   }
 
   _loadPage() {
@@ -120,7 +122,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     return BlocProvider(
       create: (context) => bloc,
       child: Scaffold(
-        backgroundColor: const Color.fromARGB(255, 18, 21, 37),
+        backgroundColor: Theme.of(context).colorScheme.background,
         body: SafeArea(
           child: RefreshIndicator(
             onRefresh: () async => bloc.add(FetchData(
@@ -191,7 +193,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                             ),
                           );
                         } else if (state is ScheduleInitial) {
-                          return const Text("Starting");
+                          return const Text("Choose group");
                         } else {
                           return const SizedBox(); // or some default widget
                         }

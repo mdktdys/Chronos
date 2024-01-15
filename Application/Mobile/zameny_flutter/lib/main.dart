@@ -1,17 +1,12 @@
-// ignore_for_file: prefer_const_constructors
-
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart' as pr; 
+import 'package:provider/provider.dart' as pr;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/ui/Screens/schedule_screen/schedule_screen.dart';
-import 'package:zameny_flutter/ui/Screens/exams_screen/exams_screen/exams_screen.dart';
+import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
 import 'package:zameny_flutter/theme/theme.dart';
-import 'package:zameny_flutter/ui/Screens/settings_screen/settings_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -25,155 +20,45 @@ Future<void> main() async {
   SupabaseClient client = Supabase.instance.client;
   GetIt.I.registerSingleton<SupabaseClient>(client);
 
-  Data data = Data();
-  GetIt.I.registerSingleton<Data>(data);
-
   Talker talker = Talker();
   GetIt.I.registerSingleton<Talker>(talker);
 
-  runApp(MyApp());
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  GetIt.I.registerSingleton<SharedPreferences>(prefs);
+
+  runApp(const MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return pr.ChangeNotifierProvider(
-      create: (context) => ThemeProvider(),
-      builder: (context, child) {
-        final provider = pr.Provider.of<ThemeProvider>(context);
-        return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: provider.theme,
-        home: MainScreen(title: 'Flutter Demo Home Page'),
-      );
-      },
-    );
-  }
+  State<MyApp> createState() => _MyAppState();
 }
 
-class MainScreen extends StatefulWidget {
-  MainScreen({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MainScreen> createState() => _MainScreenState();
-}
-
-class _MainScreenState extends State<MainScreen> {
-  int selectedPageIndex = 0;
-  late final PageController pageController;
-
+class _MyAppState extends State<MyApp> {
   @override
   void initState() {
-    pageController = PageController(initialPage: 0);
-
+    Data data = Data.fromShared(context);
+    GetIt.I.registerSingleton<Data>(data);
     super.initState();
   }
 
-  _setPage(int index) {
-    pageController.animateToPage(index,
-        duration: Duration(milliseconds: 200), curve: Curves.easeOutQuint);
-  }
-
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: MyTheme().backgroundColor,
-      body: Stack(children: [
-        PageView(
-          controller: pageController,
-          children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
+    return pr.MultiProvider(
+      providers: [
+        pr.ChangeNotifierProvider<ThemeProvider>(
+          create: (context) => ThemeProvider.fromData(),
         ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.1),
-                  border: Border(
-                      top: BorderSide(
-                          color: const Color.fromARGB(255, 30, 118, 233),
-                          width: 1))),
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      bottomNavigationItem(
-                          index: 0,
-                          onTap: _setPage,
-                          icon: Icons.school_rounded,
-                          text: "Schedule",),
-                      bottomNavigationItem(
-                          index: 1,
-                          onTap: _setPage,
-                          icon: Icons.code_rounded,
-                          text: "Exams",),
-                      bottomNavigationItem(
-                          index: 2,
-                          onTap: _setPage,
-                          icon: Icons.settings,
-                          text: "Settings",),
-                    ],
-                  ),
-                ),
-              ),
-            )),
-      ]),
-    );
-  }
-}
-
-class bottomNavigationItem extends StatelessWidget {
-  final int index;
-  final Function onTap;
-  final IconData icon;
-  final String text;
-  const bottomNavigationItem(
-      {super.key,
-      required this.index,
-      required this.onTap,
-      required this.icon,
-      required this.text});
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(10.0),
-      child: GestureDetector(
-        onTap: () { onTap.call(index); },
-        child: Container(
-            height: 50,
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 30, 118, 233),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 28, 95, 182),
-                    blurStyle: BlurStyle.outer,
-                    blurRadius: 6,
-                  )
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(
-                  icon,
-                  color: Colors.white,
-                ),
-                SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  text,
-                  style: TextStyle(color: Colors.white),
-                )
-              ]),
-            )),
-      ),
+      ],
+      builder: (context, child) {
+        return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: pr.Provider.of<ThemeProvider>(context).theme,
+          home: const MainScreen(),
+        );
+      },
     );
   }
 }

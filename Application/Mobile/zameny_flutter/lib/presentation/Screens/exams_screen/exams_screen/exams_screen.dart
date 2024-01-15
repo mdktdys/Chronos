@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zameny_flutter/theme/theme.dart';
 
 class ExamsScreen extends StatefulWidget {
   const ExamsScreen({super.key});
@@ -12,13 +11,13 @@ class _ExamsScreenState extends State<ExamsScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: MyTheme().backgroundColor,
+      backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
           child: Padding(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
         child: CustomScrollView(
           slivers: [
-            const SliverToBoxAdapter(
+            SliverToBoxAdapter(
                 child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -28,12 +27,12 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     icon: Icon(
                       Icons.edit,
                       size: 24,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorLight,
                     )),
                 Text(
                   "Exams",
                   style: TextStyle(
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorLight,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Ubuntu'),
@@ -43,7 +42,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
                     icon: Icon(
                       Icons.more_horiz_rounded,
                       size: 36,
-                      color: Colors.white,
+                      color: Theme.of(context).primaryColorLight,
                     ))
               ],
             )),
@@ -58,7 +57,7 @@ class _ExamsScreenState extends State<ExamsScreen> {
             // ),
             SliverToBoxAdapter(
               child: Center(
-                child: Container(
+                child: SizedBox(
                   height: 650,
                   width: 250,
                   child: Column(

@@ -1,6 +1,7 @@
 import 'dart:convert';
-
+import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
@@ -13,7 +14,11 @@ class Data {
   List<Zamena> zamenas = [];
   List<ZamenasType> zamenaTypes = [];
 
-  int seekGroup = 1;
+  int? seekGroup = -1;
+
+  Data.fromShared(context) {
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup')??-1;
+  }
 }
 
 class Department {
@@ -40,7 +45,8 @@ class Department {
 
   String toJson() => json.encode(toMap());
 
-  factory Department.fromJson(String source) => Department.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Department.fromJson(String source) =>
+      Department.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Group {
@@ -48,11 +54,7 @@ class Group {
   String name;
   int department;
   List<Lesson> lessons = [];
-  Group({
-    required this.id,
-    required this.name,
-    required this.department
-  });
+  Group({required this.id, required this.name, required this.department});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -71,7 +73,8 @@ class Group {
 
   String toJson() => json.encode(toMap());
 
-  factory Group.fromJson(String source) => Group.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Group.fromJson(String source) =>
+      Group.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class LessonTimings {
@@ -95,7 +98,7 @@ class LessonTimings {
   factory LessonTimings.fromMap(Map<String, dynamic> map) {
     return LessonTimings(
       number: map['number'] as int,
-      start: DateFormat.Hms().parse(map['start']), 
+      start: DateFormat.Hms().parse(map['start']),
       end: DateFormat('HH:mm:ss').parse(map['end']),
     );
   }
@@ -111,11 +114,7 @@ class Course {
   String name;
   String color;
 
-  Course({
-    required this.id,
-    required this.name,
-    required this.color
-  });
+  Course({required this.id, required this.name, required this.color});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -171,7 +170,7 @@ class ZamenasType {
   int id;
   int group;
   DateTime date;
-  bool full; 
+  bool full;
   ZamenasType({
     required this.id,
     required this.group,
@@ -199,7 +198,8 @@ class ZamenasType {
 
   String toJson() => json.encode(toMap());
 
-  factory ZamenasType.fromJson(String source) => ZamenasType.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ZamenasType.fromJson(String source) =>
+      ZamenasType.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Zamena {
@@ -242,7 +242,8 @@ class Zamena {
 
   String toJson() => json.encode(toMap());
 
-  factory Zamena.fromJson(String source) => Zamena.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Zamena.fromJson(String source) =>
+      Zamena.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Cabinet {
@@ -322,3 +323,6 @@ class Lesson {
       Lesson.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
+void setChoosedTheme(int index) {
+  GetIt.I.get<SharedPreferences>().setInt("Theme", index);
+}

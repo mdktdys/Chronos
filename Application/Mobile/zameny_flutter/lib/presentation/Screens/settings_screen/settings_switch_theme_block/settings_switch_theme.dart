@@ -10,7 +10,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
+    return SizedBox(
         width: double.infinity,
         child: CupertinoSlidingSegmentedControl(
             thumbColor: Theme.of(context).colorScheme.primary,
