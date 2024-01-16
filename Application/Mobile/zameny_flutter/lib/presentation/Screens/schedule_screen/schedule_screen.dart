@@ -123,91 +123,90 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       create: (context) => bloc,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async => bloc.add(FetchData(
-                groupID: groupIDSeek,
-                dateStart: getStartOfWeek(NavigationDate),
-                dateEnd: getEndOfWeek(NavigationDate))),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        const ScheduleHeader(),
-                        const SizedBox(height: 10),
-                        GroupChooser(onGroupSelected: _groupSelected),
-                        const SizedBox(height: 10),
-                        DateHeader(
-                          parentWidget: this,
+        body: RefreshIndicator(
+          onRefresh: () async => bloc.add(FetchData(
+              groupID: groupIDSeek,
+              dateStart: getStartOfWeek(NavigationDate),
+              dateEnd: getEndOfWeek(NavigationDate))),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      const ScheduleHeader(),
+                      const SizedBox(height: 10),
+                      GroupChooser(onGroupSelected: _groupSelected),
+                      const SizedBox(height: 10),
+                      DateHeader(
+                        parentWidget: this,
+                        todayWeek: todayWeek,
+                        currentWeek: currentWeek,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverToBoxAdapter(
+                  child: BlocBuilder<ScheduleBloc, ScheduleState>(
+                    builder: (context, state) {
+                      if (state is ScheduleLoaded) {
+                        return LessonList(
+                          groupID: groupIDSeek,
+                          weekDate: NavigationDate,
                           todayWeek: todayWeek,
+                          DaysKeys: keys,
                           currentWeek: currentWeek,
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: BlocBuilder<ScheduleBloc, ScheduleState>(
-                      builder: (context, state) {
-                        if (state is ScheduleLoaded) {
-                          return LessonList(
-                            groupID: groupIDSeek,
-                            weekDate: NavigationDate,
-                            todayWeek: todayWeek,
-                            DaysKeys: keys,
-                            currentWeek: currentWeek,
-                          );
-                        } else if (state is ScheduleFailedLoading) {
-                          return FailedLoadWidget(
-                            funcReload: _loadWeekSchedule,
-                          );
-                        } else if (state is ScheduleLoading) {
-                          return SizedBox(
-                            height: 550,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                      height: 200,
-                                      child: Lottie.asset(
-                                          'assets/lottie/loading.json')),
-                                  const Text(
-                                    "Loading...",
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        fontFamily: 'Ubuntu',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 26),
-                                  )
-                                ],
-                              ),
+                        );
+                      } else if (state is ScheduleFailedLoading) {
+                        return FailedLoadWidget(
+                          funcReload: _loadWeekSchedule,
+                        );
+                      } else if (state is ScheduleLoading) {
+                        return SizedBox(
+                          height: 550,
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    height: 200,
+                                    child: Lottie.asset(
+                                        'assets/lottie/loading.json')),
+                                const Text(
+                                  "Loading...",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontFamily: 'Ubuntu',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26),
+                                )
+                              ],
                             ),
-                          );
-                        } else if (state is ScheduleInitial) {
-                          return const Text("Choose group");
-                        } else {
-                          return const SizedBox(); // or some default widget
-                        }
-                      },
-                    ),
+                          ),
+                        );
+                      } else if (state is ScheduleInitial) {
+                        return const Text("Choose group");
+                      } else {
+                        return const SizedBox(); // or some default widget
+                      }
+                    },
                   ),
                 ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 80,
-                  ),
-                )
-              ],
-            ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 80,
+                ),
+              )
+            ],
           ),
         ),
       ),
