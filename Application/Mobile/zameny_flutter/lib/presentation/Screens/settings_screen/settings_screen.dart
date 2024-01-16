@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/settings_screen/settings_logo_block/settings_logo_block.dart';
-import 'package:zameny_flutter/theme/theme.dart';
 
 import 'settings_header/settings_header.dart';
 import 'settings_switch_theme_block/settings_switch_theme.dart';
