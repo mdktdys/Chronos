@@ -1,54 +1,30 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/load_bloc_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/GroupTile.dart';
 
-class GroupChooser extends StatelessWidget {
+class GroupChooser extends StatefulWidget {
   final Function(int) onGroupSelected;
   const GroupChooser({super.key, required this.onGroupSelected});
 
-  Future<dynamic> ShowGroupChooserBottomSheet(
-      {required BuildContext context, required List<Group> groups}) {
-    return showModalBottomSheet(
-        backgroundColor: Colors.transparent,
-        context: context,
-        builder: (BuildContext context) {
-          return BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-            child: Container(
-                decoration: const BoxDecoration(
-                    backgroundBlendMode: BlendMode.screen,
-                    color: Color.fromARGB(255, 18, 21, 37),
-                    border: Border(top: BorderSide(color: Colors.amber))),
-                width: double.infinity,
-                height: double.infinity,
-                child: SingleChildScrollView(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    child: Column(
-                      children: groups
-                          .map((e) => GroupTile(
-                                group: e,
-                                context: context,
-                                onGroupSelected: onGroupSelected,
-                              ))
-                          .toList(),
-                    ),
-                  ),
-                )),
-          );
-        });
-  }
+  @override
+  State<GroupChooser> createState() => _GroupChooserState();
+}
 
+class _GroupChooserState extends State<GroupChooser> {
   @override
   Widget build(BuildContext context) {
     Data dat = GetIt.I.get<Data>();
     Group? group;
     if (dat.groups.isNotEmpty) {
-      List<Group> list = dat.groups.where((element) => element.id == dat.seekGroup).toList();
-      if(list.isNotEmpty){
-        group = dat.groups.where((element) => element.id == dat.seekGroup).first;
+      List<Group> list =
+          dat.groups.where((element) => element.id == dat.seekGroup).toList();
+      if (list.isNotEmpty) {
+        group =
+            dat.groups.where((element) => element.id == dat.seekGroup).first;
       }
     }
 
@@ -56,8 +32,8 @@ class GroupChooser extends StatelessWidget {
       onTap: () async {
         final data = GetIt.I.get<Data>();
         List<Group> groups = data.groups;
-        groups.sort((a,b) => a.name.compareTo(b.name) );
-        await ShowGroupChooserBottomSheet(context: context, groups: groups);
+        groups.sort((a, b) => a.name.compareTo(b.name));
+        await ShowGroupChooserBottomSheet(context: context, onGroupSelected: this.widget.onGroupSelected);
       },
       child: Container(
         width: double.infinity,
@@ -104,6 +80,89 @@ class GroupChooser extends StatelessWidget {
               ],
             ),
           ),
+        ),
+      ),
+    );
+  }
+
+  Future<dynamic> ShowGroupChooserBottomSheet(
+      {required BuildContext context, required Function(int) onGroupSelected}) {
+    return showModalBottomSheet(
+        backgroundColor: Colors.transparent,
+        context: context,
+        builder: (BuildContext context) {
+          return ModalGroupsBottomSheet(
+            onGroupSelected: onGroupSelected,
+          );
+        });
+  }
+}
+
+class ModalGroupsBottomSheet extends StatefulWidget {
+  final Function(int) onGroupSelected;
+  const ModalGroupsBottomSheet({super.key, required this.onGroupSelected});
+
+  @override
+  State<ModalGroupsBottomSheet> createState() => _ModalGroupsBottomSheetState();
+}
+
+class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
+  late List<Group> groups;
+  late final LoadBloc loadBloc;
+
+  @override
+  void initState() {
+    super.initState();
+    loadBloc = LoadBloc();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return BackdropFilter(
+      filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
+      child: Container(
+          decoration: const BoxDecoration(
+            color: Color.fromARGB(255, 18, 21, 37),
+          ),
+          width: double.infinity,
+          height: double.infinity,
+          child: BlocBuilder<LoadBloc, LoadBlocState>(
+            bloc: loadBloc,
+            builder: (context, state) {
+              if (state is LoadBlocLoaded) {
+                return GroupList(groups: groups, widget: widget);
+              }
+              return Text("err");
+            },
+          )),
+    );
+    ;
+  }
+}
+
+class GroupList extends StatelessWidget {
+  const GroupList({
+    super.key,
+    required this.groups,
+    required this.widget,
+  });
+
+  final List<Group> groups;
+  final ModalGroupsBottomSheet widget;
+
+  @override
+  Widget build(BuildContext context) {
+    return SingleChildScrollView(
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10.0),
+        child: Column(
+          children: groups
+              .map((e) => GroupTile(
+                    group: e,
+                    context: context,
+                    onGroupSelected: widget.onGroupSelected,
+                  ))
+              .toList(),
         ),
       ),
     );
