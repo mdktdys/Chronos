@@ -18,7 +18,7 @@ class Data {
   int? seekGroup = -1;
 
   Data.fromShared(context) {
-    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup') ?? -1;
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
   }
 }
 

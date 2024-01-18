@@ -70,7 +70,7 @@ class _GroupChooserState extends State<GroupChooser> {
                         color: Colors.white),
                   ),
                   Text(
-                    group != null ? group.name : "No found",
+                    group != null ? group.name : GetIt.I.get<Data>().seekGroup.toString(),
                     style: const TextStyle(
                         fontFamily: 'Ubuntu',
                         fontWeight: FontWeight.bold,

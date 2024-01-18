@@ -118,8 +118,7 @@ class Api {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
-    List<dynamic> data =
-        await client.from('Courses').select('*');
+    List<dynamic> data = await client.from('Courses').select('*');
 
     dat.courses = [];
     for (var element in data) {
