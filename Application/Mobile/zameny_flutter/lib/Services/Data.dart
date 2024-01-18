@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -17,7 +18,7 @@ class Data {
   int? seekGroup = -1;
 
   Data.fromShared(context) {
-    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup')??-1;
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup') ?? -1;
   }
 }
 
@@ -47,6 +48,13 @@ class Department {
 
   factory Department.fromJson(String source) =>
       Department.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  IconData getIcon() {
+    if (id == 1) {
+      return Icons.code;
+    }
+    return Icons.question_mark;
+  }
 }
 
 class Group {

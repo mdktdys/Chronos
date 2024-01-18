@@ -23,9 +23,9 @@ Teacher getTeacherById(int teacherID) {
   return dat.teachers.where((teacher) => teacher.id == teacherID).first;
 }
 
-Course getCourseById(int CourseID) {
+Course? getCourseById(int CourseID) {
   final dat = GetIt.I.get<Data>();
-  return dat.courses.where((course) => course.id == CourseID).toList().first;
+  return dat.courses.where((course) => course.id == CourseID).toList().firstOrNull;
 }
 
 String getMonthName(int monthNumber) {

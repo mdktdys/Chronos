@@ -26,8 +26,8 @@ class GroupTile extends StatelessWidget {
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                const Icon(
-                  Icons.code_rounded,
+                Icon(
+                  getDepartmentById(group.department).getIcon(),
                   color: Colors.white,
                   size: 36,
                 ),

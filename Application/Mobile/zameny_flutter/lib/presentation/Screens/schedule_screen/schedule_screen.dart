@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
@@ -112,6 +113,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   void _groupSelected(int groupID) {
     setState(() {
+      this.groupIDSeek = groupID;
       GetIt.I.get<Data>().seekGroup = groupID;
       _loadWeekSchedule();
     });
@@ -387,6 +389,7 @@ Widget LessonList(
           zamena.date.isAfter(startDate) &&
           zamena.date.isBefore(startDate.add(const Duration(days: 6))))
       .toList();
+
   return Column(children: [
     zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
     Column(
@@ -566,98 +569,59 @@ class DayScheduleWidget extends StatelessWidget {
               ],
             ),
           ),
-          Column(children: () {
-            if (data.zamenaTypes.any((element) =>
-                element.date.day ==
-                startDate.add(Duration(days: day - 1)).day)) {
-              final ZamenasType dayZamenaType = data.zamenaTypes
-                  .where((element) =>
-                      element.date.day ==
-                      startDate.add(Duration(days: day - 1)).day)
-                  .first;
-
-              if (dayZamenaType.full) {
-                return DayZamenas.map((zamena) {
-                  final course = getCourseById(zamena.courseID);
-                  return CourseTile(
-                    course: course,
-                    lesson: Lesson(
-                        id: -1,
-                        course: course.id,
-                        cabinet: 5,
-                        number: zamena.LessonTimingsID,
-                        teacher: zamena.teacherID,
-                        group: zamena.groupID,
-                        day: day),
-                    swaped: true,
-                  );
-                }).toList();
-              } else {
-                return data.timings.map((para) {
-                  if (DayZamenas.any(
-                      (zamena) => zamena.LessonTimingsID == para)) {
-                    final Zamena zamena = DayZamenas.where(
-                        (zamena) => zamena.LessonTimingsID == para).first;
-                    final course = getCourseById(zamena.courseID);
-                    return CourseTile(
-                      course: course,
-                      lesson: Lesson(
-                          id: -1,
-                          course: course.id,
-                          cabinet: 5,
-                          number: zamena.LessonTimingsID,
-                          teacher: zamena.teacherID,
-                          group: zamena.groupID,
-                          day: day),
-                      swaped: true,
-                    );
-                  } else {
-                    if (DayZamenas.any(
-                        (element) => element.LessonTimingsID == para.number)) {
-                      Zamena zamena = DayZamenas.where((element) =>
-                          element.LessonTimingsID == para.number).first;
-                      final course = getCourseById(zamena.courseID);
-                      return CourseTile(
-                        course: course,
-                        lesson: Lesson(
-                            id: -1,
-                            course: course.id,
-                            cabinet: 5,
-                            number: zamena.LessonTimingsID,
-                            teacher: zamena.teacherID,
-                            group: zamena.groupID,
-                            day: day),
-                        swaped: true,
-                      );
-                    } else {
-                      if (lessons
-                          .any((element) => element.number == para.number)) {
-                        Lesson lesson = lessons
-                            .where((element) => element.number == para.number)
-                            .first;
-                        final course = getCourseById(lesson.course);
-                        return CourseTile(
-                          course: course,
-                          lesson: lesson,
-                          swaped: false,
-                        );
-                      }
-                    }
-                    return Container();
-                  }
-                }).toList();
-              }
+          Column(
+              children: data.timings.map((para) {
+            if (DayZamenas.any((zamena) => zamena.LessonTimingsID == para)) {
+              final Zamena zamena =
+                  DayZamenas.where((zamena) => zamena.LessonTimingsID == para)
+                      .first;
+              final course = getCourseById(zamena.courseID)??Course(id: -1, name: "err", color: "1,0,0,1");
+              return CourseTile(
+                course: course,
+                lesson: Lesson(
+                    id: -1,
+                    course: course.id,
+                    cabinet: 5,
+                    number: zamena.LessonTimingsID,
+                    teacher: zamena.teacherID,
+                    group: zamena.groupID,
+                    day: day),
+                swaped: true,
+              );
             } else {
-              return lessons.map((lesson) {
-                final course = getCourseById(lesson.course);
+              if (DayZamenas.any(
+                  (element) => element.LessonTimingsID == para.number)) {
+                Zamena zamena = DayZamenas.where(
+                    (element) => element.LessonTimingsID == para.number).first;
+                final course = getCourseById(zamena.courseID)??Course(id: -1, name: "err", color: "1,0,0,1");
                 return CourseTile(
                   course: course,
-                  lesson: lesson,
-                  swaped: false,
+                  lesson: Lesson(
+                      id: -1,
+                      course: course.id,
+                      cabinet: 5,
+                      number: zamena.LessonTimingsID,
+                      teacher: zamena.teacherID,
+                      group: zamena.groupID,
+                      day: day),
+                  swaped: true,
                 );
-              }).toList();
+              } else {
+                if (lessons.any((element) => element.number == para.number)) {
+                  Lesson lesson = lessons
+                      .where((element) => element.number == para.number)
+                      .first;
+                  final course = getCourseById(lesson.course)??Course(id: -1, name: "err", color: "1,0,0,1");
+                  return CourseTile(
+                    course: course,
+                    lesson: lesson,
+                    swaped: false,
+                  );
+                }
+              }
+              return Container();
             }
-          }())
+          }).toList())
         ],
       ),
     );

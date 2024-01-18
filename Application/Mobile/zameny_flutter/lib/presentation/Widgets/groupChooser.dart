@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/load_bloc_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/GroupTile.dart';
@@ -114,6 +115,15 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
   void initState() {
     super.initState();
     loadBloc = LoadBloc();
+    _loadGroups();
+  }
+
+  _loadGroups() async {
+    loadBloc.emit(LoadBlocLoading());
+    await Api().loadDepartments();
+    await Api().loadGroups();
+    groups = GetIt.I.get<Data>().groups;
+    loadBloc.emit(LoadBlocLoaded());
   }
 
   @override
@@ -131,6 +141,9 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
             builder: (context, state) {
               if (state is LoadBlocLoaded) {
                 return GroupList(groups: groups, widget: widget);
+              }
+              if (state is LoadBlocLoading){
+                return CircularProgressIndicator();
               }
               return Text("err");
             },

@@ -95,7 +95,7 @@ class CourseTile extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(getCourseById(lesson.course).name,
+                    Text((getCourseById(lesson.course)??Course(id: -1,name: "err",color: "0,0,0,0")).name,
                         style: const TextStyle(
                             color: Colors.white,
                             fontFamily: 'Ubuntu',
