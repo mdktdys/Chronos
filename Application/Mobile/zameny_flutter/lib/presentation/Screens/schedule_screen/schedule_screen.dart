@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
@@ -112,6 +113,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _groupSelected(int groupID) {
+    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup',groupID);
     setState(() {
       this.groupIDSeek = groupID;
       GetIt.I.get<Data>().seekGroup = groupID;
@@ -511,6 +513,8 @@ class DayScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GetIt.I.get<Talker>().debug("${day}");
+
     return Container(
       key: DayKey,
       child: Column(
@@ -571,17 +575,36 @@ class DayScheduleWidget extends StatelessWidget {
           ),
           Column(
               children: data.timings.map((para) {
-            if (DayZamenas.any((zamena) => zamena.LessonTimingsID == para)) {
-              final Zamena zamena =
-                  DayZamenas.where((zamena) => zamena.LessonTimingsID == para)
-                      .first;
-              final course = getCourseById(zamena.courseID)??Course(id: -1, name: "err", color: "1,0,0,1");
+            // if (DayZamenas.any((zamena) => zamena.LessonTimingsID == para)) {
+            //   final Zamena zamena =
+            //       DayZamenas.where((zamena) => zamena.LessonTimingsID == para)
+            //           .first;
+            //   final course = getCourseById(zamena.courseID) ??
+            //       Course(id: -1, name: "err", color: "50,0,0,1");
+            // return CourseTile(
+            //   course: course,
+            //   lesson: Lesson(
+            //       id: -1,
+            //       course: course.id,
+            //       cabinet: zamena.cabinetID,
+            //       number: zamena.LessonTimingsID,
+            //       teacher: zamena.teacherID,
+            //       group: zamena.groupID,
+            //       day: day),
+            //   swaped: true,
+            //this working
+            if (DayZamenas.any(
+                (element) => element.LessonTimingsID == para.number)) {
+              Zamena zamena = DayZamenas.where(
+                  (element) => element.LessonTimingsID == para.number).first;
+              final course = getCourseById(zamena.courseID) ??
+                  Course(id: -1, name: "err2", color: "100,0,0,0");
               return CourseTile(
                 course: course,
                 lesson: Lesson(
                     id: -1,
                     course: course.id,
-                    cabinet: 5,
+                    cabinet: zamena.cabinetID,
                     number: zamena.LessonTimingsID,
                     teacher: zamena.teacherID,
                     group: zamena.groupID,
@@ -589,38 +612,20 @@ class DayScheduleWidget extends StatelessWidget {
                 swaped: true,
               );
             } else {
-              if (DayZamenas.any(
-                  (element) => element.LessonTimingsID == para.number)) {
-                Zamena zamena = DayZamenas.where(
-                    (element) => element.LessonTimingsID == para.number).first;
-                final course = getCourseById(zamena.courseID)??Course(id: -1, name: "err", color: "1,0,0,1");
+              if (lessons.any((element) => element.number == para.number)) {
+                Lesson lesson = lessons
+                    .where((element) => element.number == para.number)
+                    .first;
+                final course = getCourseById(lesson.course) ??
+                    Course(id: -1, name: "err3", color: "50,0,0,1");
                 return CourseTile(
                   course: course,
-                  lesson: Lesson(
-                      id: -1,
-                      course: course.id,
-                      cabinet: 5,
-                      number: zamena.LessonTimingsID,
-                      teacher: zamena.teacherID,
-                      group: zamena.groupID,
-                      day: day),
-                  swaped: true,
+                  lesson: lesson,
+                  swaped: false,
                 );
-              } else {
-                if (lessons.any((element) => element.number == para.number)) {
-                  Lesson lesson = lessons
-                      .where((element) => element.number == para.number)
-                      .first;
-                  final course = getCourseById(lesson.course)??Course(id: -1, name: "err", color: "1,0,0,1");
-                  return CourseTile(
-                    course: course,
-                    lesson: lesson,
-                    swaped: false,
-                  );
-                }
               }
-              return Container();
             }
+            return Container();
           }).toList())
         ],
       ),

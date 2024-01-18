@@ -32,7 +32,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       emit(ScheduleLoading());
       try {
         await Api().loadTeachers();
-        await Api().loadCourses([1, 2, 3, 4, 5, 6, 7]);
+        await Api().loadCourses();
         await Api().loadCabinets();
         await Api().loadTimings();
         await Api().loadGroups();

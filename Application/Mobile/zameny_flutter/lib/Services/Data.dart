@@ -216,6 +216,8 @@ class Zamena {
   int teacherID;
   int courseID;
   int LessonTimingsID;
+  int cabinetID;
+
   DateTime date;
   Zamena({
     required this.id,
@@ -224,6 +226,7 @@ class Zamena {
     required this.courseID,
     required this.LessonTimingsID,
     required this.date,
+    required this.cabinetID
   });
 
   Map<String, dynamic> toMap() {
@@ -243,6 +246,7 @@ class Zamena {
       groupID: map['group'] as int,
       teacherID: map['teacher'] as int,
       courseID: map['course'] as int,
+      cabinetID: map['cabinet'] as int,
       LessonTimingsID: map['number'] as int,
       date: DateTime.parse((map['date'] as String)),
     );
