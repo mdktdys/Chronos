@@ -2,18 +2,16 @@ import 'dart:async';
 
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 
 class Api {
-  
   Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = List.empty();
 
-    data = await client
-        .from('Teachers')
-        .select('*');
+    data = await client.from('Teachers').select('*');
 
     dat.teachers = [];
 
@@ -34,6 +32,7 @@ class Api {
       Cabinet cab = Cabinet.fromMap(element);
       dat.cabinets.add(cab);
     }
+    GetIt.I.get<Talker>().debug(dat.cabinets);
   }
 
   Future<void> loadTimings() async {
@@ -41,7 +40,7 @@ class Api {
     final dat = GetIt.I.get<Data>();
 
     List<dynamic> data = await client.from('scheduleTimetable').select('*');
-
+    dat.timings = [];
     for (var element in data) {
       LessonTimings timing = LessonTimings.fromMap(element);
       dat.timings.add(timing);
@@ -74,7 +73,6 @@ class Api {
       required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
-
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')
@@ -94,29 +92,34 @@ class Api {
   }
 
   Future<void> loadDefaultSchedule({required int groupID}) async {
-    if(groupID == -1){
-      throw Exception("invalid group selected");
-    }
-    final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
+    try {
+      if (groupID == -1) {
+        throw Exception("invalid group selected");
+      }
+      final client = GetIt.I.get<SupabaseClient>();
 
-    List<dynamic> data =
-        await client.from('defaultLessons').select('*').eq('group', groupID);
+      List<dynamic> data =
+          await client.from('defaultLessons').select('*').eq('group', groupID);
 
-    Group group = dat.groups.where((element) => element.id == groupID).first;
-    group.lessons = [];
-    for (var element in data) {
-      Lesson lesson = Lesson.fromMap(element);
-      group.lessons.add(lesson);
+      Group group = dat.groups.where((element) => element.id == groupID).first;
+      group.lessons = [];
+      for (var element in data) {
+        Lesson lesson = Lesson.fromMap(element);
+        group.lessons.add(lesson);
+      }
+    } catch (err) {
+      Group group = dat.groups.where((element) => element.id == groupID).first;
+      group.lessons = [];
     }
   }
 
-  Future<void> loadCourses(List<int> coursesID) async {
+  Future<void> loadCourses() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
     List<dynamic> data =
-        await client.from('Courses').select('*').in_('id', coursesID);
+        await client.from('Courses').select('*');
 
     dat.courses = [];
     for (var element in data) {

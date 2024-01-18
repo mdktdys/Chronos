@@ -32,14 +32,14 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       emit(ScheduleLoading());
       try {
         await Api().loadTeachers();
-        await Api().loadCourses([1, 2, 3, 4, 5, 6, 7]);
+        await Api().loadCourses();
         await Api().loadCabinets();
         await Api().loadTimings();
         await Api().loadGroups();
         await Api().loadDepartments();
-        await Api().loadDefaultSchedule(groupID: event.groupID);
+        //await Api().loadDefaultSchedule(groupID: event.groupID);
         await Api().loadZamenas(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
-        await Api().loadZamenasTypes(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+        //await Api().loadZamenasTypes(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded());
       } catch (error) {
         GetIt.I.get<Talker>().critical(error);

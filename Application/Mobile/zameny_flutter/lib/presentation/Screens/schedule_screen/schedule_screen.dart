@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
@@ -111,7 +113,9 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _groupSelected(int groupID) {
+    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup',groupID);
     setState(() {
+      this.groupIDSeek = groupID;
       GetIt.I.get<Data>().seekGroup = groupID;
       _loadWeekSchedule();
     });
@@ -123,91 +127,90 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       create: (context) => bloc,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.background,
-        body: SafeArea(
-          child: RefreshIndicator(
-            onRefresh: () async => bloc.add(FetchData(
-                groupID: groupIDSeek,
-                dateStart: getStartOfWeek(NavigationDate),
-                dateEnd: getEndOfWeek(NavigationDate))),
-            child: CustomScrollView(
-              controller: scrollController,
-              slivers: [
-                SliverToBoxAdapter(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                    child: Column(
-                      children: [
-                        const ScheduleHeader(),
-                        const SizedBox(height: 10),
-                        GroupChooser(onGroupSelected: _groupSelected),
-                        const SizedBox(height: 10),
-                        DateHeader(
-                          parentWidget: this,
+        body: RefreshIndicator(
+          onRefresh: () async => bloc.add(FetchData(
+              groupID: groupIDSeek,
+              dateStart: getStartOfWeek(NavigationDate),
+              dateEnd: getEndOfWeek(NavigationDate))),
+          child: CustomScrollView(
+            controller: scrollController,
+            slivers: [
+              SliverToBoxAdapter(
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                  child: Column(
+                    children: [
+                      const SizedBox(height: 10),
+                      const ScheduleHeader(),
+                      const SizedBox(height: 10),
+                      GroupChooser(onGroupSelected: _groupSelected),
+                      const SizedBox(height: 10),
+                      DateHeader(
+                        parentWidget: this,
+                        todayWeek: todayWeek,
+                        currentWeek: currentWeek,
+                      ),
+                      const SizedBox(height: 10),
+                    ],
+                  ),
+                ),
+              ),
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverToBoxAdapter(
+                  child: BlocBuilder<ScheduleBloc, ScheduleState>(
+                    builder: (context, state) {
+                      if (state is ScheduleLoaded) {
+                        return LessonList(
+                          groupID: groupIDSeek,
+                          weekDate: NavigationDate,
                           todayWeek: todayWeek,
+                          DaysKeys: keys,
                           currentWeek: currentWeek,
-                        ),
-                        const SizedBox(height: 10),
-                      ],
-                    ),
-                  ),
-                ),
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverToBoxAdapter(
-                    child: BlocBuilder<ScheduleBloc, ScheduleState>(
-                      builder: (context, state) {
-                        if (state is ScheduleLoaded) {
-                          return LessonList(
-                            groupID: groupIDSeek,
-                            weekDate: NavigationDate,
-                            todayWeek: todayWeek,
-                            DaysKeys: keys,
-                            currentWeek: currentWeek,
-                          );
-                        } else if (state is ScheduleFailedLoading) {
-                          return FailedLoadWidget(
-                            funcReload: _loadWeekSchedule,
-                          );
-                        } else if (state is ScheduleLoading) {
-                          return SizedBox(
-                            height: 550,
-                            child: Center(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                      height: 200,
-                                      child: Lottie.asset(
-                                          'assets/lottie/loading.json')),
-                                  const Text(
-                                    "Loading...",
-                                    style: TextStyle(
-                                        color: Colors.blue,
-                                        fontFamily: 'Ubuntu',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 26),
-                                  )
-                                ],
-                              ),
+                        );
+                      } else if (state is ScheduleFailedLoading) {
+                        return FailedLoadWidget(
+                          funcReload: _loadWeekSchedule,
+                        );
+                      } else if (state is ScheduleLoading) {
+                        return SizedBox(
+                          height: 550,
+                          child: Center(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(
+                                    height: 200,
+                                    child: Lottie.asset(
+                                        'assets/lottie/loading.json')),
+                                const Text(
+                                  "Loading...",
+                                  style: TextStyle(
+                                      color: Colors.blue,
+                                      fontFamily: 'Ubuntu',
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 26),
+                                )
+                              ],
                             ),
-                          );
-                        } else if (state is ScheduleInitial) {
-                          return const Text("Choose group");
-                        } else {
-                          return const SizedBox(); // or some default widget
-                        }
-                      },
-                    ),
+                          ),
+                        );
+                      } else if (state is ScheduleInitial) {
+                        return const Text("Choose group");
+                      } else {
+                        return const SizedBox(); // or some default widget
+                      }
+                    },
                   ),
                 ),
-                const SliverToBoxAdapter(
-                  child: SizedBox(
-                    height: 80,
-                  ),
-                )
-              ],
-            ),
+              ),
+              const SliverToBoxAdapter(
+                child: SizedBox(
+                  height: 80,
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -388,6 +391,7 @@ Widget LessonList(
           zamena.date.isAfter(startDate) &&
           zamena.date.isBefore(startDate.add(const Duration(days: 6))))
       .toList();
+
   return Column(children: [
     zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
     Column(
@@ -509,6 +513,8 @@ class DayScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    GetIt.I.get<Talker>().debug("${day}");
+
     return Container(
       key: DayKey,
       child: Column(
@@ -567,98 +573,60 @@ class DayScheduleWidget extends StatelessWidget {
               ],
             ),
           ),
-          Column(children: () {
-            if (data.zamenaTypes.any((element) =>
-                element.date.day ==
-                startDate.add(Duration(days: day - 1)).day)) {
-              final ZamenasType dayZamenaType = data.zamenaTypes
-                  .where((element) =>
-                      element.date.day ==
-                      startDate.add(Duration(days: day - 1)).day)
-                  .first;
-
-              if (dayZamenaType.full) {
-                return DayZamenas.map((zamena) {
-                  final course = getCourseById(zamena.courseID);
-                  return CourseTile(
-                    course: course,
-                    lesson: Lesson(
-                        id: -1,
-                        course: course.id,
-                        cabinet: 5,
-                        number: zamena.LessonTimingsID,
-                        teacher: zamena.teacherID,
-                        group: zamena.groupID,
-                        day: day),
-                    swaped: true,
-                  );
-                }).toList();
-              } else {
-                return data.timings.map((para) {
-                  if (DayZamenas.any(
-                      (zamena) => zamena.LessonTimingsID == para)) {
-                    final Zamena zamena = DayZamenas.where(
-                        (zamena) => zamena.LessonTimingsID == para).first;
-                    final course = getCourseById(zamena.courseID);
-                    return CourseTile(
-                      course: course,
-                      lesson: Lesson(
-                          id: -1,
-                          course: course.id,
-                          cabinet: 5,
-                          number: zamena.LessonTimingsID,
-                          teacher: zamena.teacherID,
-                          group: zamena.groupID,
-                          day: day),
-                      swaped: true,
-                    );
-                  } else {
-                    if (DayZamenas.any(
-                        (element) => element.LessonTimingsID == para.number)) {
-                      Zamena zamena = DayZamenas.where((element) =>
-                          element.LessonTimingsID == para.number).first;
-                      final course = getCourseById(zamena.courseID);
-                      return CourseTile(
-                        course: course,
-                        lesson: Lesson(
-                            id: -1,
-                            course: course.id,
-                            cabinet: 5,
-                            number: zamena.LessonTimingsID,
-                            teacher: zamena.teacherID,
-                            group: zamena.groupID,
-                            day: day),
-                        swaped: true,
-                      );
-                    } else {
-                      if (lessons
-                          .any((element) => element.number == para.number)) {
-                        Lesson lesson = lessons
-                            .where((element) => element.number == para.number)
-                            .first;
-                        final course = getCourseById(lesson.course);
-                        return CourseTile(
-                          course: course,
-                          lesson: lesson,
-                          swaped: false,
-                        );
-                      }
-                    }
-                    return Container();
-                  }
-                }).toList();
-              }
+          Column(
+              children: data.timings.map((para) {
+            // if (DayZamenas.any((zamena) => zamena.LessonTimingsID == para)) {
+            //   final Zamena zamena =
+            //       DayZamenas.where((zamena) => zamena.LessonTimingsID == para)
+            //           .first;
+            //   final course = getCourseById(zamena.courseID) ??
+            //       Course(id: -1, name: "err", color: "50,0,0,1");
+            // return CourseTile(
+            //   course: course,
+            //   lesson: Lesson(
+            //       id: -1,
+            //       course: course.id,
+            //       cabinet: zamena.cabinetID,
+            //       number: zamena.LessonTimingsID,
+            //       teacher: zamena.teacherID,
+            //       group: zamena.groupID,
+            //       day: day),
+            //   swaped: true,
+            //this working
+            if (DayZamenas.any(
+                (element) => element.LessonTimingsID == para.number)) {
+              Zamena zamena = DayZamenas.where(
+                  (element) => element.LessonTimingsID == para.number).first;
+              final course = getCourseById(zamena.courseID) ??
+                  Course(id: -1, name: "err2", color: "100,0,0,0");
+              return CourseTile(
+                course: course,
+                lesson: Lesson(
+                    id: -1,
+                    course: course.id,
+                    cabinet: zamena.cabinetID,
+                    number: zamena.LessonTimingsID,
+                    teacher: zamena.teacherID,
+                    group: zamena.groupID,
+                    day: day),
+                swaped: true,
+              );
             } else {
-              return lessons.map((lesson) {
-                final course = getCourseById(lesson.course);
+              if (lessons.any((element) => element.number == para.number)) {
+                Lesson lesson = lessons
+                    .where((element) => element.number == para.number)
+                    .first;
+                final course = getCourseById(lesson.course) ??
+                    Course(id: -1, name: "err3", color: "50,0,0,1");
                 return CourseTile(
                   course: course,
                   lesson: lesson,
                   swaped: false,
                 );
-              }).toList();
+              }
             }
-          }())
+            return Container();
+          }).toList())
         ],
       ),
     );

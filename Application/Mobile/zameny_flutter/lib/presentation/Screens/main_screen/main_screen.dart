@@ -42,51 +42,51 @@ class _MainScreenState extends State<MainScreen> {
         Align(
             alignment: Alignment.bottomCenter,
             child: Container(
-              decoration: BoxDecoration(
-                  color: Colors.black.withOpacity(0.1),
-                  border: const Border(
-                      top: BorderSide(
-                          color: Color.fromARGB(255, 30, 118, 233), width: 1))),
-              child: ClipRect(
-                child: BackdropFilter(
-                  filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceAround,
-                    children: [
-                      bottomNavigationItem(
-                        index: 0,
-                        onTap: _setPage,
-                        icon: Icons.school_rounded,
-                        text: "Schedule",
-                      ),
-                      bottomNavigationItem(
-                        index: 1,
-                        onTap: _setPage,
-                        icon: Icons.code_rounded,
-                        text: "Exams",
-                      ),
-                      bottomNavigationItem(
-                        index: 2,
-                        onTap: _setPage,
-                        icon: Icons.settings,
-                        text: "Settings",
-                      ),
-                    ],
+                decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.1),
+                    border: const Border(
+                        top: BorderSide(
+                            color: Color.fromARGB(255, 30, 118, 233),
+                            width: 1))),
+                child: ClipRect(
+                  child: BackdropFilter(
+                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: [
+                        BottomNavigationItem(
+                          index: 0,
+                          onTap: _setPage,
+                          icon: Icons.school_rounded,
+                          text: "Schedule",
+                        ),
+                        BottomNavigationItem(
+                          index: 1,
+                          onTap: _setPage,
+                          icon: Icons.code_rounded,
+                          text: "Exams",
+                        ),
+                        BottomNavigationItem(
+                          index: 2,
+                          onTap: _setPage,
+                          icon: Icons.settings,
+                          text: "Settings",
+                        ),
+                      ],
+                    ),
                   ),
-                ),
-              ),
-            )),
+                ))),
       ]),
     );
   }
 }
 
-class bottomNavigationItem extends StatelessWidget {
+class BottomNavigationItem extends StatelessWidget {
   final int index;
   final Function onTap;
   final IconData icon;
   final String text;
-  const bottomNavigationItem(
+  const BottomNavigationItem(
       {super.key,
       required this.index,
       required this.onTap,
