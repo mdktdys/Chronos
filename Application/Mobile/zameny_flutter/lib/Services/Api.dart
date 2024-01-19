@@ -4,6 +4,7 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
 
 class Api {
   Future<void> loadTeachers() async {

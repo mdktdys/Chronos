@@ -6,7 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
-import 'package:zameny_flutter/Services/blocs/schedule_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
@@ -25,13 +25,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   late final todayWeek;
   var currentWeek;
   late final ScrollController scrollController;
-  final bloc = ScheduleBloc();
   late int groupIDSeek;
-
-  List<GlobalKey> keys = List.generate(
-    6,
-    (index) => GlobalKey(debugLabel: "$index"),
-  );
 
   @override
   void initState() {
@@ -57,11 +51,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     if (groupIDSeek != -1) {
-      bloc.add(FetchData(
-        groupID: groupIDSeek,
-        dateStart: startOfWeek,
-        dateEnd: endOfWeek,
-      ));
+      context.read<ScheduleBloc>().add(FetchData(
+            groupID: groupIDSeek,
+            dateStart: startOfWeek,
+            dateEnd: endOfWeek,
+          ));
     }
   }
 
@@ -75,11 +69,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    bloc.add(FetchData(
-      groupID: groupIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek,
-    ));
+    context.read<ScheduleBloc>().add(FetchData(
+          groupID: groupIDSeek,
+          dateStart: startOfWeek,
+          dateEnd: endOfWeek,
+        ));
   }
 
   void _loadWeekSchedule() async {
@@ -93,11 +87,11 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    bloc.add(FetchData(
-      groupID: groupIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek,
-    ));
+    context.read<ScheduleBloc>().add(FetchData(
+          groupID: groupIDSeek,
+          dateStart: startOfWeek,
+          dateEnd: endOfWeek,
+        ));
   }
 
   DateTime getStartOfWeek(DateTime week) {
@@ -113,7 +107,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
   }
 
   void _groupSelected(int groupID) {
-    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup',groupID);
+    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
     setState(() {
       this.groupIDSeek = groupID;
       GetIt.I.get<Data>().seekGroup = groupID;
@@ -123,96 +117,89 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => bloc,
-      child: Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
-        body: RefreshIndicator(
-          onRefresh: () async => bloc.add(FetchData(
-              groupID: groupIDSeek,
-              dateStart: getStartOfWeek(NavigationDate),
-              dateEnd: getEndOfWeek(NavigationDate))),
-          child: CustomScrollView(
-            controller: scrollController,
-            slivers: [
-              SliverToBoxAdapter(
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(
-                    children: [
-                      const SizedBox(height: 10),
-                      const ScheduleHeader(),
-                      const SizedBox(height: 10),
-                      GroupChooser(onGroupSelected: _groupSelected),
-                      const SizedBox(height: 10),
-                      DateHeader(
-                        parentWidget: this,
-                        todayWeek: todayWeek,
-                        currentWeek: currentWeek,
-                      ),
-                      const SizedBox(height: 10),
-                    ],
+    return RefreshIndicator(
+      onRefresh: () async => context.read<ScheduleBloc>().add(FetchData(
+          groupID: groupIDSeek,
+          dateStart: getStartOfWeek(NavigationDate),
+          dateEnd: getEndOfWeek(NavigationDate))),
+      child: CustomScrollView(
+        controller: scrollController,
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  GroupChooser(onGroupSelected: _groupSelected),
+                  const SizedBox(height: 10),
+                  DateHeader(
+                    parentWidget: this,
+                    todayWeek: todayWeek,
+                    currentWeek: currentWeek,
                   ),
-                ),
+                  const SizedBox(height: 10),
+                ],
               ),
-              SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 20),
-                sliver: SliverToBoxAdapter(
-                  child: BlocBuilder<ScheduleBloc, ScheduleState>(
-                    builder: (context, state) {
-                      if (state is ScheduleLoaded) {
-                        return LessonList(
-                          groupID: groupIDSeek,
-                          weekDate: NavigationDate,
-                          todayWeek: todayWeek,
-                          DaysKeys: keys,
-                          currentWeek: currentWeek,
-                        );
-                      } else if (state is ScheduleFailedLoading) {
-                        return FailedLoadWidget(
-                          funcReload: _loadWeekSchedule,
-                        );
-                      } else if (state is ScheduleLoading) {
-                        return SizedBox(
-                          height: 550,
-                          child: Center(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
-                              mainAxisAlignment: MainAxisAlignment.center,
-                              children: [
-                                SizedBox(
-                                    height: 200,
-                                    child: Lottie.asset(
-                                        'assets/lottie/loading.json')),
-                                const Text(
-                                  "Loading...",
-                                  style: TextStyle(
-                                      color: Colors.blue,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 26),
-                                )
-                              ],
-                            ),
-                          ),
-                        );
-                      } else if (state is ScheduleInitial) {
-                        return const Text("Choose group");
-                      } else {
-                        return const SizedBox(); // or some default widget
-                      }
-                    },
-                  ),
-                ),
-              ),
-              const SliverToBoxAdapter(
-                child: SizedBox(
-                  height: 80,
-                ),
-              )
-            ],
+            ),
           ),
-        ),
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: SliverToBoxAdapter(
+              child: BlocBuilder<ScheduleBloc, ScheduleState>(
+                builder: (context, state) {
+                  if (state is ScheduleLoaded) {
+                    return LessonList(
+                      groupID: groupIDSeek,
+                      weekDate: NavigationDate,
+                      todayWeek: todayWeek,
+                      currentWeek: currentWeek,
+                    );
+                  } else if (state is ScheduleFailedLoading) {
+                    return FailedLoadWidget(
+                      funcReload: _loadWeekSchedule,
+                    );
+                  } else if (state is ScheduleLoading) {
+                    return SizedBox(
+                      height: 550,
+                      child: Center(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                                height: 200,
+                                child:
+                                    Lottie.asset('assets/lottie/loading.json')),
+                            const Text(
+                              "Loading...",
+                              style: TextStyle(
+                                  color: Colors.blue,
+                                  fontFamily: 'Ubuntu',
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 26),
+                            )
+                          ],
+                        ),
+                      ),
+                    );
+                  } else if (state is ScheduleInitial) {
+                    return const Text("Choose group");
+                  } else {
+                    return const SizedBox(); // or some default widget
+                  }
+                },
+              ),
+            ),
+          ),
+          const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 80,
+            ),
+          )
+        ],
       ),
     );
   }
@@ -377,8 +364,7 @@ DateTime getFirstDayOfWeek(int year, int week) {
 }
 
 Widget LessonList(
-    {required List<Key> DaysKeys,
-    required DateTime weekDate,
+    {required DateTime weekDate,
     required int groupID,
     required todayWeek,
     required currentWeek}) {
@@ -395,8 +381,8 @@ Widget LessonList(
   return Column(children: [
     zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
     Column(
-        children: ScheduleList(data, groupID, zamenas, DaysKeys, startDate,
-            currentDay, todayWeek, currentWeek)),
+        children: ScheduleList(data, groupID, zamenas, startDate, currentDay,
+            todayWeek, currentWeek)),
   ]);
 }
 
@@ -447,15 +433,8 @@ class SearchBannerMessageWidget extends StatelessWidget {
   }
 }
 
-List<Widget> ScheduleList(
-    Data data,
-    int groupID,
-    List<Zamena> zamenas,
-    List<Key> DaysKeys,
-    DateTime startDate,
-    int currentDay,
-    todayWeek,
-    currentWeek) {
+List<Widget> ScheduleList(Data data, int groupID, List<Zamena> zamenas,
+    DateTime startDate, int currentDay, todayWeek, currentWeek) {
   return List.generate(6, (iter) {
     final day = iter + 1;
 
@@ -476,7 +455,6 @@ List<Widget> ScheduleList(
       day: day,
       DayZamenas: DayZamenas,
       lessons: lessons,
-      DayKey: DaysKeys[iter],
       startDate: startDate,
       data: data,
       currentDay: currentDay,
@@ -487,7 +465,6 @@ List<Widget> ScheduleList(
 }
 
 class DayScheduleWidget extends StatelessWidget {
-  final DayKey;
   final DateTime startDate;
   final int currentDay;
   final int currentWeek;
@@ -499,7 +476,6 @@ class DayScheduleWidget extends StatelessWidget {
     required this.day,
     required this.DayZamenas,
     required this.lessons,
-    required this.DayKey,
     required this.startDate,
     required this.currentDay,
     required this.currentWeek,
@@ -516,7 +492,6 @@ class DayScheduleWidget extends StatelessWidget {
     GetIt.I.get<Talker>().debug("${day}");
 
     return Container(
-      key: DayKey,
       child: Column(
         children: [
           Align(

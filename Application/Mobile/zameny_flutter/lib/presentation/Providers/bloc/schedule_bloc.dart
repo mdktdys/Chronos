@@ -15,6 +15,14 @@ final class FetchData extends ScheduleEvent {
       {required this.groupID, required this.dateStart, required this.dateEnd});
 }
 
+final class LoadWeek extends ScheduleEvent {
+  final int groupID;
+  final DateTime dateStart;
+  final DateTime dateEnd;
+  LoadWeek(
+      {required this.groupID, required this.dateStart, required this.dateEnd});
+}
+
 @immutable
 sealed class ScheduleState {}
 
@@ -28,6 +36,15 @@ final class ScheduleLoading extends ScheduleState {}
 
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc() : super(ScheduleInitial()) {
+    on<LoadWeek>((event, emit) async {
+      emit(ScheduleLoading());
+      try{
+
+      }catch (error) {
+        GetIt.I.get<Talker>().critical(error);
+        emit(ScheduleFailedLoading());
+      }
+    });
     on<FetchData>((event, emit) async {
       emit(ScheduleLoading());
       try {
@@ -38,7 +55,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api().loadGroups();
         await Api().loadDepartments();
         //await Api().loadDefaultSchedule(groupID: event.groupID);
-        await Api().loadZamenas(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+        await Api().loadZamenas(
+            groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         //await Api().loadZamenasTypes(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded());
       } catch (error) {

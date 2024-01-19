@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
@@ -20,7 +21,13 @@ class Data {
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
   }
+
+  loadFromHive() async {
+    //this.groups = await Hive.openBox('Groups');
+  }
 }
+
+
 
 class Department {
   int id;
@@ -57,33 +64,7 @@ class Department {
   }
 }
 
-class Group {
-  int id;
-  String name;
-  int department;
-  List<Lesson> lessons = [];
-  Group({required this.id, required this.name, required this.department});
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-    };
-  }
-
-  factory Group.fromMap(Map<String, dynamic> map) {
-    return Group(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      department: map['department'] as int,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Group.fromJson(String source) =>
-      Group.fromMap(json.decode(source) as Map<String, dynamic>);
-}
 
 class LessonTimings {
   int number;
