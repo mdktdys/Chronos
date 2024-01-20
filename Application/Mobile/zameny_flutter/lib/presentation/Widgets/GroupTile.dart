@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 
 class GroupTile extends StatelessWidget {

@@ -28,6 +28,15 @@ Course? getCourseById(int CourseID) {
   return dat.courses.where((course) => course.id == CourseID).toList().firstOrNull;
 }
 
+DateTime getFirstDayOfWeek(int year, int week) {
+  DateTime januaryFirst = DateTime(year, 1, 1);
+  int firstMondayOffset = (DateTime.monday - januaryFirst.weekday + 7) % 7;
+  DateTime firstMonday = januaryFirst.add(Duration(days: firstMondayOffset));
+  int daysToAdd = (week - 1) * 7;
+  return firstMonday.add(Duration(days: daysToAdd));
+}
+
+
 String getMonthName(int monthNumber) {
   List<String> months = [
     "January", "February", "March", "April", "May", "June",

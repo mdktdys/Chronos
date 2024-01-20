@@ -4,8 +4,49 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
+import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 
 class Api {
+  Future<void> loadZamenaFileLinks(
+      {required DateTime start, required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+
+    List<dynamic> data = await client
+        .from('ZamenaFileLinks')
+        .select('id,link,date')
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    dat.zamenaFileLinks = [];
+    for (var element in data) {
+      ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+      dat.zamenaFileLinks.add(zamenaLink);
+    }
+    GetIt.I.get<Talker>().debug(dat.cabinets);
+  }
+
+  Future<List<Lesson>> loadWeekSchedule(
+      {required int groupID,required DateTime start, required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    List<dynamic> data = await client
+        .from('Paras')
+        .select('id,group,number,course,teacher,cabinet,date').eq('group', groupID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    
+    List<Lesson> weekLessons = [];
+    for (var element in data) {
+      Lesson lesson = Lesson.fromMap(element);
+      weekLessons.add(lesson);
+    }
+    GetIt.I.get<Talker>().good(data);
+    return weekLessons;
+  }
+
   Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
@@ -118,8 +159,7 @@ class Api {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
-    List<dynamic> data =
-        await client.from('Courses').select('*');
+    List<dynamic> data = await client.from('Courses').select('*');
 
     dat.courses = [];
     for (var element in data) {

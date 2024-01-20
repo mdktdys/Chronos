@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
+import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
@@ -14,13 +16,20 @@ class Data {
   List<Department> departments = [];
   List<Zamena> zamenas = [];
   List<ZamenasType> zamenaTypes = [];
+  List<ZamenaFileLink> zamenaFileLinks = [];
 
   int? seekGroup = -1;
 
   Data.fromShared(context) {
-    seekGroup = GetIt.I.get<SharedPreferences>().getInt('seekGroup') ?? -1;
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
+  }
+
+  loadFromHive() async {
+    //this.groups = await Hive.openBox('Groups');
   }
 }
+
+
 
 class Department {
   int id;
@@ -57,33 +66,7 @@ class Department {
   }
 }
 
-class Group {
-  int id;
-  String name;
-  int department;
-  List<Lesson> lessons = [];
-  Group({required this.id, required this.name, required this.department});
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'name': name,
-    };
-  }
-
-  factory Group.fromMap(Map<String, dynamic> map) {
-    return Group(
-      id: map['id'] as int,
-      name: map['name'] as String,
-      department: map['department'] as int,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Group.fromJson(String source) =>
-      Group.fromMap(json.decode(source) as Map<String, dynamic>);
-}
 
 class LessonTimings {
   int number;
@@ -290,7 +273,7 @@ class Lesson {
   int id;
   int number;
   int group;
-  int day;
+  DateTime date;
   int course;
   int teacher;
   int cabinet;
@@ -299,7 +282,7 @@ class Lesson {
     required this.id,
     required this.number,
     required this.group,
-    required this.day,
+    required this.date,
     required this.course,
     required this.teacher,
     required this.cabinet,
@@ -310,7 +293,7 @@ class Lesson {
       'id': id,
       'number': number,
       'group': group,
-      'day': day,
+      'date': date,
       'course': course,
       'teacher': teacher,
       'cabinet': cabinet,
@@ -322,7 +305,7 @@ class Lesson {
       id: map['id'] as int,
       number: map['number'] as int,
       group: map['group'] as int,
-      day: map['day'] as int,
+      date: DateTime.parse(map['date']),
       course: map['course'] as int,
       teacher: map['teacher'] as int,
       cabinet: map['cabinet'] as int,

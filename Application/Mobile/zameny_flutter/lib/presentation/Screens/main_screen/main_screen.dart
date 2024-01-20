@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 
 import '../exams_screen/exams_screen/exams_screen.dart';
 import '../schedule_screen/schedule_screen.dart';
@@ -20,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     pageController = PageController(initialPage: 0);
-
+    context.read<ScheduleBloc>().add(LoadInitial());
     super.initState();
   }
 
@@ -34,49 +36,51 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
-      body: Stack(children: [
-        PageView(
-          controller: pageController,
-          children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
-        ),
-        Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-                decoration: BoxDecoration(
-                    color: Colors.black.withOpacity(0.1),
-                    border: const Border(
-                        top: BorderSide(
-                            color: Color.fromARGB(255, 30, 118, 233),
-                            width: 1))),
-                child: ClipRect(
-                  child: BackdropFilter(
-                    filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceAround,
-                      children: [
-                        BottomNavigationItem(
-                          index: 0,
-                          onTap: _setPage,
-                          icon: Icons.school_rounded,
-                          text: "Schedule",
-                        ),
-                        BottomNavigationItem(
-                          index: 1,
-                          onTap: _setPage,
-                          icon: Icons.code_rounded,
-                          text: "Exams",
-                        ),
-                        BottomNavigationItem(
-                          index: 2,
-                          onTap: _setPage,
-                          icon: Icons.settings,
-                          text: "Settings",
-                        ),
-                      ],
+      body: SafeArea(
+        child: Stack(children: [
+          PageView(
+            controller: pageController,
+            children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
+          ),
+          Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                  decoration: BoxDecoration(
+                      color: Colors.black.withOpacity(0.1),
+                      border: const Border(
+                          top: BorderSide(
+                              color: Color.fromARGB(255, 30, 118, 233),
+                              width: 1))),
+                  child: ClipRect(
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          BottomNavigationItem(
+                            index: 0,
+                            onTap: _setPage,
+                            icon: Icons.school_rounded,
+                            text: "Schedule",
+                          ),
+                          BottomNavigationItem(
+                            index: 1,
+                            onTap: _setPage,
+                            icon: Icons.code_rounded,
+                            text: "Exams",
+                          ),
+                          BottomNavigationItem(
+                            index: 2,
+                            onTap: _setPage,
+                            icon: Icons.settings,
+                            text: "Settings",
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
-                ))),
-      ]),
+                  ))),
+        ]),
+      ),
     );
   }
 }

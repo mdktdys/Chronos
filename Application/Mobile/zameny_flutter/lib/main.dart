@@ -1,17 +1,22 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart' as pr;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await Supabase.initialize(  
+  await Supabase.initialize(
     url: 'https://ojbsikxdqcbuvamygezd.supabase.co',
     anonKey:
         'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYnNpa3hkcWNidXZhbXlnZXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDE4MDY4OTgsImV4cCI6MjAxNzM4Mjg5OH0.jV7YiBEePGjybsL8qqXWeQ9PX8_3yctpq14Gfwh39JM',
@@ -53,10 +58,15 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       builder: (context, child) {
+        SystemChrome.setSystemUIOverlayStyle(
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: pr.Provider.of<ThemeProvider>(context).theme,
-          home: const MainScreen(),
+          home: BlocProvider(
+            create: (context) => ScheduleBloc(),
+            child: const MainScreen(),
+          ),
         );
       },
     );
