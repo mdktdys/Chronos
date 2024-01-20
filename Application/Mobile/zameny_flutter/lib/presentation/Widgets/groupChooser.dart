@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,7 +40,7 @@ class _GroupChooserState extends State<GroupChooser> {
         List<Group> groups = data.groups;
         groups.sort((a, b) => a.name.compareTo(b.name));
         await ShowGroupChooserBottomSheet(
-            context: context, onGroupSelected: this.widget.onGroupSelected);
+            context: context, onGroupSelected: widget.onGroupSelected);
       },
       child: Container(
         width: double.infinity,
@@ -79,16 +78,16 @@ class _GroupChooserState extends State<GroupChooser> {
                   BlocBuilder<ScheduleBloc, ScheduleState>(
                     builder: (context, state) {
                       if (state is ScheduleInitial) {
-                        return Text("Wait for loading",
-                            style: const TextStyle(
+                        return const Text("Wait for loading",
+                            style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize: 18));
                       }
                       if (state is ScheduleFailedLoading) {
-                        return Text("Failed loading",
-                            style: const TextStyle(
+                        return const Text("Failed loading",
+                            style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
@@ -108,14 +107,14 @@ class _GroupChooserState extends State<GroupChooser> {
                         );
                       }
                       if (state is ScheduleLoading) {
-                        return Text("Loading...",
-                            style: const TextStyle(
+                        return const Text("Loading...",
+                            style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
                                 fontSize: 18));
                       }
-                      return Text("");
+                      return const Text("");
                     },
                   )
                 ])
@@ -200,7 +199,7 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
                     });
                   },
                 ),
-                SizedBox(height: 5,),
+                const SizedBox(height: 5,),
                 BlocBuilder<LoadBloc, LoadBlocState>(
                   bloc: loadBloc,
                   builder: (context, state) {
@@ -211,9 +210,9 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
                           filter: _searchController.text);
                     }
                     if (state is LoadBlocLoading) {
-                      return CircularProgressIndicator();
+                      return const CircularProgressIndicator();
                     }
-                    return Text("err");
+                    return const Text("err");
                   },
                 ),
               ],
