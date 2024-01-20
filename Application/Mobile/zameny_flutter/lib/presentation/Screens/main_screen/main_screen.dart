@@ -114,7 +114,7 @@ class _MainScreenState extends State<MainScreen> {
                             onTap: () {
                               Navigator.of(context).pop();
                               OtaUpdate()
-                                  .execute(update!.link,
+                                  .execute(update.link,
                                       destinationFilename:
                                           'flutter_hello_world.apk')
                                   .listen((event) {});
