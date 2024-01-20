@@ -24,14 +24,13 @@ jobs:
 
       - run: flutter pub get
       - run: flutter build apk --release --split-per-abi
+      - run: flutter build apk --release
 
       - name: Push to Releases
         uses: ncipollo/release-action@v1
         with:
           artifacts: |
-            Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/app-armeabi-v7a-release.apk
-            Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/app-arm64-v8a-release.apk
-            Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/app-x86_64-release.apk
+            Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/*.apk
           tag: ${{ github.run_number }}
           token: ${{ secrets.TOKEN }} 
 
