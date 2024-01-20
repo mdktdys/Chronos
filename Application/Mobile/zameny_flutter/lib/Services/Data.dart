@@ -8,6 +8,8 @@ import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
+  final VERSION = 1;
+
   List<Teacher> teachers = [];
   List<Group> groups = [];
   List<Course> courses = [];
@@ -22,10 +24,6 @@ class Data {
 
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
-  }
-
-  loadFromHive() async {
-    //this.groups = await Hive.openBox('Groups');
   }
 }
 
@@ -61,6 +59,18 @@ class Department {
   IconData getIcon() {
     if (id == 1) {
       return Icons.code;
+    }
+    if (id == 2) {
+      return Icons.architecture;
+    }
+    if (id == 5) {
+      return Icons.bar_chart;
+    }
+    if (id == 4) {
+      return Icons.balance_outlined;
+    }
+     if (id == 3) {
+      return Icons.child_friendly;
     }
     return Icons.question_mark;
   }

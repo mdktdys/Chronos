@@ -2,6 +2,10 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
+import 'package:ota_update/ota_update.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 
 import '../exams_screen/exams_screen/exams_screen.dart';
@@ -24,6 +28,125 @@ class _MainScreenState extends State<MainScreen> {
     pageController = PageController(initialPage: 0);
     context.read<ScheduleBloc>().add(LoadInitial());
     super.initState();
+
+    _checkupdate();
+  }
+
+  _checkupdate() async {
+    Update? update = await Api().checkUpdate();
+    if (update != null) {
+      showModalBottomSheet(
+          backgroundColor: Theme.of(context).colorScheme.background,
+          context: context,
+          builder: (context) {
+            return Container(
+              padding: EdgeInsets.all(15),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                      padding: EdgeInsets.all(2),
+                      child: Column(
+                        children: [
+                          Icon(
+                            Icons.construction_rounded,
+                            color: Theme.of(context).colorScheme.primary,
+                            size: 80,
+                            shadows: [
+                              Shadow(
+                                  color: Theme.of(context).colorScheme.primary,
+                                  blurRadius: 12)
+                            ],
+                          ),
+                          Text(
+                            "New update!",
+                            style: TextStyle(
+                                fontSize: 30,
+                                fontFamily: 'Ubuntu',
+                                color: Theme.of(context).colorScheme.secondary),
+                          ),
+                        ],
+                      )),
+                  Expanded(
+                      child: Container(
+                          width: double.infinity,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.shade100.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(10)),
+                          child: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Text(
+                              update.desc,
+                              style:
+                                  TextStyle(fontFamily: 'Ubuntu', fontSize: 18),
+                            ),
+                          ))),
+                  SizedBox(
+                    height: 70,
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                              onTap: () => Navigator.of(context).pop(),
+                              child: Container(
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(10),
+                                    color: Colors.white.withOpacity(0.2)),
+                                padding: EdgeInsets.all(8),
+                                child: Center(
+                                    child: Text(
+                                  "Cancel",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                )),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Expanded(
+                            child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            onTap: () {
+                              Navigator.of(context).pop();
+                              OtaUpdate()
+                                  .execute(update!.link,
+                                      destinationFilename:
+                                          'flutter_hello_world.apk')
+                                  .listen((event) {});
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(content: Text("Downloading...",style: TextStyle(color: Colors.white),),backgroundColor: Theme.of(context).colorScheme.background,));
+                            },
+                            child: Container(
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(10),
+                                  color: Theme.of(context).colorScheme.primary),
+                              padding: EdgeInsets.all(8),
+                              child: Center(
+                                child: Text("Download",
+                                    style: TextStyle(
+                                        fontFamily: 'Ubuntu',
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.bold)),
+                              ),
+                            ),
+                          ),
+                        ))
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            );
+          });
+      try {} catch (err) {
+        GetIt.I.get<Talker>().critical(err);
+      }
+    }
   }
 
   _setPage(int index) {
