@@ -1,4 +1,6 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -7,7 +9,54 @@ import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 
+class Update {
+  int id;
+  int version;
+  String link;
+  String desc;
+  Update({
+    required this.id,
+    required this.version,
+    required this.link,
+    required this.desc,
+  });
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'version': version,
+      'link': link,
+      'desc': desc,
+    };
+  }
+
+  factory Update.fromMap(Map<String, dynamic> map) {
+    return Update(
+      id: map['id'] as int,
+      version: map['version'] as int,
+      link: map['link'] as String,
+      desc: map['desc'] as String,
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory Update.fromJson(String source) => Update.fromMap(json.decode(source) as Map<String, dynamic>);
+}
+
 class Api {
+
+  Future<Update?> checkUpdate() async {
+    final client = GetIt.I.get<SupabaseClient>();
+    List<dynamic> data = await client.from('AppVersion').select('id,version,link,desc').order('id').limit(1);
+    final update = Update.fromMap(data[0]);
+    if(GetIt.I.get<Data>().VERSION < update.version){
+      return update;
+    }else{
+      return null;
+    }
+  }
+
   Future<void> loadZamenaFileLinks(
       {required DateTime start, required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();

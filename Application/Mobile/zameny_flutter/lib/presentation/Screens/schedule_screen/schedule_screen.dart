@@ -317,7 +317,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
           children: [
             Icon(
               Icons.info_outline_rounded,
-              size: 42,
+              size: 30,
               color: Colors.blue,
               shadows: [
                 Shadow(
@@ -330,9 +330,9 @@ class SearchBannerMessageWidget extends StatelessWidget {
               width: 10,
             ),
             Text(
-              "Loaded default",
+              "No swapped lessons",
               style: TextStyle(
-                  fontFamily: 'Ubuntu', fontSize: 20, color: Colors.white),
+                  fontFamily: 'Ubuntu', fontSize: 18, color: Colors.white),
             )
           ],
         ),
@@ -421,7 +421,6 @@ class DayScheduleWidget extends StatelessWidget {
                     ),
                     Text(
                       "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
-                      //"${getMonthName(currentDayDateTime.add(Duration(days: iter)).month)} ${currentDayDateTime.add(Duration(days: iter)).day}",
                       style: const TextStyle(
                           color: Color.fromARGB(100, 255, 255, 255),
                           fontSize: 18,

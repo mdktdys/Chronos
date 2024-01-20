@@ -235,7 +235,6 @@ class GroupList extends StatelessWidget {
       required this.filter});
 
 
-
   @override
   Widget build(BuildContext context) {
     List<Group> filtered = groups.where((element) => element.name.toLowerCase().contains(filter.toLowerCase())).toList();
