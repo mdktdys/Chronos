@@ -152,6 +152,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 builder: (context, state) {
                   if (state is ScheduleLoaded) {
                     return LessonList(
+                      lessons: state.lessons,
                       groupID: groupIDSeek,
                       weekDate: NavigationDate,
                       todayWeek: todayWeek,
@@ -203,104 +204,6 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
       ),
     );
   }
-
-  // GestureDetector GroupChooser(
-  //     BuildContext context, Function(int) onGroupSelected, seekGroup) {
-  //   Data dat = GetIt.I.get<Data>();
-
-  //   Group? group;
-  //   if (dat.groups.isNotEmpty) {
-  //     group = dat.groups.where((element) => element.id == seekGroup).first;
-  //   }
-
-  //   return GestureDetector(
-  //     onTap: () {
-  //       final data = GetIt.I.get<Data>();
-  //       List<Group> groups = data.groups;
-  //       ShowGroupChooserBottomSheet(context, groups, onGroupSelected);
-  //     },
-  //     child: Container(
-  //       width: double.infinity,
-  //       decoration: const BoxDecoration(
-  //           borderRadius: BorderRadius.all(Radius.circular(20)),
-  //           color: Color.fromARGB(255, 59, 64, 82),
-  //           boxShadow: [
-  //             BoxShadow(
-  //                 color: Color.fromARGB(255, 43, 43, 58),
-  //                 blurStyle: BlurStyle.outer,
-  //                 blurRadius: 12)
-  //           ]),
-  //       child: Padding(
-  //         padding: const EdgeInsets.all(8.0),
-  //         child: Container(
-  //           padding: const EdgeInsets.symmetric(horizontal: 5),
-  //           child: Row(
-  //             children: [
-  //               const Icon(
-  //                 Icons.person_search_rounded,
-  //                 color: Colors.white,
-  //                 size: 30,
-  //               ),
-  //               const SizedBox(
-  //                 width: 8,
-  //               ),
-  //               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-  //                 const Text(
-  //                   "Selected study group",
-  //                   style: TextStyle(
-  //                       fontFamily: 'Ubuntu',
-  //                       fontSize: 16,
-  //                       color: Colors.white),
-  //                 ),
-  //                 Text(
-  //                   group != null ? group.name : "No found",
-  //                   style: const TextStyle(
-  //                       fontFamily: 'Ubuntu',
-  //                       fontWeight: FontWeight.bold,
-  //                       color: Colors.white,
-  //                       fontSize: 18),
-  //                 )
-  //               ])
-  //             ],
-  //           ),
-  //         ),
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // Future<dynamic> ShowGroupChooserBottomSheet(
-  //     BuildContext context, List<Group> groups, Function(int) onGroupSelected) {
-  //   return showModalBottomSheet(
-  //       backgroundColor: Colors.transparent,
-  //       context: context,
-  //       builder: (BuildContext context) {
-  //         return BackdropFilter(
-  //           filter: ImageFilter.blur(sigmaX: 1, sigmaY: 1),
-  //           child: Container(
-  //               decoration: const BoxDecoration(
-  //                   backgroundBlendMode: BlendMode.screen,
-  //                   color: Color.fromARGB(255, 18, 21, 37),
-  //                   border: Border(top: BorderSide(color: Colors.amber))),
-  //               width: double.infinity,
-  //               height: double.infinity,
-  //               child: SingleChildScrollView(
-  //                 child: Padding(
-  //                   padding: const EdgeInsets.symmetric(horizontal: 10.0),
-  //                   child: Column(
-  //                     children: groups
-  //                         .map((e) => GroupTile(
-  //                               group: e,
-  //                               context: context,
-  //                               onGroupSelected: onGroupSelected,
-  //                             ))
-  //                         .toList(),
-  //                   ),
-  //                 ),
-  //               )),
-  //         );
-  //       });
-  // }
 }
 
 class FailedLoadWidget extends StatelessWidget {
@@ -355,35 +258,40 @@ class FailedLoadWidget extends StatelessWidget {
   }
 }
 
-DateTime getFirstDayOfWeek(int year, int week) {
-  DateTime januaryFirst = DateTime(year, 1, 1);
-  int firstMondayOffset = (DateTime.monday - januaryFirst.weekday + 7) % 7;
-  DateTime firstMonday = januaryFirst.add(Duration(days: firstMondayOffset));
-  int daysToAdd = (week - 1) * 7;
-  return firstMonday.add(Duration(days: daysToAdd));
-}
+class LessonList extends StatelessWidget {
+  final List<Lesson> lessons;
+  final DateTime weekDate;
+  final int groupID;
+  final todayWeek;
+  final currentWeek;
 
-Widget LessonList(
-    {required DateTime weekDate,
-    required int groupID,
-    required todayWeek,
-    required currentWeek}) {
-  final currentDay = DateTime.now().weekday;
-  final data = GetIt.I.get<Data>();
-  final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
-  List<Zamena> zamenas = data.zamenas
-      .where((zamena) =>
-          zamena.groupID == groupID &&
-          zamena.date.isAfter(startDate) &&
-          zamena.date.isBefore(startDate.add(const Duration(days: 6))))
-      .toList();
+  const LessonList(
+      {super.key,
+      required this.lessons,
+      required this.weekDate,
+      required this.groupID,
+      required this.todayWeek,
+      required this.currentWeek});
 
-  return Column(children: [
-    zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
-    Column(
-        children: ScheduleList(data, groupID, zamenas, startDate, currentDay,
-            todayWeek, currentWeek)),
-  ]);
+  @override
+  Widget build(BuildContext context) {
+    final currentDay = DateTime.now().weekday;
+    final data = GetIt.I.get<Data>();
+    final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
+    List<Zamena> zamenas = data.zamenas
+        .where((zamena) =>
+            zamena.groupID == groupID &&
+            zamena.date.isAfter(startDate) &&
+            zamena.date.isBefore(startDate.add(const Duration(days: 6))))
+        .toList();
+
+    return Column(children: [
+      zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
+      Column(
+          children: ScheduleList(lessons,data, groupID, zamenas, startDate, currentDay,
+              todayWeek, currentWeek)),
+    ]);
+  }
 }
 
 class SearchBannerMessageWidget extends StatelessWidget {
@@ -433,34 +341,36 @@ class SearchBannerMessageWidget extends StatelessWidget {
   }
 }
 
-List<Widget> ScheduleList(Data data, int groupID, List<Zamena> zamenas,
+List<Widget> ScheduleList(List<Lesson> weekLessons,Data data, int groupID, List<Zamena> zamenas, 
     DateTime startDate, int currentDay, todayWeek, currentWeek) {
   return List.generate(6, (iter) {
     final day = iter + 1;
-
-    List<Lesson> lessons = [];
+    List <Lesson> lessons = [];
     try {
-      lessons =
-          data.groups.where((element) => element.id == groupID).first.lessons;
-      lessons = lessons.where((lesson) => lesson.day == day).toList();
+      weekLessons.forEach((element) { GetIt.I.get<Talker>().critical(element.date.weekday);});
+      lessons = weekLessons.where((lesson) => lesson.date.weekday == day).toList();
       lessons.sort((a, b) => a.number > b.number ? 1 : -1);
     } catch (e) {
-      return const Text("ASD");
+      return const SizedBox();
     }
 
     List<Zamena> DayZamenas =
         zamenas.where((element) => element.date.weekday == day).toList();
     DayZamenas.sort((a, b) => a.LessonTimingsID > b.LessonTimingsID ? 1 : -1);
-    return DayScheduleWidget(
-      day: day,
-      DayZamenas: DayZamenas,
-      lessons: lessons,
-      startDate: startDate,
-      data: data,
-      currentDay: currentDay,
-      todayWeek: todayWeek,
-      currentWeek: currentWeek,
-    );
+    if ((DayZamenas.length + lessons.length) > 0) {
+      return DayScheduleWidget(
+        day: day,
+        DayZamenas: DayZamenas,
+        lessons: lessons,
+        startDate: startDate,
+        data: data,
+        currentDay: currentDay,
+        todayWeek: todayWeek,
+        currentWeek: currentWeek,
+      );
+    } else {
+      return const SizedBox();
+    }
   });
 }
 
@@ -583,7 +493,7 @@ class DayScheduleWidget extends StatelessWidget {
                     number: zamena.LessonTimingsID,
                     teacher: zamena.teacherID,
                     group: zamena.groupID,
-                    day: day),
+                    date: zamena.date),
                 swaped: true,
               );
             } else {

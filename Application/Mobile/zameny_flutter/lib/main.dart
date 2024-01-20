@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart' as pr;
@@ -57,6 +58,8 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       builder: (context, child) {
+        SystemChrome.setSystemUIOverlayStyle(
+            const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
         return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: pr.Provider.of<ThemeProvider>(context).theme,

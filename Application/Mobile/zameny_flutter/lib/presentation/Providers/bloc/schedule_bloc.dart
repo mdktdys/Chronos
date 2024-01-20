@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Api.dart';
+import 'package:zameny_flutter/Services/Data.dart';
 
 @immutable
 sealed class ScheduleEvent {}
@@ -23,10 +24,14 @@ final class LoadWeek extends ScheduleEvent {
       {required this.groupID, required this.dateStart, required this.dateEnd});
 }
 
-@immutable
+final class LoadInitial extends ScheduleEvent {}
+
 sealed class ScheduleState {}
 
-final class ScheduleLoaded extends ScheduleState {}
+final class ScheduleLoaded extends ScheduleState {
+  List<Lesson> lessons = [];
+  ScheduleLoaded({required this.lessons});
+}
 
 final class ScheduleFailedLoading extends ScheduleState {}
 
@@ -34,13 +39,14 @@ final class ScheduleInitial extends ScheduleState {}
 
 final class ScheduleLoading extends ScheduleState {}
 
-class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
+  class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc() : super(ScheduleInitial()) {
-    on<LoadWeek>((event, emit) async {
+    on<LoadInitial>((event, emit) async {
       emit(ScheduleLoading());
-      try{
-
-      }catch (error) {
+      try {
+        await Api().loadGroups();
+        await Api().loadDepartments();
+      } catch (error) {
         GetIt.I.get<Talker>().critical(error);
         emit(ScheduleFailedLoading());
       }
@@ -52,13 +58,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api().loadCourses();
         await Api().loadCabinets();
         await Api().loadTimings();
-        await Api().loadGroups();
-        await Api().loadDepartments();
-        //await Api().loadDefaultSchedule(groupID: event.groupID);
+        List<Lesson> lessons = await Api().loadWeekSchedule(start: event.dateStart, end: event.dateEnd,groupID: event.groupID);
+        await Api()
+            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
         await Api().loadZamenas(
             groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
-        //await Api().loadZamenasTypes(groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
-        emit(ScheduleLoaded());
+        emit(ScheduleLoaded(lessons:lessons));
       } catch (error) {
         GetIt.I.get<Talker>().critical(error);
         emit(ScheduleFailedLoading());

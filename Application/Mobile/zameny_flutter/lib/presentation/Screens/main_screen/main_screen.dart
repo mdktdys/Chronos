@@ -1,6 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 
 import '../exams_screen/exams_screen/exams_screen.dart';
 import '../schedule_screen/schedule_screen.dart';
@@ -20,7 +22,7 @@ class _MainScreenState extends State<MainScreen> {
   @override
   void initState() {
     pageController = PageController(initialPage: 0);
-
+    context.read<ScheduleBloc>().add(LoadInitial());
     super.initState();
   }
 

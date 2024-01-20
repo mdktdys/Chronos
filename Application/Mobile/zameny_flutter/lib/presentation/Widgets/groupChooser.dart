@@ -6,6 +6,7 @@ import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/load_bloc_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/GroupTile.dart';
 
 class GroupChooser extends StatefulWidget {
@@ -21,12 +22,15 @@ class _GroupChooserState extends State<GroupChooser> {
   Widget build(BuildContext context) {
     Data dat = GetIt.I.get<Data>();
     Group? group;
-    if (dat.groups.isNotEmpty) {
-      List<Group> list =
-          dat.groups.where((element) => element.id == dat.seekGroup).toList();
-      if (list.isNotEmpty) {
-        group =
-            dat.groups.where((element) => element.id == dat.seekGroup).first;
+
+    _setGroup() {
+      if (dat.groups.isNotEmpty) {
+        List<Group> list =
+            dat.groups.where((element) => element.id == dat.seekGroup).toList();
+        if (list.isNotEmpty) {
+          group =
+              dat.groups.where((element) => element.id == dat.seekGroup).first;
+        }
       }
     }
 
@@ -35,7 +39,8 @@ class _GroupChooserState extends State<GroupChooser> {
         final data = GetIt.I.get<Data>();
         List<Group> groups = data.groups;
         groups.sort((a, b) => a.name.compareTo(b.name));
-        await ShowGroupChooserBottomSheet(context: context, onGroupSelected: this.widget.onGroupSelected);
+        await ShowGroupChooserBottomSheet(
+            context: context, onGroupSelected: this.widget.onGroupSelected);
       },
       child: Container(
         width: double.infinity,
@@ -70,13 +75,47 @@ class _GroupChooserState extends State<GroupChooser> {
                         fontSize: 16,
                         color: Colors.white),
                   ),
-                  Text(
-                    group != null ? group.name : GetIt.I.get<Data>().seekGroup.toString(),
-                    style: const TextStyle(
-                        fontFamily: 'Ubuntu',
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white,
-                        fontSize: 18),
+                  BlocBuilder<ScheduleBloc, ScheduleState>(
+                    builder: (context, state) {
+                      if (state is ScheduleInitial) {
+                        return Text("Wait for loading",
+                            style: const TextStyle(
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18));
+                      }
+                      if (state is ScheduleFailedLoading) {
+                        return Text("Failed loading",
+                            style: const TextStyle(
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18));
+                      }
+                      if (state is ScheduleLoaded) {
+                        _setGroup();
+                        return Text(
+                          group != null
+                              ? group!.name
+                              : GetIt.I.get<Data>().seekGroup.toString(),
+                          style: const TextStyle(
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                              fontSize: 18),
+                        );
+                      }
+                      if (state is ScheduleLoading) {
+                        return Text("Loading...",
+                            style: const TextStyle(
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white,
+                                fontSize: 18));
+                      }
+                      return Text("");
+                    },
                   )
                 ])
               ],
@@ -143,7 +182,7 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
               if (state is LoadBlocLoaded) {
                 return GroupList(groups: groups, widget: widget);
               }
-              if (state is LoadBlocLoading){
+              if (state is LoadBlocLoading) {
                 return CircularProgressIndicator();
               }
               return Text("err");
