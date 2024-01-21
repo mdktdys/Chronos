@@ -8,7 +8,7 @@ import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
-  final VERSION = 2;
+  final VERSION = 3;
 
   List<Teacher> teachers = [];
   List<Group> groups = [];
