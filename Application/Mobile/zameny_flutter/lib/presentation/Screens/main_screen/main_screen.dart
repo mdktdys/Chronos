@@ -40,12 +40,12 @@ class _MainScreenState extends State<MainScreen> {
           context: context,
           builder: (context) {
             return Container(
-              padding: EdgeInsets.all(15),
+              padding: const EdgeInsets.all(15),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Container(
-                      padding: EdgeInsets.all(2),
+                      padding: const EdgeInsets.all(2),
                       child: Column(
                         children: [
                           Icon(
@@ -78,7 +78,7 @@ class _MainScreenState extends State<MainScreen> {
                             child: Text(
                               update.desc,
                               style:
-                                  TextStyle(fontFamily: 'Ubuntu', fontSize: 18),
+                                  const TextStyle(fontFamily: 'Ubuntu', fontSize: 18),
                             ),
                           ))),
                   SizedBox(
@@ -94,8 +94,8 @@ class _MainScreenState extends State<MainScreen> {
                                 decoration: BoxDecoration(
                                     borderRadius: BorderRadius.circular(10),
                                     color: Colors.white.withOpacity(0.2)),
-                                padding: EdgeInsets.all(8),
-                                child: Center(
+                                padding: const EdgeInsets.all(8),
+                                child: const Center(
                                     child: Text(
                                   "Cancel",
                                   style: TextStyle(
@@ -119,14 +119,14 @@ class _MainScreenState extends State<MainScreen> {
                                           'flutter_hello_world.apk')
                                   .listen((event) {});
                               ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: Text("Downloading...",style: TextStyle(color: Colors.white),),backgroundColor: Theme.of(context).colorScheme.background,));
+                                  SnackBar(content: const Text("Downloading...",style: TextStyle(color: Colors.white),),backgroundColor: Theme.of(context).colorScheme.background,));
                             },
                             child: Container(
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.circular(10),
                                   color: Theme.of(context).colorScheme.primary),
-                              padding: EdgeInsets.all(8),
-                              child: Center(
+                              padding: const EdgeInsets.all(8),
+                              child: const Center(
                                 child: Text("Download",
                                     style: TextStyle(
                                         fontFamily: 'Ubuntu',
@@ -160,49 +160,56 @@ class _MainScreenState extends State<MainScreen> {
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
-        child: Stack(children: [
-          PageView(
-            controller: pageController,
-            children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
-          ),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.1),
-                      border: const Border(
-                          top: BorderSide(
-                              color: Color.fromARGB(255, 30, 118, 233),
-                              width: 1))),
-                  child: ClipRect(
-                    child: BackdropFilter(
-                      filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          BottomNavigationItem(
-                            index: 0,
-                            onTap: _setPage,
-                            icon: Icons.school_rounded,
-                            text: "Schedule",
-                          ),
-                          BottomNavigationItem(
-                            index: 1,
-                            onTap: _setPage,
-                            icon: Icons.code_rounded,
-                            text: "Exams",
-                          ),
-                          BottomNavigationItem(
-                            index: 2,
-                            onTap: _setPage,
-                            icon: Icons.settings,
-                            text: "Settings",
-                          ),
-                        ],
+        child: Center(
+          child: Stack(children: [
+            Center(
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: 1200),
+                child: PageView(
+                  controller: pageController,
+                  children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
+                ),
+              ),
+            ),
+            Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                    decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.1),
+                        border: const Border(
+                            top: BorderSide(
+                                color: Color.fromARGB(255, 30, 118, 233),
+                                width: 1))),
+                    child: ClipRect(
+                      child: BackdropFilter(
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            BottomNavigationItem(
+                              index: 0,
+                              onTap: _setPage,
+                              icon: Icons.school_rounded,
+                              text: "Schedule",
+                            ),
+                            BottomNavigationItem(
+                              index: 1,
+                              onTap: _setPage,
+                              icon: Icons.code_rounded,
+                              text: "Exams",
+                            ),
+                            BottomNavigationItem(
+                              index: 2,
+                              onTap: _setPage,
+                              icon: Icons.settings,
+                              text: "Settings",
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  ))),
-        ]),
+                    ))),
+          ]),
+        ),
       ),
     );
   }
