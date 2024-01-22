@@ -35,13 +35,13 @@ jobs:
       #     token: ${{ secrets.TOKEN }}
           
       - name: Build
-        run: flutter build web --release --web-renderer html
+        run: flutter build web --release --web-renderer html --base-href /Chronos/
   
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: ./Application/Mobile/zameny_flutter/build/web
+          publish_dir: Application/Mobile/zameny_flutter/build/web
           force_orphan: true
           user_name: 'github-ci[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
