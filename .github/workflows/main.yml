@@ -32,5 +32,18 @@ jobs:
           artifacts: |
             Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/*.apk
           tag: ${{ github.run_number }}
-          token: ${{ secrets.TOKEN }} 
+          token: ${{ secrets.TOKEN }}
+          
+      - name: Build
+        run: flutter build web --release --web-renderer html --base-href ./
+  
+      - name: Deploy
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build/web
+          force_orphan: true
+          user_name: 'github-ci[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: 'Publish to gh-pages'
 

@@ -132,6 +132,7 @@ class _GroupChooserState extends State<GroupChooser> {
         context: context,
         isScrollControlled: true,
         useSafeArea: true,
+        backgroundColor: Theme.of(context).colorScheme.background,
         builder: (_) {
           return DraggableScrollableSheet(
             shouldCloseOnMinExtent: true,
@@ -178,9 +179,6 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
   @override
   Widget build(BuildContext context) {
     return Container(
-        decoration: const BoxDecoration(
-            color: Color.fromARGB(255, 18, 21, 37),
-            ),
         padding: const EdgeInsets.only(top: 10),
         child: SingleChildScrollView(
           controller: this.widget.controller,
