@@ -2,6 +2,7 @@ import 'dart:ui';
 
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
 
 Department getDepartmentById(int departmentID) {
   final dat = GetIt.I.get<Data>();
@@ -21,6 +22,11 @@ Cabinet getCabinetById(int cabinetID) {
 Teacher getTeacherById(int teacherID) {
   final dat = GetIt.I.get<Data>();
   return dat.teachers.where((teacher) => teacher.id == teacherID).first;
+}
+
+Group getGroupById(int groupID) {
+  final dat = GetIt.I.get<Data>();
+  return dat.groups.where((group) => group.id == groupID).first;
 }
 
 Course? getCourseById(int CourseID) {

@@ -21,13 +21,19 @@ class ScheduleScreen extends StatefulWidget {
   State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> {
+class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAliveClientMixin {
+
+  @override
+  bool get wantKeepAlive => true;
+
   DateTime NavigationDate = DateTime.now();
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   late final todayWeek;
   var currentWeek;
   late final ScrollController scrollController;
   late int groupIDSeek;
+  late int teacherIDSeek;
+  late int cabinetIDSeek;
 
   @override
   void initState() {
@@ -36,6 +42,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     scrollController = ScrollController();
 
     groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
+    teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
+
     currentWeek = ((NavigationDate.difference(septemberFirst).inDays +
                 septemberFirst.weekday) ~/
             7) +
@@ -117,6 +125,53 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
     });
   }
 
+  void _teacherSelected(int teacherID) {
+    GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
+    setState(() {
+      this.teacherIDSeek = teacherID;
+      GetIt.I.get<Data>().teacherGroup = teacherID;
+      _loadWeekTeahcerSchedule();
+    });
+  }
+
+  void _cabinetSelected(int cabinetID) {
+    GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
+    setState(() {
+      this.cabinetIDSeek = cabinetID;
+      GetIt.I.get<Data>().seekCabinet = cabinetID;
+      _loadWeekSchedule();
+    });
+  }
+
+   void _loadWeekTeahcerSchedule() async {
+    setState(() {});
+    DateTime monday = NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+    DateTime sunday = monday.add(const Duration(days: 6));
+
+    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+
+    context.read<ScheduleBloc>().add(LoadTeacherWeek(
+          teacherID: teacherIDSeek,
+          dateStart: startOfWeek,
+          dateEnd: endOfWeek,
+        ));
+  }
+
+  void _dateSwitched() async {
+    final Data dat = GetIt.I.get<Data>();
+    setState(() {});
+    if(dat.latestSearch == CourseTileType.teacher){
+      _teacherSelected(dat.teacherGroup!);
+    }
+    if(dat.latestSearch == CourseTileType.cabinet){
+      _cabinetSelected(dat.seekCabinet!);
+    }
+    if(dat.latestSearch == CourseTileType.group){
+      _groupSelected(dat.seekGroup!);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return RefreshIndicator(
@@ -124,86 +179,81 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
           groupID: groupIDSeek,
           dateStart: getStartOfWeek(NavigationDate),
           dateEnd: getEndOfWeek(NavigationDate))),
-      child: CustomScrollView(
+      child: ListView(
         controller: scrollController,
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  const ScheduleHeader(),
-                  const SizedBox(height: 10),
-                  const ScheduleTurboSearch(),
-                  const SizedBox(height: 10),
-                  GroupChooser(onGroupSelected: _groupSelected),
-                  const SizedBox(height: 10),
-                  DateHeader(
-                    parentWidget: this,
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const ScheduleHeader(),
+                const SizedBox(height: 10),
+                ScheduleTurboSearch(groupSelected: _groupSelected, teacherSelected: _teacherSelected, cabinetSelected: _cabinetSelected,),
+                const SizedBox(height: 10),
+                GroupChooser(onGroupSelected: _groupSelected),
+                const SizedBox(height: 10),
+                DateHeader(
+                  parentWidget: this,
+                  todayWeek: todayWeek,
+                  currentWeek: currentWeek,
+                  dateSwitched: _dateSwitched
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            child: BlocBuilder<ScheduleBloc, ScheduleState>(
+              builder: (context, state) {
+                if (state is ScheduleLoaded) {
+                  return LessonList(
+                    type: state.searchType,
+                    zamenas: state.zamenas,
+                    lessons: state.lessons,
+                    groupID: groupIDSeek,
+                    weekDate: NavigationDate,
                     todayWeek: todayWeek,
                     currentWeek: currentWeek,
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-          ),
-          SliverPadding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            sliver: SliverToBoxAdapter(
-              child: BlocBuilder<ScheduleBloc, ScheduleState>(
-                builder: (context, state) {
-                  if (state is ScheduleLoaded) {
-                    return LessonList(
-                      lessons: state.lessons,
-                      groupID: groupIDSeek,
-                      weekDate: NavigationDate,
-                      todayWeek: todayWeek,
-                      currentWeek: currentWeek,
-                    );
-                  } else if (state is ScheduleFailedLoading) {
-                    return FailedLoadWidget(
-                      funcReload: _loadWeekSchedule,
-                    );
-                  } else if (state is ScheduleLoading) {
-                    return SizedBox(
-                      height: 550,
-                      child: Center(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(
-                                height: 200,
-                                child:
-                                    Lottie.asset('assets/lottie/loading.json')),
-                            const Text(
-                              "Loading...",
-                              style: TextStyle(
-                                  color: Colors.blue,
-                                  fontFamily: 'Ubuntu',
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 26),
-                            )
-                          ],
-                        ),
+                  );
+                } else if (state is ScheduleFailedLoading) {
+                  return FailedLoadWidget(
+                    funcReload: _loadWeekSchedule,
+                  );
+                } else if (state is ScheduleLoading) {
+                  return SizedBox(
+                    height: 550,
+                    child: Center(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                              height: 200,
+                              child:
+                                  Lottie.asset('assets/lottie/loading.json')),
+                          const Text(
+                            "Loading...",
+                            style: TextStyle(
+                                color: Colors.blue,
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold,
+                                fontSize: 26),
+                          )
+                        ],
                       ),
-                    );
-                  } else if (state is ScheduleInitial) {
-                    return const Text("Choose group");
-                  } else {
-                    return const SizedBox(); // or some default widget
-                  }
-                },
-              ),
+                    ),
+                  );
+                } else if (state is ScheduleInitial) {
+                  return const Text("Choose group");
+                } else {
+                  return const SizedBox(); // or some default widget
+                }
+              },
             ),
           ),
-          const SliverToBoxAdapter(
-            child: SizedBox(
-              height: 80,
-            ),
-          )
+          SizedBox(height: 100,)
         ],
       ),
     );
@@ -264,13 +314,17 @@ class FailedLoadWidget extends StatelessWidget {
 
 class LessonList extends StatelessWidget {
   final List<Lesson> lessons;
+  final List<Zamena> zamenas;
   final DateTime weekDate;
   final int groupID;
+  final CourseTileType type;
   final todayWeek;
   final currentWeek;
 
   const LessonList(
       {super.key,
+      required this.type,
+      required this.zamenas,
       required this.lessons,
       required this.weekDate,
       required this.groupID,
@@ -282,8 +336,8 @@ class LessonList extends StatelessWidget {
     final currentDay = DateTime.now().weekday;
     final data = GetIt.I.get<Data>();
     final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
-    List<Zamena> zamenas = data.zamenas
-        .where((zamena) =>
+    List<Zamena> zamenas = this.zamenas.
+        where((zamena) =>
             zamena.groupID == groupID &&
             zamena.date.isAfter(startDate) &&
             zamena.date.isBefore(startDate.add(const Duration(days: 6))))
@@ -293,7 +347,7 @@ class LessonList extends StatelessWidget {
       zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
       Column(
           children: ScheduleList(lessons,data, groupID, zamenas, startDate, currentDay,
-              todayWeek, currentWeek)),
+              todayWeek, currentWeek,type: type)),
     ]);
   }
 }
@@ -323,12 +377,12 @@ class SearchBannerMessageWidget extends StatelessWidget {
               Icons.info_outline_rounded,
               size: 30,
               color: Colors.blue,
-              shadows: [
-                Shadow(
-                  color: Color.fromARGB(255, 28, 95, 182),
-                  blurRadius: 6,
-                )
-              ],
+              // shadows: [
+              //   Shadow(
+              //     color: Color.fromARGB(255, 28, 95, 182),
+              //     blurRadius: 6,
+              //   )
+              // ],
             ),
             SizedBox(
               width: 10,
@@ -346,7 +400,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
 }
 
 List<Widget> ScheduleList(List<Lesson> weekLessons,Data data, int groupID, List<Zamena> zamenas, 
-    DateTime startDate, int currentDay, todayWeek, currentWeek) {
+    DateTime startDate, int currentDay, todayWeek, currentWeek, {required CourseTileType type}) {
   return List.generate(6, (iter) {
     final day = iter + 1;
     List <Lesson> lessons = [];
@@ -363,6 +417,7 @@ List<Widget> ScheduleList(List<Lesson> weekLessons,Data data, int groupID, List<
     DayZamenas.sort((a, b) => a.LessonTimingsID > b.LessonTimingsID ? 1 : -1);
     if ((DayZamenas.length + lessons.length) > 0) {
       return DayScheduleWidget(
+        type: type,
         day: day,
         DayZamenas: DayZamenas,
         lessons: lessons,
@@ -384,6 +439,7 @@ class DayScheduleWidget extends StatelessWidget {
   final int currentWeek;
   final int todayWeek;
   final Data data;
+  final CourseTileType type;
 
   const DayScheduleWidget({
     super.key,
@@ -395,6 +451,7 @@ class DayScheduleWidget extends StatelessWidget {
     required this.currentWeek,
     required this.todayWeek,
     required this.data,
+    required this.type
   });
 
   final int day;
@@ -436,13 +493,13 @@ class DayScheduleWidget extends StatelessWidget {
                     ? Container(
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 30, 118, 233),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Color.fromARGB(255, 28, 95, 182),
-                                blurStyle: BlurStyle.outer,
-                                blurRadius: 6,
-                              )
-                            ],
+                            // boxShadow: [
+                            //   BoxShadow(
+                            //     color: Color.fromARGB(255, 28, 95, 182),
+                            //     blurStyle: BlurStyle.outer,
+                            //     blurRadius: 6,
+                            //   )
+                            // ],
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: const Padding(
@@ -463,31 +520,15 @@ class DayScheduleWidget extends StatelessWidget {
           ),
           Column(
               children: data.timings.map((para) {
-            // if (DayZamenas.any((zamena) => zamena.LessonTimingsID == para)) {
-            //   final Zamena zamena =
-            //       DayZamenas.where((zamena) => zamena.LessonTimingsID == para)
-            //           .first;
-            //   final course = getCourseById(zamena.courseID) ??
-            //       Course(id: -1, name: "err", color: "50,0,0,1");
-            // return CourseTile(
-            //   course: course,
-            //   lesson: Lesson(
-            //       id: -1,
-            //       course: course.id,
-            //       cabinet: zamena.cabinetID,
-            //       number: zamena.LessonTimingsID,
-            //       teacher: zamena.teacherID,
-            //       group: zamena.groupID,
-            //       day: day),
-            //   swaped: true,
-            //this working
             if (DayZamenas.any(
                 (element) => element.LessonTimingsID == para.number)) {
+                Lesson? swapedPara = lessons.where((element) => element.number == para.number).firstOrNull; 
               Zamena zamena = DayZamenas.where(
                   (element) => element.LessonTimingsID == para.number).first;
               final course = getCourseById(zamena.courseID) ??
                   Course(id: -1, name: "err2", color: "100,0,0,0");
               return CourseTile(
+                type: type,
                 course: course,
                 lesson: Lesson(
                     id: -1,
@@ -497,7 +538,7 @@ class DayScheduleWidget extends StatelessWidget {
                     teacher: zamena.teacherID,
                     group: zamena.groupID,
                     date: zamena.date),
-                swaped: true,
+                swaped: swapedPara,
               );
             } else {
               if (lessons.any((element) => element.number == para.number)) {
@@ -507,9 +548,10 @@ class DayScheduleWidget extends StatelessWidget {
                 final course = getCourseById(lesson.course) ??
                     Course(id: -1, name: "err3", color: "50,0,0,1");
                 return CourseTile(
+                  type: type,
                   course: course,
                   lesson: lesson,
-                  swaped: false,
+                  swaped: null,
                 );
               }
             }

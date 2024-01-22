@@ -96,6 +96,24 @@ class Api {
     return weekLessons;
   }
 
+  Future<List<Lesson>> loadWeekTeacherSchedule(
+      {required int teacherID,required DateTime start, required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    List<dynamic> data = await client
+        .from('Paras')
+        .select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    List<Lesson> weekLessons = [];
+    for (var element in data) {
+      Lesson lesson = Lesson.fromMap(element);
+      weekLessons.add(lesson);
+    }
+    return weekLessons;
+  }
+
   Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
@@ -137,25 +155,25 @@ class Api {
     }
   }
 
-  Future<void> loadZamenasTypes(
-      {required int groupID,
-      required DateTime start,
-      required DateTime end}) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+  // Future<void> loadZamenasTypes(
+  //     {required int groupID,
+  //     required DateTime start,
+  //     required DateTime end}) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
 
-    List<dynamic> data = await client
-        .from('ZamenasType')
-        .select('*')
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String())
-        .order('date');
+  //   List<dynamic> data = await client
+  //       .from('ZamenasType')
+  //       .select('*')
+  //       .lte('date', end.toIso8601String())
+  //       .gte('date', start.toIso8601String())
+  //       .order('date');
 
-    for (var element in data) {
-      ZamenasType zamenaType = ZamenasType.fromMap(element);
-      dat.zamenaTypes.add(zamenaType);
-    }
-  }
+  //   for (var element in data) {
+  //     ZamenasType zamenaType = ZamenasType.fromMap(element);
+  //     dat.zamenaTypes.add(zamenaType);
+  //   }
+  // }
 
   Future<List<Zamena>> loadZamenas(
       {required int groupID,
@@ -165,7 +183,7 @@ class Api {
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
-        .select('*')
+        .select('*').eq('group', groupID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String())
         .order('date');
@@ -181,28 +199,52 @@ class Api {
     return zamenaBuffer;
   }
 
-  Future<void> loadDefaultSchedule({required int groupID}) async {
+    Future<List<Zamena>> loadTeacherZamenas(
+      {required int teacherID,
+      required DateTime start,
+      required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
-    try {
-      if (groupID == -1) {
-        throw Exception("invalid group selected");
-      }
-      final client = GetIt.I.get<SupabaseClient>();
+    List<dynamic> data = await client
+        .from('Zamenas')
+        .select('*').eq('teacher', teacherID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String())
+        .order('date');
 
-      List<dynamic> data =
-          await client.from('defaultLessons').select('*').eq('group', groupID);
-
-      Group group = dat.groups.where((element) => element.id == groupID).first;
-      group.lessons = [];
-      for (var element in data) {
-        Lesson lesson = Lesson.fromMap(element);
-        group.lessons.add(lesson);
+    List<Zamena> zamenaBuffer = [];
+    for (var element in data) {
+      Zamena zamena = Zamena.fromMap(element);
+      zamenaBuffer.add(zamena);
+      if (!dat.zamenas.any((element) => element.id == zamena.id)) {
+        dat.zamenas.add(zamena);
       }
-    } catch (err) {
-      Group group = dat.groups.where((element) => element.id == groupID).first;
-      group.lessons = [];
     }
+    return zamenaBuffer;
   }
+
+  // Future<void> loadDefaultSchedule({required int groupID}) async {
+  //   final dat = GetIt.I.get<Data>();
+  //   try {
+  //     if (groupID == -1) {
+  //       throw Exception("invalid group selected");
+  //     }
+  //     final client = GetIt.I.get<SupabaseClient>();
+
+  //     List<dynamic> data =
+  //         await client.from('defaultLessons').select('*').eq('group', groupID);
+
+  //     Group group = dat.groups.where((element) => element.id == groupID).first;
+  //     group.lessons = [];
+  //     for (var element in data) {
+  //       Lesson lesson = Lesson.fromMap(element);
+  //       group.lessons.add(lesson);
+  //     }
+  //   } catch (err) {
+  //     Group group = dat.groups.where((element) => element.id == groupID).first;
+  //     group.lessons = [];
+  //   }
+  // }
 
   Future<void> loadCourses() async {
     final client = GetIt.I.get<SupabaseClient>();

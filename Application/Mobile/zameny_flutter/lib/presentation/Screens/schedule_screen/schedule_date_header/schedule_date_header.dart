@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header_toggle_week_button.dart';
 
 class DateHeader extends StatelessWidget {
+  final Function dateSwitched;
   final parentWidget;
 
   const DateHeader(
       {super.key,
+      required this.dateSwitched,
       required this.todayWeek,
       required this.currentWeek,
       required this.parentWidget});
@@ -21,18 +23,19 @@ class DateHeader extends StatelessWidget {
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: Color.fromARGB(255, 59, 64, 82),
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 43, 43, 58),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
+            // boxShadow: [
+            //   BoxShadow(
+            //       color: Color.fromARGB(255, 43, 43, 58),
+            //       blurStyle: BlurStyle.outer,
+            //       blurRadius: 12)
+            // ]
+            ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ToggleWeekButton(next: false, widget: parentWidget),
+            ToggleWeekButton(next: false, widget: parentWidget, dateSwitched: dateSwitched),
             Column(
               children: [
                 const Text(
@@ -67,13 +70,13 @@ class DateHeader extends StatelessWidget {
                           ? Container(
                               decoration: const BoxDecoration(
                                   color: Color.fromARGB(255, 30, 118, 233),
-                                  boxShadow: [
-                                    BoxShadow(
-                                      color: Color.fromARGB(255, 28, 95, 182),
-                                      blurStyle: BlurStyle.outer,
-                                      blurRadius: 6,
-                                    )
-                                  ],
+                                  // boxShadow: [
+                                  //   BoxShadow(
+                                  //     color: Color.fromARGB(255, 28, 95, 182),
+                                  //     blurStyle: BlurStyle.outer,
+                                  //     blurRadius: 6,
+                                  //   )
+                                  // ],
                                   borderRadius:
                                       BorderRadius.all(Radius.circular(20))),
                               child: const Padding(
@@ -94,7 +97,7 @@ class DateHeader extends StatelessWidget {
                 )
               ],
             ),
-            ToggleWeekButton(next: true, widget: parentWidget),
+            ToggleWeekButton(next: true, widget: parentWidget, dateSwitched: dateSwitched),
           ],
         ));
   }
