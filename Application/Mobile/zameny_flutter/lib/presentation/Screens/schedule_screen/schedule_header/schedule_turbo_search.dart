@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:zameny_flutter/Services/Data.dart';
 
 class ScheduleTurboSearch extends StatefulWidget {
   const ScheduleTurboSearch({super.key});
@@ -10,6 +12,7 @@ class ScheduleTurboSearch extends StatefulWidget {
 
 class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
   late final SearchController searchController;
+  List<SearchItem> searchItems = [];
 
   @override
   void initState() {
@@ -18,7 +21,9 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
     this.searchController = SearchController();
   }
 
-  _updateSearch(String filter) {}
+  _updateSearch(String filter) {
+    searchItems.addAll(GetIt.I.get<Data>().groups.where((element) => element.name.contains(filter)).toList());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,3 +49,5 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
     );
   }
 }
+
+abstract class SearchItem {}

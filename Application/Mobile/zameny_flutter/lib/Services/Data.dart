@@ -5,6 +5,7 @@ import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 class Data {
@@ -139,7 +140,7 @@ class Course {
       Course.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
-class Teacher {
+class Teacher extends SearchItem {
   int id;
   String name;
   Teacher({
@@ -251,7 +252,7 @@ class Zamena {
       Zamena.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
-class Cabinet {
+class Cabinet extends SearchItem {
   int id;
   String name;
   Cabinet({
