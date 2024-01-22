@@ -35,7 +35,7 @@ jobs:
       #     token: ${{ secrets.TOKEN }}
           
       - name: Build
-        run: flutter build web --release --web-renderer html --base-href=https://eventgamer67.github.io/Chronos/
+        run: flutter build web --release --web-renderer html
   
       - name: Deploy
         uses: peaceiris/actions-gh-pages@v3
