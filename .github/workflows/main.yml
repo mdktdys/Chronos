@@ -23,16 +23,16 @@ jobs:
           channel: "stable"
 
       - run: flutter pub get
-      - run: flutter build apk --release --split-per-abi --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
-      - run: flutter build apk --release --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
+      # - run: flutter build apk --release --split-per-abi --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
+      # - run: flutter build apk --release --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
 
-      - name: Push to Releases
-        uses: ncipollo/release-action@v1
-        with:
-          artifacts: |
-            Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/*.apk
-          tag: ${{ github.run_number }}
-          token: ${{ secrets.TOKEN }}
+      # - name: Push to Releases
+      #   uses: ncipollo/release-action@v1
+      #   with:
+      #     artifacts: |
+      #       Application/Mobile/zameny_flutter/build/app/outputs/flutter-apk/*.apk
+      #     tag: ${{ github.run_number }}
+      #     token: ${{ secrets.TOKEN }}
           
       - name: Build
         run: flutter build web --release --web-renderer html --base-href ./
