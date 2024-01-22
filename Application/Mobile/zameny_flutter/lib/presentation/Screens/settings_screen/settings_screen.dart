@@ -16,8 +16,11 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen> {
+class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAliveClientMixin {
   int _sliding = 0;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {

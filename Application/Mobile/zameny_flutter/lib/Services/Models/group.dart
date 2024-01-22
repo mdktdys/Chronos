@@ -1,7 +1,8 @@
 import 'dart:convert';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 
-class Group {
+class Group extends SearchItem {
   Group({required this.id, required this.name, required this.department});
 
   int id;

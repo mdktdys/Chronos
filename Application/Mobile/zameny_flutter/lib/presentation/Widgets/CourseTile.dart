@@ -1,15 +1,24 @@
+
 import 'package:flutter/material.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 
+enum CourseTileType{
+  teacher,
+  group,
+  cabinet
+}
+
 class CourseTile extends StatelessWidget {
   final Lesson lesson;
-  final bool swaped;
+  final Lesson? swaped;
+  final CourseTileType type;
 
   const CourseTile(
       {super.key,
       required this.course,
       required this.lesson,
+      required this.type,
       required this.swaped});
 
   final Course course;
@@ -21,12 +30,13 @@ class CourseTile extends StatelessWidget {
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: Color.fromARGB(255, 41, 44, 58),
-            boxShadow: [
-              BoxShadow(
-                  color: Color.fromARGB(255, 43, 43, 58),
-                  blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
+            // boxShadow: [
+            //   BoxShadow(
+            //       color: Color.fromARGB(255, 43, 43, 58),
+            //       blurStyle: BlurStyle.outer,
+            //       blurRadius: 12)
+            // ]
+            ),
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
@@ -36,12 +46,12 @@ class CourseTile extends StatelessWidget {
                   width: 10,
                   decoration: BoxDecoration(
                       color: getCourseColor(course.color),
-                      boxShadow: [
-                        BoxShadow(
-                            color: getCourseColor(course.color),
-                            blurRadius: 6,
-                            blurStyle: BlurStyle.outer),
-                      ],
+                      // boxShadow: [
+                      //   BoxShadow(
+                      //       color: getCourseColor(course.color),
+                      //       blurRadius: 6,
+                      //       blurStyle: BlurStyle.outer),
+                      // ],
                       borderRadius:
                           const BorderRadius.all(Radius.circular(20))),
                   height: 100,
@@ -56,12 +66,12 @@ class CourseTile extends StatelessWidget {
                       width: 30,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                                color: getCourseColor(course.color),
-                                blurRadius: 6,
-                                blurStyle: BlurStyle.outer),
-                          ],
+                          // boxShadow: [
+                          //   BoxShadow(
+                          //       color: getCourseColor(course.color),
+                          //       blurRadius: 6,
+                          //       blurStyle: BlurStyle.outer),
+                          // ],
                           color: getCourseColor(course.color)),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -103,19 +113,30 @@ class CourseTile extends StatelessWidget {
                             fontWeight: FontWeight.bold,
                             fontSize: 20)),
                     Text(
-                      getTeacherById(lesson.teacher).name,
+                      type == CourseTileType.teacher ?
+                        getGroupById(lesson.group).name :
+                      type == CourseTileType.group ? 
+                        getTeacherById(lesson.teacher).name :
+                      type == CourseTileType.cabinet ? 
+                      "" : "",
                       style: const TextStyle(
                           color: Colors.white, fontFamily: 'Ubuntu'),
                     ),
                     Row(
                       children: [
+                        type !=  CourseTileType.cabinet ?
                         const Icon(
                           Icons.location_on_rounded,
                           color: Colors.white,
                           size: 20,
-                        ),
+                        ) : SizedBox(),
                         Text(
-                          getCabinetById(lesson.cabinet).name,
+                          type == CourseTileType.teacher ?
+                            getCabinetById(lesson.cabinet).name :
+                          type == CourseTileType.group ? 
+                            getCabinetById(lesson.cabinet).name :
+                          type == CourseTileType.cabinet ? 
+                            getGroupById(lesson.group).name : "",
                           style: const TextStyle(
                               color: Colors.white, fontFamily: 'Ubuntu'),
                         ),
@@ -129,7 +150,7 @@ class CourseTile extends StatelessWidget {
           Positioned(
             top: 0,
             right: 0,
-            child: swaped
+            child: swaped != null
                 ? const Padding(
                     padding: EdgeInsets.all(8),
                     child: Align(
