@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -9,6 +10,7 @@ import 'package:zameny_flutter/Services/Tools.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/groupChooser.dart';
 
@@ -132,6 +134,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> {
                 children: [
                   const SizedBox(height: 10),
                   const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  const ScheduleTurboSearch(),
                   const SizedBox(height: 10),
                   GroupChooser(onGroupSelected: _groupSelected),
                   const SizedBox(height: 10),
