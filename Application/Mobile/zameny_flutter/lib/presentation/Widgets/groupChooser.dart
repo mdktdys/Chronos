@@ -43,7 +43,6 @@ class _GroupChooserState extends State<GroupChooser> {
             context: context, onGroupSelected: widget.onGroupSelected);
       },
       child: Container(
-        width: double.infinity,
         decoration: const BoxDecoration(
             borderRadius: BorderRadius.all(Radius.circular(20)),
             color: Color.fromARGB(255, 59, 64, 82),
@@ -70,6 +69,7 @@ class _GroupChooserState extends State<GroupChooser> {
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   const Text(
                     "Selected study group",
+                    overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                         fontFamily: 'Ubuntu',
                         fontSize: 16,
@@ -135,13 +135,14 @@ class _GroupChooserState extends State<GroupChooser> {
         backgroundColor: Theme.of(context).colorScheme.background,
         builder: (_) {
           return DraggableScrollableSheet(
-            shouldCloseOnMinExtent: true,
-            snap: false,
-            expand: false,
-            maxChildSize: 0.8,
+              shouldCloseOnMinExtent: true,
+              snap: false,
+              expand: false,
+              maxChildSize: 0.8,
               builder: (BuildContext context, ScrollController controller) {
-            return ModalGroupsBottomSheet(onGroupSelected: onGroupSelected,controller : controller);
-          });
+                return ModalGroupsBottomSheet(
+                    onGroupSelected: onGroupSelected, controller: controller);
+              });
         });
   }
 }
@@ -149,7 +150,8 @@ class _GroupChooserState extends State<GroupChooser> {
 class ModalGroupsBottomSheet extends StatefulWidget {
   final Function(int) onGroupSelected;
   final ScrollController controller;
-  const ModalGroupsBottomSheet({super.key, required this.onGroupSelected, required this.controller});
+  const ModalGroupsBottomSheet(
+      {super.key, required this.onGroupSelected, required this.controller});
 
   @override
   State<ModalGroupsBottomSheet> createState() => _ModalGroupsBottomSheetState();
@@ -184,37 +186,52 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
           controller: this.widget.controller,
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                CupertinoSearchTextField(
-                  autocorrect: false,
-                  enableIMEPersonalizedLearning: false,
-                  style: TextStyle(color: Theme.of(context).colorScheme.secondary),
-                  controller: _searchController,
-                  onChanged: (value) {
-                    setState(() {
-                      
-                    });
+            child: Column(children: [
+              CupertinoSearchTextField(
+                autocorrect: false,
+                enableIMEPersonalizedLearning: false,
+                style:
+                    TextStyle(color: Theme.of(context).colorScheme.secondary),
+                controller: _searchController,
+                onChanged: (value) {
+                  setState(() {});
+                },
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              Container(
+                width: double.infinity,
+                child: CupertinoSegmentedControl(
+                  selectedColor: Theme.of(context).colorScheme.primary,
+                  unselectedColor: Colors.transparent,
+                  onValueChanged: (index) {},
+                  children: {
+                    1: Expanded(child:Text("Groups")),
+                    2: Expanded(child:Text("Teachers")),
+                    3: Expanded(child:Text("Cabinets")),
                   },
                 ),
-                const SizedBox(height: 5,),
-                BlocBuilder<LoadBloc, LoadBlocState>(
-                  bloc: loadBloc,
-                  builder: (context, state) {
-                    if (state is LoadBlocLoaded) {
-                      return GroupList(
-                          groups: groups,
-                          widget: widget,
-                          filter: _searchController.text);
-                    }
-                    if (state is LoadBlocLoading) {
-                      return const CircularProgressIndicator();
-                    }
-                    return const Text("err");
-                  },
-                ),
-              ],
-            ),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              BlocBuilder<LoadBloc, LoadBlocState>(
+                bloc: loadBloc,
+                builder: (context, state) {
+                  if (state is LoadBlocLoaded) {
+                    return GroupList(
+                        groups: groups,
+                        widget: widget,
+                        filter: _searchController.text);
+                  }
+                  if (state is LoadBlocLoading) {
+                    return const CircularProgressIndicator();
+                  }
+                  return const Text("err");
+                },
+              ),
+            ]),
           ),
         ));
   }
@@ -231,10 +248,12 @@ class GroupList extends StatelessWidget {
       required this.widget,
       required this.filter});
 
-
   @override
   Widget build(BuildContext context) {
-    List<Group> filtered = groups.where((element) => element.name.toLowerCase().contains(filter.toLowerCase())).toList();
+    List<Group> filtered = groups
+        .where((element) =>
+            element.name.toLowerCase().contains(filter.toLowerCase()))
+        .toList();
     return Column(
       children: filtered
           .map((e) => GroupTile(
