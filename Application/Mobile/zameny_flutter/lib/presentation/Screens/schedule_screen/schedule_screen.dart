@@ -139,8 +139,23 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
     setState(() {
       this.cabinetIDSeek = cabinetID;
       GetIt.I.get<Data>().seekCabinet = cabinetID;
-      _loadWeekSchedule();
+      _loadCabinetWeekSchedule();
     });
+  }
+
+  void _loadCabinetWeekSchedule() async {
+    setState(() {});
+    DateTime monday = NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+    DateTime sunday = monday.add(const Duration(days: 6));
+
+    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+
+    context.read<ScheduleBloc>().add(LoadCabinetWeek(
+          cabinetID: cabinetIDSeek,
+          dateStart: startOfWeek,
+          dateEnd: endOfWeek,
+        ));
   }
 
    void _loadWeekTeahcerSchedule() async {
@@ -190,8 +205,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 ScheduleTurboSearch(groupSelected: _groupSelected, teacherSelected: _teacherSelected, cabinetSelected: _cabinetSelected,),
-                const SizedBox(height: 10),
-                GroupChooser(onGroupSelected: _groupSelected),
+                //const SizedBox(height: 10),
+                //GroupChooser(onGroupSelected: _groupSelected),
                 const SizedBox(height: 10),
                 DateHeader(
                   parentWidget: this,
@@ -248,7 +263,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                 } else if (state is ScheduleInitial) {
                   return const Text("Choose group");
                 } else {
-                  return const SizedBox(); // or some default widget
+                  return const SizedBox();
                 }
               },
             ),
@@ -336,12 +351,12 @@ class LessonList extends StatelessWidget {
     final currentDay = DateTime.now().weekday;
     final data = GetIt.I.get<Data>();
     final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
-    List<Zamena> zamenas = this.zamenas.
-        where((zamena) =>
-            zamena.groupID == groupID &&
-            zamena.date.isAfter(startDate) &&
-            zamena.date.isBefore(startDate.add(const Duration(days: 6))))
-        .toList();
+    // List<Zamena> zamenas = this.zamenas.
+    //     where((zamena) =>
+    //         zamena.groupID == groupID &&
+    //         zamena.date.isAfter(startDate) &&
+    //         zamena.date.isBefore(startDate.add(const Duration(days: 6))))
+    //     .toList();
 
     return Column(children: [
       zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
@@ -405,7 +420,6 @@ List<Widget> ScheduleList(List<Lesson> weekLessons,Data data, int groupID, List<
     final day = iter + 1;
     List <Lesson> lessons = [];
     try {
-      weekLessons.forEach((element) { GetIt.I.get<Talker>().critical(element.date.weekday);});
       lessons = weekLessons.where((lesson) => lesson.date.weekday == day).toList();
       lessons.sort((a, b) => a.number > b.number ? 1 : -1);
     } catch (e) {
@@ -460,8 +474,6 @@ class DayScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I.get<Talker>().debug("${day}");
-
     return Container(
       child: Column(
         children: [

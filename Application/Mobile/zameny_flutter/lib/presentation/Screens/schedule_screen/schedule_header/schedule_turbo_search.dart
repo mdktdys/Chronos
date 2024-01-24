@@ -13,7 +13,11 @@ class ScheduleTurboSearch extends StatefulWidget {
   final Function(int) groupSelected;
   final Function(int) teacherSelected;
   final Function(int) cabinetSelected;
-  const ScheduleTurboSearch({super.key, required this.groupSelected, required this.cabinetSelected, required this.teacherSelected});
+  const ScheduleTurboSearch(
+      {super.key,
+      required this.groupSelected,
+      required this.cabinetSelected,
+      required this.teacherSelected});
 
   @override
   State<ScheduleTurboSearch> createState() => _ScheduleTurboSearchState();
@@ -31,11 +35,15 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
   }
 
   static void filterSearchItems(List<dynamic> args) {
-
     var sendPort = args[0] as SendPort;
-    (args[1] as List<SearchItem>).where((element) => element.getFiltername().toLowerCase().contains(args[2].toLowerCase())).toList();
+    (args[1] as List<SearchItem>)
+        .where((element) => element
+            .getFiltername()
+            .toLowerCase()
+            .contains(args[2].toLowerCase()))
+        .toList();
     Isolate.exit(sendPort, args);
-}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +52,9 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
       children: [
         CupertinoSearchTextField(
           controller: searchController,
+          onSubmitted: (value) {
+            FocusScope.of(context).unfocus();
+          },
           onTap: () {
             searchItems.clear();
             searchItems.addAll(GetIt.I.get<Data>().groups);
@@ -51,52 +62,57 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
             searchItems.addAll(GetIt.I.get<Data>().teachers);
           },
           onChanged: (value) {
-  if (value.isEmpty) {
-    filteredItems.clear();
-    setState(() {});
-  } else {
-    if (_debounceTimer?.isActive ?? false) {
-      _debounceTimer!.cancel();
-    }
+            if (value.isEmpty) {
+              filteredItems.clear();
+              setState(() {});
+            } else {
+              if (_debounceTimer?.isActive ?? false) {
+                _debounceTimer!.cancel();
+              }
 
-    _debounceTimer = Timer(Duration(milliseconds: 300), () {
-      filteredItems = searchItems
-          .where((element) =>
-              element.getFiltername().toLowerCase().contains(value.toLowerCase()))
-          .toList();
-
-      setState(() {});
-    });
-  }
-},
+              _debounceTimer = Timer(Duration(milliseconds: 300), () {
+                filteredItems = searchItems
+                    .where((element) => element
+                        .getFiltername()
+                        .toLowerCase()
+                        .contains(value.toLowerCase()))
+                    .toList();
+                setState(() {});
+              });
+            }
+          },
           style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
           placeholder: 'Turbo search',
         ),
         ListView.builder(
-          shrinkWrap: true,
-          physics: const NeverScrollableScrollPhysics(),
-          itemCount: filteredItems.length,
-          itemBuilder: ((context, index) {
-          SearchItem item = filteredItems[index];
-          return ListTile(
-            onTap: (){
-              if(item is Group){
-                widget.groupSelected.call(item.id);
-              }
-              if(item is Cabinet){
-                widget.cabinetSelected.call(item.id);
-              }
-              if(item is Teacher){
-                widget.teacherSelected.call(item.id);
-              }
-              setState(() {
-                searchController.text ='';
-                filteredItems.clear();
-              });
-            },
-            title: Text(item.getFiltername(),style: TextStyle(fontFamily: 'Ubuntu'),),
-          );
-        }))
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemCount: filteredItems.length,
+            itemBuilder: ((context, index) {
+              SearchItem item = filteredItems[index];
+              return ListTile(
+                onTap: () {
+                  if (item is Group) {
+                    widget.groupSelected.call(item.id);
+                  }
+                  if (item is Cabinet) {
+                    widget.cabinetSelected.call(item.id);
+                  }
+                  if (item is Teacher) {
+                    widget.teacherSelected.call(item.id);
+                  }
+                  setState(() {
+                    searchController.text = '';
+                    FocusScope.of(context).unfocus();
+                    filteredItems.clear();
+                  });
+                },
+                title: Text(
+                  item.getFiltername(),
+                  style: TextStyle(fontFamily: 'Ubuntu'),
+                ),
+              );
+            }))
       ],
     );
   }
@@ -104,14 +120,13 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
 
 abstract class SearchItem {
   String getFiltername() {
-    if(this is Group){
-
+    if (this is Group) {
       return (this as Group).name;
     }
-    if(this is Cabinet){
+    if (this is Cabinet) {
       return (this as Cabinet).name;
     }
-    if(this is Teacher){
+    if (this is Teacher) {
       return (this as Teacher).name;
     }
     return "";

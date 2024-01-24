@@ -41,18 +41,22 @@ class Update {
 
   String toJson() => json.encode(toMap());
 
-  factory Update.fromJson(String source) => Update.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Update.fromJson(String source) =>
+      Update.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
 class Api {
-
   Future<Update?> checkUpdate() async {
     final client = GetIt.I.get<SupabaseClient>();
-    List<dynamic> data = await client.from('AppVersion').select('id,version,link,desc').order('id').limit(1);
+    List<dynamic> data = await client
+        .from('AppVersion')
+        .select('id,version,link,desc')
+        .order('id')
+        .limit(1);
     final update = Update.fromMap(data[0]);
-    if(GetIt.I.get<Data>().VERSION < update.version){
+    if (GetIt.I.get<Data>().VERSION < update.version) {
       return update;
-    }else{
+    } else {
       return null;
     }
   }
@@ -77,16 +81,18 @@ class Api {
   }
 
   Future<List<Lesson>> loadWeekSchedule(
-      {required int groupID,required DateTime start, required DateTime end}) async {
+      {required int groupID,
+      required DateTime start,
+      required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     List<dynamic> data = await client
         .from('Paras')
-        .select('id,group,number,course,teacher,cabinet,date').eq('group', groupID)
+        .select('id,group,number,course,teacher,cabinet,date')
+        .eq('group', groupID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
 
-    
     List<Lesson> weekLessons = [];
     for (var element in data) {
       Lesson lesson = Lesson.fromMap(element);
@@ -97,12 +103,36 @@ class Api {
   }
 
   Future<List<Lesson>> loadWeekTeacherSchedule(
-      {required int teacherID,required DateTime start, required DateTime end}) async {
+      {required int teacherID,
+      required DateTime start,
+      required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     List<dynamic> data = await client
         .from('Paras')
-        .select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID)
+        .select('id,group,number,course,teacher,cabinet,date')
+        .eq('teacher', teacherID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    List<Lesson> weekLessons = [];
+    for (var element in data) {
+      Lesson lesson = Lesson.fromMap(element);
+      weekLessons.add(lesson);
+    }
+    return weekLessons;
+  }
+
+  Future<List<Lesson>> loadWeekCabinetSchedule(
+      {required int cabinetID,
+      required DateTime start,
+      required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    List<dynamic> data = await client
+        .from('Paras')
+        .select('id,group,number,course,teacher,cabinet,date')
+        .eq('cabinet', cabinetID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
 
@@ -183,7 +213,8 @@ class Api {
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
-        .select('*').eq('group', groupID)
+        .select('*')
+        .eq('group', groupID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String())
         .order('date');
@@ -192,14 +223,14 @@ class Api {
     for (var element in data) {
       Zamena zamena = Zamena.fromMap(element);
       zamenaBuffer.add(zamena);
-      if (!dat.zamenas.any((element) => element.id == zamena.id)) {
-        dat.zamenas.add(zamena);
-      }
+      // if (!dat.zamenas.any((element) => element.id == zamena.id)) {
+      //   dat.zamenas.add(zamena);
+      // }
     }
     return zamenaBuffer;
   }
 
-    Future<List<Zamena>> loadTeacherZamenas(
+  Future<List<Zamena>> loadTeacherZamenas(
       {required int teacherID,
       required DateTime start,
       required DateTime end}) async {
@@ -207,7 +238,8 @@ class Api {
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
-        .select('*').eq('teacher', teacherID)
+        .select('*')
+        .eq('teacher', teacherID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String())
         .order('date');
@@ -216,9 +248,34 @@ class Api {
     for (var element in data) {
       Zamena zamena = Zamena.fromMap(element);
       zamenaBuffer.add(zamena);
-      if (!dat.zamenas.any((element) => element.id == zamena.id)) {
-        dat.zamenas.add(zamena);
-      }
+      // if (!dat.zamenas.any((element) => element.id == zamena.id)) {
+      //   dat.zamenas.add(zamena);
+      // }
+    }
+    return zamenaBuffer;
+  }
+
+  Future<List<Zamena>> loadCabinetZamenas(
+      {required int cabinetID,
+      required DateTime start,
+      required DateTime end}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+    List<dynamic> data = await client
+        .from('Zamenas')
+        .select('*')
+        .eq('cabinet', cabinetID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String())
+        .order('date');
+
+    List<Zamena> zamenaBuffer = [];
+    for (var element in data) {
+      Zamena zamena = Zamena.fromMap(element);
+      zamenaBuffer.add(zamena);
+      // if (!dat.zamenas.any((element) => element.id == zamena.id)) {
+      //   dat.zamenas.add(zamena);
+      // }
     }
     return zamenaBuffer;
   }

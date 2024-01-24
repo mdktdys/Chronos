@@ -161,12 +161,14 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
   late List<Group> groups;
   late final LoadBloc loadBloc;
   late final TextEditingController _searchController;
+  late final int _searchIndex;
 
   @override
   void initState() {
     super.initState();
     loadBloc = LoadBloc();
     _searchController = TextEditingController();
+    _searchIndex = 0;
     _loadGroups();
   }
 
@@ -176,6 +178,12 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
     await Api().loadGroups();
     groups = GetIt.I.get<Data>().groups;
     loadBloc.emit(LoadBlocLoaded());
+  }
+
+  _switchedSearch(int index) {
+    setState(() {
+      _searchIndex = index;
+    });
   }
 
   @override
@@ -201,15 +209,20 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
                 height: 5,
               ),
               Container(
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width,
+                height: 35,
                 child: CupertinoSegmentedControl(
+                  groupValue: _searchIndex,
                   selectedColor: Theme.of(context).colorScheme.primary,
+                  borderColor: Colors.white,
                   unselectedColor: Colors.transparent,
-                  onValueChanged: (index) {},
+                  onValueChanged: (index) {
+                    _switchedSearch(index);
+                  },
                   children: {
-                    1: Expanded(child:Text("Groups")),
-                    2: Expanded(child:Text("Teachers")),
-                    3: Expanded(child:Text("Cabinets")),
+                    1: Text("Groups"),
+                    2: Text("Teachers"),
+                    3: Text("Cabinets"),
                   },
                 ),
               ),
@@ -223,7 +236,7 @@ class _ModalGroupsBottomSheetState extends State<ModalGroupsBottomSheet> {
                     return GroupList(
                         groups: groups,
                         widget: widget,
-                        filter: _searchController.text);
+                        filter: _searchController.text, searchIndex: _searchIndex);
                   }
                   if (state is LoadBlocLoading) {
                     return const CircularProgressIndicator();
@@ -241,16 +254,30 @@ class GroupList extends StatelessWidget {
   final String filter;
   final List<Group> groups;
   final ModalGroupsBottomSheet widget;
+  final int searchIndex;
 
   const GroupList(
       {super.key,
       required this.groups,
       required this.widget,
-      required this.filter});
+      required this.filter,
+      required this.searchIndex});
 
   @override
   Widget build(BuildContext context) {
-    List<Group> filtered = groups
+    List<Group> filtered = groups;
+
+    // if(searchIndex == 0){
+    //   filtered = filtered.where((element) => element.)
+    // }
+    // else if (searchIndex == 1){
+
+    // }
+    // else if (searchIndex == 2){
+
+    // }
+
+    filtered = groups
         .where((element) =>
             element.name.toLowerCase().contains(filter.toLowerCase()))
         .toList();
