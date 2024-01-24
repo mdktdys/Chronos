@@ -37,7 +37,8 @@ class CourseTile extends StatelessWidget {
             //       blurRadius: 12)
             // ]
             ),
-        child: Stack(children: [
+        child: Stack(
+          children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -60,7 +61,7 @@ class CourseTile extends StatelessWidget {
                   width: 10,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: 30,
@@ -86,14 +87,14 @@ class CourseTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                        "${getLessonTimings(lesson.number).start!.hour}:${getLessonTimings(lesson.number).start!.minute}",
+                        "${getLessonTimings(lesson.number).start!.hour}:${getLessonTimings(lesson.number).start!.minute < 9 ? "0${getLessonTimings(lesson.number).start!.minute}" : getLessonTimings(lesson.number).start!.minute}",
                         style: const TextStyle(
                             fontSize: 16,
                             color: Colors.white,
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.bold)),
                     Text(
-                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute}",
+                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute < 9 ? "0${getLessonTimings(lesson.number).end!.minute}" : getLessonTimings(lesson.number).end!.minute }",
                         style: TextStyle(
                             color: Colors.white.withAlpha(180),
                             fontFamily: 'Ubuntu')),
@@ -102,47 +103,49 @@ class CourseTile extends StatelessWidget {
                 const SizedBox(
                   width: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text((getCourseById(lesson.course)??Course(id: -1,name: "err",color: "0,0,0,0")).name,
-                        overflow: TextOverflow.fade,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20)),
-                    Text(
-                      type == CourseTileType.teacher ?
-                        getGroupById(lesson.group).name :
-                      type == CourseTileType.group ? 
-                        getTeacherById(lesson.teacher).name :
-                      type == CourseTileType.cabinet ? 
-                      "" : "",
-                      style: const TextStyle(
-                          color: Colors.white, fontFamily: 'Ubuntu'),
-                    ),
-                    Row(
-                      children: [
-                        type !=  CourseTileType.cabinet ?
-                        const Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white,
-                          size: 20,
-                        ) : SizedBox(),
-                        Text(
-                          type == CourseTileType.teacher ?
-                            getCabinetById(lesson.cabinet).name :
-                          type == CourseTileType.group ? 
-                            getCabinetById(lesson.cabinet).name :
-                          type == CourseTileType.cabinet ? 
-                            getGroupById(lesson.group).name : "",
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text((getCourseById(lesson.course)??Course(id: -1,name: "err",color: "0,0,0,0")).name,
+                          overflow: TextOverflow.fade,
                           style: const TextStyle(
-                              color: Colors.white, fontFamily: 'Ubuntu'),
-                        ),
-                      ],
-                    ),
-                  ],
+                              color: Colors.white,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
+                      Text(
+                        type == CourseTileType.teacher ?
+                          getGroupById(lesson.group).name :
+                        type == CourseTileType.group ? 
+                          getTeacherById(lesson.teacher).name :
+                        type == CourseTileType.cabinet ? 
+                        "" : "",
+                        style: const TextStyle(
+                            color: Colors.white, fontFamily: 'Ubuntu'),
+                      ),
+                      Row(
+                        children: [
+                          type !=  CourseTileType.cabinet ?
+                          const Icon(
+                            Icons.location_on_rounded,
+                            color: Colors.white,
+                            size: 20,
+                          ) : SizedBox(),
+                          Text(
+                            type == CourseTileType.teacher ?
+                              getCabinetById(lesson.cabinet).name :
+                            type == CourseTileType.group ? 
+                              getCabinetById(lesson.cabinet).name :
+                            type == CourseTileType.cabinet ? 
+                              getGroupById(lesson.group).name : "",
+                            style: const TextStyle(
+                                color: Colors.white, fontFamily: 'Ubuntu'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),
