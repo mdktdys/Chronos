@@ -80,7 +80,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             cabinetID: event.cabinetID,
             start: event.dateStart,
             end: event.dateEnd);
-        GetIt.I.get<Talker>().critical(zamenas);
         emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,
@@ -101,7 +100,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             teacherID: event.teacherID,
             start: event.dateStart,
             end: event.dateEnd);
-        GetIt.I.get<Talker>().critical(zamenas);
         emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,

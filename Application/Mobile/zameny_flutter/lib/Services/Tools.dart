@@ -24,9 +24,9 @@ Teacher getTeacherById(int teacherID) {
   return dat.teachers.where((teacher) => teacher.id == teacherID).first;
 }
 
-Group getGroupById(int groupID) {
+Group? getGroupById(int groupID) {
   final dat = GetIt.I.get<Data>();
-  return dat.groups.where((group) => group.id == groupID).first;
+  return dat.groups.where((group) => group.id == groupID).firstOrNull;
 }
 
 Course? getCourseById(int CourseID) {

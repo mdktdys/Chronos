@@ -1,13 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 
-enum CourseTileType{
-  teacher,
-  group,
-  cabinet
-}
+enum CourseTileType { teacher, group, cabinet }
 
 class CourseTile extends StatelessWidget {
   final Lesson lesson;
@@ -28,17 +23,16 @@ class CourseTile extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 41, 44, 58),
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: Color.fromARGB(255, 43, 43, 58),
-            //       blurStyle: BlurStyle.outer,
-            //       blurRadius: 12)
-            // ]
-            ),
-        child: Stack(
-          children: [
+          borderRadius: BorderRadius.all(Radius.circular(20)),
+          color: Color.fromARGB(255, 41, 44, 58),
+          // boxShadow: [
+          //   BoxShadow(
+          //       color: Color.fromARGB(255, 43, 43, 58),
+          //       blurStyle: BlurStyle.outer,
+          //       blurRadius: 12)
+          // ]
+        ),
+        child: Stack(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
@@ -94,7 +88,7 @@ class CourseTile extends StatelessWidget {
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.bold)),
                     Text(
-                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute < 9 ? "0${getLessonTimings(lesson.number).end!.minute}" : getLessonTimings(lesson.number).end!.minute }",
+                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute < 9 ? "0${getLessonTimings(lesson.number).end!.minute}" : getLessonTimings(lesson.number).end!.minute}",
                         style: TextStyle(
                             color: Colors.white.withAlpha(180),
                             fontFamily: 'Ubuntu')),
@@ -107,7 +101,10 @@ class CourseTile extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text((getCourseById(lesson.course)??Course(id: -1,name: "err",color: "0,0,0,0")).name,
+                      Text(
+                          (getCourseById(lesson.course) ??
+                                  Course(id: -1, name: "err", color: "0,0,0,0"))
+                              .name,
                           overflow: TextOverflow.fade,
                           style: const TextStyle(
                               color: Colors.white,
@@ -115,30 +112,33 @@ class CourseTile extends StatelessWidget {
                               fontWeight: FontWeight.bold,
                               fontSize: 20)),
                       Text(
-                        type == CourseTileType.teacher ?
-                          getGroupById(lesson.group).name :
-                        type == CourseTileType.group ? 
-                          getTeacherById(lesson.teacher).name :
-                        type == CourseTileType.cabinet ? 
-                        "" : "",
+                        type == CourseTileType.teacher
+                            ? getGroupById(lesson.group)!.name
+                            : type == CourseTileType.group
+                                ? getTeacherById(lesson.teacher).name
+                                : type == CourseTileType.cabinet
+                                    ? ""
+                                    : "",
                         style: const TextStyle(
                             color: Colors.white, fontFamily: 'Ubuntu'),
                       ),
                       Row(
                         children: [
-                          type !=  CourseTileType.cabinet ?
-                          const Icon(
-                            Icons.location_on_rounded,
-                            color: Colors.white,
-                            size: 20,
-                          ) : SizedBox(),
+                          type != CourseTileType.cabinet
+                              ? const Icon(
+                                  Icons.location_on_rounded,
+                                  color: Colors.white,
+                                  size: 20,
+                                )
+                              : SizedBox(),
                           Text(
-                            type == CourseTileType.teacher ?
-                              getCabinetById(lesson.cabinet).name :
-                            type == CourseTileType.group ? 
-                              getCabinetById(lesson.cabinet).name :
-                            type == CourseTileType.cabinet ? 
-                              getGroupById(lesson.group).name : "",
+                            type == CourseTileType.teacher
+                                ? getCabinetById(lesson.cabinet).name
+                                : type == CourseTileType.group
+                                    ? getCabinetById(lesson.cabinet).name
+                                    : type == CourseTileType.cabinet
+                                        ? getGroupById(lesson.group)!.name
+                                        : "",
                             style: const TextStyle(
                                 color: Colors.white, fontFamily: 'Ubuntu'),
                           ),
