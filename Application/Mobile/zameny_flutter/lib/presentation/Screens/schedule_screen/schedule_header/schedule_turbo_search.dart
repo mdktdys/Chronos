@@ -81,7 +81,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
               });
             }
           },
-          style: TextStyle(color: Theme.of(context).colorScheme.onSecondary),
+          style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
           placeholder: 'Turbo search',
         ),
         ListView.builder(
@@ -109,7 +109,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                 },
                 title: Text(
                   item.getFiltername(),
-                  style: TextStyle(fontFamily: 'Ubuntu'),
+                  style: TextStyle(fontFamily: 'Ubuntu',color: Theme.of(context).colorScheme.onSurface),
                 ),
               );
             }))

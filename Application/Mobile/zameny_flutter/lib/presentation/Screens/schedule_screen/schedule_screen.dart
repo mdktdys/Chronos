@@ -65,25 +65,27 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             dateStart: startOfWeek,
             dateEnd: endOfWeek,
           ));
+    } else {
+      context.read<ScheduleBloc>().emit(ScheduleInitial());
     }
   }
 
-  _loadPage() {
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
+  // _loadPage() {
+  //   DateTime monday =
+  //       NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+  //   DateTime sunday = monday.add(const Duration(days: 6));
 
-    // Устанавливаем время для понедельника и воскресенья
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+  //   // Устанавливаем время для понедельника и воскресенья
+  //   DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+  //   DateTime endOfWeek =
+  //       DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(FetchData(
-          groupID: groupIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ));
-  }
+  //   context.read<ScheduleBloc>().add(FetchData(
+  //         groupID: groupIDSeek,
+  //         dateStart: startOfWeek,
+  //         dateEnd: endOfWeek,
+  //       ));
+  // }
 
   void _loadWeekSchedule() async {
     DateTime monday =
@@ -203,7 +205,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
       Group? group = getGroupById(dat.seekGroup!);
       return group == null ? "Error" : group.name;
     }
-    return "Error";
+    return "Not found";
   }
 
   String getSearchTypeNamed() {
@@ -217,131 +219,134 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     if (dat.latestSearch == CourseTileType.group) {
       return "Group";
     }
-    return "Error";
+    return "Not found";
   }
 
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => context.read<ScheduleBloc>().add(FetchData(
-          groupID: groupIDSeek,
-          dateStart: getStartOfWeek(NavigationDate),
-          dateEnd: getEndOfWeek(NavigationDate))),
-      child: ListView(
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                ScheduleTurboSearch(
-                  groupSelected: _groupSelected,
-                  teacherSelected: _teacherSelected,
-                  cabinetSelected: _cabinetSelected,
-                ),
-                //const SizedBox(height: 10),
-                //GroupChooser(onGroupSelected: _groupSelected),
-                const SizedBox(height: 10),
-                DateHeader(
-                    parentWidget: this,
-                    todayWeek: todayWeek,
-                    currentWeek: currentWeek,
-                    dateSwitched: _dateSwitched),
-                const SizedBox(height: 10),
-                BlocBuilder<ScheduleBloc, ScheduleState>(
-                  builder: (context, state) {
-                    if (state is ScheduleLoaded) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            Text(getSearchTypeNamed(),
-                                style: const TextStyle(
-                                    fontFamily: 'Ubuntu', fontSize: 18)),
-                            Text(searchDiscribtion(),
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface,
-                                    fontFamily: 'Ubuntu',
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      );
-                    } else if (state is ScheduleFailedLoading) {
-                      return SizedBox();
-                    } else if (state is ScheduleLoading) {
-                      return SizedBox();
-                    } else if (state is ScheduleInitial) {
-                      return const Text("Choose any");
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: BlocBuilder<ScheduleBloc, ScheduleState>(
-              builder: (context, state) {
-                if (state is ScheduleLoaded) {
-                  return LessonList(
-                    type: state.searchType,
-                    zamenas: state.zamenas,
-                    lessons: state.lessons,
-                    groupID: groupIDSeek,
-                    weekDate: NavigationDate,
-                    todayWeek: todayWeek,
-                    currentWeek: currentWeek,
-                  );
-                } else if (state is ScheduleFailedLoading) {
-                  return FailedLoadWidget(
-                    funcReload: _loadWeekSchedule,
-                  );
-                } else if (state is ScheduleLoading) {
-                  return SizedBox(
-                    height: 550,
-                    child: Center(
+    return ListView(
+      controller: scrollController,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              const ScheduleHeader(),
+              const SizedBox(height: 10),
+              ScheduleTurboSearch(
+                groupSelected: _groupSelected,
+                teacherSelected: _teacherSelected,
+                cabinetSelected: _cabinetSelected,
+              ),
+              //const SizedBox(height: 10),
+              //GroupChooser(onGroupSelected: _groupSelected),
+              const SizedBox(height: 10),
+              DateHeader(
+                  parentWidget: this,
+                  todayWeek: todayWeek,
+                  currentWeek: currentWeek,
+                  dateSwitched: _dateSwitched),
+              const SizedBox(height: 10),
+              BlocBuilder<ScheduleBloc, ScheduleState>(
+                builder: (context, state) {
+                  if (state is ScheduleLoaded) {
+                    return Container(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                              height: 200,
-                              child:
-                                  Lottie.asset('assets/lottie/loading.json')),
-                          const Text(
-                            "Loading...",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26),
-                          )
+                          Text(getSearchTypeNamed(),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 18)),
+                          Text(searchDiscribtion(),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    ),
-                  );
-                } else if (state is ScheduleInitial) {
-                  return const Text("Choose group");
-                } else {
-                  return const SizedBox();
-                }
-              },
-            ),
+                    );
+                  } else if (state is ScheduleFailedLoading) {
+                    return SizedBox();
+                  } else if (state is ScheduleLoading) {
+                    return SizedBox();
+                  } else if (state is ScheduleInitial) {
+                    return Text("Search any object",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold));
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+
+              const SizedBox(height: 10),
+            ],
           ),
-          const SizedBox(
-            height: 100,
-          )
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: BlocBuilder<ScheduleBloc, ScheduleState>(
+            builder: (context, state) {
+              if (state is ScheduleLoaded) {
+                return LessonList(
+                  type: state.searchType,
+                  zamenas: state.zamenas,
+                  lessons: state.lessons,
+                  groupID: groupIDSeek,
+                  weekDate: NavigationDate,
+                  todayWeek: todayWeek,
+                  currentWeek: currentWeek,
+                );
+              } else if (state is ScheduleFailedLoading) {
+                return FailedLoadWidget(
+                  funcReload: _loadWeekSchedule,
+                );
+              } else if (state is ScheduleLoading) {
+                return SizedBox(
+                  height: 550,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            height: 200,
+                            child: Lottie.asset('assets/lottie/loading.json')),
+                        const Text(
+                          "Loading...",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              } else if (state is ScheduleInitial) {
+                return const SizedBox();
+                ;
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 100,
+        )
+      ],
     );
   }
 }
@@ -441,20 +446,21 @@ class SearchBannerMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Color.fromARGB(255, 59, 64, 82),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(255, 43, 43, 58),
-                blurStyle: BlurStyle.outer,
-                blurRadius: 12)
-          ]),
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        // boxShadow: [
+        //   const BoxShadow(
+        //       color: Color.fromARGB(255, 43, 43, 58),
+        //       blurStyle: BlurStyle.outer,
+        //       blurRadius: 12)
+        // ]),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.info_outline_rounded,
               size: 30,
               color: Colors.blue,
@@ -465,13 +471,15 @@ class SearchBannerMessageWidget extends StatelessWidget {
               //   )
               // ],
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
               "No swapped lessons",
               style: TextStyle(
-                  fontFamily: 'Ubuntu', fontSize: 18, color: Colors.white),
+                  fontFamily: 'Ubuntu',
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.inverseSurface),
             )
           ],
         ),
@@ -561,15 +569,15 @@ class DayScheduleWidget extends StatelessWidget {
                   children: [
                     Text(
                       getDayName(day),
-                      style: const TextStyle(
-                          color: Colors.white,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface,
                           fontSize: 24,
                           fontFamily: 'Ubuntu'),
                     ),
                     Text(
                       "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
-                      style: const TextStyle(
-                          color: Color.fromARGB(100, 255, 255, 255),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7),
                           fontSize: 18,
                           fontFamily: 'Ubuntu'),
                     ),

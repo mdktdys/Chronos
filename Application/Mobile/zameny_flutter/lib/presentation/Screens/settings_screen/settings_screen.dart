@@ -116,7 +116,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(20))),
                           child: Padding(
@@ -176,7 +176,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(20))),
                           child: Padding(
@@ -236,7 +236,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                         },
                         child: Container(
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.1),
+                              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
                               borderRadius: const BorderRadius.all(
                                   Radius.circular(20))),
                           child: Padding(
