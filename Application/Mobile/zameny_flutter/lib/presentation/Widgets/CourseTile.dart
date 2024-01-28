@@ -1,13 +1,8 @@
-
 import 'package:flutter/material.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 
-enum CourseTileType{
-  teacher,
-  group,
-  cabinet
-}
+enum CourseTileType { teacher, group, cabinet }
 
 class CourseTile extends StatelessWidget {
   final Lesson lesson;
@@ -27,40 +22,42 @@ class CourseTile extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 41, 44, 58),
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: Color.fromARGB(255, 43, 43, 58),
-            //       blurStyle: BlurStyle.outer,
-            //       blurRadius: 12)
-            // ]
-            ),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+          // boxShadow: [
+          //   BoxShadow(
+          //       color: Color.fromARGB(255, 43, 43, 58),
+          //       blurStyle: BlurStyle.outer,
+          //       blurRadius: 12)
+          // ]
+        ),
         child: Stack(children: [
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Row(
               children: [
-                Container(
-                  width: 10,
-                  decoration: BoxDecoration(
-                      color: getCourseColor(course.color),
-                      // boxShadow: [
-                      //   BoxShadow(
-                      //       color: getCourseColor(course.color),
-                      //       blurRadius: 6,
-                      //       blurStyle: BlurStyle.outer),
-                      // ],
-                      borderRadius:
-                          const BorderRadius.all(Radius.circular(20))),
-                  height: 100,
+                LimitedBox(
+                  maxHeight: 100,
+                  child: Container(
+                    width: 10,
+                    decoration: BoxDecoration(
+                        color: getCourseColor(course.color),
+                        // boxShadow: [
+                        //   BoxShadow(
+                        //       color: getCourseColor(course.color),
+                        //       blurRadius: 6,
+                        //       blurStyle: BlurStyle.outer),
+                        // ],
+                        borderRadius:
+                            const BorderRadius.all(Radius.circular(20))),
+                  ),
                 ),
                 const SizedBox(
                   width: 10,
                 ),
                 Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Container(
                       width: 30,
@@ -78,7 +75,7 @@ class CourseTile extends StatelessWidget {
                         child: Text(
                           lesson.number.toString(),
                           textAlign: TextAlign.center,
-                          style: const TextStyle(
+                          style: TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               fontSize: 14),
@@ -86,63 +83,71 @@ class CourseTile extends StatelessWidget {
                       ),
                     ),
                     Text(
-                        "${getLessonTimings(lesson.number).start!.hour}:${getLessonTimings(lesson.number).start!.minute}",
-                        style: const TextStyle(
+                        "${getLessonTimings(lesson.number).start!.hour}:${getLessonTimings(lesson.number).start!.minute < 9 ? "0${getLessonTimings(lesson.number).start!.minute}" : getLessonTimings(lesson.number).start!.minute}",
+                        style: TextStyle(
                             fontSize: 16,
-                            color: Colors.white,
+                            color: Theme.of(context).colorScheme.inverseSurface,
                             fontFamily: 'Ubuntu',
                             fontWeight: FontWeight.bold)),
                     Text(
-                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute}",
+                        "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute < 9 ? "0${getLessonTimings(lesson.number).end!.minute}" : getLessonTimings(lesson.number).end!.minute}",
                         style: TextStyle(
-                            color: Colors.white.withAlpha(180),
+                            color: Theme.of(context).colorScheme.inverseSurface.withAlpha(200),
                             fontFamily: 'Ubuntu')),
                   ],
                 ),
                 const SizedBox(
                   width: 10,
                 ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text((getCourseById(lesson.course)??Course(id: -1,name: "err",color: "0,0,0,0")).name,
-                        overflow: TextOverflow.fade,
-                        style: const TextStyle(
-                            color: Colors.white,
-                            fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.bold,
-                            fontSize: 20)),
-                    Text(
-                      type == CourseTileType.teacher ?
-                        getGroupById(lesson.group).name :
-                      type == CourseTileType.group ? 
-                        getTeacherById(lesson.teacher).name :
-                      type == CourseTileType.cabinet ? 
-                      "" : "",
-                      style: const TextStyle(
-                          color: Colors.white, fontFamily: 'Ubuntu'),
-                    ),
-                    Row(
-                      children: [
-                        type !=  CourseTileType.cabinet ?
-                        const Icon(
-                          Icons.location_on_rounded,
-                          color: Colors.white,
-                          size: 20,
-                        ) : SizedBox(),
-                        Text(
-                          type == CourseTileType.teacher ?
-                            getCabinetById(lesson.cabinet).name :
-                          type == CourseTileType.group ? 
-                            getCabinetById(lesson.cabinet).name :
-                          type == CourseTileType.cabinet ? 
-                            getGroupById(lesson.group).name : "",
-                          style: const TextStyle(
-                              color: Colors.white, fontFamily: 'Ubuntu'),
-                        ),
-                      ],
-                    ),
-                  ],
+                Flexible(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                          (getCourseById(lesson.course) ??
+                                  Course(id: -1, name: "err", color: "0,0,0,0"))
+                              .name,
+                          overflow: TextOverflow.fade,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.inverseSurface,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20)),
+                      Text(
+                        type == CourseTileType.teacher
+                            ? getGroupById(lesson.group)!.name
+                            : type == CourseTileType.group
+                                ? getTeacherById(lesson.teacher).name
+                                : type == CourseTileType.cabinet
+                                    ? ""
+                                    : "",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inverseSurface, fontFamily: 'Ubuntu'),
+                      ),
+                      Row(
+                        children: [
+                          type != CourseTileType.cabinet
+                              ? Icon(
+                                  Icons.location_on_rounded,
+                                  color: Theme.of(context).colorScheme.inverseSurface,
+                                  size: 20,
+                                )
+                              : SizedBox(),
+                          Text(
+                            type == CourseTileType.teacher
+                                ? getCabinetById(lesson.cabinet).name
+                                : type == CourseTileType.group
+                                    ? getCabinetById(lesson.cabinet).name
+                                    : type == CourseTileType.cabinet
+                                        ? getGroupById(lesson.group)!.name
+                                        : "",
+                            style: TextStyle(
+                                color: Theme.of(context).colorScheme.inverseSurface,fontFamily: 'Ubuntu'),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
             ),

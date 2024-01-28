@@ -20,9 +20,9 @@ class DateHeader extends StatelessWidget {
     return Container(
         height: 80,
         width: double.infinity,
-        decoration: const BoxDecoration(
-            borderRadius: BorderRadius.all(Radius.circular(20)),
-            color: Color.fromARGB(255, 59, 64, 82),
+        decoration: BoxDecoration(
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
             // boxShadow: [
             //   BoxShadow(
             //       color: Color.fromARGB(255, 43, 43, 58),
@@ -38,13 +38,13 @@ class DateHeader extends StatelessWidget {
             ToggleWeekButton(next: false, widget: parentWidget, dateSwitched: dateSwitched),
             Column(
               children: [
-                const Text(
+                Text(
                   "Осенний семестр 2023/2024",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Ubuntu',
                       fontSize: 16,
-                      color: Colors.white),
+                      color: Theme.of(context).colorScheme.inverseSurface),
                 ),
                 const SizedBox(
                   height: 5,
@@ -57,11 +57,11 @@ class DateHeader extends StatelessWidget {
                     children: [
                       Text(
                         "Week $currentWeek",
-                        style: const TextStyle(
+                        style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Ubuntu',
                             fontSize: 16,
-                            color: Colors.white),
+                            color: Theme.of(context).colorScheme.inverseSurface),
                       ),
                       const SizedBox(
                         width: 5,

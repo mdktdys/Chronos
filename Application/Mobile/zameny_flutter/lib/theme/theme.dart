@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-ThemeData lightTheme = ThemeData(
+ThemeData lightTheme = ThemeData.light().copyWith(
   textTheme: const TextTheme(
     titleLarge: TextStyle(
       fontSize: 25,
@@ -10,6 +10,7 @@ ThemeData lightTheme = ThemeData(
   ),
   primaryColorLight: Colors.black,
     colorScheme: const ColorScheme(
+      inverseSurface: Colors.black,
         brightness: Brightness.light,
         primary: Color.fromARGB(255, 30, 118, 233),
         onPrimary: Colors.white,
@@ -20,13 +21,14 @@ ThemeData lightTheme = ThemeData(
         background: Colors.white,
         onBackground: Colors.white,
         surface: Colors.red,
-        onSurface: Colors.white70),
+        onSurface: Colors.grey ),
     useMaterial3: true);
 
 
-ThemeData darkTheme = ThemeData(
+ThemeData darkTheme = ThemeData.dark().copyWith(
   primaryColorLight: Colors.white,
     colorScheme: const ColorScheme(
+      inverseSurface: Colors.white,
         brightness: Brightness.dark,
         primary: Color.fromARGB(255, 30, 118, 233),
         onPrimary: Colors.white,
@@ -37,5 +39,5 @@ ThemeData darkTheme = ThemeData(
         background: Color.fromARGB(255, 18, 21, 37),
         onBackground: Colors.white,
         surface: Colors.red,
-        onSurface: Colors.white70),
+        onSurface: Colors.grey),
     useMaterial3: true);

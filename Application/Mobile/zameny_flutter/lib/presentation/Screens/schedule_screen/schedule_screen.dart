@@ -4,15 +4,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
-import 'package:zameny_flutter/presentation/Widgets/groupChooser.dart';
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -21,8 +20,8 @@ class ScheduleScreen extends StatefulWidget {
   State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAliveClientMixin {
-
+class _ScheduleScreenState extends State<ScheduleScreen>
+    with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
 
@@ -66,28 +65,29 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
             dateStart: startOfWeek,
             dateEnd: endOfWeek,
           ));
+    } else {
+      context.read<ScheduleBloc>().emit(ScheduleInitial());
     }
   }
 
-  _loadPage() {
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
+  // _loadPage() {
+  //   DateTime monday =
+  //       NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+  //   DateTime sunday = monday.add(const Duration(days: 6));
 
-    // Устанавливаем время для понедельника и воскресенья
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+  //   // Устанавливаем время для понедельника и воскресенья
+  //   DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+  //   DateTime endOfWeek =
+  //       DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(FetchData(
-          groupID: groupIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ));
-  }
+  //   context.read<ScheduleBloc>().add(FetchData(
+  //         groupID: groupIDSeek,
+  //         dateStart: startOfWeek,
+  //         dateEnd: endOfWeek,
+  //       ));
+  // }
 
   void _loadWeekSchedule() async {
-    setState(() {});
     DateTime monday =
         NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
     DateTime sunday = monday.add(const Duration(days: 6));
@@ -117,39 +117,59 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
   }
 
   void _groupSelected(int groupID) {
+    final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
-    setState(() {
-      this.groupIDSeek = groupID;
-      GetIt.I.get<Data>().seekGroup = groupID;
-      _loadWeekSchedule();
-    });
+    groupIDSeek = groupID;
+    data.seekGroup = groupID;
+    data.latestSearch = CourseTileType.group;
+    _loadWeekSchedule();
+    setState(() {});
   }
 
   void _teacherSelected(int teacherID) {
+    final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
-    setState(() {
-      this.teacherIDSeek = teacherID;
-      GetIt.I.get<Data>().teacherGroup = teacherID;
-      _loadWeekTeahcerSchedule();
-    });
+    teacherIDSeek = teacherID;
+    data.teacherGroup = teacherID;
+    data.latestSearch = CourseTileType.teacher;
+    _loadWeekTeahcerSchedule();
+    setState(() {});
   }
 
   void _cabinetSelected(int cabinetID) {
+    final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
-    setState(() {
-      this.cabinetIDSeek = cabinetID;
-      GetIt.I.get<Data>().seekCabinet = cabinetID;
-      _loadWeekSchedule();
-    });
+    cabinetIDSeek = cabinetID;
+    data.seekCabinet = cabinetID;
+    data.latestSearch = CourseTileType.cabinet;
+    _loadCabinetWeekSchedule();
+    setState(() {});
   }
 
-   void _loadWeekTeahcerSchedule() async {
-    setState(() {});
-    DateTime monday = NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+  void _loadCabinetWeekSchedule() async {
+    DateTime monday =
+        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
     DateTime sunday = monday.add(const Duration(days: 6));
 
     DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    DateTime endOfWeek =
+        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+
+    context.read<ScheduleBloc>().add(LoadCabinetWeek(
+          cabinetID: cabinetIDSeek,
+          dateStart: startOfWeek,
+          dateEnd: endOfWeek,
+        ));
+  }
+
+  void _loadWeekTeahcerSchedule() async {
+    DateTime monday =
+        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
+    DateTime sunday = monday.add(const Duration(days: 6));
+
+    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    DateTime endOfWeek =
+        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     context.read<ScheduleBloc>().add(LoadTeacherWeek(
           teacherID: teacherIDSeek,
@@ -160,102 +180,173 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
 
   void _dateSwitched() async {
     final Data dat = GetIt.I.get<Data>();
-    setState(() {});
-    if(dat.latestSearch == CourseTileType.teacher){
+    if (dat.latestSearch == CourseTileType.teacher) {
       _teacherSelected(dat.teacherGroup!);
     }
-    if(dat.latestSearch == CourseTileType.cabinet){
+    if (dat.latestSearch == CourseTileType.cabinet) {
       _cabinetSelected(dat.seekCabinet!);
     }
-    if(dat.latestSearch == CourseTileType.group){
+    if (dat.latestSearch == CourseTileType.group) {
       _groupSelected(dat.seekGroup!);
     }
   }
 
+  String searchDiscribtion() {
+    final Data dat = GetIt.I.get<Data>();
+    if (dat.latestSearch == CourseTileType.teacher) {
+      Teacher? teacher = getTeacherById(dat.teacherGroup!);
+      return teacher == null ? "Error" : teacher.name;
+    }
+    if (dat.latestSearch == CourseTileType.cabinet) {
+      Cabinet? cabinet = getCabinetById(dat.seekCabinet!);
+      return cabinet == null ? "Error" : cabinet.name;
+    }
+    if (dat.latestSearch == CourseTileType.group) {
+      Group? group = getGroupById(dat.seekGroup!);
+      return group == null ? "Error" : group.name;
+    }
+    return "Not found";
+  }
+
+  String getSearchTypeNamed() {
+    final Data dat = GetIt.I.get<Data>();
+    if (dat.latestSearch == CourseTileType.teacher) {
+      return "Teacher";
+    }
+    if (dat.latestSearch == CourseTileType.cabinet) {
+      return "Cabinet";
+    }
+    if (dat.latestSearch == CourseTileType.group) {
+      return "Group";
+    }
+    return "Not found";
+  }
+
   @override
   Widget build(BuildContext context) {
-    return RefreshIndicator(
-      onRefresh: () async => context.read<ScheduleBloc>().add(FetchData(
-          groupID: groupIDSeek,
-          dateStart: getStartOfWeek(NavigationDate),
-          dateEnd: getEndOfWeek(NavigationDate))),
-      child: ListView(
-        controller: scrollController,
-        children: [
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                ScheduleTurboSearch(groupSelected: _groupSelected, teacherSelected: _teacherSelected, cabinetSelected: _cabinetSelected,),
-                const SizedBox(height: 10),
-                GroupChooser(onGroupSelected: _groupSelected),
-                const SizedBox(height: 10),
-                DateHeader(
+    return ListView(
+      controller: scrollController,
+      children: [
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20.0),
+          child: Column(
+            children: [
+              const SizedBox(height: 10),
+              const ScheduleHeader(),
+              const SizedBox(height: 10),
+              ScheduleTurboSearch(
+                groupSelected: _groupSelected,
+                teacherSelected: _teacherSelected,
+                cabinetSelected: _cabinetSelected,
+              ),
+              //const SizedBox(height: 10),
+              //GroupChooser(onGroupSelected: _groupSelected),
+              const SizedBox(height: 10),
+              DateHeader(
                   parentWidget: this,
                   todayWeek: todayWeek,
                   currentWeek: currentWeek,
-                  dateSwitched: _dateSwitched
-                ),
-                const SizedBox(height: 10),
-              ],
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: BlocBuilder<ScheduleBloc, ScheduleState>(
-              builder: (context, state) {
-                if (state is ScheduleLoaded) {
-                  return LessonList(
-                    type: state.searchType,
-                    zamenas: state.zamenas,
-                    lessons: state.lessons,
-                    groupID: groupIDSeek,
-                    weekDate: NavigationDate,
-                    todayWeek: todayWeek,
-                    currentWeek: currentWeek,
-                  );
-                } else if (state is ScheduleFailedLoading) {
-                  return FailedLoadWidget(
-                    funcReload: _loadWeekSchedule,
-                  );
-                } else if (state is ScheduleLoading) {
-                  return SizedBox(
-                    height: 550,
-                    child: Center(
+                  dateSwitched: _dateSwitched),
+              const SizedBox(height: 10),
+              BlocBuilder<ScheduleBloc, ScheduleState>(
+                builder: (context, state) {
+                  if (state is ScheduleLoaded) {
+                    return Container(
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          SizedBox(
-                              height: 200,
-                              child:
-                                  Lottie.asset('assets/lottie/loading.json')),
-                          const Text(
-                            "Loading...",
-                            style: TextStyle(
-                                color: Colors.blue,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 26),
-                          )
+                          Text(getSearchTypeNamed(),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 18)),
+                          Text(searchDiscribtion(),
+                              style: TextStyle(
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 24,
+                                  fontWeight: FontWeight.bold)),
                         ],
                       ),
-                    ),
-                  );
-                } else if (state is ScheduleInitial) {
-                  return const Text("Choose group");
-                } else {
-                  return const SizedBox(); // or some default widget
-                }
-              },
-            ),
+                    );
+                  } else if (state is ScheduleFailedLoading) {
+                    return SizedBox();
+                  } else if (state is ScheduleLoading) {
+                    return SizedBox();
+                  } else if (state is ScheduleInitial) {
+                    return Text("Search any object",
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold));
+                  } else {
+                    return const SizedBox();
+                  }
+                },
+              ),
+
+              const SizedBox(height: 10),
+            ],
           ),
-          SizedBox(height: 100,)
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          child: BlocBuilder<ScheduleBloc, ScheduleState>(
+            builder: (context, state) {
+              if (state is ScheduleLoaded) {
+                return LessonList(
+                  type: state.searchType,
+                  zamenas: state.zamenas,
+                  lessons: state.lessons,
+                  groupID: groupIDSeek,
+                  weekDate: NavigationDate,
+                  todayWeek: todayWeek,
+                  currentWeek: currentWeek,
+                );
+              } else if (state is ScheduleFailedLoading) {
+                return FailedLoadWidget(
+                  funcReload: _loadWeekSchedule,
+                );
+              } else if (state is ScheduleLoading) {
+                return SizedBox(
+                  height: 550,
+                  child: Center(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                            height: 200,
+                            child: Lottie.asset('assets/lottie/loading.json')),
+                        const Text(
+                          "Loading...",
+                          style: TextStyle(
+                              color: Colors.blue,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                              fontSize: 26),
+                        )
+                      ],
+                    ),
+                  ),
+                );
+              } else if (state is ScheduleInitial) {
+                return const SizedBox();
+                ;
+              } else {
+                return const SizedBox();
+              }
+            },
+          ),
+        ),
+        const SizedBox(
+          height: 100,
+        )
+      ],
     );
   }
 }
@@ -336,18 +427,13 @@ class LessonList extends StatelessWidget {
     final currentDay = DateTime.now().weekday;
     final data = GetIt.I.get<Data>();
     final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
-    List<Zamena> zamenas = this.zamenas.
-        where((zamena) =>
-            zamena.groupID == groupID &&
-            zamena.date.isAfter(startDate) &&
-            zamena.date.isBefore(startDate.add(const Duration(days: 6))))
-        .toList();
 
     return Column(children: [
       zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
       Column(
-          children: ScheduleList(lessons,data, groupID, zamenas, startDate, currentDay,
-              todayWeek, currentWeek,type: type)),
+          children: ScheduleList(lessons, data, groupID, zamenas, startDate,
+              currentDay, todayWeek, currentWeek,
+              type: type)),
     ]);
   }
 }
@@ -360,20 +446,21 @@ class SearchBannerMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      decoration: const BoxDecoration(
-          borderRadius: BorderRadius.all(Radius.circular(20)),
-          color: Color.fromARGB(255, 59, 64, 82),
-          boxShadow: [
-            BoxShadow(
-                color: Color.fromARGB(255, 43, 43, 58),
-                blurStyle: BlurStyle.outer,
-                blurRadius: 12)
-          ]),
-      child: const Padding(
-        padding: EdgeInsets.all(8.0),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        // boxShadow: [
+        //   const BoxShadow(
+        //       color: Color.fromARGB(255, 43, 43, 58),
+        //       blurStyle: BlurStyle.outer,
+        //       blurRadius: 12)
+        // ]),
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(8.0),
         child: Row(
           children: [
-            Icon(
+            const Icon(
               Icons.info_outline_rounded,
               size: 30,
               color: Colors.blue,
@@ -384,13 +471,15 @@ class SearchBannerMessageWidget extends StatelessWidget {
               //   )
               // ],
             ),
-            SizedBox(
+            const SizedBox(
               width: 10,
             ),
             Text(
               "No swapped lessons",
               style: TextStyle(
-                  fontFamily: 'Ubuntu', fontSize: 18, color: Colors.white),
+                  fontFamily: 'Ubuntu',
+                  fontSize: 18,
+                  color: Theme.of(context).colorScheme.inverseSurface),
             )
           ],
         ),
@@ -399,14 +488,22 @@ class SearchBannerMessageWidget extends StatelessWidget {
   }
 }
 
-List<Widget> ScheduleList(List<Lesson> weekLessons,Data data, int groupID, List<Zamena> zamenas, 
-    DateTime startDate, int currentDay, todayWeek, currentWeek, {required CourseTileType type}) {
+List<Widget> ScheduleList(
+    List<Lesson> weekLessons,
+    Data data,
+    int groupID,
+    List<Zamena> zamenas,
+    DateTime startDate,
+    int currentDay,
+    todayWeek,
+    currentWeek,
+    {required CourseTileType type}) {
   return List.generate(6, (iter) {
     final day = iter + 1;
-    List <Lesson> lessons = [];
+    List<Lesson> lessons = [];
     try {
-      weekLessons.forEach((element) { GetIt.I.get<Talker>().critical(element.date.weekday);});
-      lessons = weekLessons.where((lesson) => lesson.date.weekday == day).toList();
+      lessons =
+          weekLessons.where((lesson) => lesson.date.weekday == day).toList();
       lessons.sort((a, b) => a.number > b.number ? 1 : -1);
     } catch (e) {
       return const SizedBox();
@@ -441,18 +538,17 @@ class DayScheduleWidget extends StatelessWidget {
   final Data data;
   final CourseTileType type;
 
-  const DayScheduleWidget({
-    super.key,
-    required this.day,
-    required this.DayZamenas,
-    required this.lessons,
-    required this.startDate,
-    required this.currentDay,
-    required this.currentWeek,
-    required this.todayWeek,
-    required this.data,
-    required this.type
-  });
+  const DayScheduleWidget(
+      {super.key,
+      required this.day,
+      required this.DayZamenas,
+      required this.lessons,
+      required this.startDate,
+      required this.currentDay,
+      required this.currentWeek,
+      required this.todayWeek,
+      required this.data,
+      required this.type});
 
   final int day;
   final List<Zamena> DayZamenas;
@@ -460,8 +556,6 @@ class DayScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I.get<Talker>().debug("${day}");
-
     return Container(
       child: Column(
         children: [
@@ -475,15 +569,15 @@ class DayScheduleWidget extends StatelessWidget {
                   children: [
                     Text(
                       getDayName(day),
-                      style: const TextStyle(
-                          color: Colors.white,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface,
                           fontSize: 24,
                           fontFamily: 'Ubuntu'),
                     ),
                     Text(
                       "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
-                      style: const TextStyle(
-                          color: Color.fromARGB(100, 255, 255, 255),
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7),
                           fontSize: 18,
                           fontFamily: 'Ubuntu'),
                     ),
@@ -522,7 +616,9 @@ class DayScheduleWidget extends StatelessWidget {
               children: data.timings.map((para) {
             if (DayZamenas.any(
                 (element) => element.LessonTimingsID == para.number)) {
-                Lesson? swapedPara = lessons.where((element) => element.number == para.number).firstOrNull; 
+              Lesson? swapedPara = lessons
+                  .where((element) => element.number == para.number)
+                  .firstOrNull;
               Zamena zamena = DayZamenas.where(
                   (element) => element.LessonTimingsID == para.number).first;
               final course = getCourseById(zamena.courseID) ??
