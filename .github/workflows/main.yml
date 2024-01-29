@@ -23,6 +23,7 @@ jobs:
           channel: "stable"
 
       - run: flutter pub get
+      - run: flutter pub get flutter pub run flutter_launcher_icons
       - run: flutter build apk --release --split-per-abi --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
       - run: flutter build apk --release --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
 
