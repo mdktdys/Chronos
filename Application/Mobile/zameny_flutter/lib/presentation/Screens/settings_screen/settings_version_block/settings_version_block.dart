@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 
 class SettingsVersionBlock extends StatelessWidget {
   const SettingsVersionBlock({
@@ -7,18 +9,19 @@ class SettingsVersionBlock extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final packageInfo = GetIt.I.get<PackageInfo>();
     return Container(
       alignment: Alignment.topLeft,
-      child: const Column(
+      child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            "Version: 0.0.1a (34) Github",
-            style: TextStyle(fontFamily: 'Monospace', color: Colors.grey),
+            "Version: ${packageInfo.version} build: ${packageInfo.buildNumber} Github",
+            style: const TextStyle(fontFamily: 'Monospace', color: Colors.grey),
             textAlign: TextAlign.start,
           ),
-          Text(
+          const Text(
             "carefully made for people ✨",
             style: TextStyle(fontFamily: 'Monospace', color: Colors.grey),
             textAlign: TextAlign.start,

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
 class ScheduleHeader extends StatelessWidget {
   const ScheduleHeader({
@@ -25,7 +27,29 @@ class ScheduleHeader extends StatelessWidget {
               fontFamily: 'Ubuntu'),
         ),
         IconButton(
-            onPressed: () {},
+            onPressed: () {
+              showModalBottomSheet(
+                barrierColor: Colors.black.withOpacity(0.3),
+                  backgroundColor: Theme.of(context).colorScheme.background,
+                  context: context,
+                  builder: (context) => Container(
+                    height: 100,
+                        child: Padding(
+                          padding: EdgeInsets.all(8),
+                          child: Column(
+                            children: [
+                              ListTile(
+                                title: Text("Show debug"),
+                                onTap: () => Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (context) => TalkerScreen(
+                                            talker: GetIt.I.get<Talker>()))),
+                              )
+                            ],
+                          ),
+                        ),
+                      ));
+            },
             icon: Icon(
               Icons.more_horiz_rounded,
               size: 36,
