@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
   <!--
     If you are serving your web app in a path other than the root, change the
@@ -17,6 +18,7 @@
   <base href="./">
 
   <meta charset="UTF-8">
+  <script defer src="index.dart.js" type="application/javascript"></script>
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
   <meta name="description" content="A new Flutter project.">
 
@@ -25,9 +27,10 @@
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="zameny_flutter">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="stylesheet" href="style.css">
 
   <!-- Favicon -->
-  <link rel="icon" type="image/png" href="favicon.png"/>
+  <link rel="icon" type="image/png" href="favicon.png" />
 
   <title>Chronos</title>
   <link rel="manifest" href="manifest.json">
@@ -37,18 +40,31 @@
     const serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
+
   <script src="flutter.js" defer></script>
 </head>
+
 <body>
+  <div class="loading">
+    <div class="loader"></div>
+  </div>
+  <script defer src="main.dart.js" type="application/javascript"></script>
   <script>
-    window.addEventListener('load', function(ev) {
+    window.onload = (event) => {
+      console.log('page is fully loaded');
+      var element = document.getElementById("loader");
+      element.parentNode.removeChild(element);
+    };
+  </script>
+  <script>
+    window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
-        onEntrypointLoaded: function(engineInitializer) {
-          engineInitializer.initializeEngine().then(function(appRunner) {
+        onEntrypointLoaded: function (engineInitializer) {
+          engineInitializer.initializeEngine().then(function (appRunner) {
             appRunner.runApp();
           });
         }
@@ -56,4 +72,5 @@
     });
   </script>
 </body>
+
 </html>
