@@ -77,8 +77,8 @@ class _MainScreenState extends State<MainScreen> {
                             padding: const EdgeInsets.all(10.0),
                             child: Text(
                               update.desc,
-                              style:
-                                  const TextStyle(fontFamily: 'Ubuntu', fontSize: 18),
+                              style: const TextStyle(
+                                  fontFamily: 'Ubuntu', fontSize: 18),
                             ),
                           ))),
                   SizedBox(
@@ -118,8 +118,15 @@ class _MainScreenState extends State<MainScreen> {
                                       destinationFilename:
                                           'flutter_hello_world.apk')
                                   .listen((event) {});
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                  SnackBar(content: const Text("Downloading...",style: TextStyle(color: Colors.white),),backgroundColor: Theme.of(context).colorScheme.background,));
+                              ScaffoldMessenger.of(context)
+                                  .showSnackBar(SnackBar(
+                                content: const Text(
+                                  "Downloading...",
+                                  style: TextStyle(color: Colors.white),
+                                ),
+                                backgroundColor:
+                                    Theme.of(context).colorScheme.background,
+                              ));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -167,7 +174,11 @@ class _MainScreenState extends State<MainScreen> {
                 constraints: BoxConstraints(maxWidth: 1200),
                 child: PageView(
                   controller: pageController,
-                  children: const [ScheduleScreen(), ExamsScreen(), SettingsScreen()],
+                  children: const [
+                    ScheduleScreen(),
+                    ExamsScreen(),
+                    SettingsScreen()
+                  ],
                 ),
               ),
             ),
