@@ -556,7 +556,21 @@ class DayScheduleWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isToday =
+        (day == currentDay && todayWeek == currentWeek ? true : false);
+
     return Container(
+      padding: EdgeInsets.all(8),
+      decoration: isToday
+          ? BoxDecoration(
+
+              border: Border.all(
+                strokeAlign: BorderSide.strokeAlignOutside,
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  width: 2),
+              borderRadius: BorderRadius.all(Radius.circular(20)))
+          : null,
       child: Column(
         children: [
           Align(
@@ -577,13 +591,16 @@ class DayScheduleWidget extends StatelessWidget {
                     Text(
                       "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7),
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withOpacity(0.7),
                           fontSize: 18,
                           fontFamily: 'Ubuntu'),
                     ),
                   ],
                 ),
-                day == currentDay && todayWeek == currentWeek
+                isToday
                     ? Container(
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 30, 118, 233),
