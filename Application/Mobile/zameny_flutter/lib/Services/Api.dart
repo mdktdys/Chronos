@@ -209,6 +209,9 @@ class Api {
       {required int groupID,
       required DateTime start,
       required DateTime end}) async {
+    if(groupID == -1){
+      return [];
+    }
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client

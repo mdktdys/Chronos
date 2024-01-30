@@ -563,11 +563,9 @@ class DayScheduleWidget extends StatelessWidget {
       padding: const EdgeInsets.all(8),
       decoration: isToday
           ? BoxDecoration(
-
               border: Border.all(
-                strokeAlign: BorderSide.strokeAlignOutside,
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   width: 2),
               borderRadius: const BorderRadius.all(Radius.circular(20)))
           : null,
