@@ -75,7 +75,7 @@ class CourseTile extends StatelessWidget {
                         child: Text(
                           lesson.number.toString(),
                           textAlign: TextAlign.center,
-                          style: TextStyle(
+                          style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
                               fontSize: 14),
@@ -132,7 +132,7 @@ class CourseTile extends StatelessWidget {
                                   color: Theme.of(context).colorScheme.inverseSurface,
                                   size: 20,
                                 )
-                              : SizedBox(),
+                              : const SizedBox(),
                           Text(
                             type == CourseTileType.teacher
                                 ? getCabinetById(lesson.cabinet).name

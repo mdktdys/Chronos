@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:isolate';
-
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 
@@ -70,7 +67,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                 _debounceTimer!.cancel();
               }
 
-              _debounceTimer = Timer(Duration(milliseconds: 300), () {
+              _debounceTimer = Timer(const Duration(milliseconds: 300), () {
                 filteredItems = searchItems
                     .where((element) => element
                         .getFiltername()

@@ -63,6 +63,7 @@ class _MyAppState extends State<MyApp> {
         SystemChrome.setSystemUIOverlayStyle(
             const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
         return MaterialApp(
+          color: pr.Provider.of<ThemeProvider>(context).theme.colorScheme.background,
           title: "",
           debugShowCheckedModeBanner: false,
           theme: pr.Provider.of<ThemeProvider>(context).theme,
