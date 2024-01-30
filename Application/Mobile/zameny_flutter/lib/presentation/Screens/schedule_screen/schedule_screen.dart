@@ -273,9 +273,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       ),
                     );
                   } else if (state is ScheduleFailedLoading) {
-                    return SizedBox();
+                    return const SizedBox();
                   } else if (state is ScheduleLoading) {
-                    return SizedBox();
+                    return const SizedBox();
                   } else if (state is ScheduleInitial) {
                     return Text("Search any object",
                         style: TextStyle(
@@ -447,7 +447,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(20)),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         // boxShadow: [
         //   const BoxShadow(
@@ -560,7 +560,7 @@ class DayScheduleWidget extends StatelessWidget {
         (day == currentDay && todayWeek == currentWeek ? true : false);
 
     return Container(
-      padding: EdgeInsets.all(8),
+      padding: const EdgeInsets.all(8),
       decoration: isToday
           ? BoxDecoration(
 
@@ -569,7 +569,7 @@ class DayScheduleWidget extends StatelessWidget {
                   color:
                       Theme.of(context).colorScheme.primary.withOpacity(0.3),
                   width: 2),
-              borderRadius: BorderRadius.all(Radius.circular(20)))
+              borderRadius: const BorderRadius.all(Radius.circular(20)))
           : null,
       child: Column(
         children: [

@@ -151,9 +151,9 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                     )
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: const Icon(
+                                const Padding(
+                                  padding:  EdgeInsets.symmetric(horizontal: 8.0),
+                                  child:  Icon(
                                     Icons.open_in_new,
                                     size: 40,
                                     color: Colors.blue,
