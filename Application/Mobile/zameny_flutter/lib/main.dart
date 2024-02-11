@@ -11,6 +11,7 @@ import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
+import 'package:zameny_flutter/theme/betterfeedback.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,7 +34,9 @@ Future<void> main() async {
   PackageInfo packageInfo = await PackageInfo.fromPlatform();
   GetIt.I.registerSingleton<PackageInfo>(packageInfo);
 
-  runApp(const MyApp());
+  runApp(
+    const MyApp(),
+  );
 }
 
 class MyApp extends StatefulWidget {
@@ -62,14 +65,26 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) {
         SystemChrome.setSystemUIOverlayStyle(
             const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-        return MaterialApp(
-          color: pr.Provider.of<ThemeProvider>(context).theme.colorScheme.background,
-          title: "",
-          debugShowCheckedModeBanner: false,
+        return MyBetterFeedBack(
           theme: pr.Provider.of<ThemeProvider>(context).theme,
-          home: BlocProvider(
-            create: (context) => ScheduleBloc(),
-            child: const MainScreen(),
+          child: MaterialApp(
+            builder: (context, child) {
+              return MediaQuery(
+                data: MediaQuery.of(context).copyWith(textScaleFactor: 1.0),
+                child: child!,
+              );
+            },
+            color: pr.Provider.of<ThemeProvider>(context)
+                .theme
+                .colorScheme
+                .background,
+            title: "",
+            debugShowCheckedModeBanner: false,
+            theme: pr.Provider.of<ThemeProvider>(context).theme,
+            home: BlocProvider(
+              create: (context) => ScheduleBloc(),
+              child: const MainScreen(),
+            ),
           ),
         );
       },
