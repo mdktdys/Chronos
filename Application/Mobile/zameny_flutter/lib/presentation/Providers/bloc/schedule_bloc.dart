@@ -61,7 +61,10 @@ final class ScheduleLoaded extends ScheduleState {
       {required this.lessons, required this.zamenas, required this.searchType});
 }
 
-final class ScheduleFailedLoading extends ScheduleState {}
+final class ScheduleFailedLoading extends ScheduleState {
+  final String error;
+  ScheduleFailedLoading({required this.error});
+}
 
 final class ScheduleInitial extends ScheduleState {}
 
@@ -86,7 +89,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             searchType: CourseTileType.cabinet));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
-        emit(ScheduleFailedLoading());
+        emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
     on<LoadTeacherWeek>((event, emit) async {
@@ -106,7 +109,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             searchType: CourseTileType.teacher));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
-        emit(ScheduleFailedLoading());
+        emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
     on<LoadInitial>((event, emit) async {
@@ -114,8 +117,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         await Api().loadGroups();
         await Api().loadDepartments();
-      } catch (error) {
-        emit(ScheduleFailedLoading());
+      } catch (err) {
+        emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
     on<FetchData>((event, emit) async {
@@ -135,8 +138,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             lessons: lessons,
             zamenas: zamenas,
             searchType: CourseTileType.group));
-      } catch (error) {
-        emit(ScheduleFailedLoading());
+      } catch (err) {
+        emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
   }

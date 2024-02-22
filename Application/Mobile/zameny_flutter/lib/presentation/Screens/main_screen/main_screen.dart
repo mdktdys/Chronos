@@ -185,6 +185,7 @@ class _MainScreenState extends State<MainScreen> {
             Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
+                  height: 60,
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.1),
                         border: const Border(
