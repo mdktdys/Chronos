@@ -224,181 +224,216 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
+    return CustomScrollView(
       controller: scrollController,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20.0),
-          child: Column(
-            children: [
-              const SizedBox(height: 10),
-              const ScheduleHeader(),
-              const SizedBox(height: 10),
-              ScheduleTurboSearch(
-                groupSelected: _groupSelected,
-                teacherSelected: _teacherSelected,
-                cabinetSelected: _cabinetSelected,
-              ),
-              //const SizedBox(height: 10),
-              //GroupChooser(onGroupSelected: _groupSelected),
-              const SizedBox(height: 10),
-              DateHeader(
-                  parentWidget: this,
-                  todayWeek: todayWeek,
-                  currentWeek: currentWeek,
-                  dateSwitched: _dateSwitched),
-              const SizedBox(height: 10),
-              BlocBuilder<ScheduleBloc, ScheduleState>(
-                builder: (context, state) {
-                  if (state is ScheduleLoaded) {
-                    return Container(
-                      child: Column(
-                        children: [
-                          Text(getSearchTypeNamed(),
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 18)),
-                          Text(searchDiscribtion(),
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold)),
-                        ],
-                      ),
-                    );
-                  } else if (state is ScheduleFailedLoading) {
-                    return const SizedBox();
-                  } else if (state is ScheduleLoading) {
-                    return const SizedBox();
-                  } else if (state is ScheduleInitial) {
-                    return Text("Search any object",
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.inverseSurface,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold));
-                  } else {
-                    return const SizedBox();
-                  }
-                },
-              ),
-
-              const SizedBox(height: 10),
-            ],
+      physics: BouncingScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const ScheduleHeader(),
+                const SizedBox(height: 10),
+                ScheduleTurboSearch(
+                  groupSelected: _groupSelected,
+                  teacherSelected: _teacherSelected,
+                  cabinetSelected: _cabinetSelected,
+                ),
+                //const SizedBox(height: 10),
+                //GroupChooser(onGroupSelected: _groupSelected),
+                const SizedBox(height: 10),
+                DateHeader(
+                    parentWidget: this,
+                    todayWeek: todayWeek,
+                    currentWeek: currentWeek,
+                    dateSwitched: _dateSwitched),
+                const SizedBox(height: 10),
+                BlocBuilder<ScheduleBloc, ScheduleState>(
+                  builder: (context, state) {
+                    if (state is ScheduleLoaded) {
+                      return Container(
+                        child: Column(
+                          children: [
+                            Text(getSearchTypeNamed(),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 18)),
+                            Text(searchDiscribtion(),
+                                style: TextStyle(
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface,
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 24,
+                                    fontWeight: FontWeight.bold)),
+                          ],
+                        ),
+                      );
+                    } else if (state is ScheduleFailedLoading) {
+                      return const SizedBox();
+                    } else if (state is ScheduleLoading) {
+                      return const SizedBox();
+                    } else if (state is ScheduleInitial) {
+                      return Text("Search any object",
+                          style: TextStyle(
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
+                              fontFamily: 'Ubuntu',
+                              fontSize: 24,
+                              fontWeight: FontWeight.bold));
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
+            ),
           ),
         ),
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          child: BlocBuilder<ScheduleBloc, ScheduleState>(
+        SliverPadding(
+          padding: EdgeInsets.symmetric(horizontal: 20),
+          sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
             builder: (context, state) {
               if (state is ScheduleLoaded) {
-                return LessonList(
-                  type: state.searchType,
-                  zamenas: state.zamenas,
-                  lessons: state.lessons,
-                  groupID: groupIDSeek,
-                  weekDate: NavigationDate,
-                  todayWeek: todayWeek,
-                  currentWeek: currentWeek,
-                );
-              } else if (state is ScheduleFailedLoading) {
-                return FailedLoadWidget(
-                  funcReload: _loadWeekSchedule,
-                );
-              } else if (state is ScheduleLoading) {
-                return SizedBox(
-                  height: 550,
-                  child: Center(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                            height: 200,
-                            child: Lottie.asset('assets/lottie/loading.json')),
-                        const Text(
-                          "Loading...",
-                          style: TextStyle(
-                              color: Colors.blue,
-                              fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.bold,
-                              fontSize: 26),
-                        )
-                      ],
-                    ),
+                return SliverToBoxAdapter(
+                  child: LessonList(
+                    type: state.searchType,
+                    zamenas: state.zamenas,
+                    lessons: state.lessons,
+                    groupID: groupIDSeek,
+                    weekDate: NavigationDate,
+                    todayWeek: todayWeek,
+                    currentWeek: currentWeek,
                   ),
                 );
+              } else if (state is ScheduleFailedLoading) {
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  fillOverscroll: true,
+                  child: FailedLoadWidget(
+                    error: state.error,
+                    funcReload: _loadWeekSchedule,
+                  ),
+                );
+              } else if (state is ScheduleLoading) {
+                return SliverFillRemaining(
+                  child: LoadingWidget(),
+                );
               } else if (state is ScheduleInitial) {
-                return const SizedBox();
+                return SliverFillRemaining(child: const SizedBox());
                 ;
               } else {
-                return const SizedBox();
+                return SliverFillRemaining(child: const SizedBox());
               }
             },
           ),
         ),
-        const SizedBox(
-          height: 100,
+        SliverToBoxAdapter(
+          child: const SizedBox(
+            height: 100,
+          ),
         )
       ],
     );
   }
 }
 
-class FailedLoadWidget extends StatelessWidget {
-  final Function funcReload;
-  const FailedLoadWidget({super.key, required this.funcReload});
+class LoadingWidget extends StatelessWidget {
+  const LoadingWidget({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Center(
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const SizedBox(
-            height: 120,
-          ),
-          const Icon(
-            Icons.warning_amber,
-            color: Colors.red,
-            size: 100,
-            shadows: [Shadow(color: Colors.red, blurRadius: 12)],
-          ),
+          SizedBox(
+              height: 200, child: Lottie.asset('assets/lottie/loading.json')),
           const Text(
-            "Failed to load",
+            "Loading...",
             style: TextStyle(
-                color: Colors.red,
+                color: Colors.blue,
                 fontFamily: 'Ubuntu',
                 fontWeight: FontWeight.bold,
                 fontSize: 26),
-          ),
-          GestureDetector(
-            onTap: () {
-              funcReload.call();
-            },
-            child: Container(
-              width: 150,
-              height: 40,
-              decoration: const BoxDecoration(
-                  boxShadow: [BoxShadow(color: Colors.red, blurRadius: 6)],
-                  color: Colors.red,
-                  borderRadius: BorderRadius.all(Radius.circular(20))),
-              child: const Center(
-                child: Text(
-                  "Reload",
-                  style: TextStyle(
-                      color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18),
-                ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class FailedLoadWidget extends StatelessWidget {
+  final Function funcReload;
+  final String error;
+  const FailedLoadWidget(
+      {super.key, required this.funcReload, required this.error});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        const Icon(
+          Icons.warning_amber_outlined,
+          color: Colors.red,
+          size: 100,
+          shadows: [Shadow(color: Colors.red, blurRadius: 4)],
+        ),
+        const Text(
+          "Failed to load",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+              color: Colors.red,
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.bold,
+              fontSize: 26),
+        ),
+        Text(
+          error,
+          textAlign: TextAlign.center,
+          style: const TextStyle(
+              color: Colors.red,
+              fontFamily: 'Ubuntu',
+              fontWeight: FontWeight.w400,
+              fontSize: 14),
+        ),
+        SizedBox(
+          height: 10,
+        ),
+        GestureDetector(
+          onTap: () {
+            funcReload.call();
+          },
+          child: Container(
+            width: 150,
+            height: 40,
+            decoration: BoxDecoration(
+                color: Colors.transparent,
+                border: Border.all(width: 2, color: Colors.red),
+                borderRadius: BorderRadius.all(Radius.circular(20))),
+            child: const Center(
+              child: Text(
+                "Reload",
+                style: TextStyle(
+                    color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18),
               ),
             ),
           ),
-        ],
-      ),
+        ),
+        SizedBox(
+          height: 60,
+        ),
+      ],
     );
   }
 }

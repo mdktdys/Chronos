@@ -43,7 +43,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 10.0, 20.0, 0),
         child: CustomScrollView(
-      physics: const NeverScrollableScrollPhysics(),
+      physics: const BouncingScrollPhysics(),
       slivers: [
         const SliverToBoxAdapter(child: SettingsHeader()),
         SliverToBoxAdapter(
