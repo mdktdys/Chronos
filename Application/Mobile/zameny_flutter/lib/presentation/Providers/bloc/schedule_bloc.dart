@@ -117,9 +117,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         await Api().loadGroups();
         await Api().loadDepartments();
+        emit(ScheduleInitial());
       } catch (err) {
         emit(ScheduleFailedLoading(error: err.toString()));
       }
+      
     });
     on<FetchData>((event, emit) async {
       emit(ScheduleLoading());

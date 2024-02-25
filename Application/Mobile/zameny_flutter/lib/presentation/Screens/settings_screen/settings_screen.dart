@@ -61,7 +61,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Decoration",
+                    "Оформление",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Ubuntu',
@@ -75,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "App theme:",
+                    "Тема:",
                     style: TextStyle(
                         fontFamily: 'Ubuntu',
                         fontSize: 18,
@@ -94,7 +94,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                 Container(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    "Contacts",
+                    "Контакты",
                     style: TextStyle(
                         fontWeight: FontWeight.bold,
                         fontFamily: 'Ubuntu',
@@ -130,7 +130,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Educational organization website",
+                                      "Сайтик колледжа",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -142,7 +142,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       height: 5,
                                     ),
                                     Text(
-                                      "Visit for more information",
+                                      "В представлении не нуждается",
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontFamily: 'Ubuntu',
@@ -190,7 +190,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Have a question or suggestion?",
+                                      "Есть идеи или предложения?",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -202,7 +202,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       height: 5,
                                     ),
                                     Text(
-                                      "Write to the application developer in Telegram",
+                                      "Отпишите мне в телеграмчике",
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontFamily: 'Ubuntu',
@@ -211,9 +211,9 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                     )
                                   ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                                  child: const Icon(
+                                const Padding(
+                                  padding: EdgeInsets.symmetric(horizontal: 8.0),
+                                  child: Icon(
                                     Icons.telegram,
                                     size: 40,
                                     color: Colors.blue,
@@ -250,7 +250,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      "Stay tuned for new updates",
+                                      "Пользуйтесь свежим!",
                                       style: TextStyle(
                                           fontWeight: FontWeight.bold,
                                           fontSize: 14,
@@ -262,7 +262,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                       height: 5,
                                     ),
                                     Text(
-                                      "Follow the development\nand get the latest versions on Github",
+                                      "Следите за разработкой\nи получайте актуальные версии с гитхаба",
                                       style: TextStyle(
                                           fontSize: 12,
                                           fontFamily: 'Ubuntu',
@@ -271,7 +271,7 @@ class _SettingsScreenState extends State<SettingsScreen> with AutomaticKeepAlive
                                     )
                                   ],
                                 ),
-                                Padding(
+                                const Padding(
                                   padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                   child: const Icon(
                                     Icons.android_rounded,

@@ -279,13 +279,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                     } else if (state is ScheduleLoading) {
                       return const SizedBox();
                     } else if (state is ScheduleInitial) {
-                      return Text("Search any object",
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.inverseSurface,
-                              fontFamily: 'Ubuntu',
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold));
+                      return SizedBox();
                     } else {
                       return const SizedBox();
                     }
@@ -326,7 +320,17 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   child: LoadingWidget(),
                 );
               } else if (state is ScheduleInitial) {
-                return SliverFillRemaining(child: const SizedBox());
+                return SliverFillRemaining(
+                    child: Center(
+                  child: Text(
+                      "Тыкни на поиск!\nвыбери группу, препода или кабинет",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface,
+                          fontFamily: 'Ubuntu',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold)),
+                ));
                 ;
               } else {
                 return SliverFillRemaining(child: const SizedBox());
@@ -359,7 +363,7 @@ class LoadingWidget extends StatelessWidget {
           SizedBox(
               height: 200, child: Lottie.asset('assets/lottie/loading.json')),
           const Text(
-            "Loading...",
+            "Гружу...",
             style: TextStyle(
                 color: Colors.blue,
                 fontFamily: 'Ubuntu',
@@ -390,7 +394,7 @@ class FailedLoadWidget extends StatelessWidget {
           shadows: [Shadow(color: Colors.red, blurRadius: 4)],
         ),
         const Text(
-          "Failed to load",
+          "Ошибка :(",
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.red,
@@ -423,7 +427,7 @@ class FailedLoadWidget extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: const Center(
               child: Text(
-                "Reload",
+                "Перезагрузить",
                 style: TextStyle(
                     color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18),
               ),
@@ -510,7 +514,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
               width: 10,
             ),
             Text(
-              "No swapped lessons",
+              "Нет замен",
               style: TextStyle(
                   fontFamily: 'Ubuntu',
                   fontSize: 18,
@@ -649,7 +653,7 @@ class DayScheduleWidget extends StatelessWidget {
                         child: const Padding(
                           padding: EdgeInsets.all(8.0),
                           child: Text(
-                            "Today",
+                            "Сегодня",
                             style: TextStyle(
                                 color: Colors.white,
                                 fontSize: 16,

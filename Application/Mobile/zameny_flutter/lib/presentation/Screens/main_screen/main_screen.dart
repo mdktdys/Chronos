@@ -1,6 +1,9 @@
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ota_update/ota_update.dart';
@@ -59,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
                             ],
                           ),
                           Text(
-                            "New update!",
+                            "Новая обнова!",
                             style: TextStyle(
                                 fontSize: 30,
                                 fontFamily: 'Ubuntu',
@@ -97,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                                 padding: const EdgeInsets.all(8),
                                 child: const Center(
                                     child: Text(
-                                  "Cancel",
+                                  "Отмена",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       fontSize: 18,
@@ -121,7 +124,7 @@ class _MainScreenState extends State<MainScreen> {
                               ScaffoldMessenger.of(context)
                                   .showSnackBar(SnackBar(
                                 content: const Text(
-                                  "Downloading...",
+                                  "Скачивание...",
                                   style: TextStyle(color: Colors.white),
                                 ),
                                 backgroundColor:
@@ -134,7 +137,7 @@ class _MainScreenState extends State<MainScreen> {
                                   color: Theme.of(context).colorScheme.primary),
                               padding: const EdgeInsets.all(8),
                               child: const Center(
-                                child: Text("Download",
+                                child: Text("Скачать",
                                     style: TextStyle(
                                         fontFamily: 'Ubuntu',
                                         fontSize: 18,
@@ -185,7 +188,7 @@ class _MainScreenState extends State<MainScreen> {
             Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                  height: 60,
+                    height: 60,
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.1),
                         border: const Border(
@@ -198,23 +201,29 @@ class _MainScreenState extends State<MainScreen> {
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceAround,
                           children: [
-                            BottomNavigationItem(
-                              index: 0,
-                              onTap: _setPage,
-                              icon: Icons.school_rounded,
-                              text: "Schedule",
+                            Expanded(
+                              child: BottomNavigationItem(
+                                index: 0,
+                                onTap: _setPage,
+                                icon: Icons.school_rounded,
+                                text: "Расписание",
+                              ),
                             ),
-                            BottomNavigationItem(
-                              index: 1,
-                              onTap: _setPage,
-                              icon: Icons.code_rounded,
-                              text: "Exams",
+                            Expanded(
+                              child: BottomNavigationItem(
+                                index: 1,
+                                onTap: _setPage,
+                                icon: Icons.code_rounded,
+                                text: "Экзамены",
+                              ),
                             ),
-                            BottomNavigationItem(
-                              index: 2,
-                              onTap: _setPage,
-                              icon: Icons.settings,
-                              text: "Settings",
+                            Expanded(
+                              child: BottomNavigationItem(
+                                index: 2,
+                                onTap: _setPage,
+                                icon: Icons.settings,
+                                text: "Настройки",
+                              ),
                             ),
                           ],
                         ),
@@ -232,7 +241,8 @@ class BottomNavigationItem extends StatelessWidget {
   final Function onTap;
   final IconData icon;
   final String text;
-  const BottomNavigationItem(
+
+  BottomNavigationItem(
       {super.key,
       required this.index,
       required this.onTap,
@@ -248,7 +258,8 @@ class BottomNavigationItem extends StatelessWidget {
           onTap.call(index);
         },
         child: Container(
-            height: 50,
+           height: 60,
+            clipBehavior: Clip.antiAlias,
             decoration: const BoxDecoration(
                 color: Color.fromARGB(255, 30, 118, 233),
                 boxShadow: [
@@ -261,20 +272,27 @@ class BottomNavigationItem extends StatelessWidget {
                 borderRadius: BorderRadius.all(Radius.circular(20))),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-                Icon(
-                  icon,
-                  color: Colors.white,
-                ),
-                const SizedBox(
-                  width: 5,
-                ),
-                Text(
-                  text,
-                  style: const TextStyle(color: Colors.white),
-                )
-              ]),
+              child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Icon(
+                      icon,
+                      color: Colors.white,
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    Flexible(
+                      child: FittedBox(
+                        child: Text(
+                          maxLines: 1,
+                          text,
+                          overflow: TextOverflow.fade,
+                          style: const TextStyle(color: Colors.white),
+                        ),
+                      ),
+                    )
+                  ]),
             )),
       ),
     );
