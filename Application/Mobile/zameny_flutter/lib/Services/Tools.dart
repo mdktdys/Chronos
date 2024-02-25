@@ -45,8 +45,8 @@ DateTime getFirstDayOfWeek(int year, int week) {
 
 String getMonthName(int monthNumber) {
   List<String> months = [
-    "January", "February", "March", "April", "May", "June",
-    "July", "August", "September", "October", "November", "December"
+    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
+    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
 ];
 
   
@@ -60,19 +60,19 @@ String getMonthName(int monthNumber) {
 String getDayName(int day) {
   switch (day) {
     case 1:
-      return "Monday";
+      return "Понедельник";
     case 2:
-      return "Tuesday";
+      return "Вторник";
     case 3:
-      return "Wednesday";
+      return "Среда";
     case 4:
-      return "Thursday";
+      return "Четверг";
     case 5:
-      return "Friday";
+      return "Пятница";
     case 6:
-      return "Saturday";
+      return "Суббота";
     case 7:
-      return "Sunday";
+      return "Воскресенье";
     default:
       return "Invalid";
   }

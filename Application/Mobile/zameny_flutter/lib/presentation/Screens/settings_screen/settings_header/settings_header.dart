@@ -19,7 +19,7 @@ class SettingsHeader extends StatelessWidget {
               color: Theme.of(context).primaryColorLight,
             )),
         Text(
-          "Settings",
+          "Настроечки",
           style: TextStyle(
               color: Theme.of(context).primaryColorLight,
               fontSize: 24,

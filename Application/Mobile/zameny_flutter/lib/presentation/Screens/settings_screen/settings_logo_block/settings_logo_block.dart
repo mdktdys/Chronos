@@ -33,7 +33,7 @@ class SettingsLogoBlock extends StatelessWidget {
                       fontSize: 30,
                       fontWeight: FontWeight.bold),
                 ),
-                Text("be patient, test versions ❤️",
+                Text("будьте терпеливы, я все еще пилю ❤️",
                     style: TextStyle(color: Colors.white)),
               ],
             ),

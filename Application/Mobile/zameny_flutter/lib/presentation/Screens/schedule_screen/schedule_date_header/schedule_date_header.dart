@@ -39,7 +39,7 @@ class DateHeader extends StatelessWidget {
             Column(
               children: [
                 Text(
-                  "Осенний семестр 2023/2024",
+                  "Весенний семестр 2023/2024",
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontFamily: 'Ubuntu',
@@ -56,7 +56,7 @@ class DateHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Week $currentWeek",
+                        "Неделя $currentWeek",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Ubuntu',
@@ -82,7 +82,7 @@ class DateHeader extends StatelessWidget {
                               child: const Padding(
                                 padding: EdgeInsets.all(6.0),
                                 child: Text(
-                                  "Current",
+                                  "Текущий",
                                   style: TextStyle(
                                       color: Colors.white,
                                       fontSize: 14,

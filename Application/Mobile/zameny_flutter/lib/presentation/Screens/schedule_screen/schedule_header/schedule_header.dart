@@ -49,7 +49,7 @@ class ScheduleHeader extends StatelessWidget {
           color: Theme.of(context).primaryColorLight,
         ),
         Text(
-          "Schedule",
+          "Расписание",
           style: TextStyle(
               color: Theme.of(context).primaryColorLight,
               fontSize: 24,
@@ -69,7 +69,14 @@ class ScheduleHeader extends StatelessWidget {
                           child: Column(
                             children: [
                               ListTile(
-                                title: Text("Show debug"),
+                                title: Text(
+                                  "Показать логи Talker",
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inversePrimary,
+                                      fontFamily: 'Ubuntu'),
+                                ),
                                 onTap: () => Navigator.of(context).push(
                                     MaterialPageRoute(
                                         builder: (context) => TalkerScreen(

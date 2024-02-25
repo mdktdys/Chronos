@@ -32,7 +32,7 @@ class _ExamsScreenState extends State<ExamsScreen>
                       color: Theme.of(context).primaryColorLight,
                     )),
                 Text(
-                  "Exams",
+                  "Экзамены",
                   style: TextStyle(
                       color: Theme.of(context).primaryColorLight,
                       fontSize: 24,
@@ -76,7 +76,7 @@ class _ExamsScreenState extends State<ExamsScreen>
                         ],
                       ),
                       Text(
-                        "In develop",
+                        "В разработке",
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontFamily: 'Ubuntu',
@@ -84,7 +84,8 @@ class _ExamsScreenState extends State<ExamsScreen>
                             fontSize: 26),
                       ),
                       Text(
-                        "see in next updates",
+                        "следите за обновами",
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.primary,
                             fontFamily: 'Ubuntu',

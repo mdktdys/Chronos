@@ -27,7 +27,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      "Dark",
+                      "Темная",
                       style: TextStyle(
                           color: Theme.of(context).primaryColorLight,
                           fontSize: 16),
@@ -45,7 +45,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                       width: 3,
                     ),
                     Text(
-                      "Light",
+                      "Светлая",
                       style: TextStyle(
                           color: Theme.of(context).primaryColorLight,
                           fontSize: 16),

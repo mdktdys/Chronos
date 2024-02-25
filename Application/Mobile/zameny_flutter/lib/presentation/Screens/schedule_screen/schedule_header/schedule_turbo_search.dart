@@ -79,7 +79,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
             }
           },
           style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
-          placeholder: 'Turbo search',
+          placeholder: 'Я ищу...',
         ),
         ListView.builder(
             shrinkWrap: true,
