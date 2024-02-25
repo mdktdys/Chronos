@@ -211,13 +211,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   String getSearchTypeNamed() {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == CourseTileType.teacher) {
-      return "Teacher";
+      return "Препод";
     }
     if (dat.latestSearch == CourseTileType.cabinet) {
-      return "Cabinet";
+      return "Кабинет";
     }
     if (dat.latestSearch == CourseTileType.group) {
-      return "Group";
+      return "Группа";
     }
     return "Not found";
   }
