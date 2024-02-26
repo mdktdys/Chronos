@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:ota_update/ota_update.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -189,43 +190,48 @@ class _MainScreenState extends State<MainScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     height: 60,
-                    decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.1),
-                        border: const Border(
-                            top: BorderSide(
-                                color: Color.fromARGB(255, 30, 118, 233),
-                                width: 1))),
                     child: ClipRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Expanded(
-                              child: BottomNavigationItem(
-                                index: 0,
-                                onTap: _setPage,
-                                icon: Icons.school_rounded,
-                                text: "Расписание",
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(20),
+                            border: const Border(
+                                top: BorderSide(
+                                    color: Color.fromARGB(255, 30, 118, 233),
+                                    width: 1)),
+                          ),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              Expanded(
+                                child: BottomNavigationItem(
+                                  index: 0,
+                                  onTap: _setPage,
+                                  icon: "assets/icon/vuesax_linear_note.svg",
+                                  text: "Расписание",
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: BottomNavigationItem(
-                                index: 1,
-                                onTap: _setPage,
-                                icon: Icons.code_rounded,
-                                text: "Экзамены",
+                              Expanded(
+                                child: BottomNavigationItem(
+                                  index: 1,
+                                  onTap: _setPage,
+                                  icon: "assets/icon/vuesax_linear_award.svg",
+                                  text: "Экзамены",
+                                ),
                               ),
-                            ),
-                            Expanded(
-                              child: BottomNavigationItem(
-                                index: 2,
-                                onTap: _setPage,
-                                icon: Icons.settings,
-                                text: "Настройки",
+                              Expanded(
+                                child: BottomNavigationItem(
+                                  index: 2,
+                                  onTap: _setPage,
+                                  icon:
+                                      "assets/icon/vuesax_linear_setting-2.svg",
+                                  text: "Настройки",
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
                         ),
                       ),
                     ))),
@@ -239,10 +245,10 @@ class _MainScreenState extends State<MainScreen> {
 class BottomNavigationItem extends StatelessWidget {
   final int index;
   final Function onTap;
-  final IconData icon;
+  final String icon;
   final String text;
 
-  BottomNavigationItem(
+  const BottomNavigationItem(
       {super.key,
       required this.index,
       required this.onTap,
@@ -251,33 +257,27 @@ class BottomNavigationItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.all(10.0),
-      child: GestureDetector(
-        onTap: () {
-          onTap.call(index);
-        },
-        child: Container(
-           height: 60,
-            clipBehavior: Clip.antiAlias,
-            decoration: const BoxDecoration(
-                color: Color.fromARGB(255, 30, 118, 233),
-                boxShadow: [
-                  BoxShadow(
-                    color: Color.fromARGB(255, 28, 95, 182),
-                    blurStyle: BlurStyle.outer,
-                    blurRadius: 6,
-                  )
-                ],
-                borderRadius: BorderRadius.all(Radius.circular(20))),
+    return InkWell(
+      radius: 20,
+      enableFeedback: false,
+      borderRadius: BorderRadius.circular(20),
+      highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+      splashColor: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+      onTap: () {
+        onTap.call(index);
+      },
+      child: Padding(
+        padding: const EdgeInsets.all(10.0),
+        child: SizedBox(
+            height: 60,
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 12.0),
-              child: Row(
+              child: Column(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Icon(
+                    SvgPicture.asset(
                       icon,
-                      color: Colors.white,
+                      color: Theme.of(context).colorScheme.primary,
                     ),
                     const SizedBox(
                       width: 5,
@@ -288,7 +288,10 @@ class BottomNavigationItem extends StatelessWidget {
                           maxLines: 1,
                           text,
                           overflow: TextOverflow.fade,
-                          style: const TextStyle(color: Colors.white),
+                          style: const TextStyle(
+                              color: Colors.white,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.w500),
                         ),
                       ),
                     )
