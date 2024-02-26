@@ -163,7 +163,7 @@ class CourseTile extends StatelessWidget {
                       child: Row(
                         children: [
                           Text(
-                            "Swaped",
+                            "Замена",
                             style: TextStyle(
                                 fontFamily: 'Ubuntu',
                                 color: Colors.red,
