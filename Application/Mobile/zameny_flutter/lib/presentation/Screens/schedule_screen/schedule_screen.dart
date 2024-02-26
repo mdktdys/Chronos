@@ -468,8 +468,10 @@ class LessonList extends StatelessWidget {
     final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
 
     return Column(children: [
-      zamenas.isNotEmpty ? Container() : const SearchBannerMessageWidget(),
-      Column(
+      zamenas.isNotEmpty ? SizedBox() : const SearchBannerMessageWidget(),
+      ListView(
+        physics: const NeverScrollableScrollPhysics(),
+        shrinkWrap: true,
           children: ScheduleList(lessons, data, groupID, zamenas, startDate,
               currentDay, todayWeek, currentWeek,
               type: type)),
@@ -485,6 +487,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),

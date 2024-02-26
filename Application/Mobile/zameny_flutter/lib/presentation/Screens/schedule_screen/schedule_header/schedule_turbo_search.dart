@@ -72,7 +72,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                     .where((element) => element
                         .getFiltername()
                         .toLowerCase()
-                        .contains(value.toLowerCase()))
+                        .contains(value.toLowerCase().trim()))
                     .toList();
                 setState(() {});
               });
