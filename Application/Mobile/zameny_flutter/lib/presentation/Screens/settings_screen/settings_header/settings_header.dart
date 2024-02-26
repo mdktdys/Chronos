@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SettingsHeader extends StatelessWidget {
   const SettingsHeader({
@@ -11,13 +12,7 @@ class SettingsHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.settings_suggest_rounded,
-              size: 36,
-              color: Theme.of(context).primaryColorLight,
-            )),
+        SvgPicture.asset("assets/icon/vuesax_linear_setting-2.svg",color: Theme.of(context).primaryColorLight,),
         Text(
           "Настроечки",
           style: TextStyle(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
 
@@ -127,10 +128,11 @@ class CourseTile extends StatelessWidget {
                       Row(
                         children: [
                           type != CourseTileType.cabinet
-                              ? Icon(
-                                  Icons.location_on_rounded,
+                              ? SvgPicture.asset("assets/icon/vuesax_linear_location.svg",
+                             
                                   color: Theme.of(context).colorScheme.inverseSurface,
-                                  size: 20,
+                                  width: 18,
+                                  height: 18,
                                 )
                               : const SizedBox(),
                           Text(

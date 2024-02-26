@@ -175,7 +175,7 @@ class _MainScreenState extends State<MainScreen> {
           child: Stack(children: [
             Center(
               child: ConstrainedBox(
-                constraints: BoxConstraints(maxWidth: 1200),
+                constraints: const BoxConstraints(maxWidth: 1200),
                 child: PageView(
                   controller: pageController,
                   children: const [
@@ -188,11 +188,11 @@ class _MainScreenState extends State<MainScreen> {
             ),
             Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
+                child: SizedBox(
                     height: 60,
                     child: ClipRect(
                       child: BackdropFilter(
-                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+                        filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5,),
                         child: Container(
                           decoration: BoxDecoration(
                             color: Colors.transparent,
@@ -259,6 +259,7 @@ class BottomNavigationItem extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       radius: 20,
+      customBorder: Border.all(width: 10,color: Colors.red),
       enableFeedback: false,
       borderRadius: BorderRadius.circular(20),
       highlightColor: Theme.of(context).colorScheme.primary.withOpacity(0.2),
@@ -288,8 +289,8 @@ class BottomNavigationItem extends StatelessWidget {
                           maxLines: 1,
                           text,
                           overflow: TextOverflow.fade,
-                          style: const TextStyle(
-                              color: Colors.white,
+                          style: TextStyle(
+                              color: Theme.of(context).colorScheme.inverseSurface,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.w500),
                         ),
