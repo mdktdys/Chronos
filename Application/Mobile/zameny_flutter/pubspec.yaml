@@ -52,6 +52,7 @@ dependencies:
   flutter_email_sender: ^6.0.2
   path_provider: ^2.1.2
   smooth_scroll_multiplatform: ^1.0.8
+  flutter_svg: ^2.0.10+1
 
 dev_dependencies:
   # flutter_test:
@@ -103,6 +104,7 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   assets:
     - assets/lottie/loading.json
+    - assets/icon/
     
   fonts:
     - family: Ubuntu
