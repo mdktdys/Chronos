@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Tools.dart';
@@ -224,126 +225,129 @@ class _ScheduleScreenState extends State<ScheduleScreen>
 
   @override
   Widget build(BuildContext context) {
-    return CustomScrollView(
-      controller: scrollController,
-      physics: BouncingScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                ScheduleTurboSearch(
-                  groupSelected: _groupSelected,
-                  teacherSelected: _teacherSelected,
-                  cabinetSelected: _cabinetSelected,
-                ),
-                //const SizedBox(height: 10),
-                //GroupChooser(onGroupSelected: _groupSelected),
-                const SizedBox(height: 10),
-                DateHeader(
-                    parentWidget: this,
-                    todayWeek: todayWeek,
-                    currentWeek: currentWeek,
-                    dateSwitched: _dateSwitched),
-                const SizedBox(height: 10),
-                BlocBuilder<ScheduleBloc, ScheduleState>(
-                  builder: (context, state) {
-                    if (state is ScheduleLoaded) {
-                      return Container(
-                        child: Column(
-                          children: [
-                            Text(getSearchTypeNamed(),
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface,
-                                    fontFamily: 'Ubuntu',
-                                    fontSize: 18)),
-                            Text(searchDiscribtion(),
-                                style: TextStyle(
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface,
-                                    fontFamily: 'Ubuntu',
-                                    fontSize: 24,
-                                    fontWeight: FontWeight.bold)),
-                          ],
-                        ),
-                      );
-                    } else if (state is ScheduleFailedLoading) {
-                      return const SizedBox();
-                    } else if (state is ScheduleLoading) {
-                      return const SizedBox();
-                    } else if (state is ScheduleInitial) {
-                      return SizedBox();
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
+    return DynMouseScroll(
+      mobilePhysics: BouncingScrollPhysics(),
+      builder: (context, controller, physics) => CustomScrollView(
+        controller: scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  ScheduleTurboSearch(
+                    groupSelected: _groupSelected,
+                    teacherSelected: _teacherSelected,
+                    cabinetSelected: _cabinetSelected,
+                  ),
+                  //const SizedBox(height: 10),
+                  //GroupChooser(onGroupSelected: _groupSelected),
+                  const SizedBox(height: 10),
+                  DateHeader(
+                      parentWidget: this,
+                      todayWeek: todayWeek,
+                      currentWeek: currentWeek,
+                      dateSwitched: _dateSwitched),
+                  const SizedBox(height: 10),
+                  BlocBuilder<ScheduleBloc, ScheduleState>(
+                    builder: (context, state) {
+                      if (state is ScheduleLoaded) {
+                        return Container(
+                          child: Column(
+                            children: [
+                              Text(getSearchTypeNamed(),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 18)),
+                              Text(searchDiscribtion(),
+                                  style: TextStyle(
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold)),
+                            ],
+                          ),
+                        );
+                      } else if (state is ScheduleFailedLoading) {
+                        return const SizedBox();
+                      } else if (state is ScheduleLoading) {
+                        return const SizedBox();
+                      } else if (state is ScheduleInitial) {
+                        return SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
-            builder: (context, state) {
-              if (state is ScheduleLoaded) {
-                return SliverToBoxAdapter(
-                  child: LessonList(
-                    type: state.searchType,
-                    zamenas: state.zamenas,
-                    lessons: state.lessons,
-                    groupID: groupIDSeek,
-                    weekDate: NavigationDate,
-                    todayWeek: todayWeek,
-                    currentWeek: currentWeek,
-                  ),
-                );
-              } else if (state is ScheduleFailedLoading) {
-                return SliverFillRemaining(
-                  hasScrollBody: false,
-                  fillOverscroll: true,
-                  child: FailedLoadWidget(
-                    error: state.error,
-                    funcReload: _loadWeekSchedule,
-                  ),
-                );
-              } else if (state is ScheduleLoading) {
-                return SliverFillRemaining(
-                  child: LoadingWidget(),
-                );
-              } else if (state is ScheduleInitial) {
-                return SliverFillRemaining(
-                    child: Center(
-                  child: Text(
-                      "Тыкни на поиск!\nвыбери группу, препода или кабинет",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,
-                          fontFamily: 'Ubuntu',
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold)),
-                ));
-                ;
-              } else {
-                return SliverFillRemaining(child: const SizedBox());
-              }
-            },
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
+              builder: (context, state) {
+                if (state is ScheduleLoaded) {
+                  return SliverToBoxAdapter(
+                    child: LessonList(
+                      type: state.searchType,
+                      zamenas: state.zamenas,
+                      lessons: state.lessons,
+                      groupID: groupIDSeek,
+                      weekDate: NavigationDate,
+                      todayWeek: todayWeek,
+                      currentWeek: currentWeek,
+                    ),
+                  );
+                } else if (state is ScheduleFailedLoading) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    fillOverscroll: true,
+                    child: FailedLoadWidget(
+                      error: state.error,
+                      funcReload: _loadWeekSchedule,
+                    ),
+                  );
+                } else if (state is ScheduleLoading) {
+                  return SliverFillRemaining(
+                    child: LoadingWidget(),
+                  );
+                } else if (state is ScheduleInitial) {
+                  return SliverFillRemaining(
+                      child: Center(
+                    child: Text(
+                        "Тыкни на поиск!\nвыбери группу, препода или кабинет",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold)),
+                  ));
+                  ;
+                } else {
+                  return SliverFillRemaining(child: const SizedBox());
+                }
+              },
+            ),
           ),
-        ),
-        SliverToBoxAdapter(
-          child: const SizedBox(
-            height: 100,
-          ),
-        )
-      ],
+          SliverToBoxAdapter(
+            child: const SizedBox(
+              height: 100,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -470,8 +474,8 @@ class LessonList extends StatelessWidget {
     return Column(children: [
       zamenas.isNotEmpty ? SizedBox() : const SearchBannerMessageWidget(),
       ListView(
-        physics: const NeverScrollableScrollPhysics(),
-        shrinkWrap: true,
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
           children: ScheduleList(lessons, data, groupID, zamenas, startDate,
               currentDay, todayWeek, currentWeek,
               type: type)),
