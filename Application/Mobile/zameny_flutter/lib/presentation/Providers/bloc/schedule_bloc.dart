@@ -1,21 +1,28 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 
 @immutable
 sealed class ScheduleEvent {}
 
 final class FetchData extends ScheduleEvent {
+  final BuildContext context;
   final int groupID;
   final DateTime dateStart;
   final DateTime dateEnd;
 
   FetchData(
-      {required this.groupID, required this.dateStart, required this.dateEnd});
+      {required this.groupID,
+      required this.dateStart,
+      required this.dateEnd,
+      required this.context});
 }
 
 final class LoadWeek extends ScheduleEvent {
@@ -49,7 +56,10 @@ final class LoadCabinetWeek extends ScheduleEvent {
       required this.dateEnd});
 }
 
-final class LoadInitial extends ScheduleEvent {}
+final class LoadInitial extends ScheduleEvent {
+  final BuildContext context;
+  LoadInitial({required this.context});
+}
 
 sealed class ScheduleState {}
 
@@ -113,22 +123,39 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       }
     });
     on<LoadInitial>((event, emit) async {
+      ScheduleProvider searchProvider =
+          Provider.of<ScheduleProvider>(event.context, listen: false);
+      GetIt.I.get<Talker>().debug("init");
       emit(ScheduleLoading());
       try {
-        await Api().loadGroups();
+        await Api().loadGroups(event.context);
         await Api().loadDepartments();
-        emit(ScheduleInitial());
+        if (searchProvider.groupIDSeek != -1) {
+          DateTime monday = searchProvider.navigationDate.subtract(
+              Duration(days: searchProvider.navigationDate.weekday - 1));
+          DateTime sunday = monday.add(const Duration(days: 6));
+          DateTime startOfWeek =
+              DateTime(monday.year, monday.month, monday.day);
+          DateTime endOfWeek =
+              DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+          add(FetchData(
+              groupID: searchProvider.groupIDSeek,
+              dateStart: startOfWeek,
+              dateEnd: endOfWeek,
+              context: event.context));
+        } else {
+          emit(ScheduleInitial());
+        }
       } catch (err) {
         emit(ScheduleFailedLoading(error: err.toString()));
       }
-      
     });
     on<FetchData>((event, emit) async {
       emit(ScheduleLoading());
       try {
-        await Api().loadTeachers();
+        await Api().loadTeachers(event.context);
         await Api().loadCourses();
-        await Api().loadCabinets();
+        await Api().loadCabinets(event.context);
         await Api().loadTimings();
         List<Lesson> lessons = await Api().loadWeekSchedule(
             start: event.dateStart, end: event.dateEnd, groupID: event.groupID);

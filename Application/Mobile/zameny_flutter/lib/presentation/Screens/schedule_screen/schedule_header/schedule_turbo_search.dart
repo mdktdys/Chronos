@@ -1,20 +1,20 @@
 import 'dart:async';
-import 'dart:isolate';
+import 'package:animated_list_plus/animated_list_plus.dart';
+import 'package:animated_list_plus/transitions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
+import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 
 class ScheduleTurboSearch extends StatefulWidget {
-  final Function(int) groupSelected;
-  final Function(int) teacherSelected;
-  final Function(int) cabinetSelected;
-  const ScheduleTurboSearch(
-      {super.key,
-      required this.groupSelected,
-      required this.cabinetSelected,
-      required this.teacherSelected});
+  const ScheduleTurboSearch({
+    super.key,
+  });
 
   @override
   State<ScheduleTurboSearch> createState() => _ScheduleTurboSearchState();
@@ -22,7 +22,6 @@ class ScheduleTurboSearch extends StatefulWidget {
 
 class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
   late final SearchController searchController;
-  List<SearchItem> searchItems = [];
   List<SearchItem> filteredItems = [];
   Timer? _debounceTimer;
   @override
@@ -31,19 +30,10 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
     searchController = SearchController();
   }
 
-  static void filterSearchItems(List<dynamic> args) {
-    var sendPort = args[0] as SendPort;
-    (args[1] as List<SearchItem>)
-        .where((element) => element
-            .getFiltername()
-            .toLowerCase()
-            .contains(args[2].toLowerCase()))
-        .toList();
-    Isolate.exit(sendPort, args);
-  }
-
   @override
   Widget build(BuildContext context) {
+    SearchProvider providerSearch = context.read<SearchProvider>();
+    ScheduleProvider providerSchedule = context.watch<ScheduleProvider>();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -52,70 +42,89 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
           onSubmitted: (value) {
             FocusScope.of(context).unfocus();
           },
-          onTap: () {
-            searchItems.clear();
-            searchItems.addAll(GetIt.I.get<Data>().groups);
-            searchItems.addAll(GetIt.I.get<Data>().cabinets);
-            searchItems.addAll(GetIt.I.get<Data>().teachers);
-          },
           onChanged: (value) {
             if (value.isEmpty) {
-              filteredItems.clear();
-              setState(() {});
+              setState(() {
+                filteredItems.clear();
+              });
             } else {
               if (_debounceTimer?.isActive ?? false) {
                 _debounceTimer!.cancel();
               }
 
-              _debounceTimer = Timer(const Duration(milliseconds: 300), () {
-                filteredItems = searchItems
-                    .where((element) => element
-                        .getFiltername()
-                        .toLowerCase()
-                        .contains(value.toLowerCase().trim()))
-                    .toList();
-                setState(() {});
+              _debounceTimer = Timer(const Duration(milliseconds: 150), () {
+                setState(() {
+                  filteredItems = providerSearch.searchItems
+                      .where((element) => element
+                          .getFiltername()
+                          .toLowerCase()
+                          .contains(value.toLowerCase().trim()))
+                      .toList();
+                });
               });
             }
           },
           style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
           placeholder: 'Я ищу...',
         ),
-        ListView.builder(
-            shrinkWrap: true,
+        ImplicitlyAnimatedList<SearchItem>(
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: filteredItems.length,
-            itemBuilder: ((context, index) {
-              SearchItem item = filteredItems[index];
-              return ListTile(
-                onTap: () {
-                  if (item is Group) {
-                    widget.groupSelected.call(item.id);
-                  }
-                  if (item is Cabinet) {
-                    widget.cabinetSelected.call(item.id);
-                  }
-                  if (item is Teacher) {
-                    widget.teacherSelected.call(item.id);
-                  }
-                  setState(() {
-                    searchController.text = '';
-                    FocusScope.of(context).unfocus();
-                    filteredItems.clear();
-                  });
-                },
-                title: Text(
-                  item.getFiltername(),
-                  style: TextStyle(fontFamily: 'Ubuntu',color: Theme.of(context).colorScheme.onSurface),
+            shrinkWrap: true,
+            items: filteredItems,
+            areItemsTheSame: (a, b) => a.s == b.s,
+            insertDuration: const Duration(milliseconds: 300),
+            removeDuration: const Duration(milliseconds: 300),
+            removeItemBuilder: (context, animation, oldItem) {
+              return FadeTransition(
+                  opacity: animation,
+                  child: ListTile(
+                    key: UniqueKey(),
+                    title: Text(
+                      oldItem.getFiltername(),
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Theme.of(context).colorScheme.onSurface),
+                    ),
+                  ));
+            },
+            itemBuilder: (context, animation, item, index) {
+              return SizeTransition(
+                sizeFactor: animation,
+                axisAlignment: -1,
+                child: ListTile(
+                  key: UniqueKey(),
+                  onTap: () {
+                    if (item is Group) {
+                      providerSchedule.groupSelected(item.id, context);
+                    }
+                    if (item is Cabinet) {
+                      providerSchedule.cabinetSelected(item.id, context);
+                    }
+                    if (item is Teacher) {
+                      providerSchedule.teacherSelected(item.id, context);
+                    }
+                    setState(() {
+                      searchController.text = '';
+                      FocusScope.of(context).unfocus();
+                      filteredItems.clear();
+                    });
+                  },
+                  title: Text(
+                    item.getFiltername(),
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        color: Theme.of(context).colorScheme.onSurface),
+                  ),
                 ),
               );
-            }))
+            }),
       ],
     );
   }
 }
 
 abstract class SearchItem {
+  int s = 0;
   String getFiltername() {
     if (this is Group) {
       return (this as Group).name;

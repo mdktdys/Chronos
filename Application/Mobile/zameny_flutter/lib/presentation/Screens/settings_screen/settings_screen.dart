@@ -225,7 +225,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                       ],
                                     ),
                                     Padding(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 8.0),
                                         child: Container(
                                             width: 48,
@@ -295,7 +295,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                       ],
                                     ),
                                     Padding(
-                                        padding: EdgeInsets.symmetric(
+                                        padding: const EdgeInsets.symmetric(
                                             horizontal: 8.0),
                                         child: Container(
                                             width: 48,
