@@ -148,12 +148,12 @@ class ScheduleProvider extends ChangeNotifier {
   String searchDiscribtion() {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == CourseTileType.teacher) {
-      Teacher? teacher = getTeacherById(dat.teacherGroup!);
-      return teacher == null ? "Error" : teacher.name;
+      Teacher teacher = getTeacherById(dat.teacherGroup!);
+      return teacher.name;
     }
     if (dat.latestSearch == CourseTileType.cabinet) {
-      Cabinet? cabinet = getCabinetById(dat.seekCabinet!);
-      return cabinet == null ? "Error" : cabinet.name;
+      Cabinet cabinet = getCabinetById(dat.seekCabinet!);
+      return cabinet.name;
     }
     if (dat.latestSearch == CourseTileType.group) {
       Group? group = getGroupById(dat.seekGroup!);
