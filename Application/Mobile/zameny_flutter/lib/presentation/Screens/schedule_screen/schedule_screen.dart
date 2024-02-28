@@ -1,21 +1,31 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
+import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/failed_load_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/loading_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/search_banner_message_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/search_result_header.dart';
+
+
+MyGlobals myGlobals = MyGlobals();
+
+class MyGlobals {
+  GlobalKey mainKey = GlobalKey<ScaffoldState>();
+  GlobalKey get scaffoldKey => mainKey;
+}
 
 class ScheduleWrapper extends StatelessWidget {
   const ScheduleWrapper({super.key});
@@ -54,120 +64,119 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     scrollController = ScrollController();
   }
 
+  refresh(int teacher, BuildContext context) {
+    setState(() {});
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
-    return CustomScrollView(
-      controller: scrollController,
-      physics: const BouncingScrollPhysics(),
-      slivers: [
-        SliverToBoxAdapter(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
-              children: [
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                const ScheduleTurboSearch(),
-                const SizedBox(height: 10),
-                const DateHeader(),
-                const SizedBox(height: 10),
-                BlocBuilder<ScheduleBloc, ScheduleState>(
-                  builder: (context, state) {
-                    GetIt.I.get<Talker>().good(state);
-                    if (state is ScheduleLoaded) {
-                      return const SearchResultHeader();
-                    } else if (state is ScheduleFailedLoading) {
-                      return const SizedBox();
-                    } else if (state is ScheduleLoading) {
-                      return const SizedBox();
-                    } else if (state is ScheduleInitial) {
-                      return const SizedBox();
-                    } else {
-                      return const SizedBox();
-                    }
-                  },
-                ),
-                const SizedBox(height: 10),
-              ],
+    ThemeProvider themeProvider = context.watch<ThemeProvider>();
+    return Scaffold(
+      backgroundColor: themeProvider.theme.colorScheme.background,
+      key: myGlobals.scaffoldKey,
+      body: CustomScrollView(
+        controller: scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverToBoxAdapter(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Column(
+                children: [
+                  const SizedBox(height: 10),
+                  const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  const ScheduleTurboSearch(),
+                  const SizedBox(height: 10),
+                  const DateHeader(),
+                  const SizedBox(height: 10),
+                  BlocBuilder<ScheduleBloc, ScheduleState>(
+                    builder: (context, state) {
+                      GetIt.I.get<Talker>().good(state);
+                      if (state is ScheduleLoaded) {
+                        return const SearchResultHeader();
+                      } else if (state is ScheduleFailedLoading) {
+                        return const SizedBox();
+                      } else if (state is ScheduleLoading) {
+                        return Shimmer.fromColors(
+                            baseColor: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.1),
+                            highlightColor: Theme.of(context)
+                                .colorScheme
+                                .onSurface
+                                .withOpacity(0.2),
+                            child: Container(
+                              height: 60,
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.circular(20),
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .onSurface
+                                      .withOpacity(0.6)),
+                            ));
+                      } else if (state is ScheduleInitial) {
+                        return const SizedBox();
+                      } else {
+                        return const SizedBox();
+                      }
+                    },
+                  ),
+                  const SizedBox(height: 10),
+                ],
+              ),
             ),
           ),
-        ),
-        SliverPadding(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
-          sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
-            builder: (context, state) {
-              if (state is ScheduleLoaded) {
-                return SliverToBoxAdapter(
-                  child: LessonList(
-                    type: state.searchType,
-                    zamenas: state.zamenas,
-                    lessons: state.lessons,
-                  ),
-                );
-              } else if (state is ScheduleFailedLoading) {
-                return SliverFillRemaining(
-                  hasScrollBody: false,
-                  fillOverscroll: true,
-                  child: FailedLoadWidget(
-                    error: state.error,
-                  ),
-                );
-              } else if (state is ScheduleLoading) {
-                return const SliverFillRemaining(
-                  child: LoadingWidget(),
-                );
-              } else if (state is ScheduleInitial) {
-                return SliverFillRemaining(
-                    child: Center(
-                  child: Text(
-                      "Тыкни на поиск!\nвыбери группу, препода или кабинет",
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,
-                          fontFamily: 'Ubuntu',
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold)),
-                ));
-              } else {
-                return const SliverFillRemaining(child: SizedBox());
-              }
-            },
+          SliverPadding(
+            padding: const EdgeInsets.symmetric(horizontal: 20),
+            sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
+              builder: (context, state) {
+                if (state is ScheduleLoaded) {
+                  return SliverToBoxAdapter(
+                    child: LessonList(
+                      refresh: refresh,
+                      type: state.searchType,
+                      zamenas: state.zamenas,
+                      lessons: state.lessons,
+                    ),
+                  );
+                } else if (state is ScheduleFailedLoading) {
+                  return SliverFillRemaining(
+                    hasScrollBody: false,
+                    fillOverscroll: true,
+                    child: FailedLoadWidget(
+                      error: state.error,
+                    ),
+                  );
+                } else if (state is ScheduleLoading) {
+                  return const SliverToBoxAdapter(
+                    child: LoadingWidget(),
+                  );
+                } else if (state is ScheduleInitial) {
+                  return SliverFillRemaining(
+                      child: Center(
+                    child: Text(
+                        "Тыкни на поиск!\nвыбери группу, препода или кабинет",
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            fontFamily: 'Ubuntu',
+                            fontSize: 24,
+                            fontWeight: FontWeight.bold)),
+                  ));
+                } else {
+                  return const SliverFillRemaining(child: SizedBox());
+                }
+              },
+            ),
           ),
-        ),
-        const SliverToBoxAdapter(
-          child: SizedBox(
-            height: 100,
-          ),
-        )
-      ],
-    );
-  }
-}
-
-class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          SizedBox(
-              height: 200, child: Lottie.asset('assets/lottie/loading.json')),
-          const Text(
-            "Гружу...",
-            style: TextStyle(
-                color: Colors.blue,
-                fontFamily: 'Ubuntu',
-                fontWeight: FontWeight.bold,
-                fontSize: 26),
+          const SliverToBoxAdapter(
+            child: SizedBox(
+              height: 100,
+            ),
           )
         ],
       ),
@@ -179,9 +188,11 @@ class LessonList extends StatelessWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
   final CourseTileType type;
+  final Function refresh;
 
   const LessonList({
     super.key,
+    required this.refresh,
     required this.type,
     required this.zamenas,
     required this.lessons,
@@ -200,14 +211,23 @@ class LessonList extends StatelessWidget {
       ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          children: ScheduleList(lessons, data, provider.groupIDSeek, zamenas,
-              startDate, currentDay, provider.todayWeek, provider.currentWeek,
+          children: ScheduleList(
+              refresh,
+              lessons,
+              data,
+              provider.groupIDSeek,
+              zamenas,
+              startDate,
+              currentDay,
+              provider.todayWeek,
+              provider.currentWeek,
               type: type)),
     ]);
   }
 }
 
 List<Widget> ScheduleList(
+    Function refresh,
     List<Lesson> weekLessons,
     Data data,
     int groupID,
@@ -234,6 +254,7 @@ List<Widget> ScheduleList(
     if ((DayZamenas.length + lessons.length) > 0) {
       return DayScheduleWidget(
         type: type,
+        refresh: refresh,
         day: day,
         DayZamenas: DayZamenas,
         lessons: lessons,
@@ -256,10 +277,12 @@ class DayScheduleWidget extends StatelessWidget {
   final int todayWeek;
   final Data data;
   final CourseTileType type;
+  final Function refresh;
 
   const DayScheduleWidget(
       {super.key,
       required this.day,
+      required this.refresh,
       required this.DayZamenas,
       required this.lessons,
       required this.startDate,
@@ -353,6 +376,7 @@ class DayScheduleWidget extends StatelessWidget {
               return CourseTile(
                 type: type,
                 course: course,
+                refresh: refresh,
                 lesson: Lesson(
                     id: -1,
                     course: course.id,
@@ -375,6 +399,7 @@ class DayScheduleWidget extends StatelessWidget {
                   course: course,
                   lesson: lesson,
                   swaped: null,
+                  refresh: refresh,
                 );
               }
             }

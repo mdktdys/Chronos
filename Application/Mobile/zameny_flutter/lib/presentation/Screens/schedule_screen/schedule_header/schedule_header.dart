@@ -62,7 +62,7 @@ class ScheduleHeader extends StatelessWidget {
                   barrierColor: Colors.black.withOpacity(0.3),
                   backgroundColor: Theme.of(context).colorScheme.background,
                   context: context,
-                  builder: (context) => Container(
+                  builder: (context) => SizedBox(
                         height: 100,
                         child: Padding(
                           padding: const EdgeInsets.all(8),
