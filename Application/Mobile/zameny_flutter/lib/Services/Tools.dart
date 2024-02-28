@@ -41,7 +41,6 @@ DateTime getFirstDayOfWeek(int year, int week) {
   return firstMonday.add(Duration(days: daysToAdd));
 }
 
-
 String getMonthName(int monthNumber) {
   List<String> months = [
     "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
