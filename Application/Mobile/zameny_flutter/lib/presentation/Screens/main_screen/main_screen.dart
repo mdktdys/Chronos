@@ -5,6 +5,7 @@ import '../exams_screen/exams_screen/exams_screen.dart';
 import '../schedule_screen/schedule_screen.dart';
 import '../settings_screen/settings_screen.dart';
 
+
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
 
@@ -18,7 +19,6 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    // WidgetsBinding.instance.addPersistentFrameCallback((timeStamp) { context.watch<ScheduleBloc>().add(LoadInitial(context: context)); });
     pageController = PageController(initialPage: 0);
     super.initState();
   }
@@ -31,6 +31,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(

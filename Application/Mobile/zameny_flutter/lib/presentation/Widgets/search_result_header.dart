@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
@@ -14,11 +13,13 @@ class SearchResultHeader extends StatelessWidget {
     return Column(
       children: [
         Text(provider.getSearchTypeNamed(),
+            textAlign: TextAlign.center,
             style: TextStyle(
                 color: Theme.of(context).colorScheme.inverseSurface,
                 fontFamily: 'Ubuntu',
                 fontSize: 18)),
         Text(provider.searchDiscribtion(),
+            textAlign: TextAlign.center,
             style: TextStyle(
                 color: Theme.of(context).colorScheme.inverseSurface,
                 fontFamily: 'Ubuntu',
