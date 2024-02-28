@@ -1,8 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
-import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
-import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/bottom_navigation_item.dart';
 import '../exams_screen/exams_screen/exams_screen.dart';
 import '../schedule_screen/schedule_screen.dart';

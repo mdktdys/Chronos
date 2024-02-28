@@ -1,5 +1,4 @@
 import 'dart:ui';
-
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
@@ -41,7 +40,6 @@ DateTime getFirstDayOfWeek(int year, int week) {
   int daysToAdd = (week - 1) * 7;
   return firstMonday.add(Duration(days: daysToAdd));
 }
-
 
 String getMonthName(int monthNumber) {
   List<String> months = [

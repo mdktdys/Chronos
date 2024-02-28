@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'package:animated_list_plus/animated_list_plus.dart';
-import 'package:animated_list_plus/transitions.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';

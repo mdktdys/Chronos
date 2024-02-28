@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 
