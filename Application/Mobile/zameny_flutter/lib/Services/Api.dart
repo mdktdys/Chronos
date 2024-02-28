@@ -1,13 +1,15 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:async';
+
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
+import 'package:provider/provider.dart' as pr;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
+import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 
 class Update {
   int id;
@@ -46,20 +48,6 @@ class Update {
 }
 
 class Api {
-  Future<Update?> checkUpdate() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    List<dynamic> data = await client
-        .from('AppVersion')
-        .select('id,version,link,desc')
-        .order('id')
-        .limit(1);
-    final update = Update.fromMap(data[0]);
-    if (GetIt.I.get<Data>().VERSION < update.version) {
-      return update;
-    } else {
-      return null;
-    }
-  }
 
   Future<void> loadZamenaFileLinks(
       {required DateTime start, required DateTime end}) async {
@@ -98,7 +86,6 @@ class Api {
       Lesson lesson = Lesson.fromMap(element);
       weekLessons.add(lesson);
     }
-    GetIt.I.get<Talker>().good(data);
     return weekLessons;
   }
 
@@ -144,7 +131,23 @@ class Api {
     return weekLessons;
   }
 
-  Future<void> loadTeachers() async {
+    Future<void> loadGroups(BuildContext context) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+
+    List<dynamic> data = await client.from('Groups').select('*');
+
+    dat.groups = [];
+    for (var element in data) {
+      Group groupName = Group.fromMap(element);
+      dat.groups.add(groupName);
+    }
+
+    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
+  }
+
+
+  Future<void> loadTeachers(BuildContext context) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = List.empty();
@@ -152,17 +155,17 @@ class Api {
     data = await client.from('Teachers').select('*');
 
     dat.teachers = [];
-
     for (var element in data) {
       Teacher teacher = Teacher.fromMap(element);
       dat.teachers.add(teacher);
     }
+
+    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
   }
 
-  Future<void> loadCabinets() async {
+  Future<void> loadCabinets(BuildContext context) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
-
     List<dynamic> data = await client.from('Cabinets').select('*');
 
     dat.cabinets = [];
@@ -170,7 +173,8 @@ class Api {
       Cabinet cab = Cabinet.fromMap(element);
       dat.cabinets.add(cab);
     }
-    GetIt.I.get<Talker>().debug(dat.cabinets);
+
+    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
   }
 
   Future<void> loadTimings() async {
@@ -209,7 +213,7 @@ class Api {
       {required int groupID,
       required DateTime start,
       required DateTime end}) async {
-    if(groupID == -1){
+    if (groupID == -1) {
       return [];
     }
     final client = GetIt.I.get<SupabaseClient>();
@@ -316,19 +320,6 @@ class Api {
     for (var element in data) {
       Course course = Course.fromMap(element);
       dat.courses.add(course);
-    }
-  }
-
-  Future<void> loadGroups() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
-
-    List<dynamic> data = await client.from('Groups').select('*');
-
-    dat.groups = [];
-    for (var element in data) {
-      Group groupName = Group.fromMap(element);
-      dat.groups.add(groupName);
     }
   }
 

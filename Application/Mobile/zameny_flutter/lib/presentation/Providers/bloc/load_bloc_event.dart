@@ -1,6 +1,5 @@
 part of 'load_bloc_bloc.dart';
 
-@immutable
 sealed class LoadBlocEvent {}
 
 final class OnLoaded extends LoadBlocEvent{}

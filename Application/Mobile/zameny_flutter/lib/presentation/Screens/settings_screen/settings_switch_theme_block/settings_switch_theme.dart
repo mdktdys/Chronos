@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class SettingsSwitchThemeBlock extends StatelessWidget {
   const SettingsSwitchThemeBlock(
@@ -22,7 +23,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.dark_mode_outlined),
+                    SvgPicture.asset("assets/icon/vuesax_linear_moon.svg", color: Colors.white,),
                     const SizedBox(
                       width: 3,
                     ),
@@ -40,7 +41,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    const Icon(Icons.light_mode_outlined),
+                    SvgPicture.asset("assets/icon/vuesax_linear_sun-2.svg", color: Colors.white,),
                     const SizedBox(
                       width: 3,
                     ),

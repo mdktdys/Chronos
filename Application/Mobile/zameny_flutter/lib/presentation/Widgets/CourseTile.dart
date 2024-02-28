@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Services/Tools.dart';
+import 'package:zameny_flutter/Services/tools.dart';
 
 enum CourseTileType { teacher, group, cabinet }
 
@@ -25,12 +26,6 @@ class CourseTile extends StatelessWidget {
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          // boxShadow: [
-          //   BoxShadow(
-          //       color: Color.fromARGB(255, 43, 43, 58),
-          //       blurStyle: BlurStyle.outer,
-          //       blurRadius: 12)
-          // ]
         ),
         child: Stack(children: [
           Padding(
@@ -43,12 +38,6 @@ class CourseTile extends StatelessWidget {
                     width: 10,
                     decoration: BoxDecoration(
                         color: getCourseColor(course.color),
-                        // boxShadow: [
-                        //   BoxShadow(
-                        //       color: getCourseColor(course.color),
-                        //       blurRadius: 6,
-                        //       blurStyle: BlurStyle.outer),
-                        // ],
                         borderRadius:
                             const BorderRadius.all(Radius.circular(20))),
                   ),
@@ -63,12 +52,6 @@ class CourseTile extends StatelessWidget {
                       width: 30,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          // boxShadow: [
-                          //   BoxShadow(
-                          //       color: getCourseColor(course.color),
-                          //       blurRadius: 6,
-                          //       blurStyle: BlurStyle.outer),
-                          // ],
                           color: getCourseColor(course.color)),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -92,7 +75,10 @@ class CourseTile extends StatelessWidget {
                     Text(
                         "${getLessonTimings(lesson.number).end!.hour}:${getLessonTimings(lesson.number).end!.minute < 9 ? "0${getLessonTimings(lesson.number).end!.minute}" : getLessonTimings(lesson.number).end!.minute}",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inverseSurface.withAlpha(200),
+                            color: Theme.of(context)
+                                .colorScheme
+                                .inverseSurface
+                                .withAlpha(200),
                             fontFamily: 'Ubuntu')),
                   ],
                 ),
@@ -109,7 +95,8 @@ class CourseTile extends StatelessWidget {
                               .name,
                           overflow: TextOverflow.fade,
                           style: TextStyle(
-                              color: Theme.of(context).colorScheme.inverseSurface,
+                              color:
+                                  Theme.of(context).colorScheme.inverseSurface,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.bold,
                               fontSize: 20)),
@@ -122,15 +109,19 @@ class CourseTile extends StatelessWidget {
                                     ? ""
                                     : "",
                         style: TextStyle(
-                            color: Theme.of(context).colorScheme.inverseSurface, fontFamily: 'Ubuntu'),
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            fontFamily: 'Ubuntu'),
                       ),
                       Row(
                         children: [
                           type != CourseTileType.cabinet
-                              ? Icon(
-                                  Icons.location_on_rounded,
-                                  color: Theme.of(context).colorScheme.inverseSurface,
-                                  size: 20,
+                              ? SvgPicture.asset(
+                                  "assets/icon/vuesax_linear_location.svg",
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
+                                  width: 18,
+                                  height: 18,
                                 )
                               : const SizedBox(),
                           Text(
@@ -142,7 +133,10 @@ class CourseTile extends StatelessWidget {
                                         ? getGroupById(lesson.group)!.name
                                         : "",
                             style: TextStyle(
-                                color: Theme.of(context).colorScheme.inverseSurface,fontFamily: 'Ubuntu'),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .inverseSurface,
+                                fontFamily: 'Ubuntu'),
                           ),
                         ],
                       ),

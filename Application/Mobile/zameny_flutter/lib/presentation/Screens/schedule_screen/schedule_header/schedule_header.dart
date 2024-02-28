@@ -65,7 +65,7 @@ class ScheduleHeader extends StatelessWidget {
                   builder: (context) => Container(
                         height: 100,
                         child: Padding(
-                          padding: EdgeInsets.all(8),
+                          padding: const EdgeInsets.all(8),
                           child: Column(
                             children: [
                               ListTile(

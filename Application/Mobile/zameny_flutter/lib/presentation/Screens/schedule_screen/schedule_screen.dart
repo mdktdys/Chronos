@@ -1,18 +1,39 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:lottie/lottie.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:smooth_scroll_multiplatform/smooth_scroll_multiplatform.dart';
+import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Services/Models/group.dart';
-import 'package:zameny_flutter/Services/Tools.dart';
+import 'package:zameny_flutter/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_header/schedule_turbo_search.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/failed_load_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/search_banner_message_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/search_result_header.dart';
+
+class ScheduleWrapper extends StatelessWidget {
+  const ScheduleWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (context) => SearchProvider(context)),
+        ChangeNotifierProvider(create: (context) => ScheduleProvider(context)),
+      ],
+      builder: (context, child) {
+        context.read<ScheduleBloc>().add(LoadInitial(context: context));
+        return const ScheduleScreen();
+      },
+    );
+  }
+}
 
 class ScheduleScreen extends StatefulWidget {
   const ScheduleScreen({super.key});
@@ -25,329 +46,103 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
-
-  DateTime NavigationDate = DateTime.now();
-  DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
-  late final todayWeek;
-  var currentWeek;
   late final ScrollController scrollController;
-  late int groupIDSeek;
-  late int teacherIDSeek;
-  late int cabinetIDSeek;
 
   @override
   void initState() {
     super.initState();
-
     scrollController = ScrollController();
-
-    groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
-    teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
-
-    currentWeek = ((NavigationDate.difference(septemberFirst).inDays +
-                septemberFirst.weekday) ~/
-            7) +
-        1;
-
-    todayWeek = currentWeek;
-    // Находим понедельник и воскресенье текущей недели
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
-
-    // Устанавливаем время для понедельника и воскресенья
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    if (groupIDSeek != -1) {
-      context.read<ScheduleBloc>().add(FetchData(
-            groupID: groupIDSeek,
-            dateStart: startOfWeek,
-            dateEnd: endOfWeek,
-          ));
-    } else {
-      context.read<ScheduleBloc>().emit(ScheduleInitial());
-    }
-  }
-
-  // _loadPage() {
-  //   DateTime monday =
-  //       NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-  //   DateTime sunday = monday.add(const Duration(days: 6));
-
-  //   // Устанавливаем время для понедельника и воскресенья
-  //   DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-  //   DateTime endOfWeek =
-  //       DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-  //   context.read<ScheduleBloc>().add(FetchData(
-  //         groupID: groupIDSeek,
-  //         dateStart: startOfWeek,
-  //         dateEnd: endOfWeek,
-  //       ));
-  // }
-
-  void _loadWeekSchedule() async {
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
-
-    // Устанавливаем время для понедельника и воскресенья
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    context.read<ScheduleBloc>().add(FetchData(
-          groupID: groupIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ));
-  }
-
-  DateTime getStartOfWeek(DateTime week) {
-    DateTime monday = week.subtract(Duration(days: week.weekday - 1));
-    return DateTime(monday.year, monday.month, monday.day);
-  }
-
-  DateTime getEndOfWeek(DateTime week) {
-    DateTime sunday = week
-        .subtract(Duration(days: week.weekday - 1))
-        .add(const Duration(days: 6));
-    return DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-  }
-
-  void _groupSelected(int groupID) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
-    groupIDSeek = groupID;
-    data.seekGroup = groupID;
-    data.latestSearch = CourseTileType.group;
-    _loadWeekSchedule();
-    setState(() {});
-  }
-
-  void _teacherSelected(int teacherID) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
-    teacherIDSeek = teacherID;
-    data.teacherGroup = teacherID;
-    data.latestSearch = CourseTileType.teacher;
-    _loadWeekTeahcerSchedule();
-    setState(() {});
-  }
-
-  void _cabinetSelected(int cabinetID) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
-    cabinetIDSeek = cabinetID;
-    data.seekCabinet = cabinetID;
-    data.latestSearch = CourseTileType.cabinet;
-    _loadCabinetWeekSchedule();
-    setState(() {});
-  }
-
-  void _loadCabinetWeekSchedule() async {
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
-
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    context.read<ScheduleBloc>().add(LoadCabinetWeek(
-          cabinetID: cabinetIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ));
-  }
-
-  void _loadWeekTeahcerSchedule() async {
-    DateTime monday =
-        NavigationDate.subtract(Duration(days: NavigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
-
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    context.read<ScheduleBloc>().add(LoadTeacherWeek(
-          teacherID: teacherIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ));
-  }
-
-  void _dateSwitched() async {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
-      _teacherSelected(dat.teacherGroup!);
-    }
-    if (dat.latestSearch == CourseTileType.cabinet) {
-      _cabinetSelected(dat.seekCabinet!);
-    }
-    if (dat.latestSearch == CourseTileType.group) {
-      _groupSelected(dat.seekGroup!);
-    }
-  }
-
-  String searchDiscribtion() {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
-      Teacher? teacher = getTeacherById(dat.teacherGroup!);
-      return teacher == null ? "Error" : teacher.name;
-    }
-    if (dat.latestSearch == CourseTileType.cabinet) {
-      Cabinet? cabinet = getCabinetById(dat.seekCabinet!);
-      return cabinet == null ? "Error" : cabinet.name;
-    }
-    if (dat.latestSearch == CourseTileType.group) {
-      Group? group = getGroupById(dat.seekGroup!);
-      return group == null ? "Error" : group.name;
-    }
-    return "Not found";
-  }
-
-  String getSearchTypeNamed() {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
-      return "Препод";
-    }
-    if (dat.latestSearch == CourseTileType.cabinet) {
-      return "Кабинет";
-    }
-    if (dat.latestSearch == CourseTileType.group) {
-      return "Группа";
-    }
-    return "Not found";
   }
 
   @override
   Widget build(BuildContext context) {
-    return DynMouseScroll(
-      mobilePhysics: BouncingScrollPhysics(),
-      builder: (context, controller, physics) => CustomScrollView(
-        controller: scrollController,
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverToBoxAdapter(
-            child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(
-                children: [
-                  const SizedBox(height: 10),
-                  const ScheduleHeader(),
-                  const SizedBox(height: 10),
-                  ScheduleTurboSearch(
-                    groupSelected: _groupSelected,
-                    teacherSelected: _teacherSelected,
-                    cabinetSelected: _cabinetSelected,
-                  ),
-                  //const SizedBox(height: 10),
-                  //GroupChooser(onGroupSelected: _groupSelected),
-                  const SizedBox(height: 10),
-                  DateHeader(
-                      parentWidget: this,
-                      todayWeek: todayWeek,
-                      currentWeek: currentWeek,
-                      dateSwitched: _dateSwitched),
-                  const SizedBox(height: 10),
-                  BlocBuilder<ScheduleBloc, ScheduleState>(
-                    builder: (context, state) {
-                      if (state is ScheduleLoaded) {
-                        return Container(
-                          child: Column(
-                            children: [
-                              Text(getSearchTypeNamed(),
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface,
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 18)),
-                              Text(searchDiscribtion(),
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface,
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 24,
-                                      fontWeight: FontWeight.bold)),
-                            ],
-                          ),
-                        );
-                      } else if (state is ScheduleFailedLoading) {
-                        return const SizedBox();
-                      } else if (state is ScheduleLoading) {
-                        return const SizedBox();
-                      } else if (state is ScheduleInitial) {
-                        return SizedBox();
-                      } else {
-                        return const SizedBox();
-                      }
-                    },
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
+    super.build(context);
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    return CustomScrollView(
+      controller: scrollController,
+      physics: const BouncingScrollPhysics(),
+      slivers: [
+        SliverToBoxAdapter(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
+            child: Column(
+              children: [
+                const SizedBox(height: 10),
+                const ScheduleHeader(),
+                const SizedBox(height: 10),
+                const ScheduleTurboSearch(),
+                const SizedBox(height: 10),
+                const DateHeader(),
+                const SizedBox(height: 10),
+                BlocBuilder<ScheduleBloc, ScheduleState>(
+                  builder: (context, state) {
+                    GetIt.I.get<Talker>().good(state);
+                    if (state is ScheduleLoaded) {
+                      return const SearchResultHeader();
+                    } else if (state is ScheduleFailedLoading) {
+                      return const SizedBox();
+                    } else if (state is ScheduleLoading) {
+                      return const SizedBox();
+                    } else if (state is ScheduleInitial) {
+                      return const SizedBox();
+                    } else {
+                      return const SizedBox();
+                    }
+                  },
+                ),
+                const SizedBox(height: 10),
+              ],
             ),
           ),
-          SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
-              builder: (context, state) {
-                if (state is ScheduleLoaded) {
-                  return SliverToBoxAdapter(
-                    child: LessonList(
-                      type: state.searchType,
-                      zamenas: state.zamenas,
-                      lessons: state.lessons,
-                      groupID: groupIDSeek,
-                      weekDate: NavigationDate,
-                      todayWeek: todayWeek,
-                      currentWeek: currentWeek,
-                    ),
-                  );
-                } else if (state is ScheduleFailedLoading) {
-                  return SliverFillRemaining(
-                    hasScrollBody: false,
-                    fillOverscroll: true,
-                    child: FailedLoadWidget(
-                      error: state.error,
-                      funcReload: _loadWeekSchedule,
-                    ),
-                  );
-                } else if (state is ScheduleLoading) {
-                  return SliverFillRemaining(
-                    child: LoadingWidget(),
-                  );
-                } else if (state is ScheduleInitial) {
-                  return SliverFillRemaining(
-                      child: Center(
-                    child: Text(
-                        "Тыкни на поиск!\nвыбери группу, препода или кабинет",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.inverseSurface,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
-                  ));
-                  ;
-                } else {
-                  return SliverFillRemaining(child: const SizedBox());
-                }
-              },
-            ),
+        ),
+        SliverPadding(
+          padding: const EdgeInsets.symmetric(horizontal: 20),
+          sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
+            builder: (context, state) {
+              if (state is ScheduleLoaded) {
+                return SliverToBoxAdapter(
+                  child: LessonList(
+                    type: state.searchType,
+                    zamenas: state.zamenas,
+                    lessons: state.lessons,
+                  ),
+                );
+              } else if (state is ScheduleFailedLoading) {
+                return SliverFillRemaining(
+                  hasScrollBody: false,
+                  fillOverscroll: true,
+                  child: FailedLoadWidget(
+                    error: state.error,
+                  ),
+                );
+              } else if (state is ScheduleLoading) {
+                return const SliverFillRemaining(
+                  child: LoadingWidget(),
+                );
+              } else if (state is ScheduleInitial) {
+                return SliverFillRemaining(
+                    child: Center(
+                  child: Text(
+                      "Тыкни на поиск!\nвыбери группу, препода или кабинет",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface,
+                          fontFamily: 'Ubuntu',
+                          fontSize: 24,
+                          fontWeight: FontWeight.bold)),
+                ));
+              } else {
+                return const SliverFillRemaining(child: SizedBox());
+              }
+            },
           ),
-          SliverToBoxAdapter(
-            child: const SizedBox(
-              height: 100,
-            ),
-          )
-        ],
-      ),
+        ),
+        const SliverToBoxAdapter(
+          child: SizedBox(
+            height: 100,
+          ),
+        )
+      ],
     );
   }
 }
@@ -380,157 +175,35 @@ class LoadingWidget extends StatelessWidget {
   }
 }
 
-class FailedLoadWidget extends StatelessWidget {
-  final Function funcReload;
-  final String error;
-  const FailedLoadWidget(
-      {super.key, required this.funcReload, required this.error});
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        const Icon(
-          Icons.warning_amber_outlined,
-          color: Colors.red,
-          size: 100,
-          shadows: [Shadow(color: Colors.red, blurRadius: 4)],
-        ),
-        const Text(
-          "Ошибка :(",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-              color: Colors.red,
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.bold,
-              fontSize: 26),
-        ),
-        Text(
-          error,
-          textAlign: TextAlign.center,
-          style: const TextStyle(
-              color: Colors.red,
-              fontFamily: 'Ubuntu',
-              fontWeight: FontWeight.w400,
-              fontSize: 14),
-        ),
-        SizedBox(
-          height: 10,
-        ),
-        GestureDetector(
-          onTap: () {
-            funcReload.call();
-          },
-          child: Container(
-            width: 150,
-            height: 40,
-            decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(width: 2, color: Colors.red),
-                borderRadius: BorderRadius.all(Radius.circular(20))),
-            child: const Center(
-              child: Text(
-                "Перезагрузить",
-                style: TextStyle(
-                    color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18),
-              ),
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 60,
-        ),
-      ],
-    );
-  }
-}
-
 class LessonList extends StatelessWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
-  final DateTime weekDate;
-  final int groupID;
   final CourseTileType type;
-  final todayWeek;
-  final currentWeek;
 
-  const LessonList(
-      {super.key,
-      required this.type,
-      required this.zamenas,
-      required this.lessons,
-      required this.weekDate,
-      required this.groupID,
-      required this.todayWeek,
-      required this.currentWeek});
-
-  @override
-  Widget build(BuildContext context) {
-    final currentDay = DateTime.now().weekday;
-    final data = GetIt.I.get<Data>();
-    final startDate = weekDate.subtract(Duration(days: weekDate.weekday - 1));
-
-    return Column(children: [
-      zamenas.isNotEmpty ? SizedBox() : const SearchBannerMessageWidget(),
-      ListView(
-          physics: const NeverScrollableScrollPhysics(),
-          shrinkWrap: true,
-          children: ScheduleList(lessons, data, groupID, zamenas, startDate,
-              currentDay, todayWeek, currentWeek,
-              type: type)),
-    ]);
-  }
-}
-
-class SearchBannerMessageWidget extends StatelessWidget {
-  const SearchBannerMessageWidget({
+  const LessonList({
     super.key,
+    required this.type,
+    required this.zamenas,
+    required this.lessons,
   });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: const EdgeInsets.only(bottom: 20),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-        // boxShadow: [
-        //   const BoxShadow(
-        //       color: Color.fromARGB(255, 43, 43, 58),
-        //       blurStyle: BlurStyle.outer,
-        //       blurRadius: 12)
-        // ]),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Row(
-          children: [
-            const Icon(
-              Icons.info_outline_rounded,
-              size: 30,
-              color: Colors.blue,
-              // shadows: [
-              //   Shadow(
-              //     color: Color.fromARGB(255, 28, 95, 182),
-              //     blurRadius: 6,
-              //   )
-              // ],
-            ),
-            const SizedBox(
-              width: 10,
-            ),
-            Text(
-              "Нет замен",
-              style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.inverseSurface),
-            )
-          ],
-        ),
-      ),
-    );
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final currentDay = DateTime.now().weekday;
+    final data = GetIt.I.get<Data>();
+    final startDate = provider.navigationDate
+        .subtract(Duration(days: provider.navigationDate.weekday - 1));
+
+    return Column(children: [
+      zamenas.isNotEmpty ? const SizedBox() : const SearchBannerMessageWidget(),
+      ListView(
+          physics: const NeverScrollableScrollPhysics(),
+          shrinkWrap: true,
+          children: ScheduleList(lessons, data, provider.groupIDSeek, zamenas,
+              startDate, currentDay, provider.todayWeek, provider.currentWeek,
+              type: type)),
+    ]);
   }
 }
 
@@ -648,13 +321,6 @@ class DayScheduleWidget extends StatelessWidget {
                     ? Container(
                         decoration: const BoxDecoration(
                             color: Color.fromARGB(255, 30, 118, 233),
-                            // boxShadow: [
-                            //   BoxShadow(
-                            //     color: Color.fromARGB(255, 28, 95, 182),
-                            //     blurStyle: BlurStyle.outer,
-                            //     blurRadius: 6,
-                            //   )
-                            // ],
                             borderRadius:
                                 BorderRadius.all(Radius.circular(20))),
                         child: const Padding(

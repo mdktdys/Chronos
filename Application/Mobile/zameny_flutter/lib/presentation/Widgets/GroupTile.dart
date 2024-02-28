@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
-import 'package:zameny_flutter/Services/Tools.dart';
+import 'package:zameny_flutter/Services/tools.dart';
 
 class GroupTile extends StatelessWidget {
   final Group group;
-  final context;
+  final BuildContext context;
   final Function(int) onGroupSelected;
 
   const GroupTile({super.key, required this.group, required this.context,  required this.onGroupSelected});

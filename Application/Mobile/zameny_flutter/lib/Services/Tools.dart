@@ -29,9 +29,9 @@ Group? getGroupById(int groupID) {
   return dat.groups.where((group) => group.id == groupID).firstOrNull;
 }
 
-Course? getCourseById(int CourseID) {
+Course? getCourseById(int courseID) {
   final dat = GetIt.I.get<Data>();
-  return dat.courses.where((course) => course.id == CourseID).toList().firstOrNull;
+  return dat.courses.where((course) => course.id == courseID).toList().firstOrNull;
 }
 
 DateTime getFirstDayOfWeek(int year, int week) {

@@ -1,41 +1,29 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_date_header/schedule_date_header_toggle_week_button.dart';
 
 class DateHeader extends StatelessWidget {
-  final Function dateSwitched;
-  final parentWidget;
-
-  const DateHeader(
-      {super.key,
-      required this.dateSwitched,
-      required this.todayWeek,
-      required this.currentWeek,
-      required this.parentWidget});
-
-  final int todayWeek;
-  final int currentWeek;
+  const DateHeader({super.key});
 
   @override
   Widget build(BuildContext context) {
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Container(
         height: 80,
         width: double.infinity,
         decoration: BoxDecoration(
-            borderRadius: const BorderRadius.all(Radius.circular(20)),
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-            // boxShadow: [
-            //   BoxShadow(
-            //       color: Color.fromARGB(255, 43, 43, 58),
-            //       blurStyle: BlurStyle.outer,
-            //       blurRadius: 12)
-            // ]
-            ),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        ),
         padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            ToggleWeekButton(next: false, widget: parentWidget, dateSwitched: dateSwitched),
+            const ToggleWeekButton(
+              next: false,
+            ),
             Column(
               children: [
                 Text(
@@ -56,48 +44,47 @@ class DateHeader extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: [
                       Text(
-                        "Неделя $currentWeek",
+                        "Неделя ${provider.currentWeek}",
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Ubuntu',
                             fontSize: 16,
-                            color: Theme.of(context).colorScheme.inverseSurface),
+                            color:
+                                Theme.of(context).colorScheme.inverseSurface),
                       ),
                       const SizedBox(
                         width: 5,
                       ),
-                      todayWeek == currentWeek
-                          ? Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 30, 118, 233),
-                                  // boxShadow: [
-                                  //   BoxShadow(
-                                  //     color: Color.fromARGB(255, 28, 95, 182),
-                                  //     blurStyle: BlurStyle.outer,
-                                  //     blurRadius: 6,
-                                  //   )
-                                  // ],
-                                  borderRadius:
-                                      BorderRadius.all(Radius.circular(20))),
-                              child: const Padding(
-                                padding: EdgeInsets.all(6.0),
-                                child: Text(
-                                  "Текущий",
-                                  style: TextStyle(
-                                      color: Colors.white,
-                                      fontSize: 14,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold),
+                      AnimatedSize(
+                        curve: Curves.easeOutCubic,
+                        duration: const Duration(milliseconds: 150),
+                        alignment: Alignment.center,
+                        child: provider.todayWeek == provider.currentWeek
+                            ? Container(
+                                decoration: const BoxDecoration(
+                                    color: Color.fromARGB(255, 30, 118, 233),
+                                    borderRadius:
+                                        BorderRadius.all(Radius.circular(20))),
+                                child: const Padding(
+                                  padding: EdgeInsets.all(6.0),
+                                  child: Text(
+                                    "Текущий",
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 14,
+                                        fontFamily: 'Ubuntu',
+                                        fontWeight: FontWeight.bold),
+                                  ),
                                 ),
-                              ),
-                            )
-                          : Container()
+                              )
+                            : Container(),
+                      ),
                     ],
                   ),
                 )
               ],
             ),
-            ToggleWeekButton(next: true, widget: parentWidget, dateSwitched: dateSwitched),
+            const ToggleWeekButton(next: true),
           ],
         ));
   }

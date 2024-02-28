@@ -21,8 +21,7 @@ ThemeData lightTheme = ThemeData.light().copyWith(
         background: Colors.white,
         onBackground: Colors.white,
         surface: Colors.red,
-        onSurface: Colors.grey ),
-    useMaterial3: true);
+        onSurface: Colors.grey ),);
 
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
@@ -39,5 +38,4 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
         background: Color.fromARGB(255, 18, 21, 37),
         onBackground: Colors.white,
         surface: Colors.red,
-        onSurface: Colors.grey),
-    useMaterial3: true);
+        onSurface: Colors.grey),);
