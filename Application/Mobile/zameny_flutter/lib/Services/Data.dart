@@ -1,4 +1,6 @@
 import 'dart:convert';
+
+import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:intl/intl.dart';
@@ -9,6 +11,48 @@ import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_hea
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+
+class ZamenaFull {
+  final int id;
+  final int group;
+  final DateTime date;
+
+  ZamenaFull({required this.id, required this.group, required this.date});
+
+  Map<String, dynamic> toMap() {
+    return <String, dynamic>{
+      'id': id,
+      'group': group,
+      'date': date.millisecondsSinceEpoch,
+    };
+  }
+
+  factory ZamenaFull.fromMap(Map<String, dynamic> map) {
+    return ZamenaFull(
+      id: map['id'] as int,
+      group: map['group'] as int,
+      date: DateTime.parse(map['date'] as String),
+    );
+  }
+
+  String toJson() => json.encode(toMap());
+
+  factory ZamenaFull.fromJson(String source) => ZamenaFull.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  @override
+  bool operator ==(covariant ZamenaFull other) {
+    if (identical(this, other)) return true;
+  
+    return 
+      other.id == id &&
+      other.group == group &&
+      other.date == date;
+  }
+
+  @override
+  int get hashCode => id.hashCode ^ group.hashCode ^ date.hashCode;
+}
+
 class Data {
 
   List<Teacher> teachers = [];
@@ -20,11 +64,12 @@ class Data {
   List<Zamena> zamenas = [];
   List<ZamenasType> zamenaTypes = [];
   List<ZamenaFileLink> zamenaFileLinks = [];
+  Set<ZamenaFull> zamenasFull = {};
 
   int? seekGroup = -1;
   int? teacherGroup = -1;
   int? seekCabinet = -1;
-  CourseTileType latestSearch = CourseTileType.group;
+  SearchType latestSearch = SearchType.group;
 
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -18,7 +19,6 @@ import 'package:zameny_flutter/presentation/Widgets/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/loading_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/search_banner_message_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/search_result_header.dart';
-
 
 MyGlobals myGlobals = MyGlobals();
 
@@ -99,25 +99,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       } else if (state is ScheduleFailedLoading) {
                         return const SizedBox();
                       } else if (state is ScheduleLoading) {
-                        return Shimmer.fromColors(
-                            baseColor: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.1),
-                            highlightColor: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.2),
-                            child: Container(
-                              height: 60,
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.circular(20),
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .onSurface
-                                      .withOpacity(0.6)),
-                            ));
+                        return const ShimmerContainer();
                       } else if (state is ScheduleInitial) {
                         return const SizedBox();
                       } else {
@@ -138,7 +120,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   return SliverToBoxAdapter(
                     child: LessonList(
                       refresh: refresh,
-                      type: state.searchType,
                       zamenas: state.zamenas,
                       lessons: state.lessons,
                     ),
@@ -184,16 +165,35 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   }
 }
 
+class ShimmerContainer extends StatelessWidget {
+  const ShimmerContainer({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Shimmer.fromColors(
+        baseColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        highlightColor:
+            Theme.of(context).colorScheme.onSurface.withOpacity(0.2),
+        child: Container(
+          height: 60,
+          width: double.infinity,
+          decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(20),
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+        ));
+  }
+}
+
 class LessonList extends StatelessWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
-  final CourseTileType type;
   final Function refresh;
 
   const LessonList({
     super.key,
     required this.refresh,
-    required this.type,
     required this.zamenas,
     required this.lessons,
   });
@@ -212,16 +212,16 @@ class LessonList extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: ScheduleList(
-              refresh,
-              lessons,
-              data,
-              provider.groupIDSeek,
-              zamenas,
-              startDate,
-              currentDay,
-              provider.todayWeek,
-              provider.currentWeek,
-              type: type)),
+            refresh,
+            lessons,
+            data,
+            provider.groupIDSeek,
+            zamenas,
+            startDate,
+            currentDay,
+            provider.todayWeek,
+            provider.currentWeek,
+          )),
     ]);
   }
 }
@@ -235,8 +235,7 @@ List<Widget> ScheduleList(
     DateTime startDate,
     int currentDay,
     todayWeek,
-    currentWeek,
-    {required CourseTileType type}) {
+    currentWeek) {
   return List.generate(6, (iter) {
     final day = iter + 1;
     List<Lesson> lessons = [];
@@ -253,7 +252,6 @@ List<Widget> ScheduleList(
     DayZamenas.sort((a, b) => a.LessonTimingsID > b.LessonTimingsID ? 1 : -1);
     if ((DayZamenas.length + lessons.length) > 0) {
       return DayScheduleWidget(
-        type: type,
         refresh: refresh,
         day: day,
         DayZamenas: DayZamenas,
@@ -276,8 +274,10 @@ class DayScheduleWidget extends StatelessWidget {
   final int currentWeek;
   final int todayWeek;
   final Data data;
-  final CourseTileType type;
   final Function refresh;
+  final int day;
+  final List<Zamena> DayZamenas;
+  final List<Lesson> lessons;
 
   const DayScheduleWidget(
       {super.key,
@@ -289,18 +289,30 @@ class DayScheduleWidget extends StatelessWidget {
       required this.currentDay,
       required this.currentWeek,
       required this.todayWeek,
-      required this.data,
-      required this.type});
-
-  final int day;
-  final List<Zamena> DayZamenas;
-  final List<Lesson> lessons;
+      required this.data});
 
   @override
   Widget build(BuildContext context) {
     bool isToday =
         (day == currentDay && todayWeek == currentWeek ? true : false);
-
+    //ScheduleProvider provider = context.watch<ScheduleProvider>();
+    SearchType type = context.watch<ScheduleProvider>().searchType;
+    bool fullSwap = false;
+    if (type == SearchType.group) {
+      int searchDay = startDate.add(Duration(days: day - 1)).day;
+      int searchMonth = startDate.add(Duration(days: day - 1)).month;
+      int searchYear = startDate.add(Duration(days: day - 1)).year;
+      fullSwap = GetIt.I
+          .get<Data>()
+          .zamenasFull
+          .where((element) =>
+              (element.group == lessons[0].group) &&
+              (element.date.day == searchDay) &&
+              (element.date.month == searchMonth) &&
+              (element.date.year == searchYear))
+          .toSet()
+          .isNotEmpty;
+    }
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: isToday
@@ -313,98 +325,168 @@ class DayScheduleWidget extends StatelessWidget {
           : null,
       child: Column(
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      getDayName(day),
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,
-                          fontSize: 24,
-                          fontFamily: 'Ubuntu'),
-                    ),
-                    Text(
-                      "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
-                      style: TextStyle(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .inverseSurface
-                              .withOpacity(0.7),
-                          fontSize: 18,
-                          fontFamily: 'Ubuntu'),
-                    ),
-                  ],
-                ),
-                isToday
-                    ? Container(
-                        decoration: const BoxDecoration(
-                            color: Color.fromARGB(255, 30, 118, 233),
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(20))),
-                        child: const Padding(
-                          padding: EdgeInsets.all(8.0),
-                          child: Text(
-                            "Сегодня",
-                            style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold),
-                          ),
-                        ),
-                      )
-                    : Container()
-              ],
-            ),
-          ),
+          DayScheduleHeader(
+              day: day,
+              startDate: startDate,
+              isToday: isToday,
+              fullSwap: fullSwap),
           Column(
               children: data.timings.map((para) {
-            if (DayZamenas.any(
-                (element) => element.LessonTimingsID == para.number)) {
-              Lesson? swapedPara = lessons
+            if (fullSwap) {
+              Lesson? removedPara = lessons
                   .where((element) => element.number == para.number)
                   .firstOrNull;
-              Zamena zamena = DayZamenas.where(
-                  (element) => element.LessonTimingsID == para.number).first;
-              final course = getCourseById(zamena.courseID) ??
-                  Course(id: -1, name: "err2", color: "100,0,0,0");
-              return CourseTile(
-                type: type,
-                course: course,
-                refresh: refresh,
-                lesson: Lesson(
-                    id: -1,
-                    course: course.id,
-                    cabinet: zamena.cabinetID,
-                    number: zamena.LessonTimingsID,
-                    teacher: zamena.teacherID,
-                    group: zamena.groupID,
-                    date: zamena.date),
-                swaped: swapedPara,
-              );
-            } else {
-              if (lessons.any((element) => element.number == para.number)) {
-                Lesson lesson = lessons
-                    .where((element) => element.number == para.number)
-                    .first;
-                final course = getCourseById(lesson.course) ??
-                    Course(id: -1, name: "err3", color: "50,0,0,1");
+              if (removedPara != null) {
+                return SizedBox();
+              }
+              Zamena? zamena = DayZamenas.where(
+                      (element) => element.LessonTimingsID == para.number)
+                  .firstOrNull;
+              if (zamena != null) {
+                final course = getCourseById(zamena.courseID) ??
+                    Course(id: -1, name: "err2", color: "100,0,0,0");
                 return CourseTile(
                   type: type,
                   course: course,
-                  lesson: lesson,
-                  swaped: null,
                   refresh: refresh,
+                  swaped: null,
+                  lesson: Lesson(
+                      id: -1,
+                      course: course.id,
+                      cabinet: zamena.cabinetID,
+                      number: zamena.LessonTimingsID,
+                      teacher: zamena.teacherID,
+                      group: zamena.groupID,
+                      date: zamena.date),
                 );
               }
+              return SizedBox();
+            } else {
+              if (DayZamenas.any(
+                  (element) => element.LessonTimingsID == para.number)) {
+                Lesson? swapedPara = lessons
+                    .where((element) => element.number == para.number)
+                    .firstOrNull;
+                Zamena zamena = DayZamenas.where(
+                    (element) => element.LessonTimingsID == para.number).first;
+                final course = getCourseById(zamena.courseID) ??
+                    Course(id: -1, name: "err2", color: "100,0,0,0");
+                return CourseTile(
+                  type: type,
+                  course: course,
+                  refresh: refresh,
+                  lesson: Lesson(
+                      id: -1,
+                      course: course.id,
+                      cabinet: zamena.cabinetID,
+                      number: zamena.LessonTimingsID,
+                      teacher: zamena.teacherID,
+                      group: zamena.groupID,
+                      date: zamena.date),
+                  swaped: swapedPara,
+                );
+              } else {
+                if (lessons.any((element) => element.number == para.number)) {
+                  Lesson lesson = lessons
+                      .where((element) => element.number == para.number)
+                      .first;
+                  final course = getCourseById(lesson.course) ??
+                      Course(id: -1, name: "err3", color: "50,0,0,1");
+                  return CourseTile(
+                    type: type,
+                    course: course,
+                    lesson: lesson,
+                    swaped: null,
+                    refresh: refresh,
+                  );
+                }
+              }
             }
-            return Container();
+            return SizedBox();
           }).toList())
+        ],
+      ),
+    );
+  }
+}
+
+class DayScheduleHeader extends StatelessWidget {
+  final bool? fullSwap;
+  const DayScheduleHeader(
+      {super.key,
+      required this.day,
+      required this.startDate,
+      required this.isToday,
+      this.fullSwap});
+
+  final int day;
+  final DateTime startDate;
+  final bool isToday;
+
+  @override
+  Widget build(BuildContext context) {
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  getDayName(day),
+                  style: TextStyle(
+                      color: Theme.of(context).colorScheme.inverseSurface,
+                      fontSize: 24,
+                      fontFamily: 'Ubuntu'),
+                ),
+                Text(
+                  "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
+                  style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.7),
+                      fontSize: 18,
+                      fontFamily: 'Ubuntu'),
+                ),
+              ],
+            ),
+          ),
+          fullSwap == true
+              ? Text(
+                  "Полная замена",
+                  style: TextStyle(
+                      color: Theme.of(context)
+                          .colorScheme
+                          .inverseSurface
+                          .withOpacity(0.7),
+                      fontSize: 18,
+                      fontFamily: 'Ubuntu'),
+                )
+              : const SizedBox(),
+          const SizedBox(
+            width: 5,
+          ),
+          isToday
+              ? Container(
+                  decoration: const BoxDecoration(
+                      color: Color.fromARGB(255, 30, 118, 233),
+                      borderRadius: BorderRadius.all(Radius.circular(20))),
+                  child: const Padding(
+                    padding: EdgeInsets.all(8.0),
+                    child: Text(
+                      "Сегодня",
+                      style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontFamily: 'Ubuntu',
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                )
+              : SizedBox()
         ],
       ),
     );

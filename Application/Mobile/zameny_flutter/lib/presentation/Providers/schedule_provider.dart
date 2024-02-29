@@ -12,7 +12,8 @@ class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
   int teacherIDSeek = -1;
   int cabinetIDSeek = -1;
-
+  SearchType searchType = SearchType.group;
+  
   DateTime navigationDate = DateTime.now();
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   int currentWeek = 1;
@@ -57,7 +58,8 @@ class ScheduleProvider extends ChangeNotifier {
     GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
     groupIDSeek = groupID;
     data.seekGroup = groupID;
-    data.latestSearch = CourseTileType.group;
+    data.latestSearch = SearchType.group;
+    searchType = SearchType.group;
     loadWeekSchedule(context);
   }
 
@@ -84,7 +86,8 @@ class ScheduleProvider extends ChangeNotifier {
     GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
     teacherIDSeek = teacherID;
     data.teacherGroup = teacherID;
-    data.latestSearch = CourseTileType.teacher;
+    data.latestSearch = SearchType.teacher;
+    searchType = SearchType.teacher;
     loadWeekTeahcerSchedule(context);
   }
 
@@ -93,7 +96,8 @@ class ScheduleProvider extends ChangeNotifier {
     GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
     cabinetIDSeek = cabinetID;
     data.seekCabinet = cabinetID;
-    data.latestSearch = CourseTileType.cabinet;
+    data.latestSearch = SearchType.cabinet;
+    searchType = SearchType.cabinet;
     loadCabinetWeekSchedule(context);
   }
 
@@ -133,13 +137,13 @@ class ScheduleProvider extends ChangeNotifier {
 
   void dateSwitched(context) async {
     final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
+    if (dat.latestSearch == SearchType.teacher) {
       teacherSelected(dat.teacherGroup!, context);
     }
-    if (dat.latestSearch == CourseTileType.cabinet) {
+    if (dat.latestSearch == SearchType.cabinet) {
       cabinetSelected(dat.seekCabinet!, context);
     }
-    if (dat.latestSearch == CourseTileType.group) {
+    if (dat.latestSearch == SearchType.group) {
       groupSelected(dat.seekGroup!, context);
     }
     notifyListeners();
@@ -147,15 +151,15 @@ class ScheduleProvider extends ChangeNotifier {
 
   String searchDiscribtion() {
     final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
+    if (dat.latestSearch == SearchType.teacher) {
       Teacher teacher = getTeacherById(dat.teacherGroup!);
       return teacher.name;
     }
-    if (dat.latestSearch == CourseTileType.cabinet) {
+    if (dat.latestSearch == SearchType.cabinet) {
       Cabinet cabinet = getCabinetById(dat.seekCabinet!);
       return cabinet.name;
     }
-    if (dat.latestSearch == CourseTileType.group) {
+    if (dat.latestSearch == SearchType.group) {
       Group? group = getGroupById(dat.seekGroup!);
       return group == null ? "Error" : group.name;
     }
@@ -164,13 +168,13 @@ class ScheduleProvider extends ChangeNotifier {
 
   String getSearchTypeNamed() {
     final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == CourseTileType.teacher) {
+    if (dat.latestSearch == SearchType.teacher) {
       return "Препод";
     }
-    if (dat.latestSearch == CourseTileType.cabinet) {
+    if (dat.latestSearch == SearchType.cabinet) {
       return "Кабинет";
     }
-    if (dat.latestSearch == CourseTileType.group) {
+    if (dat.latestSearch == SearchType.group) {
       return "Группа";
     }
     return "Not found";
