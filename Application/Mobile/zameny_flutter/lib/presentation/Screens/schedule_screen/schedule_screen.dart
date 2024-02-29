@@ -212,10 +212,10 @@ class LessonList extends StatelessWidget {
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
           children: ScheduleList(
+            context,
             refresh,
             lessons,
             data,
-            provider.groupIDSeek,
             zamenas,
             startDate,
             currentDay,
@@ -227,15 +227,17 @@ class LessonList extends StatelessWidget {
 }
 
 List<Widget> ScheduleList(
+    BuildContext context,
     Function refresh,
     List<Lesson> weekLessons,
     Data data,
-    int groupID,
     List<Zamena> zamenas,
     DateTime startDate,
     int currentDay,
     todayWeek,
     currentWeek) {
+  ScheduleProvider provider = context.watch<ScheduleProvider>();
+  SearchType searchType = provider.searchType;
   return List.generate(6, (iter) {
     final day = iter + 1;
     List<Lesson> lessons = [];
@@ -250,22 +252,208 @@ List<Widget> ScheduleList(
     List<Zamena> DayZamenas =
         zamenas.where((element) => element.date.weekday == day).toList();
     DayZamenas.sort((a, b) => a.LessonTimingsID > b.LessonTimingsID ? 1 : -1);
+
     if ((DayZamenas.length + lessons.length) > 0) {
-      return DayScheduleWidget(
-        refresh: refresh,
-        day: day,
-        DayZamenas: DayZamenas,
-        lessons: lessons,
-        startDate: startDate,
-        data: data,
-        currentDay: currentDay,
-        todayWeek: todayWeek,
-        currentWeek: currentWeek,
-      );
+      if (searchType == SearchType.group || searchType == SearchType.cabinet) {
+        return DayScheduleWidget(
+          refresh: refresh,
+          day: day,
+          DayZamenas: DayZamenas,
+          lessons: lessons,
+          startDate: startDate,
+          data: data,
+          currentDay: currentDay,
+          todayWeek: todayWeek,
+          currentWeek: currentWeek,
+        );
+      } else if (searchType == SearchType.teacher) {
+        return DayScheduleWidgetTeacher(
+          refresh: refresh,
+          day: day,
+          DayZamenas: DayZamenas,
+          lessons: lessons,
+          startDate: startDate,
+          data: data,
+          currentDay: currentDay,
+          todayWeek: todayWeek,
+          currentWeek: currentWeek,
+        );
+      }
+      return SizedBox();
     } else {
       return const SizedBox();
     }
   });
+}
+
+class DayScheduleWidgetTeacher extends StatelessWidget {
+  final DateTime startDate;
+  final int currentDay;
+  final int currentWeek;
+  final int todayWeek;
+  final Data data;
+  final Function refresh;
+  final int day;
+  final List<Zamena> DayZamenas;
+  final List<Lesson> lessons;
+  const DayScheduleWidgetTeacher(
+      {super.key,
+      required this.startDate,
+      required this.currentDay,
+      required this.currentWeek,
+      required this.todayWeek,
+      required this.data,
+      required this.refresh,
+      required this.day,
+      required this.DayZamenas,
+      required this.lessons});
+
+  @override
+  Widget build(BuildContext context) {
+    bool isToday =
+        (day == currentDay && todayWeek == currentWeek ? true : false);
+
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
+
+    int todayYear = startDate.add(Duration(days: day - 1)).year;
+    int todayMonth = startDate.add(Duration(days: day - 1)).month;
+    int todayDay = startDate.add(Duration(days: day - 1)).day;
+
+    Set<ZamenaFull> fullzamenas = GetIt.I
+        .get<Data>()
+        .zamenasFull
+        .where((element) =>
+            element.date.day == todayDay &&
+            element.date.month == todayMonth &&
+            element.date.year == todayYear)
+        .toSet();
+    int teacherID = provider.teacherIDSeek;
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: isToday
+          ? BoxDecoration(
+              border: Border.all(
+                  strokeAlign: BorderSide.strokeAlignOutside,
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.3),
+                  width: 2),
+              borderRadius: const BorderRadius.all(Radius.circular(20)))
+          : null,
+      child: Column(
+        children: [
+          DayScheduleHeader(day: day, startDate: startDate, isToday: isToday),
+          Column(
+              children: data.timings.map((para) {
+            //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
+            if (DayZamenas.any(
+                (element) => element.LessonTimingsID == para.number)) {
+              //если есть любая замена в этот день, неважно дети или препод
+              Zamena? zamena = DayZamenas.where(
+                  (element) => element.LessonTimingsID == para.number).first;
+              //если это замена детей и она не меняет на моего препода
+              if (zamena.teacherID != teacherID) {
+                //пытаюсь поставить дефолтную пару препода
+                //проверяю не состоит ли эта пара в полной замене
+                if (lessons.any((element) => element.number == para.number)) {
+                  Lesson lesson = lessons
+                      .where((element) => element.number == para.number)
+                      .first;
+                  final course = getCourseById(lesson.course) ??
+                      Course(id: -1, name: "err3", color: "50,0,0,1");
+
+                  //проверяю не состоит ли группа дефолтного расписания в полной замене
+                  GetIt.I.get<Talker>().critical(
+                      "${para.number} $day ${getGroupById(lesson.group)!.name}");
+
+                  bool hasFullZamena = fullzamenas.where((element) =>
+                      element.group == lesson.group &&
+                      element.date.day == todayDay &&
+                      element.date.month == todayMonth &&
+                      element.date.year == todayYear).isNotEmpty;
+
+                  bool hasOtherZamena = DayZamenas.where((element) => element.groupID == lesson.group && element.LessonTimingsID == para.number).isNotEmpty;
+
+                  if (!hasFullZamena && !hasOtherZamena) {
+                    return CourseTile(
+                      type: SearchType.teacher,
+                      course: course,
+                      lesson: lesson,
+                      swaped: null,
+                      refresh: refresh,
+                    );
+                  }
+                }
+              }
+              //если это замена препода, ставлю ее
+              else {
+                //пара которая меняется
+                Lesson? swapedPara = lessons
+                    .where((element) => element.number == para.number)
+                    .firstOrNull;
+                //замена этой пары
+
+                Zamena zamena = DayZamenas.where((element) =>
+                    element.LessonTimingsID == para.number &&
+                    element.teacherID == teacherID).first;
+                final course = getCourseById(zamena.courseID) ??
+                    Course(id: -1, name: "err2", color: "100,0,0,0");
+                return CourseTile(
+                  type: SearchType.teacher,
+                  course: course,
+                  refresh: refresh,
+                  lesson: Lesson(
+                      id: -1,
+                      course: course.id,
+                      cabinet: zamena.cabinetID,
+                      number: zamena.LessonTimingsID,
+                      teacher: zamena.teacherID,
+                      group: zamena.groupID,
+                      date: zamena.date),
+                  swaped: swapedPara,
+                );
+              }
+            }
+
+            //если замен нет, пытаюсь составить дефолтное расписание
+            else {
+              // GetIt.I.get<Talker>().critical(para.number);
+              // lessons.forEach((element) {
+              //   GetIt.I.get<Talker>().good(getGroupById(element.group)!.name);
+              //   GetIt.I.get<Talker>().good(element.number);
+              //   GetIt.I.get<Talker>().good(para.number);
+              // });
+              if (lessons.any((element) => element.number == para.number)) {
+                Lesson lesson = lessons
+                    .where((element) => element.number == para.number)
+                    .first;
+
+                final course = getCourseById(lesson.course) ??
+                    Course(id: -1, name: "err3", color: "50,0,0,1");
+
+                //проверяю не состоит ли группа дефолтного расписания в полной замене
+                if (fullzamenas
+                    .where((element) =>
+                        element.group == lesson.group &&
+                        element.date.day == todayDay &&
+                        element.date.month == todayMonth &&
+                        element.date.year == todayYear)
+                    .isEmpty) {
+                  return CourseTile(
+                    type: SearchType.teacher,
+                    course: course,
+                    lesson: lesson,
+                    swaped: null,
+                    refresh: refresh,
+                  );
+                }
+              }
+            }
+            return SizedBox();
+            //return Text("data ${lessons.where((element) => element.number == para.number).length}");
+          }).toList())
+        ],
+      ),
+    );
+  }
 }
 
 class DayScheduleWidget extends StatelessWidget {

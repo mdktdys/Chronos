@@ -65,8 +65,7 @@ sealed class ScheduleState {}
 final class ScheduleLoaded extends ScheduleState {
   List<Lesson> lessons = [];
   List<Zamena> zamenas = [];
-  ScheduleLoaded(
-      {required this.lessons, required this.zamenas});
+  ScheduleLoaded({required this.lessons, required this.zamenas});
 }
 
 final class ScheduleFailedLoading extends ScheduleState {
@@ -92,9 +91,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             start: event.dateStart,
             end: event.dateEnd);
         emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
-           ));
+          lessons: lessons,
+          zamenas: zamenas,
+        ));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -111,10 +110,16 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             teacherID: event.teacherID,
             start: event.dateStart,
             end: event.dateEnd);
+        Set<int> groupsID = Set<int>.from(lessons.map((e) => e.group));
+        for (int group in groupsID) {
+          Api().loadZamenasFull(group, event.dateStart, event.dateEnd);
+          zamenas.addAll(await Api().loadZamenas(
+              groupID: group, start: event.dateStart, end: event.dateEnd));
+        }
         emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
-           ));
+          lessons: lessons,
+          zamenas: zamenas,
+        ));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -128,21 +133,33 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         await Api().loadGroups(event.context);
         await Api().loadDepartments();
-        if (searchProvider.groupIDSeek != -1) {
-          DateTime monday = searchProvider.navigationDate.subtract(
-              Duration(days: searchProvider.navigationDate.weekday - 1));
-          DateTime sunday = monday.add(const Duration(days: 6));
-          DateTime startOfWeek =
-              DateTime(monday.year, monday.month, monday.day);
-          DateTime endOfWeek =
-              DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-          add(FetchData(
-              groupID: searchProvider.groupIDSeek,
-              dateStart: startOfWeek,
-              dateEnd: endOfWeek,
-              context: event.context));
+
+        if (searchProvider.searchType == SearchType.group) {
+          searchProvider.groupSelected(
+              searchProvider.groupIDSeek, event.context);
+        } else if (searchProvider.searchType == SearchType.cabinet) {
+          searchProvider.cabinetSelected(
+              searchProvider.cabinetIDSeek, event.context);
+        } else if (searchProvider.searchType == SearchType.teacher) {
+          searchProvider.teacherSelected(
+              searchProvider.teacherIDSeek, event.context);
         } else {
-          emit(ScheduleInitial());
+          if (searchProvider.groupIDSeek != -1) {
+            DateTime monday = searchProvider.navigationDate.subtract(
+                Duration(days: searchProvider.navigationDate.weekday - 1));
+            DateTime sunday = monday.add(const Duration(days: 6));
+            DateTime startOfWeek =
+                DateTime(monday.year, monday.month, monday.day);
+            DateTime endOfWeek =
+                DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+            add(FetchData(
+                groupID: searchProvider.groupIDSeek,
+                dateStart: startOfWeek,
+                dateEnd: endOfWeek,
+                context: event.context));
+          } else {
+            emit(ScheduleInitial());
+          }
         }
       } catch (err) {
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -154,7 +171,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api().loadTeachers(event.context);
         await Api().loadCourses();
         await Api().loadCabinets(event.context);
-        await Api().loadZamenasFull(event.context,event.groupID,event.dateStart,event.dateEnd);
+        await Api()
+            .loadZamenasFull(event.groupID, event.dateStart, event.dateEnd);
         await Api().loadTimings();
         List<Lesson> lessons = await Api().loadWeekSchedule(
             start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
@@ -163,9 +181,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         List<Zamena> zamenas = await Api().loadZamenas(
             groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
-            ));
+          lessons: lessons,
+          zamenas: zamenas,
+        ));
       } catch (err) {
         emit(ScheduleFailedLoading(error: err.toString()));
       }

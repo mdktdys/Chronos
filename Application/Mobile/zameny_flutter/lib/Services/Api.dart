@@ -150,7 +150,7 @@ class Api {
     }
   }
 
-  Future<void> loadZamenasFull(BuildContext context,int groupID, DateTime start, DateTime end) async {
+  Future<void> loadZamenasFull(int groupID, DateTime start, DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
