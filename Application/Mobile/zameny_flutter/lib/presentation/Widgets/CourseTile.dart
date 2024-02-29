@@ -1,31 +1,30 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:get_it/get_it.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/tools.dart';
-import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen/schedule_screen.dart';
 
-enum CourseTileType { teacher, group, cabinet }
+enum SearchType { teacher, group, cabinet }
 
 class CourseTile extends StatelessWidget {
   final Lesson lesson;
   final Lesson? swaped;
-  final CourseTileType type;
+  final SearchType type;
   final Function refresh;
+  final bool? removed;
 
-  const CourseTile(
-      {super.key,
-      required this.course,
-      required this.lesson,
-      required this.type,
-      required this.refresh,
-      required this.swaped});
+  const CourseTile({
+    super.key,
+    required this.course,
+    required this.lesson,
+    required this.type,
+    required this.refresh,
+    this.removed,
+    required this.swaped,
+  });
 
   final Course course;
 
@@ -78,46 +77,66 @@ class CourseTile extends StatelessWidget {
                           children: [
                             GestureDetector(
                                 onTap: () {
-                                  Navigator.of(myGlobals.scaffoldKey.currentContext!).pop();
+                                  Navigator.of(
+                                          myGlobals.scaffoldKey.currentContext!)
+                                      .pop();
                                   myGlobals.scaffoldKey.currentContext!
                                       .read<ScheduleProvider>()
                                       .teacherSelected(
-                                          lesson.teacher, myGlobals.scaffoldKey.currentContext!,);
+                                        lesson.teacher,
+                                        myGlobals.scaffoldKey.currentContext!,
+                                      );
                                 },
                                 child: Container(
-                                    padding: EdgeInsets.all(8),
+                                    padding: const EdgeInsets.all(8),
                                     child: Text(
-                                        "Показать расписание для препода\n${getTeacherById(lesson.teacher).name}",style: TextStyle(fontFamily: 'Ubuntu')))),
+                                        "Показать расписание для препода\n${getTeacherById(lesson.teacher).name}",
+                                        style: const TextStyle(
+                                            fontFamily: 'Ubuntu')))),
                             Divider(
                               color: Colors.white.withOpacity(0.15),
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(myGlobals.scaffoldKey.currentContext!).pop();
+                                Navigator.of(
+                                        myGlobals.scaffoldKey.currentContext!)
+                                    .pop();
                                 myGlobals.scaffoldKey.currentContext!
                                     .read<ScheduleProvider>()
-                                    .groupSelected(lesson.group, myGlobals.scaffoldKey.currentContext!,);
+                                    .groupSelected(
+                                      lesson.group,
+                                      myGlobals.scaffoldKey.currentContext!,
+                                    );
                               },
                               child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   child: Text(
-                                      "Показать расписание для группы\n${getGroupById(lesson.group)!.name}",style: TextStyle(fontFamily: 'Ubuntu'))),
+                                      "Показать расписание для группы\n${getGroupById(lesson.group)!.name}",
+                                      style: const TextStyle(
+                                          fontFamily: 'Ubuntu'))),
                             ),
                             Divider(
                               color: Colors.white.withOpacity(0.15),
                             ),
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(myGlobals.scaffoldKey.currentContext!).pop();
+                                Navigator.of(
+                                        myGlobals.scaffoldKey.currentContext!)
+                                    .pop();
                                 myGlobals.scaffoldKey.currentContext!
                                     .read<ScheduleProvider>()
                                     .cabinetSelected(
-                                        lesson.cabinet, myGlobals.scaffoldKey.currentContext!,);
+                                      lesson.cabinet,
+                                      myGlobals.scaffoldKey.currentContext!,
+                                    );
                               },
                               child: Container(
-                                  padding: EdgeInsets.all(8),
+                                  padding: const EdgeInsets.all(8),
                                   child: Text(
-                                      "Показать расписание для кабинета\n${getCabinetById(lesson.cabinet).name}",style: TextStyle(fontFamily: 'Ubuntu'),)),
+                                    "Показать расписание для кабинета\n${getCabinetById(lesson.cabinet).name}",
+                                    style:
+                                        const TextStyle(fontFamily: 'Ubuntu'),
+                                  )),
                             )
                           ],
                         ),
@@ -207,11 +226,11 @@ class CourseTile extends StatelessWidget {
                                 fontWeight: FontWeight.bold,
                                 fontSize: 20)),
                         Text(
-                          type == CourseTileType.teacher
+                          type == SearchType.teacher
                               ? getGroupById(lesson.group)!.name
-                              : type == CourseTileType.group
+                              : type == SearchType.group
                                   ? getTeacherById(lesson.teacher).name
-                                  : type == CourseTileType.cabinet
+                                  : type == SearchType.cabinet
                                       ? ""
                                       : "",
                           style: TextStyle(
@@ -221,7 +240,7 @@ class CourseTile extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            type != CourseTileType.cabinet && !isEmpty
+                            type != SearchType.cabinet && !isEmpty
                                 ? SvgPicture.asset(
                                     "assets/icon/vuesax_linear_location.svg",
                                     color: Theme.of(context)
@@ -232,11 +251,11 @@ class CourseTile extends StatelessWidget {
                                   )
                                 : const SizedBox(),
                             Text(
-                              type == CourseTileType.teacher
+                              type == SearchType.teacher
                                   ? getCabinetById(lesson.cabinet).name
-                                  : type == CourseTileType.group
+                                  : type == SearchType.group
                                       ? getCabinetById(lesson.cabinet).name
-                                      : type == CourseTileType.cabinet
+                                      : type == SearchType.cabinet
                                           ? getGroupById(lesson.group)!.name
                                           : "",
                               style: TextStyle(
@@ -262,7 +281,7 @@ class CourseTile extends StatelessWidget {
                                       fontSize: 12),
                                 ),
                               )
-                            : SizedBox()
+                            : const SizedBox()
                       ],
                     ),
                   ),

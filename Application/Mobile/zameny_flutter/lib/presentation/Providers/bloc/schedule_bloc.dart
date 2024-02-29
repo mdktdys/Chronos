@@ -65,9 +65,8 @@ sealed class ScheduleState {}
 final class ScheduleLoaded extends ScheduleState {
   List<Lesson> lessons = [];
   List<Zamena> zamenas = [];
-  final CourseTileType searchType;
   ScheduleLoaded(
-      {required this.lessons, required this.zamenas, required this.searchType});
+      {required this.lessons, required this.zamenas});
 }
 
 final class ScheduleFailedLoading extends ScheduleState {
@@ -95,7 +94,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,
-            searchType: CourseTileType.cabinet));
+           ));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -115,7 +114,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,
-            searchType: CourseTileType.teacher));
+           ));
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -155,6 +154,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api().loadTeachers(event.context);
         await Api().loadCourses();
         await Api().loadCabinets(event.context);
+        await Api().loadZamenasFull(event.context,event.groupID,event.dateStart,event.dateEnd);
         await Api().loadTimings();
         List<Lesson> lessons = await Api().loadWeekSchedule(
             start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
@@ -165,7 +165,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,
-            searchType: CourseTileType.group));
+            ));
       } catch (err) {
         emit(ScheduleFailedLoading(error: err.toString()));
       }

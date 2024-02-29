@@ -1,6 +1,3 @@
-
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart' as pr;
@@ -10,42 +7,6 @@ import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
-
-class Update {
-  int id;
-  int version;
-  String link;
-  String desc;
-  Update({
-    required this.id,
-    required this.version,
-    required this.link,
-    required this.desc,
-  });
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'version': version,
-      'link': link,
-      'desc': desc,
-    };
-  }
-
-  factory Update.fromMap(Map<String, dynamic> map) {
-    return Update(
-      id: map['id'] as int,
-      version: map['version'] as int,
-      link: map['link'] as String,
-      desc: map['desc'] as String,
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory Update.fromJson(String source) =>
-      Update.fromMap(json.decode(source) as Map<String, dynamic>);
-}
 
 class Api {
 
@@ -186,6 +147,22 @@ class Api {
     for (var element in data) {
       LessonTimings timing = LessonTimings.fromMap(element);
       dat.timings.add(timing);
+    }
+  }
+
+  Future<void> loadZamenasFull(BuildContext context,int groupID, DateTime start, DateTime end) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+
+    List<dynamic> data = await client.from("ZamenasFull").select("*").eq("group", groupID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+    for(var element in data){
+      ZamenaFull zamena = ZamenaFull.fromMap(element);
+      dat.zamenasFull.add(zamena);
+    }
+    for(ZamenaFull zam in dat.zamenasFull){
+      GetIt.I.get<Talker>().debug(zam.toMap().toString());
     }
   }
 
