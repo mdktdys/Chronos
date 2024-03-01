@@ -1,11 +1,6 @@
-import 'dart:io';
-import 'dart:typed_data';
-
-import 'package:feedback/feedback.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_email_sender/flutter_email_sender.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class ScheduleHeader extends StatelessWidget {
@@ -13,41 +8,24 @@ class ScheduleHeader extends StatelessWidget {
     super.key,
   });
 
-  Future<String> writeImageToStorage(Uint8List feedbackScreenshot) async {
-    final Directory output = await getTemporaryDirectory();
-    final String screenshotFilePath = '${output.path}/feedback.png';
-    final File screenshotFile = File(screenshotFilePath);
-    await screenshotFile.writeAsBytes(feedbackScreenshot);
-    return screenshotFilePath;
-  }
-
   @override
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        IconButton(
-          icon: const Icon(
-            Icons.bug_report,
-            size: 28,
-          ),
-          onPressed: () {
-            BetterFeedback.of(context).show((feedback) async {
-              final screenshotFilePath =
-                  await writeImageToStorage(feedback.screenshot);
-              final Email email = Email(
-                body: feedback.text,
-                subject: 'App Feedback',
-                recipients: ['islamoffdanil67@gmail.com'],
-                attachmentPaths: [screenshotFilePath],
-                isHTML: false,
-              );
-              await FlutterEmailSender.send(email);
-            });
-          },
-          color: Theme.of(context).primaryColorLight,
-        ),
+        Container(
+            width: 52,
+            height: 52,
+            child: Center(
+                child: SvgPicture.asset(
+              "assets/icon/vuesax_linear_note.svg",
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.inverseSurface,
+                  BlendMode.srcIn),
+              width: 32,
+              height: 32,
+            ))),
         Text(
           "Расписание",
           style: TextStyle(
