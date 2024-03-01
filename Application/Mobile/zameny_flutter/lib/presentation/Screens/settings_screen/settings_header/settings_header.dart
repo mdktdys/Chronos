@@ -12,7 +12,18 @@ class SettingsHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SvgPicture.asset("assets/icon/vuesax_linear_setting-2.svg",color: Theme.of(context).primaryColorLight,),
+         Container(
+                    width: 52,
+                    height: 52,
+                    child: Center(
+                        child: SvgPicture.asset(
+                      "assets/icon/vuesax_linear_setting-2.svg",
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.inverseSurface,
+                          BlendMode.srcIn),
+                      width: 32,
+                      height: 32,
+                    ))),
         Text(
           "Настроечки",
           style: TextStyle(

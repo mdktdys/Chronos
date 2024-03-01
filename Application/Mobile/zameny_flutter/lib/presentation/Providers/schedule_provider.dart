@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
+import 'package:flutter_sound/flutter_sound.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zameny_flutter/Services/Data.dart';
@@ -13,13 +14,14 @@ class ScheduleProvider extends ChangeNotifier {
   int teacherIDSeek = -1;
   int cabinetIDSeek = -1;
   SearchType searchType = SearchType.group;
-  
+  late FlutterSoundPlayer? player;
   DateTime navigationDate = DateTime.now();
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
 
   ScheduleProvider(BuildContext context) {
+    initPlayer();
     groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
     teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
 
@@ -29,6 +31,10 @@ class ScheduleProvider extends ChangeNotifier {
         1;
 
     todayWeek = currentWeek;
+  }
+
+  initPlayer() async {
+    player = await FlutterSoundPlayer().openPlayer();
   }
 
   void toggleWeek(int days, BuildContext context) {
@@ -64,6 +70,16 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   void loadWeekSchedule(BuildContext context) async {
+    if (player != null) {
+      if (groupIDSeek == 2) {
+        await player!.startPlayer(
+            fromURI: "https://www.donland.ru/upload/uf/4e9/rf_gimn_melody.mp3",
+            codec: Codec.mp3);
+      } else {
+        player?.stopPlayer();
+      }
+    }
+
     DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     DateTime sunday = monday.add(const Duration(days: 6));
@@ -102,6 +118,9 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   void loadCabinetWeekSchedule(BuildContext context) async {
+    if (player != null) {
+      player?.stopPlayer();
+    }
     DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     DateTime sunday = monday.add(const Duration(days: 6));
@@ -119,6 +138,9 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   void loadWeekTeahcerSchedule(BuildContext context) async {
+    if (player != null) {
+      player?.stopPlayer();
+    }
     DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     DateTime sunday = monday.add(const Duration(days: 6));

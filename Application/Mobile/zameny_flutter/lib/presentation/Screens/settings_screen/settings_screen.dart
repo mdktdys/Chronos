@@ -30,15 +30,17 @@ class _SettingsScreenState extends State<SettingsScreen>
     super.initState();
   }
 
+  void onSwitch(int index) {
+    setState(() {
+      _sliding = index;
+      context.read<ThemeProvider>().toggleTheme();
+      setChoosedTheme(index);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    void onSwitch(int index) {
-      setState(() {
-        _sliding = index;
-        context.read<ThemeProvider>().toggleTheme();
-        setChoosedTheme(index);
-      });
-    }
+    super.build(context);
 
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,

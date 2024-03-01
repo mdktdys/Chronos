@@ -1,5 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:flutter_svg/svg.dart';
 
 class TimeTableScreen extends StatefulWidget {
   const TimeTableScreen({super.key});
@@ -16,15 +18,29 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(
+          SliverFillRemaining(
             child: Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
                 children: [
                   const SizedBox(height: 10),
                   const TimeTableHeader(),
                   const SizedBox(height: 10),
-                   Text("СЕРЕЖА ДАЙ ДОДЕЛАТЬ",style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),)
+                  Text(
+                    "СЕРЕЖА ДАЙ ДОДЕЛАТЬ",
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.inverseSurface),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Одинцов гага буга поломай все снова",
+                        style: TextStyle(
+                          fontSize: 20,
+                            color: Theme.of(context).colorScheme.inverseSurface),
+                      ),
+                    ),
+                  )
                 ],
               ),
             ),
@@ -44,15 +60,18 @@ class TimeTableHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        // IconButton(
-        //   icon: const Icon(
-        //     Icons.bug_report,
-        //     size: 28,
-        //   ),
-        //   onPressed: () {
-        //   },
-        //   color: Theme.of(context).primaryColorLight,
-        // ),
+        Container(
+            width: 52,
+            height: 52,
+            child: Center(
+                child: SvgPicture.asset(
+              "assets/icon/notification.svg",
+              colorFilter: ColorFilter.mode(
+                  Theme.of(context).colorScheme.inverseSurface,
+                  BlendMode.srcIn),
+              width: 32,
+              height: 32,
+            ))),
         Expanded(
           child: Text(
             "Звонки",
@@ -64,14 +83,13 @@ class TimeTableHeader extends StatelessWidget {
                 fontFamily: 'Ubuntu'),
           ),
         ),
-        // IconButton(
-        //     onPressed: () {
-        //     },
-        //     icon: Icon(
-        //       Icons.more_horiz_rounded,
-        //       size: 36,
-        //       color: Theme.of(context).primaryColorLight,
-        //     ))
+        const IconButton(
+            onPressed: null,
+            icon: Icon(
+              Icons.more_horiz_rounded,
+              size: 36,
+              color: Colors.transparent,
+            ))
       ],
     );
   }

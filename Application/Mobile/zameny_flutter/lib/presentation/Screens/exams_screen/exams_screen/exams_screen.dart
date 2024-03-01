@@ -14,6 +14,7 @@ class _ExamsScreenState extends State<ExamsScreen>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: Padding(

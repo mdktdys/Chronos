@@ -213,7 +213,7 @@ class LessonList extends StatelessWidget {
       ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          children: ScheduleList(
+          children: scheduleList(
             context,
             refresh,
             lessons,
@@ -228,7 +228,7 @@ class LessonList extends StatelessWidget {
   }
 }
 
-List<Widget> ScheduleList(
+List<Widget> scheduleList(
     BuildContext context,
     Function refresh,
     List<Lesson> weekLessons,
@@ -251,16 +251,16 @@ List<Widget> ScheduleList(
       return const SizedBox();
     }
 
-    List<Zamena> DayZamenas =
+    List<Zamena> dayZamenas =
         zamenas.where((element) => element.date.weekday == day).toList();
-    DayZamenas.sort((a, b) => a.LessonTimingsID > b.LessonTimingsID ? 1 : -1);
+    dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 
-    if ((DayZamenas.length + lessons.length) > 0) {
+    if ((dayZamenas.length + lessons.length) > 0) {
       if (searchType == SearchType.group || searchType == SearchType.cabinet) {
         return DayScheduleWidget(
           refresh: refresh,
           day: day,
-          DayZamenas: DayZamenas,
+          dayZamenas: dayZamenas,
           lessons: lessons,
           startDate: startDate,
           data: data,
@@ -272,7 +272,7 @@ List<Widget> ScheduleList(
         return DayScheduleWidgetTeacher(
           refresh: refresh,
           day: day,
-          DayZamenas: DayZamenas,
+          dayZamenas: dayZamenas,
           lessons: lessons,
           startDate: startDate,
           data: data,
@@ -296,7 +296,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
   final Data data;
   final Function refresh;
   final int day;
-  final List<Zamena> DayZamenas;
+  final List<Zamena> dayZamenas;
   final List<Lesson> lessons;
   const DayScheduleWidgetTeacher(
       {super.key,
@@ -307,7 +307,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
       required this.data,
       required this.refresh,
       required this.day,
-      required this.DayZamenas,
+      required this.dayZamenas,
       required this.lessons});
 
   @override
@@ -346,11 +346,11 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
           Column(
               children: data.timings.map((para) {
             //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
-            if (DayZamenas.any(
-                (element) => element.LessonTimingsID == para.number)) {
+            if (dayZamenas.any(
+                (element) => element.lessonTimingsID == para.number)) {
               //если есть любая замена в этот день, неважно дети или препод
-              Zamena? zamena = DayZamenas.where(
-                  (element) => element.LessonTimingsID == para.number).first;
+              Zamena? zamena = dayZamenas.where(
+                  (element) => element.lessonTimingsID == para.number).first;
               //если это замена детей и она не меняет на моего препода
               if (zamena.teacherID != teacherID) {
                 //пытаюсь поставить дефолтную пару препода
@@ -374,9 +374,9 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                           element.date.year == todayYear)
                       .isNotEmpty;
 
-                  bool hasOtherZamena = DayZamenas.where((element) =>
+                  bool hasOtherZamena = dayZamenas.where((element) =>
                       element.groupID == lesson.group &&
-                      element.LessonTimingsID == para.number).isNotEmpty;
+                      element.lessonTimingsID == para.number).isNotEmpty;
 
                   if (!hasFullZamena && !hasOtherZamena) {
                     return CourseTile(
@@ -398,8 +398,8 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                     .firstOrNull;
                 //замена этой пары
 
-                Zamena zamena = DayZamenas.where((element) =>
-                    element.LessonTimingsID == para.number &&
+                Zamena zamena = dayZamenas.where((element) =>
+                    element.lessonTimingsID == para.number &&
                     element.teacherID == teacherID).first;
                 final course = getCourseById(zamena.courseID) ??
                     Course(id: -1, name: "err2", color: "100,0,0,0");
@@ -412,7 +412,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                       id: -1,
                       course: course.id,
                       cabinet: zamena.cabinetID,
-                      number: zamena.LessonTimingsID,
+                      number: zamena.lessonTimingsID,
                       teacher: zamena.teacherID,
                       group: zamena.groupID,
                       date: zamena.date),
@@ -473,14 +473,14 @@ class DayScheduleWidget extends StatelessWidget {
   final Data data;
   final Function refresh;
   final int day;
-  final List<Zamena> DayZamenas;
+  final List<Zamena> dayZamenas;
   final List<Lesson> lessons;
 
   const DayScheduleWidget(
       {super.key,
       required this.day,
       required this.refresh,
-      required this.DayZamenas,
+      required this.dayZamenas,
       required this.lessons,
       required this.startDate,
       required this.currentDay,
@@ -536,8 +536,8 @@ class DayScheduleWidget extends StatelessWidget {
               if (removedPara != null) {
                 return const SizedBox();
               }
-              Zamena? zamena = DayZamenas.where(
-                      (element) => element.LessonTimingsID == para.number)
+              Zamena? zamena = dayZamenas.where(
+                      (element) => element.lessonTimingsID == para.number)
                   .firstOrNull;
               if (zamena != null) {
                 final course = getCourseById(zamena.courseID) ??
@@ -552,7 +552,7 @@ class DayScheduleWidget extends StatelessWidget {
                       id: -1,
                       course: course.id,
                       cabinet: zamena.cabinetID,
-                      number: zamena.LessonTimingsID,
+                      number: zamena.lessonTimingsID,
                       teacher: zamena.teacherID,
                       group: zamena.groupID,
                       date: zamena.date),
@@ -560,13 +560,13 @@ class DayScheduleWidget extends StatelessWidget {
               }
               return const SizedBox();
             } else {
-              if (DayZamenas.any(
-                  (element) => element.LessonTimingsID == para.number)) {
+              if (dayZamenas.any(
+                  (element) => element.lessonTimingsID == para.number)) {
                 Lesson? swapedPara = lessons
                     .where((element) => element.number == para.number)
                     .firstOrNull;
-                Zamena zamena = DayZamenas.where(
-                    (element) => element.LessonTimingsID == para.number).first;
+                Zamena zamena = dayZamenas.where(
+                    (element) => element.lessonTimingsID == para.number).first;
                 final course = getCourseById(zamena.courseID) ??
                     Course(id: -1, name: "err2", color: "100,0,0,0");
                 return CourseTile(
@@ -578,7 +578,7 @@ class DayScheduleWidget extends StatelessWidget {
                       id: -1,
                       course: course.id,
                       cabinet: zamena.cabinetID,
-                      number: zamena.LessonTimingsID,
+                      number: zamena.lessonTimingsID,
                       teacher: zamena.teacherID,
                       group: zamena.groupID,
                       date: zamena.date),
