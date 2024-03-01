@@ -145,7 +145,7 @@ class Api {
       LessonTimings timing = LessonTimings.fromMap(element);
       dat.timings.add(timing);
     }
-    dat.timings.sort( ((a, b) => a.number - b.number ) );
+    dat.timings.sort(((a, b) => a.number - b.number));
   }
 
   Future<void> loadZamenasFull(

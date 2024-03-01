@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable_screen/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/bottom_navigation_item.dart';
 import '../exams_screen/exams_screen/exams_screen.dart';
 import '../schedule_screen/schedule_screen.dart';
@@ -19,7 +20,7 @@ class _MainScreenState extends State<MainScreen> {
 
   @override
   void initState() {
-    pageController = PageController(initialPage: 0);
+    pageController = PageController(initialPage: 1);
     super.initState();
   }
 
@@ -43,6 +44,7 @@ class _MainScreenState extends State<MainScreen> {
                 child: PageView(
                   controller: pageController,
                   children: const [
+                    TimeTableScreen(),
                     ScheduleWrapper(),
                     ExamsScreen(),
                     SettingsScreen()
@@ -76,13 +78,21 @@ class _MainScreenState extends State<MainScreen> {
                                 child: BottomNavigationItem(
                                   index: 0,
                                   onTap: _setPage,
+                                  icon: "assets/icon/notification.svg",
+                                  text: "Звонки",
+                                ),
+                              ),
+                              Expanded(
+                                child: BottomNavigationItem(
+                                  index: 1,
+                                  onTap: _setPage,
                                   icon: "assets/icon/vuesax_linear_note.svg",
                                   text: "Расписание",
                                 ),
                               ),
                               Expanded(
                                 child: BottomNavigationItem(
-                                  index: 1,
+                                  index: 2,
                                   onTap: _setPage,
                                   icon: "assets/icon/vuesax_linear_award.svg",
                                   text: "Экзамены",
@@ -90,7 +100,7 @@ class _MainScreenState extends State<MainScreen> {
                               ),
                               Expanded(
                                 child: BottomNavigationItem(
-                                  index: 2,
+                                  index: 3,
                                   onTap: _setPage,
                                   icon:
                                       "assets/icon/vuesax_linear_setting-2.svg",
