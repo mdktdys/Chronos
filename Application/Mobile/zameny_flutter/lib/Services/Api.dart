@@ -9,7 +9,6 @@ import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 
 class Api {
-
   Future<void> loadZamenaFileLinks(
       {required DateTime start, required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
@@ -17,16 +16,15 @@ class Api {
 
     List<dynamic> data = await client
         .from('ZamenaFileLinks')
-        .select('id,link,date')
+        .select('id,link,date,created_at')
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
 
-    dat.zamenaFileLinks = [];
     for (var element in data) {
+      GetIt.I.get<Talker>().debug(element);
       ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
       dat.zamenaFileLinks.add(zamenaLink);
     }
-    GetIt.I.get<Talker>().debug(dat.cabinets);
   }
 
   Future<List<Lesson>> loadWeekSchedule(
@@ -92,7 +90,7 @@ class Api {
     return weekLessons;
   }
 
-    Future<void> loadGroups(BuildContext context) async {
+  Future<void> loadGroups(BuildContext context) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -106,7 +104,6 @@ class Api {
 
     pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
   }
-
 
   Future<void> loadTeachers(BuildContext context) async {
     final client = GetIt.I.get<SupabaseClient>();
@@ -150,18 +147,22 @@ class Api {
     }
   }
 
-  Future<void> loadZamenasFull(int groupID, DateTime start, DateTime end) async {
+  Future<void> loadZamenasFull(
+      int groupID, DateTime start, DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
-    List<dynamic> data = await client.from("ZamenasFull").select("*").eq("group", groupID)
+    List<dynamic> data = await client
+        .from("ZamenasFull")
+        .select("*")
+        .eq("group", groupID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
-    for(var element in data){
+    for (var element in data) {
       ZamenaFull zamena = ZamenaFull.fromMap(element);
       dat.zamenasFull.add(zamena);
     }
-    for(ZamenaFull zam in dat.zamenasFull){
+    for (ZamenaFull zam in dat.zamenasFull) {
       GetIt.I.get<Talker>().debug(zam.toMap().toString());
     }
   }

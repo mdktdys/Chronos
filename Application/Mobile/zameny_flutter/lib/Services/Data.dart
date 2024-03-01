@@ -37,16 +37,14 @@ class ZamenaFull {
 
   String toJson() => json.encode(toMap());
 
-  factory ZamenaFull.fromJson(String source) => ZamenaFull.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ZamenaFull.fromJson(String source) =>
+      ZamenaFull.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
   bool operator ==(covariant ZamenaFull other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.id == id &&
-      other.group == group &&
-      other.date == date;
+
+    return other.id == id && other.group == group && other.date == date;
   }
 
   @override
@@ -54,7 +52,6 @@ class ZamenaFull {
 }
 
 class Data {
-
   List<Teacher> teachers = [];
   List<Group> groups = [];
   List<Course> courses = [];
@@ -63,7 +60,7 @@ class Data {
   List<Department> departments = [];
   List<Zamena> zamenas = [];
   List<ZamenasType> zamenaTypes = [];
-  List<ZamenaFileLink> zamenaFileLinks = [];
+  Set<ZamenaFileLink> zamenaFileLinks = {};
   Set<ZamenaFull> zamenasFull = {};
 
   int? seekGroup = -1;
@@ -73,11 +70,10 @@ class Data {
 
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
-    teacherGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
+    teacherGroup =
+        GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
   }
 }
-
-
 
 class Department {
   int id;
@@ -119,14 +115,12 @@ class Department {
     if (id == 4) {
       return Icons.balance_outlined;
     }
-     if (id == 3) {
+    if (id == 3) {
       return Icons.child_friendly;
     }
     return Icons.question_mark;
   }
 }
-
-
 
 class LessonTimings {
   int number;
@@ -262,15 +256,14 @@ class Zamena {
   int cabinetID;
 
   DateTime date;
-  Zamena({
-    required this.id,
-    required this.groupID,
-    required this.teacherID,
-    required this.courseID,
-    required this.LessonTimingsID,
-    required this.date,
-    required this.cabinetID
-  });
+  Zamena(
+      {required this.id,
+      required this.groupID,
+      required this.teacherID,
+      required this.courseID,
+      required this.LessonTimingsID,
+      required this.date,
+      required this.cabinetID});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

@@ -94,6 +94,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           lessons: lessons,
           zamenas: zamenas,
         ));
+        await Api()
+            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
       } catch (err) {
         GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
@@ -116,6 +118,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           zamenas.addAll(await Api().loadZamenas(
               groupID: group, start: event.dateStart, end: event.dateEnd));
         }
+        await Api()
+            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,
@@ -174,10 +178,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api()
             .loadZamenasFull(event.groupID, event.dateStart, event.dateEnd);
         await Api().loadTimings();
-        List<Lesson> lessons = await Api().loadWeekSchedule(
-            start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
         await Api()
             .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+        List<Lesson> lessons = await Api().loadWeekSchedule(
+            start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
+
         List<Zamena> zamenas = await Api().loadZamenas(
             groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
         emit(ScheduleLoaded(

@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 import 'package:zameny_flutter/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
@@ -279,7 +281,7 @@ List<Widget> ScheduleList(
           currentWeek: currentWeek,
         );
       }
-      return SizedBox();
+      return const SizedBox();
     } else {
       return const SizedBox();
     }
@@ -364,13 +366,17 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                   GetIt.I.get<Talker>().critical(
                       "${para.number} $day ${getGroupById(lesson.group)!.name}");
 
-                  bool hasFullZamena = fullzamenas.where((element) =>
-                      element.group == lesson.group &&
-                      element.date.day == todayDay &&
-                      element.date.month == todayMonth &&
-                      element.date.year == todayYear).isNotEmpty;
+                  bool hasFullZamena = fullzamenas
+                      .where((element) =>
+                          element.group == lesson.group &&
+                          element.date.day == todayDay &&
+                          element.date.month == todayMonth &&
+                          element.date.year == todayYear)
+                      .isNotEmpty;
 
-                  bool hasOtherZamena = DayZamenas.where((element) => element.groupID == lesson.group && element.LessonTimingsID == para.number).isNotEmpty;
+                  bool hasOtherZamena = DayZamenas.where((element) =>
+                      element.groupID == lesson.group &&
+                      element.LessonTimingsID == para.number).isNotEmpty;
 
                   if (!hasFullZamena && !hasOtherZamena) {
                     return CourseTile(
@@ -447,7 +453,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                 }
               }
             }
-            return SizedBox();
+            return const SizedBox();
             //return Text("data ${lessons.where((element) => element.number == para.number).length}");
           }).toList())
         ],
@@ -525,7 +531,7 @@ class DayScheduleWidget extends StatelessWidget {
                   .where((element) => element.number == para.number)
                   .firstOrNull;
               if (removedPara != null) {
-                return SizedBox();
+                return const SizedBox();
               }
               Zamena? zamena = DayZamenas.where(
                       (element) => element.LessonTimingsID == para.number)
@@ -548,7 +554,7 @@ class DayScheduleWidget extends StatelessWidget {
                       date: zamena.date),
                 );
               }
-              return SizedBox();
+              return const SizedBox();
             } else {
               if (DayZamenas.any(
                   (element) => element.LessonTimingsID == para.number)) {
@@ -590,7 +596,7 @@ class DayScheduleWidget extends StatelessWidget {
                 }
               }
             }
-            return SizedBox();
+            return const SizedBox();
           }).toList())
         ],
       ),
@@ -613,6 +619,19 @@ class DayScheduleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    int searchDay = startDate.add(Duration(days: day - 1)).day;
+    int searchMonth = startDate.add(Duration(days: day - 1)).month;
+    int searchYear = startDate.add(Duration(days: day - 1)).year;
+    Set<ZamenaFileLink> links = GetIt.I
+        .get<Data>()
+        .zamenaFileLinks
+        .where(
+          (element) =>
+              element.date.year == searchYear &&
+              element.date.month == searchMonth &&
+              element.date.day == searchDay,
+        )
+        .toSet();
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -654,9 +673,137 @@ class DayScheduleHeader extends StatelessWidget {
                       fontFamily: 'Ubuntu'),
                 )
               : const SizedBox(),
-          const SizedBox(
-            width: 5,
-          ),
+          links.isNotEmpty
+              ? IconButton(
+                  onPressed: () {
+                    showModalBottomSheet(
+                        backgroundColor: Colors.transparent,
+                        context: context,
+                        builder: (context) {
+                          return Container(
+                            //margin: EdgeInsets.only(bottom: 60),
+                            padding: const EdgeInsets.all(20),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                  color:
+                                      Theme.of(context).colorScheme.background,
+                                  border: Border.all(
+                                      color:
+                                          Theme.of(context).colorScheme.primary,
+                                      width: 1),
+                                  borderRadius: const BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: ListView.separated(
+                                shrinkWrap: true,
+                                separatorBuilder: (context, index) =>
+                                    const Divider(),
+                                itemCount: links.length,
+                                itemBuilder: (context, index) {
+                                  return GestureDetector(
+                                    onTap: () => launchUrl(
+                                        Uri.parse(links.toList()[index].link)),
+                                    child: Container(
+                                        padding: const EdgeInsets.all(8),
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "Ссылка:",
+                                              style: TextStyle(
+                                                  fontFamily: 'Ubuntu',
+                                                  fontSize: 14,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inverseSurface),
+                                            ),
+                                            Text(links.toList()[index].link,
+                                                style: TextStyle(
+                                                    fontFamily: 'Ubuntu',
+                                                    fontSize: 10,
+                                                    color: Theme.of(context)
+                                                        .colorScheme
+                                                        .inverseSurface
+                                                        .withOpacity(0.6))),
+                                            Text(
+                                              "Время добавления в систему:",
+                                              style: TextStyle(
+                                                  fontFamily: 'Ubuntu',
+                                                  fontSize: 14,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inverseSurface),
+                                            ),
+                                            Text(
+                                              "${links.toList()[index].created}",
+                                              style: TextStyle(
+                                                  fontFamily: 'Ubuntu',
+                                                  fontSize: 10,
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .inverseSurface
+                                                      .withOpacity(0.6)),
+                                            ),
+                                          ],
+                                        )),
+                                  );
+                                },
+                              ),
+                            ),
+                          );
+                        });
+                  },
+                  icon: SizedBox(
+                    width: 30,
+                    height: 30,
+                    child: Stack(
+                      children: [
+                        Align(
+                          alignment: links.length > 1
+                              ? Alignment.bottomLeft
+                              : Alignment.center,
+                          child: SvgPicture.asset(
+                            "assets/icon/link-2.svg",
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                          ),
+                        ),
+                        links.length > 1
+                            ? Align(
+                                alignment: Alignment.topRight,
+                                child: Container(
+                                  width: 16,
+                                  height: 16,
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .background,
+                                      border: Border.all(
+                                          width: 1,
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .inverseSurface
+                                              .withOpacity(0.3))),
+                                  child: Center(
+                                    child: FittedBox(
+                                      child: Text(
+                                        links.length.toString(),
+                                        style: const TextStyle(
+                                            fontFamily: 'Ubuntu'),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              )
+                            : const SizedBox()
+                      ],
+                    ),
+                  ),
+                )
+              : const SizedBox(
+                  width: 5,
+                ),
           isToday
               ? Container(
                   decoration: const BoxDecoration(
@@ -674,7 +821,7 @@ class DayScheduleHeader extends StatelessWidget {
                     ),
                   ),
                 )
-              : SizedBox()
+              : const SizedBox()
         ],
       ),
     );
