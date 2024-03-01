@@ -182,6 +182,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         await Api().loadTeachers(event.context);
         await Api().loadCourses();
+        if(!event.context.mounted){
+          throw Exception("context ");
+        }
         await Api().loadCabinets(event.context);
         await Api()
             .loadZamenasFull(event.groupID, event.dateStart, event.dateEnd);

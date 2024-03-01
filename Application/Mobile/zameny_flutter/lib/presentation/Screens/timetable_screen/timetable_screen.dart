@@ -1,4 +1,6 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TimeTableScreen extends StatefulWidget {
@@ -16,7 +18,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       body: CustomScrollView(
         physics: const BouncingScrollPhysics(),
         slivers: [
-          SliverToBoxAdapter(
+          SliverFillRemaining(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Column(
@@ -28,6 +30,16 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                     "СЕРЕЖА ДАЙ ДОДЕЛАТЬ",
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.inverseSurface),
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        "Одинцов гага буга поломай все снова",
+                        style: TextStyle(
+                          fontSize: 20,
+                            color: Theme.of(context).colorScheme.inverseSurface),
+                      ),
+                    ),
                   )
                 ],
               ),
