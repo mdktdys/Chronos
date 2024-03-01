@@ -25,7 +25,6 @@ jobs:
       - run: echo $API_DATA | base64 -d > lib/secrets.dart
         env:
           API_DATA: ${{ secrets.API_DATA }}
-      - run: flutter pub run build_runner build --delete-conflicting-outputs
       - run: flutter pub get
       # - run: flutter build apk --release --split-per-abi --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
       # - run: flutter build apk --release --build-name=1.0.${{ github.run_number }}_Github --build-number=${{ github.run_number }}
