@@ -22,7 +22,7 @@ jobs:
         with:
           channel: "stable"
       
-      - run: echo $API_DATA | base64 -d > Application/Mobile/zameny_flutter/lib/secrets.dart
+      - run: echo $API_DATA | base64 -d > lib/secrets.dart
         env:
           API_DATA: ${{ secrets.API_DATA }}
       - run: flutter pub run build_runner build --delete-conflicting-outputs
