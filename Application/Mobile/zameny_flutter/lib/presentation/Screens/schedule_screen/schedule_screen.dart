@@ -385,6 +385,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                       lesson: lesson,
                       swaped: null,
                       refresh: refresh,
+                      saturdayTime: day == 6,
                     );
                   }
                 }
@@ -406,6 +407,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                   type: SearchType.teacher,
                   course: course,
                   refresh: refresh,
+                  saturdayTime: day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -449,6 +451,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                     lesson: lesson,
                     swaped: null,
                     refresh: refresh,
+                    saturdayTime: day == 6,
                   );
                 }
               }
@@ -544,6 +547,7 @@ class DayScheduleWidget extends StatelessWidget {
                   course: course,
                   refresh: refresh,
                   swaped: null,
+                  saturdayTime: day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -569,6 +573,7 @@ class DayScheduleWidget extends StatelessWidget {
                   type: type,
                   course: course,
                   refresh: refresh,
+                  saturdayTime: day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -587,6 +592,7 @@ class DayScheduleWidget extends StatelessWidget {
                   final course = getCourseById(lesson.course) ??
                       Course(id: -1, name: "err3", color: "50,0,0,1");
                   return CourseTile(
+                    saturdayTime: day == 6,
                     type: type,
                     course: course,
                     lesson: lesson,

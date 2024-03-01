@@ -124,12 +124,16 @@ class Department {
 
 class LessonTimings {
   int number;
-  DateTime? start;
-  DateTime? end;
+  String start;
+  String end;
+  String saturdayStart;
+  String saturdayEnd;
   LessonTimings({
     required this.number,
     required this.start,
     required this.end,
+    required this.saturdayStart,
+    required this.saturdayEnd,
   });
 
   Map<String, dynamic> toMap() {
@@ -137,18 +141,42 @@ class LessonTimings {
       'number': number,
       'start': start,
       'end': end,
+      'saturdayStart': saturdayStart,
+      'saturdayEnd': saturdayEnd,
     };
+  }
+
+  String toJson() => json.encode(toMap());
+
+  @override
+  bool operator ==(covariant LessonTimings other) {
+    if (identical(this, other)) return true;
+
+    return other.number == number &&
+        other.start == start &&
+        other.end == end &&
+        other.saturdayStart == saturdayStart &&
+        other.saturdayEnd == saturdayEnd;
+  }
+
+  @override
+  int get hashCode {
+    return number.hashCode ^
+        start.hashCode ^
+        end.hashCode ^
+        saturdayStart.hashCode ^
+        saturdayEnd.hashCode;
   }
 
   factory LessonTimings.fromMap(Map<String, dynamic> map) {
     return LessonTimings(
       number: map['number'] as int,
-      start: DateFormat.Hms().parse(map['start']),
-      end: DateFormat('HH:mm:ss').parse(map['end']),
+      start: map['start'] as String,
+      end: map['end'] as String,
+      saturdayStart:map['saturdayStart'] as String,
+      saturdayEnd: map['saturdayEnd'] as String,
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory LessonTimings.fromJson(String source) =>
       LessonTimings.fromMap(json.decode(source) as Map<String, dynamic>);
