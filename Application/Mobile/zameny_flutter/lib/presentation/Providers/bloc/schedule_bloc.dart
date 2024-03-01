@@ -139,14 +139,20 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api().loadDepartments();
 
         if (searchProvider.searchType == SearchType.group) {
-          searchProvider.groupSelected(
-              searchProvider.groupIDSeek, event.context);
+          if (event.context.mounted) {
+            searchProvider.groupSelected(
+                searchProvider.groupIDSeek, event.context);
+          }
         } else if (searchProvider.searchType == SearchType.cabinet) {
-          searchProvider.cabinetSelected(
-              searchProvider.cabinetIDSeek, event.context);
+          if (event.context.mounted) {
+            searchProvider.cabinetSelected(
+                searchProvider.cabinetIDSeek, event.context);
+          }
         } else if (searchProvider.searchType == SearchType.teacher) {
-          searchProvider.teacherSelected(
-              searchProvider.teacherIDSeek, event.context);
+          if (event.context.mounted) {
+            searchProvider.teacherSelected(
+                searchProvider.teacherIDSeek, event.context);
+          }
         } else {
           if (searchProvider.groupIDSeek != -1) {
             DateTime monday = searchProvider.navigationDate.subtract(
@@ -156,11 +162,13 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                 DateTime(monday.year, monday.month, monday.day);
             DateTime endOfWeek =
                 DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-            add(FetchData(
-                groupID: searchProvider.groupIDSeek,
-                dateStart: startOfWeek,
-                dateEnd: endOfWeek,
-                context: event.context));
+            if (event.context.mounted) {
+              add(FetchData(
+                  groupID: searchProvider.groupIDSeek,
+                  dateStart: startOfWeek,
+                  dateEnd: endOfWeek,
+                  context: event.context));
+            }
           } else {
             emit(ScheduleInitial());
           }

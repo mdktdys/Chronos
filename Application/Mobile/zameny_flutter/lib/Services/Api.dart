@@ -102,7 +102,10 @@ class Api {
       dat.groups.add(groupName);
     }
 
-    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
+    if (context.mounted) {
+      pr.Provider.of<SearchProvider>(context, listen: false)
+          .updateSearchItems();
+    }
   }
 
   Future<void> loadTeachers(BuildContext context) async {
@@ -117,8 +120,10 @@ class Api {
       Teacher teacher = Teacher.fromMap(element);
       dat.teachers.add(teacher);
     }
-
-    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
+    if (context.mounted) {
+      pr.Provider.of<SearchProvider>(context, listen: false)
+          .updateSearchItems();
+    }
   }
 
   Future<void> loadCabinets(BuildContext context) async {
@@ -132,7 +137,10 @@ class Api {
       dat.cabinets.add(cab);
     }
 
-    pr.Provider.of<SearchProvider>(context, listen: false).updateSearchItems();
+    if (context.mounted) {
+      pr.Provider.of<SearchProvider>(context, listen: false)
+          .updateSearchItems();
+    }
   }
 
   Future<void> loadTimings() async {
@@ -196,7 +204,7 @@ class Api {
       return [];
     }
     final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+    GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')
@@ -221,7 +229,7 @@ class Api {
       required DateTime start,
       required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+    GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')
@@ -246,7 +254,7 @@ class Api {
       required DateTime start,
       required DateTime end}) async {
     final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+    GetIt.I.get<Data>();
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')

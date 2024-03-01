@@ -1,9 +1,6 @@
 import 'dart:convert';
-
-import 'package:collection/collection.dart';
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
@@ -280,7 +277,7 @@ class Zamena {
   int groupID;
   int teacherID;
   int courseID;
-  int LessonTimingsID;
+  int lessonTimingsID;
   int cabinetID;
 
   DateTime date;
@@ -289,7 +286,7 @@ class Zamena {
       required this.groupID,
       required this.teacherID,
       required this.courseID,
-      required this.LessonTimingsID,
+      required this.lessonTimingsID,
       required this.date,
       required this.cabinetID});
 
@@ -299,7 +296,7 @@ class Zamena {
       'groupID': groupID,
       'teacherID': teacherID,
       'courseID': courseID,
-      'LessonTimingsID': LessonTimingsID,
+      'LessonTimingsID': lessonTimingsID,
       'date': date.millisecondsSinceEpoch,
     };
   }
@@ -311,7 +308,7 @@ class Zamena {
       teacherID: map['teacher'] as int,
       courseID: map['course'] as int,
       cabinetID: map['cabinet'] as int,
-      LessonTimingsID: map['number'] as int,
+      lessonTimingsID: map['number'] as int,
       date: DateTime.parse((map['date'] as String)),
     );
   }
