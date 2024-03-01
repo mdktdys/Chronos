@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
 
 class ExamsScreen extends StatefulWidget {
   const ExamsScreen({super.key});
@@ -24,13 +25,18 @@ class _ExamsScreenState extends State<ExamsScreen>
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                IconButton(
-                    onPressed: null,
-                    icon: Icon(
-                      Icons.edit,
-                      size: 24,
-                      color: Theme.of(context).primaryColorLight,
-                    )),
+                Container(
+                    width: 52,
+                    height: 52,
+                    child: Center(
+                        child: SvgPicture.asset(
+                      "assets/icon/vuesax_linear_award.svg",
+                      colorFilter: ColorFilter.mode(
+                          Theme.of(context).colorScheme.inverseSurface,
+                          BlendMode.srcIn),
+                      width: 32,
+                      height: 32,
+                    ))),
                 Text(
                   "Экзамены",
                   style: TextStyle(
@@ -44,7 +50,7 @@ class _ExamsScreenState extends State<ExamsScreen>
                     icon: Icon(
                       Icons.more_horiz_rounded,
                       size: 36,
-                      color: Theme.of(context).primaryColorLight,
+                      color: Colors.transparent
                     ))
               ],
             ),
@@ -97,7 +103,9 @@ class _ExamsScreenState extends State<ExamsScreen>
                 ),
               ),
             ),
-            const SizedBox(height: 100,)
+            const SizedBox(
+              height: 100,
+            )
           ],
         ),
       ),
