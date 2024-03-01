@@ -11,15 +11,15 @@ import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
+import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/theme/betterfeedback.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
-    url: 'https://ojbsikxdqcbuvamygezd.supabase.co',
-    anonKey:
-        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im9qYnNpa3hkcWNidXZhbXlnZXpkIiwicm9sZSI6ImFub24iLCJpYXQiOjE3MDkzMTM1NjAsImV4cCI6MjAyNDg4OTU2MH0.fJal6chSBGz2-BYG6S2nZQW23Xyd8mWzODIgeMLWqfE',
+    url: API_URL,
+    anonKey: API_ANON_KEY,
   );
 
   SupabaseClient client = Supabase.instance.client;
