@@ -25,7 +25,7 @@ Future<void> main() async {
   SupabaseClient client = Supabase.instance.client;
   GetIt.I.registerSingleton<SupabaseClient>(client);
 
-  Talker talker = Talker();
+  Talker talker = TalkerFlutter.init();
   GetIt.I.registerSingleton<Talker>(talker);
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
