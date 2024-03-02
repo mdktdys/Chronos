@@ -345,12 +345,14 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
           DayScheduleHeader(day: day, startDate: startDate, isToday: isToday),
           Column(
               children: data.timings.map((para) {
+                
             //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
             if (dayZamenas.any(
                 (element) => element.lessonTimingsID == para.number)) {
               //если есть любая замена в этот день, неважно дети или препод
               Zamena? zamena = dayZamenas.where(
                   (element) => element.lessonTimingsID == para.number).first;
+                  
               //если это замена детей и она не меняет на моего препода
               if (zamena.teacherID != teacherID) {
                 //пытаюсь поставить дефолтную пару препода
@@ -530,12 +532,12 @@ class DayScheduleWidget extends StatelessWidget {
           Column(
               children: data.timings.map((para) {
             if (fullSwap) {
-              Lesson? removedPara = lessons
-                  .where((element) => element.number == para.number)
-                  .firstOrNull;
-              if (removedPara != null) {
-                return const SizedBox();
-              }
+              // Lesson? removedPara = lessons
+              //     .where((element) => element.number == para.number)
+              //     .firstOrNull;
+              // if (removedPara != null) {
+              //   return const SizedBox();
+              // }
               Zamena? zamena = dayZamenas.where(
                       (element) => element.lessonTimingsID == para.number)
                   .firstOrNull;
