@@ -12,7 +12,6 @@ import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/theme/betterfeedback.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -65,26 +64,24 @@ class _MyAppState extends State<MyApp> {
       builder: (context, child) {
         SystemChrome.setSystemUIOverlayStyle(
             const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
-        return MyBetterFeedBack(
+        return MaterialApp(
+          builder: (context, child) {
+            return MediaQuery(
+              data: MediaQuery.of(context)
+                  .copyWith(textScaler: const TextScaler.linear(1.0)),
+              child: child!,
+            );
+          },
+          color: pr.Provider.of<ThemeProvider>(context)
+              .theme
+              .colorScheme
+              .background,
+          title: "Расписание УКСИВТ",
+          debugShowCheckedModeBanner: false,
           theme: pr.Provider.of<ThemeProvider>(context).theme,
-          child: MaterialApp(
-            builder: (context, child) {
-              return MediaQuery(
-                data: MediaQuery.of(context).copyWith(textScaler: const TextScaler.linear(1.0)),
-                child: child!,
-              );
-            },
-            color: pr.Provider.of<ThemeProvider>(context)
-                .theme
-                .colorScheme
-                .background,
-            title: "",
-            debugShowCheckedModeBanner: false,
-            theme: pr.Provider.of<ThemeProvider>(context).theme,
-            home: BlocProvider(
-              create: (context) => ScheduleBloc(),
-              child: const MainScreen(),
-            ),
+          home: BlocProvider(
+            create: (context) => ScheduleBloc(),
+            child: const MainScreen(),
           ),
         );
       },

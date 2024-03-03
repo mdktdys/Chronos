@@ -14,7 +14,7 @@ class ScheduleHeader extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        Container(
+        SizedBox(
             width: 52,
             height: 52,
             child: Center(
