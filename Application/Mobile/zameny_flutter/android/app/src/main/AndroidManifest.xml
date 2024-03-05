@@ -9,7 +9,7 @@
         </intent>
     </queries>
     <application
-        android:label="Chronos"
+        android:label="Расписание УКСИВТ"
         android:name="${applicationName}"
         android:icon="@mipmap/ic_launcher">
         <activity

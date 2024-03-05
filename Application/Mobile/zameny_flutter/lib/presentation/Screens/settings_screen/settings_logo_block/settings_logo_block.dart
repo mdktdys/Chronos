@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 class SettingsLogoBlock extends StatelessWidget {
   const SettingsLogoBlock({
     super.key,
@@ -24,7 +25,7 @@ class SettingsLogoBlock extends StatelessWidget {
             color: Theme.of(context).colorScheme.background,
             borderRadius: const BorderRadius.all(Radius.circular(15)),
           ),
-          child: const Row(
+          child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: [
               FittedBox(
@@ -35,16 +36,18 @@ class SettingsLogoBlock extends StatelessWidget {
                       "Chronos",
                       textAlign: TextAlign.start,
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).colorScheme.inverseSurface,
                           fontSize: 20,
                           fontWeight: FontWeight.bold),
                     ),
                     Text("будьте терпеливы, я все еще пилю ❤️",
-                        style: TextStyle(color: Colors.white)),
+                        style: TextStyle(
+                            color:
+                                Theme.of(context).colorScheme.inverseSurface)),
                   ],
                 ),
               ),
-              FittedBox(
+              const FittedBox(
                 child: Text(
                   "🐋",
                   style: TextStyle(fontSize: 48),
