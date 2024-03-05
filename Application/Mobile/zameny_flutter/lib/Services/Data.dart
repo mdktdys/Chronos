@@ -125,8 +125,12 @@ class LessonTimings {
   String end;
   String saturdayStart;
   String saturdayEnd;
+  String obedStart;
+  String obedEnd;
   LessonTimings({
     required this.number,
+    required this.obedStart,
+    required this.obedEnd,
     required this.start,
     required this.end,
     required this.saturdayStart,
@@ -140,6 +144,8 @@ class LessonTimings {
       'end': end,
       'saturdayStart': saturdayStart,
       'saturdayEnd': saturdayEnd,
+      'obedStart': obedStart,
+      'obedEnd': obedEnd
     };
   }
 
@@ -170,8 +176,10 @@ class LessonTimings {
       number: map['number'] as int,
       start: map['start'] as String,
       end: map['end'] as String,
-      saturdayStart:map['saturdayStart'] as String,
+      saturdayStart: map['saturdayStart'] as String,
       saturdayEnd: map['saturdayEnd'] as String,
+      obedStart: map['obedStart'] as String,
+      obedEnd: map['obedEnd'] as String,
     );
   }
 

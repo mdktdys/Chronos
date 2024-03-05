@@ -288,7 +288,7 @@ List<Widget> scheduleList(
   });
 }
 
-class DayScheduleWidgetTeacher extends StatelessWidget {
+class DayScheduleWidgetTeacher extends StatefulWidget {
   final DateTime startDate;
   final int currentDay;
   final int currentWeek;
@@ -311,15 +311,30 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
       required this.lessons});
 
   @override
+  State<DayScheduleWidgetTeacher> createState() =>
+      _DayScheduleWidgetTeacherState();
+}
+
+class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
+  bool obed = false;
+
+  toggleObed() {
+    obed = !obed;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isToday =
-        (day == currentDay && todayWeek == currentWeek ? true : false);
+    bool isToday = (widget.day == widget.currentDay &&
+            widget.todayWeek == widget.currentWeek
+        ? true
+        : false);
 
     ScheduleProvider provider = context.watch<ScheduleProvider>();
 
-    int todayYear = startDate.add(Duration(days: day - 1)).year;
-    int todayMonth = startDate.add(Duration(days: day - 1)).month;
-    int todayDay = startDate.add(Duration(days: day - 1)).day;
+    int todayYear = widget.startDate.add(Duration(days: widget.day - 1)).year;
+    int todayMonth = widget.startDate.add(Duration(days: widget.day - 1)).month;
+    int todayDay = widget.startDate.add(Duration(days: widget.day - 1)).day;
 
     Set<ZamenaFull> fullzamenas = GetIt.I
         .get<Data>()
@@ -342,23 +357,51 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
           : null,
       child: Column(
         children: [
-          DayScheduleHeader(day: day, startDate: startDate, isToday: isToday),
+          DayScheduleHeader(
+              day: widget.day, startDate: widget.startDate, isToday: isToday),
+          //isToday
+              true
+              ? Row(
+                  children: [
+                    SizedBox(
+                      height: 38,
+                      child: FittedBox(
+                        child: Switch(
+                            value: obed, onChanged: (value) => toggleObed()),
+                      ),
+                    ),
+                    const SizedBox(
+                      width: 8,
+                    ),
+                    Text(
+                      "С обедом",
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Theme.of(context)
+                              .colorScheme
+                              .inverseSurface
+                              .withOpacity(0.6)),
+                    )
+                  ],
+                )
+              : const SizedBox(),
           Column(
-              children: data.timings.map((para) {
-                
+              children: widget.data.timings.map((para) {
             //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
-            if (dayZamenas.any(
-                (element) => element.lessonTimingsID == para.number)) {
+            if (widget.dayZamenas
+                .any((element) => element.lessonTimingsID == para.number)) {
               //если есть любая замена в этот день, неважно дети или препод
-              Zamena? zamena = dayZamenas.where(
-                  (element) => element.lessonTimingsID == para.number).first;
-                  
+              Zamena? zamena = widget.dayZamenas
+                  .where((element) => element.lessonTimingsID == para.number)
+                  .first;
+
               //если это замена детей и она не меняет на моего препода
               if (zamena.teacherID != teacherID) {
                 //пытаюсь поставить дефолтную пару препода
                 //проверяю не состоит ли эта пара в полной замене
-                if (lessons.any((element) => element.number == para.number)) {
-                  Lesson lesson = lessons
+                if (widget.lessons
+                    .any((element) => element.number == para.number)) {
+                  Lesson lesson = widget.lessons
                       .where((element) => element.number == para.number)
                       .first;
                   final course = getCourseById(lesson.course) ??
@@ -366,7 +409,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
 
                   //проверяю не состоит ли группа дефолтного расписания в полной замене
                   GetIt.I.get<Talker>().critical(
-                      "${para.number} $day ${getGroupById(lesson.group)!.name}");
+                      "${para.number} ${widget.day} ${getGroupById(lesson.group)!.name}");
 
                   bool hasFullZamena = fullzamenas
                       .where((element) =>
@@ -376,18 +419,21 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                           element.date.year == todayYear)
                       .isNotEmpty;
 
-                  bool hasOtherZamena = dayZamenas.where((element) =>
-                      element.groupID == lesson.group &&
-                      element.lessonTimingsID == para.number).isNotEmpty;
+                  bool hasOtherZamena = widget.dayZamenas
+                      .where((element) =>
+                          element.groupID == lesson.group &&
+                          element.lessonTimingsID == para.number)
+                      .isNotEmpty;
 
                   if (!hasFullZamena && !hasOtherZamena) {
                     return CourseTile(
                       type: SearchType.teacher,
                       course: course,
+                      obedTime: obed,
                       lesson: lesson,
                       swaped: null,
-                      refresh: refresh,
-                      saturdayTime: day == 6,
+                      refresh: widget.refresh,
+                      saturdayTime: widget.day == 6,
                     );
                   }
                 }
@@ -395,21 +441,24 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
               //если это замена препода, ставлю ее
               else {
                 //пара которая меняется
-                Lesson? swapedPara = lessons
+                Lesson? swapedPara = widget.lessons
                     .where((element) => element.number == para.number)
                     .firstOrNull;
                 //замена этой пары
 
-                Zamena zamena = dayZamenas.where((element) =>
-                    element.lessonTimingsID == para.number &&
-                    element.teacherID == teacherID).first;
+                Zamena zamena = widget.dayZamenas
+                    .where((element) =>
+                        element.lessonTimingsID == para.number &&
+                        element.teacherID == teacherID)
+                    .first;
                 final course = getCourseById(zamena.courseID) ??
                     Course(id: -1, name: "err2", color: "100,0,0,0");
                 return CourseTile(
                   type: SearchType.teacher,
                   course: course,
-                  refresh: refresh,
-                  saturdayTime: day == 6,
+                  obedTime: obed,
+                  refresh: widget.refresh,
+                  saturdayTime: widget.day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -431,8 +480,9 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
               //   GetIt.I.get<Talker>().good(element.number);
               //   GetIt.I.get<Talker>().good(para.number);
               // });
-              if (lessons.any((element) => element.number == para.number)) {
-                Lesson lesson = lessons
+              if (widget.lessons
+                  .any((element) => element.number == para.number)) {
+                Lesson lesson = widget.lessons
                     .where((element) => element.number == para.number)
                     .first;
 
@@ -450,10 +500,11 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
                   return CourseTile(
                     type: SearchType.teacher,
                     course: course,
+                    obedTime: obed,
                     lesson: lesson,
                     swaped: null,
-                    refresh: refresh,
-                    saturdayTime: day == 6,
+                    refresh: widget.refresh,
+                    saturdayTime: widget.day == 6,
                   );
                 }
               }
@@ -467,7 +518,7 @@ class DayScheduleWidgetTeacher extends StatelessWidget {
   }
 }
 
-class DayScheduleWidget extends StatelessWidget {
+class DayScheduleWidget extends StatefulWidget {
   final DateTime startDate;
   final int currentDay;
   final int currentWeek;
@@ -491,21 +542,37 @@ class DayScheduleWidget extends StatelessWidget {
       required this.data});
 
   @override
+  State<DayScheduleWidget> createState() => _DayScheduleWidgetState();
+}
+
+class _DayScheduleWidgetState extends State<DayScheduleWidget> {
+  bool obed = false;
+
+  toggleObed() {
+    obed = !obed;
+    setState(() {});
+  }
+
+  @override
   Widget build(BuildContext context) {
-    bool isToday =
-        (day == currentDay && todayWeek == currentWeek ? true : false);
+    bool isToday = (widget.day == widget.currentDay &&
+            widget.todayWeek == widget.currentWeek
+        ? true
+        : false);
     //ScheduleProvider provider = context.watch<ScheduleProvider>();
     SearchType type = context.watch<ScheduleProvider>().searchType;
     bool fullSwap = false;
     if (type == SearchType.group) {
-      int searchDay = startDate.add(Duration(days: day - 1)).day;
-      int searchMonth = startDate.add(Duration(days: day - 1)).month;
-      int searchYear = startDate.add(Duration(days: day - 1)).year;
+      int searchDay = widget.startDate.add(Duration(days: widget.day - 1)).day;
+      int searchMonth =
+          widget.startDate.add(Duration(days: widget.day - 1)).month;
+      int searchYear =
+          widget.startDate.add(Duration(days: widget.day - 1)).year;
       fullSwap = GetIt.I
           .get<Data>()
           .zamenasFull
           .where((element) =>
-              (element.group == lessons[0].group) &&
+              (element.group == widget.lessons[0].group) &&
               (element.date.day == searchDay) &&
               (element.date.month == searchMonth) &&
               (element.date.year == searchYear))
@@ -524,13 +591,44 @@ class DayScheduleWidget extends StatelessWidget {
           : null,
       child: Column(
         children: [
-          DayScheduleHeader(
-              day: day,
-              startDate: startDate,
-              isToday: isToday,
-              fullSwap: fullSwap),
           Column(
-              children: data.timings.map((para) {
+            children: [
+              DayScheduleHeader(
+                  day: widget.day,
+                  startDate: widget.startDate,
+                  isToday: isToday,
+                  fullSwap: fullSwap),
+              //isToday
+              true
+                  ? Row(
+                      children: [
+                        SizedBox(
+                          height: 38,
+                          child: FittedBox(
+                            child: Switch(
+                                value: obed,
+                                onChanged: (value) => toggleObed()),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "С обедом",
+                          style: TextStyle(
+                              fontFamily: 'Ubuntu',
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withOpacity(0.6)),
+                        )
+                      ],
+                    )
+                  : const SizedBox()
+            ],
+          ),
+          Column(
+              children: widget.data.timings.map((para) {
             if (fullSwap) {
               // Lesson? removedPara = lessons
               //     .where((element) => element.number == para.number)
@@ -538,18 +636,19 @@ class DayScheduleWidget extends StatelessWidget {
               // if (removedPara != null) {
               //   return const SizedBox();
               // }
-              Zamena? zamena = dayZamenas.where(
-                      (element) => element.lessonTimingsID == para.number)
+              Zamena? zamena = widget.dayZamenas
+                  .where((element) => element.lessonTimingsID == para.number)
                   .firstOrNull;
               if (zamena != null) {
                 final course = getCourseById(zamena.courseID) ??
                     Course(id: -1, name: "err2", color: "100,0,0,0");
                 return CourseTile(
                   type: type,
+                  obedTime: obed,
                   course: course,
-                  refresh: refresh,
+                  refresh: widget.refresh,
                   swaped: null,
-                  saturdayTime: day == 6,
+                  saturdayTime: widget.day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -562,20 +661,22 @@ class DayScheduleWidget extends StatelessWidget {
               }
               return const SizedBox();
             } else {
-              if (dayZamenas.any(
-                  (element) => element.lessonTimingsID == para.number)) {
-                Lesson? swapedPara = lessons
+              if (widget.dayZamenas
+                  .any((element) => element.lessonTimingsID == para.number)) {
+                Lesson? swapedPara = widget.lessons
                     .where((element) => element.number == para.number)
                     .firstOrNull;
-                Zamena zamena = dayZamenas.where(
-                    (element) => element.lessonTimingsID == para.number).first;
+                Zamena zamena = widget.dayZamenas
+                    .where((element) => element.lessonTimingsID == para.number)
+                    .first;
                 final course = getCourseById(zamena.courseID) ??
                     Course(id: -1, name: "err2", color: "100,0,0,0");
                 return CourseTile(
                   type: type,
+                  obedTime: obed,
                   course: course,
-                  refresh: refresh,
-                  saturdayTime: day == 6,
+                  refresh: widget.refresh,
+                  saturdayTime: widget.day == 6,
                   lesson: Lesson(
                       id: -1,
                       course: course.id,
@@ -587,19 +688,21 @@ class DayScheduleWidget extends StatelessWidget {
                   swaped: swapedPara,
                 );
               } else {
-                if (lessons.any((element) => element.number == para.number)) {
-                  Lesson lesson = lessons
+                if (widget.lessons
+                    .any((element) => element.number == para.number)) {
+                  Lesson lesson = widget.lessons
                       .where((element) => element.number == para.number)
                       .first;
                   final course = getCourseById(lesson.course) ??
                       Course(id: -1, name: "err3", color: "50,0,0,1");
                   return CourseTile(
-                    saturdayTime: day == 6,
+                    saturdayTime: widget.day == 6,
                     type: type,
+                    obedTime: obed,
                     course: course,
                     lesson: lesson,
                     swaped: null,
-                    refresh: refresh,
+                    refresh: widget.refresh,
                   );
                 }
               }

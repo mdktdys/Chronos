@@ -16,6 +16,7 @@ class CourseTile extends StatelessWidget {
   final Function refresh;
   final bool? removed;
   final bool saturdayTime;
+  final bool obedTime;
 
   const CourseTile({
     super.key,
@@ -26,6 +27,7 @@ class CourseTile extends StatelessWidget {
     this.removed,
     required this.swaped,
     required this.saturdayTime,
+    required this.obedTime,
   });
 
   final Course course;
@@ -192,7 +194,7 @@ class CourseTile extends StatelessWidget {
                       Text(
                           saturdayTime
                               ? getLessonTimings(lesson.number).saturdayStart
-                              : getLessonTimings(lesson.number).start,
+                              : obedTime ? getLessonTimings(lesson.number).obedStart : getLessonTimings(lesson.number).start,
                           style: TextStyle(
                               fontSize: 16,
                               color:
@@ -202,7 +204,7 @@ class CourseTile extends StatelessWidget {
                       Text(
                           saturdayTime
                               ? getLessonTimings(lesson.number).saturdayEnd
-                              : getLessonTimings(lesson.number).end,
+                              : obedTime ? getLessonTimings(lesson.number).obedEnd : getLessonTimings(lesson.number).end,
                           style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
