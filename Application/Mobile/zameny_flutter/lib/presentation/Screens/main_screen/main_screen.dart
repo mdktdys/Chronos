@@ -83,16 +83,17 @@ class _MainScreenState extends State<MainScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
+                                  // Expanded(
+                                  //   child: BottomNavigationItem(
+                                  //     index: 0,
+                                  //     onTap: _setPage,
+                                  //     icon: "assets/icon/notification.svg",
+                                  //     text: "Звонки",
+                                  //   ),
+                                  // ),
                                   Expanded(
                                     child: BottomNavigationItem(
-                                      index: 0,
-                                      onTap: _setPage,
-                                      icon: "assets/icon/notification.svg",
-                                      text: "Звонки",
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
+                                      enabled: true,
                                       index: 1,
                                       onTap: _setPage,
                                       icon:
@@ -102,6 +103,7 @@ class _MainScreenState extends State<MainScreen> {
                                   ),
                                   Expanded(
                                     child: BottomNavigationItem(
+                                      enabled: false,
                                       index: 2,
                                       onTap: _setPage,
                                       icon:
@@ -111,6 +113,7 @@ class _MainScreenState extends State<MainScreen> {
                                   ),
                                   Expanded(
                                     child: BottomNavigationItem(
+                                      enabled: true,
                                       index: 3,
                                       onTap: _setPage,
                                       icon:

@@ -76,7 +76,7 @@ class _MyAppState extends State<MyApp> {
               .theme
               .colorScheme
               .background,
-          title: "Расписание УКСИВТ",
+          title: "Расписание и замены УКСИВТ",
           debugShowCheckedModeBanner: false,
           theme: pr.Provider.of<ThemeProvider>(context).theme,
           home: BlocProvider(
