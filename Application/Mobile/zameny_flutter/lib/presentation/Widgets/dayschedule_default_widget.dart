@@ -130,7 +130,34 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
                   : const SizedBox()
             ],
           ),
-          Column(children: tiles)
+          courseTiles.isNotEmpty
+              ? Column(children: courseTiles)
+              : Container(
+                  height: 110,
+                  margin: const EdgeInsets.only(top: 20, bottom: 10),
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),
+                      color: Colors.transparent,
+                      border: DashedBorder.all(
+                          dashLength: 10,
+                          width: 1,
+                          color: Theme.of(context)
+                              .colorScheme
+                              .primary
+                              .withOpacity(0.6))),
+                  child: Padding(
+                      padding: const EdgeInsets.all(20),
+                      child: Center(
+                          child: Text(
+                        "Нет пар",
+                        style: TextStyle(
+                            fontFamily: 'Ubuntu',
+                            fontSize: 20,
+                            color:
+                                Theme.of(context).colorScheme.inversePrimary),
+                      ))),
+                )
         ],
       ),
     );
