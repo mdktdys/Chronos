@@ -62,8 +62,8 @@ class _MyAppState extends State<MyApp> {
         ),
       ],
       builder: (context, child) {
-        SystemChrome.setSystemUIOverlayStyle(
-            const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
+        SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+            statusBarColor: Color.fromARGB(255, 18, 21, 37)));
         return MaterialApp(
           builder: (context, child) {
             return MediaQuery(
