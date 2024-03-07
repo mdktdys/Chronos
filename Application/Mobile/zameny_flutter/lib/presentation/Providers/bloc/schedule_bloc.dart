@@ -97,7 +97,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         await Api()
             .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
       } catch (err) {
-        GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
@@ -127,7 +126,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           zamenas: zamenas,
         ));
       } catch (err) {
-        GetIt.I.get<Talker>().critical(err);
         emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
