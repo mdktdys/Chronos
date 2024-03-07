@@ -197,7 +197,7 @@ class CourseTile extends StatelessWidget {
                               : obedTime ? getLessonTimings(lesson.number).obedStart : getLessonTimings(lesson.number).start,
                           style: TextStyle(
                               fontSize: 16,
-                              color:
+                              color: obedTime ? (lesson.number > 3 ?  Colors.green : Theme.of(context).colorScheme.inverseSurface) :
                                   Theme.of(context).colorScheme.inverseSurface,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.bold)),
@@ -206,10 +206,8 @@ class CourseTile extends StatelessWidget {
                               ? getLessonTimings(lesson.number).saturdayEnd
                               : obedTime ? getLessonTimings(lesson.number).obedEnd : getLessonTimings(lesson.number).end,
                           style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withAlpha(200),
+                              color: obedTime ? (lesson.number > 3 ?  Colors.green.withAlpha(200) : Theme.of(context).colorScheme.inverseSurface.withAlpha(200)) :
+                                  Theme.of(context).colorScheme.inverseSurface.withAlpha(200),
                               fontFamily: 'Ubuntu')),
                     ],
                   ),
