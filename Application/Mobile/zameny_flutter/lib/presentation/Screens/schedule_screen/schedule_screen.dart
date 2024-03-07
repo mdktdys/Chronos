@@ -103,7 +103,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                       } else if (state is ScheduleFailedLoading) {
                         return const SizedBox();
                       } else if (state is ScheduleLoading) {
-                        return const ShimmerContainer();
+                        return const SizedBox();
                       } else if (state is ScheduleInitial) {
                         return const SizedBox();
                       } else {

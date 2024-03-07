@@ -34,7 +34,8 @@ class CourseTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool isEmpty = course.name.toLowerCase() == "нет";
+    bool isEmpty =
+        course.name.toLowerCase() == "нет" || course.name.trim() == '';
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
@@ -80,27 +81,6 @@ class CourseTile extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
                             GestureDetector(
-                                onTap: () {
-                                  Navigator.of(
-                                          myGlobals.scaffoldKey.currentContext!)
-                                      .pop();
-                                  myGlobals.scaffoldKey.currentContext!
-                                      .read<ScheduleProvider>()
-                                      .teacherSelected(
-                                        lesson.teacher,
-                                        myGlobals.scaffoldKey.currentContext!,
-                                      );
-                                },
-                                child: Container(
-                                    padding: const EdgeInsets.all(8),
-                                    child: Text(
-                                        "Показать расписание для препода\n${getTeacherById(lesson.teacher).name}",
-                                        style: const TextStyle(
-                                            fontFamily: 'Ubuntu')))),
-                            Divider(
-                              color: Colors.white.withOpacity(0.15),
-                            ),
-                            GestureDetector(
                               onTap: () {
                                 Navigator.of(
                                         myGlobals.scaffoldKey.currentContext!)
@@ -119,29 +99,6 @@ class CourseTile extends StatelessWidget {
                                       style: const TextStyle(
                                           fontFamily: 'Ubuntu'))),
                             ),
-                            Divider(
-                              color: Colors.white.withOpacity(0.15),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                Navigator.of(
-                                        myGlobals.scaffoldKey.currentContext!)
-                                    .pop();
-                                myGlobals.scaffoldKey.currentContext!
-                                    .read<ScheduleProvider>()
-                                    .cabinetSelected(
-                                      lesson.cabinet,
-                                      myGlobals.scaffoldKey.currentContext!,
-                                    );
-                              },
-                              child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                    "Показать расписание для кабинета\n${getCabinetById(lesson.cabinet).name}",
-                                    style:
-                                        const TextStyle(fontFamily: 'Ubuntu'),
-                                  )),
-                            )
                           ],
                         ),
                       ),
@@ -194,20 +151,40 @@ class CourseTile extends StatelessWidget {
                       Text(
                           saturdayTime
                               ? getLessonTimings(lesson.number).saturdayStart
-                              : obedTime ? getLessonTimings(lesson.number).obedStart : getLessonTimings(lesson.number).start,
+                              : obedTime
+                                  ? getLessonTimings(lesson.number).obedStart
+                                  : getLessonTimings(lesson.number).start,
                           style: TextStyle(
                               fontSize: 16,
-                              color: obedTime ? (lesson.number > 3 ?  Colors.green : Theme.of(context).colorScheme.inverseSurface) :
-                                  Theme.of(context).colorScheme.inverseSurface,
+                              color: obedTime
+                                  ? (lesson.number > 3
+                                      ? Colors.green
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface)
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.bold)),
                       Text(
                           saturdayTime
                               ? getLessonTimings(lesson.number).saturdayEnd
-                              : obedTime ? getLessonTimings(lesson.number).obedEnd : getLessonTimings(lesson.number).end,
+                              : obedTime
+                                  ? getLessonTimings(lesson.number).obedEnd
+                                  : getLessonTimings(lesson.number).end,
                           style: TextStyle(
-                              color: obedTime ? (lesson.number > 3 ?  Colors.green.withAlpha(200) : Theme.of(context).colorScheme.inverseSurface.withAlpha(200)) :
-                                  Theme.of(context).colorScheme.inverseSurface.withAlpha(200),
+                              color: obedTime
+                                  ? (lesson.number > 3
+                                      ? Colors.green.withAlpha(200)
+                                      : Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface
+                                          .withAlpha(200))
+                                  : Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withAlpha(200),
                               fontFamily: 'Ubuntu')),
                     ],
                   ),
