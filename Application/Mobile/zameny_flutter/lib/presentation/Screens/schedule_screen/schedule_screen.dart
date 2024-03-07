@@ -98,7 +98,6 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   const SizedBox(height: 10),
                   BlocBuilder<ScheduleBloc, ScheduleState>(
                     builder: (context, state) {
-                      GetIt.I.get<Talker>().good(state);
                       if (state is ScheduleLoaded) {
                         return const SearchResultHeader();
                       } else if (state is ScheduleFailedLoading) {
@@ -290,7 +289,3 @@ List<Widget> scheduleList(
     }
   });
 }
-
-
-
-

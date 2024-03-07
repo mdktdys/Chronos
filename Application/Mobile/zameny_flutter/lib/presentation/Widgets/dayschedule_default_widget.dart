@@ -173,9 +173,9 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
     }
     Liquidation? liquidation = data.liquidations
         .where((element) =>
-            DateTime(todayYear, todayMonth, todayDay) == element.date)
+            DateTime(todayYear, todayMonth, todayDay) == element.date &&
+            element.group == group)
         .firstOrNull;
-    GetIt.I.get<Talker>().debug(liquidation);
 
     if (liquidation != null) {
       return [
