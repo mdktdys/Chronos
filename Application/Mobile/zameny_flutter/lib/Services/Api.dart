@@ -143,6 +143,39 @@ class Api {
     }
   }
 
+  Future<void> loadHolidays(DateTime start, DateTime end) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+
+    List<dynamic> data = await client
+        .from('Holidays')
+        .select('*')
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    for (var element in data) {
+      Holiday holiday = Holiday.fromMap(element);
+      dat.holidays.add(holiday);
+    }
+  }
+
+  Future<void> loadLiquidation(int group, DateTime start, DateTime end) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    final dat = GetIt.I.get<Data>();
+
+    List<dynamic> data = await client
+        .from('Liquidation')
+        .select('*')
+        .eq('group', group)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+    ;
+    for (var element in data) {
+      Liquidation liquidation = Liquidation.fromMap(element);
+      dat.liquidations.add(liquidation);
+    }
+  }
+
   Future<void> loadTimings() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
@@ -170,9 +203,6 @@ class Api {
     for (var element in data) {
       ZamenaFull zamena = ZamenaFull.fromMap(element);
       dat.zamenasFull.add(zamena);
-    }
-    for (ZamenaFull zam in dat.zamenasFull) {
-      GetIt.I.get<Talker>().debug(zam.toMap().toString());
     }
   }
 
