@@ -114,12 +114,14 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             end: event.dateEnd);
         Set<int> groupsID = Set<int>.from(lessons.map((e) => e.group));
         for (int group in groupsID) {
-          Api().loadZamenasFull(group, event.dateStart, event.dateEnd);
+          await Api().loadZamenasFull(group, event.dateStart, event.dateEnd);
           zamenas.addAll(await Api().loadZamenas(
               groupID: group, start: event.dateStart, end: event.dateEnd));
+          await Api().loadLiquidation(group, event.dateStart, event.dateEnd);
         }
         await Api()
             .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+        await Api().loadHolidays(event.dateStart, event.dateEnd);
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,
@@ -132,7 +134,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadInitial>((event, emit) async {
       ScheduleProvider searchProvider =
           Provider.of<ScheduleProvider>(event.context, listen: false);
-      GetIt.I.get<Talker>().debug("init");
       emit(ScheduleLoading());
       try {
         await Api().loadGroups(event.context);
@@ -182,7 +183,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       try {
         await Api().loadTeachers(event.context);
         await Api().loadCourses();
-        if(!event.context.mounted){
+        if (!event.context.mounted) {
           throw Exception("context ");
         }
         await Api().loadCabinets(event.context);
@@ -196,6 +197,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
         List<Zamena> zamenas = await Api().loadZamenas(
             groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+        await Api()
+            .loadLiquidation(event.groupID, event.dateStart, event.dateEnd);
+        await Api().loadHolidays(event.dateStart, event.dateEnd);
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,
