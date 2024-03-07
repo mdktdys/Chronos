@@ -345,6 +345,15 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             element.date.year == todayYear)
         .toSet();
     int teacherID = provider.teacherIDSeek;
+    List<Widget> tiles =
+        newMethod(teacherID, fullzamenas, todayDay, todayMonth, todayYear);
+    List<CourseTile> courseTiles = [];
+    for (Widget i in tiles) {
+      if (i is CourseTile) {
+        courseTiles.add(i);
+      }
+    }
+    bool needObedSwitch = courseTiles.any((element) => element.lesson.number == 4 ||  element.lesson.number == 5 ||  element.lesson.number == 6 ||  element.lesson.number == 7 );
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: isToday
@@ -360,7 +369,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
           DayScheduleHeader(
               day: widget.day, startDate: widget.startDate, isToday: isToday),
           //isToday
-              true
+          courseTiles.isNotEmpty && needObedSwitch
               ? Row(
                   children: [
                     SizedBox(
@@ -374,7 +383,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                       width: 8,
                     ),
                     Text(
-                      "С обедом",
+                      "Без обеда",
                       style: TextStyle(
                           fontFamily: 'Ubuntu',
                           color: Theme.of(context)
@@ -386,135 +395,139 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 )
               : const SizedBox(),
           Column(
-              children: widget.data.timings.map((para) {
-            //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
-            if (widget.dayZamenas
-                .any((element) => element.lessonTimingsID == para.number)) {
-              //если есть любая замена в этот день, неважно дети или препод
-              Zamena? zamena = widget.dayZamenas
-                  .where((element) => element.lessonTimingsID == para.number)
-                  .first;
-
-              //если это замена детей и она не меняет на моего препода
-              if (zamena.teacherID != teacherID) {
-                //пытаюсь поставить дефолтную пару препода
-                //проверяю не состоит ли эта пара в полной замене
-                if (widget.lessons
-                    .any((element) => element.number == para.number)) {
-                  Lesson lesson = widget.lessons
-                      .where((element) => element.number == para.number)
-                      .first;
-                  final course = getCourseById(lesson.course) ??
-                      Course(id: -1, name: "err3", color: "50,0,0,1");
-
-                  //проверяю не состоит ли группа дефолтного расписания в полной замене
-                  GetIt.I.get<Talker>().critical(
-                      "${para.number} ${widget.day} ${getGroupById(lesson.group)!.name}");
-
-                  bool hasFullZamena = fullzamenas
-                      .where((element) =>
-                          element.group == lesson.group &&
-                          element.date.day == todayDay &&
-                          element.date.month == todayMonth &&
-                          element.date.year == todayYear)
-                      .isNotEmpty;
-
-                  bool hasOtherZamena = widget.dayZamenas
-                      .where((element) =>
-                          element.groupID == lesson.group &&
-                          element.lessonTimingsID == para.number)
-                      .isNotEmpty;
-
-                  if (!hasFullZamena && !hasOtherZamena) {
-                    return CourseTile(
-                      type: SearchType.teacher,
-                      course: course,
-                      obedTime: obed,
-                      lesson: lesson,
-                      swaped: null,
-                      refresh: widget.refresh,
-                      saturdayTime: widget.day == 6,
-                    );
-                  }
-                }
-              }
-              //если это замена препода, ставлю ее
-              else {
-                //пара которая меняется
-                Lesson? swapedPara = widget.lessons
-                    .where((element) => element.number == para.number)
-                    .firstOrNull;
-                //замена этой пары
-
-                Zamena zamena = widget.dayZamenas
-                    .where((element) =>
-                        element.lessonTimingsID == para.number &&
-                        element.teacherID == teacherID)
-                    .first;
-                final course = getCourseById(zamena.courseID) ??
-                    Course(id: -1, name: "err2", color: "100,0,0,0");
-                return CourseTile(
-                  type: SearchType.teacher,
-                  course: course,
-                  obedTime: obed,
-                  refresh: widget.refresh,
-                  saturdayTime: widget.day == 6,
-                  lesson: Lesson(
-                      id: -1,
-                      course: course.id,
-                      cabinet: zamena.cabinetID,
-                      number: zamena.lessonTimingsID,
-                      teacher: zamena.teacherID,
-                      group: zamena.groupID,
-                      date: zamena.date),
-                  swaped: swapedPara,
-                );
-              }
-            }
-
-            //если замен нет, пытаюсь составить дефолтное расписание
-            else {
-              // GetIt.I.get<Talker>().critical(para.number);
-              // lessons.forEach((element) {
-              //   GetIt.I.get<Talker>().good(getGroupById(element.group)!.name);
-              //   GetIt.I.get<Talker>().good(element.number);
-              //   GetIt.I.get<Talker>().good(para.number);
-              // });
-              if (widget.lessons
-                  .any((element) => element.number == para.number)) {
-                Lesson lesson = widget.lessons
-                    .where((element) => element.number == para.number)
-                    .first;
-
-                final course = getCourseById(lesson.course) ??
-                    Course(id: -1, name: "err3", color: "50,0,0,1");
-
-                //проверяю не состоит ли группа дефолтного расписания в полной замене
-                if (fullzamenas
-                    .where((element) =>
-                        element.group == lesson.group &&
-                        element.date.day == todayDay &&
-                        element.date.month == todayMonth &&
-                        element.date.year == todayYear)
-                    .isEmpty) {
-                  return CourseTile(
-                    type: SearchType.teacher,
-                    course: course,
-                    obedTime: obed,
-                    lesson: lesson,
-                    swaped: null,
-                    refresh: widget.refresh,
-                    saturdayTime: widget.day == 6,
-                  );
-                }
-              }
-            }
-            return const SizedBox();
-            //return Text("data ${lessons.where((element) => element.number == para.number).length}");
-          }).toList())
+              children: newMethod(
+                  teacherID, fullzamenas, todayDay, todayMonth, todayYear))
         ],
       ),
     );
+  }
+
+  List<Widget> newMethod(int teacherID, Set<ZamenaFull> fullzamenas,
+      int todayDay, int todayMonth, int todayYear) {
+    return widget.data.timings.map((para) {
+      //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
+      if (widget.dayZamenas
+          .any((element) => element.lessonTimingsID == para.number)) {
+        //если есть любая замена в этот день, неважно дети или препод
+        Zamena? zamena = widget.dayZamenas
+            .where((element) => element.lessonTimingsID == para.number)
+            .first;
+
+        //если это замена детей и она не меняет на моего препода
+        if (zamena.teacherID != teacherID) {
+          //пытаюсь поставить дефолтную пару препода
+          //проверяю не состоит ли эта пара в полной замене
+          if (widget.lessons.any((element) => element.number == para.number)) {
+            Lesson lesson = widget.lessons
+                .where((element) => element.number == para.number)
+                .first;
+            final course = getCourseById(lesson.course) ??
+                Course(id: -1, name: "err3", color: "50,0,0,1");
+
+            //проверяю не состоит ли группа дефолтного расписания в полной замене
+            GetIt.I.get<Talker>().critical(
+                "${para.number} ${widget.day} ${getGroupById(lesson.group)!.name}");
+
+            bool hasFullZamena = fullzamenas
+                .where((element) =>
+                    element.group == lesson.group &&
+                    element.date.day == todayDay &&
+                    element.date.month == todayMonth &&
+                    element.date.year == todayYear)
+                .isNotEmpty;
+
+            bool hasOtherZamena = widget.dayZamenas
+                .where((element) =>
+                    element.groupID == lesson.group &&
+                    element.lessonTimingsID == para.number)
+                .isNotEmpty;
+
+            if (!hasFullZamena && !hasOtherZamena) {
+              return CourseTile(
+                type: SearchType.teacher,
+                course: course,
+                obedTime: obed,
+                lesson: lesson,
+                swaped: null,
+                refresh: widget.refresh,
+                saturdayTime: widget.day == 6,
+              );
+            }
+          }
+        }
+        //если это замена препода, ставлю ее
+        else {
+          //пара которая меняется
+          Lesson? swapedPara = widget.lessons
+              .where((element) => element.number == para.number)
+              .firstOrNull;
+          //замена этой пары
+
+          Zamena zamena = widget.dayZamenas
+              .where((element) =>
+                  element.lessonTimingsID == para.number &&
+                  element.teacherID == teacherID)
+              .first;
+          final course = getCourseById(zamena.courseID) ??
+              Course(id: -1, name: "err2", color: "100,0,0,0");
+          return CourseTile(
+            type: SearchType.teacher,
+            course: course,
+            obedTime: obed,
+            refresh: widget.refresh,
+            saturdayTime: widget.day == 6,
+            lesson: Lesson(
+                id: -1,
+                course: course.id,
+                cabinet: zamena.cabinetID,
+                number: zamena.lessonTimingsID,
+                teacher: zamena.teacherID,
+                group: zamena.groupID,
+                date: zamena.date),
+            swaped: swapedPara,
+          );
+        }
+      }
+
+      //если замен нет, пытаюсь составить дефолтное расписание
+      else {
+        // GetIt.I.get<Talker>().critical(para.number);
+        // lessons.forEach((element) {
+        //   GetIt.I.get<Talker>().good(getGroupById(element.group)!.name);
+        //   GetIt.I.get<Talker>().good(element.number);
+        //   GetIt.I.get<Talker>().good(para.number);
+        // });
+        if (widget.lessons.any((element) => element.number == para.number)) {
+          Lesson lesson = widget.lessons
+              .where((element) => element.number == para.number)
+              .first;
+
+          final course = getCourseById(lesson.course) ??
+              Course(id: -1, name: "err3", color: "50,0,0,1");
+
+          //проверяю не состоит ли группа дефолтного расписания в полной замене
+          if (fullzamenas
+              .where((element) =>
+                  element.group == lesson.group &&
+                  element.date.day == todayDay &&
+                  element.date.month == todayMonth &&
+                  element.date.year == todayYear)
+              .isEmpty) {
+            return CourseTile(
+              type: SearchType.teacher,
+              course: course,
+              obedTime: obed,
+              lesson: lesson,
+              swaped: null,
+              refresh: widget.refresh,
+              saturdayTime: widget.day == 6,
+            );
+          }
+        }
+      }
+      return const SizedBox();
+      //return Text("data ${lessons.where((element) => element.number == para.number).length}");
+    }).toList();
   }
 }
 
@@ -614,7 +627,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
                           width: 8,
                         ),
                         Text(
-                          "С обедом",
+                          "Без обеда",
                           style: TextStyle(
                               fontFamily: 'Ubuntu',
                               color: Theme.of(context)

@@ -21,7 +21,7 @@ ThemeData lightTheme = ThemeData.light().copyWith(
       onError: Colors.red,
       background: Colors.white,
       onBackground: Colors.white,
-      surface: Colors.red,
+      surface: Color.fromARGB(255, 30, 118, 233),
       onSurface: Colors.grey),
 );
 
@@ -43,6 +43,6 @@ ThemeData darkTheme = ThemeData.dark().copyWith(
       onError: Colors.red,
       background: Color.fromARGB(255, 18, 21, 37),
       onBackground: Colors.white,
-      surface: Colors.red,
+      surface: Color.fromARGB(255, 30, 118, 233),
       onSurface: Colors.grey),
 );
