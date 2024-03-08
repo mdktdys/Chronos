@@ -50,6 +50,7 @@ dependencies:
   animated_list_plus: ^0.5.2
   shimmer: ^3.0.0
   dotted_border: ^2.1.0
+  flutter_native_splash: ^2.3.10
 
 dev_dependencies:
   # flutter_test:
@@ -63,16 +64,25 @@ dev_dependencies:
   flutter_lints: ^2.0.0
   mobkit_dashed_border: ^0.0.6
 
-flutter_launcher_icons:
-  image_path: "assets/icon/whale.png"
+flutter_native_splash:
   android: true
-  min_sdk_android: 21
-  adaptive_icon_background: "#121525"
-  adaptive_icon_foreground: "assets/icon/whale_android.png"
-  web:
-    generate: true
-    background_color: "#121525"
-    theme_color: "#121525"
+  web: true
+  color: "#121525"
+  image: "assets/icon/whale_android.png"
+  android_12:
+    image: "assets/icon/whale_android.png"
+    color: "#121525"
+    icon_background_color: "#121525"
+# flutter_launcher_icons:
+#   image_path: "assets/icon/whale.png"
+#   android: true
+#   min_sdk_android: 21
+#   adaptive_icon_background: "#121525"
+#   adaptive_icon_foreground: "assets/icon/whale_android.png"
+#   web:
+#     generate: true
+#     background_color: "#121525"
+#     theme_color: "#121525"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
