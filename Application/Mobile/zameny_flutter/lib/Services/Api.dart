@@ -9,24 +9,6 @@ import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
 import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 
 class Api {
-  Future<void> loadZamenaFileLinks(
-      {required DateTime start, required DateTime end}) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
-
-    List<dynamic> data = await client
-        .from('ZamenaFileLinks')
-        .select('id,link,date,created_at')
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
-
-    for (var element in data) {
-      GetIt.I.get<Talker>().debug(element);
-      ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
-      dat.zamenaFileLinks.add(zamenaLink);
-    }
-  }
-
   Future<List<Lesson>> loadWeekSchedule(
       {required int groupID,
       required DateTime start,
@@ -159,17 +141,17 @@ class Api {
     }
   }
 
-  Future<void> loadLiquidation(int group, DateTime start, DateTime end) async {
+  Future<void> loadLiquidation(
+      List<int> groupsID, DateTime start, DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
     List<dynamic> data = await client
         .from('Liquidation')
         .select('*')
-        .eq('group', group)
+        .in_('group', groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
-    ;
     for (var element in data) {
       Liquidation liquidation = Liquidation.fromMap(element);
       dat.liquidations.add(liquidation);
@@ -190,19 +172,51 @@ class Api {
   }
 
   Future<void> loadZamenasFull(
-      int groupID, DateTime start, DateTime end) async {
-    final client = GetIt.I.get<SupabaseClient>();
+      List<int> groupsID, DateTime start, DateTime end) async {
     final dat = GetIt.I.get<Data>();
 
+    //тестова проверка на уже существующие
+    if (dat.zamenasFull.any((element) =>
+        element.date.isBefore(end) && element.date.isAfter(start))) {
+      return;
+    }
+
+    final client = GetIt.I.get<SupabaseClient>();
     List<dynamic> data = await client
         .from("ZamenasFull")
         .select("*")
-        .eq("group", groupID)
+        .in_("group", groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
+    GetIt.I.get<Talker>().debug(data);
     for (var element in data) {
       ZamenaFull zamena = ZamenaFull.fromMap(element);
       dat.zamenasFull.add(zamena);
+    }
+  }
+
+  Future<void> loadZamenaFileLinks(
+      {required DateTime start, required DateTime end}) async {
+    final dat = GetIt.I.get<Data>();
+
+    //тестова проверка на уже существующие
+    if (dat.zamenaFileLinks.any((element) =>
+        element.date.isBefore(end) && element.date.isAfter(start))) {
+      return;
+    }
+
+    final client = GetIt.I.get<SupabaseClient>();
+
+    List<dynamic> data = await client
+        .from('ZamenaFileLinks')
+        .select('id,link,date,created_at')
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    for (var element in data) {
+      GetIt.I.get<Talker>().debug(element);
+      ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+      dat.zamenaFileLinks.add(zamenaLink);
     }
   }
 
@@ -227,10 +241,10 @@ class Api {
   // }
 
   Future<List<Zamena>> loadZamenas(
-      {required int groupID,
+      {required List<int> groupsID,
       required DateTime start,
       required DateTime end}) async {
-    if (groupID == -1) {
+    if (groupsID.isEmpty == -1) {
       return [];
     }
     final client = GetIt.I.get<SupabaseClient>();
@@ -238,7 +252,7 @@ class Api {
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')
-        .eq('group', groupID)
+        .in_('group', groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String())
         .order('date');
@@ -247,9 +261,6 @@ class Api {
     for (var element in data) {
       Zamena zamena = Zamena.fromMap(element);
       zamenaBuffer.add(zamena);
-      // if (!dat.zamenas.any((element) => element.id == zamena.id)) {
-      //   dat.zamenas.add(zamena);
-      // }
     }
     return zamenaBuffer;
   }

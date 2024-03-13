@@ -73,11 +73,10 @@ class ScheduleProvider extends ChangeNotifier {
     DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(FetchData(
+    context.read<ScheduleBloc>().add(LoadGroupWeek(
         groupID: groupIDSeek,
         dateStart: startOfWeek,
-        dateEnd: endOfWeek,
-        context: context));
+        dateEnd: endOfWeek));
     notifyListeners();
   }
 
