@@ -15,8 +15,9 @@
     This is a placeholder for base href that will be replaced by the value of
     the `--base-href` argument provided to `flutter build`.
   -->
-  <base href="./">
-  <!-- <base href="/"> -->
+  <!-- <base href="./"> -->
+  <base href="/">
+
   <meta charset="UTF-8">
   <script defer="" src="index.dart.js" type="application/javascript"></script>
   <meta content="IE=Edge" http-equiv="X-UA-Compatible">
@@ -41,6 +42,7 @@
     const serviceWorkerVersion = null;
   </script>
   <!-- This script adds the flutter initialization JS code -->
+  <script src="metrica.js" defer=""></script>
 
   <script src="flutter.js" defer=""></script>
   <!-- Yandex.Metrika counter -->
@@ -59,6 +61,13 @@
       accurateTrackBounce: true,
       webvisor: true
     });
+    
+    function TeacherLoadMore5sec() {
+      ym(96571562, "reachGoal", "TeacherLoadMore5sec", (res) => console.log(res) );
+      ym(96571562,'reachGoal','TeacherLoadError', (res) => console.log(res));
+    }
+
+
   </script>
   <noscript>
     <div><img src="https://mc.yandex.ru/watch/96571562" style="position:absolute; left:-9999px;" alt="" /></div>
@@ -168,11 +177,23 @@
       });
     });
   </script>
-
-
-
-
-
+  <!-- Top.Mail.Ru counter -->
+  <script type="text/javascript">
+    var _tmr = window._tmr || (window._tmr = []);
+    _tmr.push({ id: "3491301", type: "pageView", start: (new Date()).getTime() });
+    (function (d, w, id) {
+      if (d.getElementById(id)) return;
+      var ts = d.createElement("script"); ts.type = "text/javascript"; ts.async = true; ts.id = id;
+      ts.src = "https://top-fwz1.mail.ru/js/code.js";
+      var f = function () { var s = d.getElementsByTagName("script")[0]; s.parentNode.insertBefore(ts, s); };
+      if (w.opera == "[object Opera]") { d.addEventListener("DOMContentLoaded", f, false); } else { f(); }
+    })(document, window, "tmr-code");
+  </script>
+  <noscript>
+    <div><img src="https://top-fwz1.mail.ru/counter?id=3491301;js=na" style="position:absolute;left:-9999px;"
+        alt="Top.Mail.Ru" /></div>
+  </noscript>
+  <!-- /Top.Mail.Ru counter -->
 </body>
 
 </html>
