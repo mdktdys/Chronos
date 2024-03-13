@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/Services/metrica.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 
@@ -101,6 +102,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadTeacherWeek>((event, emit) async {
       emit(ScheduleLoading());
       try {
+        teacherLoaded(0);
         List<Lesson> lessons = await Api().loadWeekTeacherSchedule(
             start: event.dateStart,
             end: event.dateEnd,

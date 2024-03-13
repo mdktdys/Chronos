@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class ScheduleHeader extends StatelessWidget {
@@ -59,7 +60,20 @@ class ScheduleHeader extends StatelessWidget {
                                     MaterialPageRoute(
                                         builder: (context) => TalkerScreen(
                                             talker: GetIt.I.get<Talker>()))),
-                              )
+                              ),
+                              ListTile(
+                                  title: Text(
+                                    "Тест",
+                                    style: TextStyle(
+                                        color: Theme.of(context)
+                                            .colorScheme
+                                            .inversePrimary,
+                                        fontFamily: 'Ubuntu'),
+                                  ),
+                                  onTap: () async {
+                                    SupabaseClient supa = GetIt.I.get<SupabaseClient>();
+                                    GetIt.I.get<Talker>().debug(await supa.rpc('test4',params: {'groupid' : 2464,'datestart': DateTime(2024,3,11).toIso8601String(), 'dateend':DateTime(2024,3,17).toIso8601String() }));
+                                  }),
                             ],
                           ),
                         ),
