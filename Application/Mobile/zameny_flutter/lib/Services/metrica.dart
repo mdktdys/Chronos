@@ -1,5 +1,5 @@
-import 'dart:js';
+// import 'dart:js';
 
-teacherLoaded(double elapsed){
-  context.callMethod("TeacherLoadMore5sec");
-}
+// teacherLoaded(double elapsed){
+//   context.callMethod("TeacherLoadMore5sec");
+// }

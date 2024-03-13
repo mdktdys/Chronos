@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/metrica.dart';
@@ -41,6 +43,15 @@ final class LoadTeacherWeek extends ScheduleEvent {
       {required this.teacherID,
       required this.dateStart,
       required this.dateEnd});
+}
+
+final class LoadGroupWeek extends ScheduleEvent {
+  final int groupID;
+  final DateTime dateStart;
+  final DateTime dateEnd;
+
+  LoadGroupWeek(
+      {required this.groupID, required this.dateStart, required this.dateEnd});
 }
 
 final class LoadCabinetWeek extends ScheduleEvent {
@@ -102,7 +113,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadTeacherWeek>((event, emit) async {
       emit(ScheduleLoading());
       try {
-        teacherLoaded(0);
         List<Lesson> lessons = await Api().loadWeekTeacherSchedule(
             start: event.dateStart,
             end: event.dateEnd,
@@ -111,16 +121,18 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             teacherID: event.teacherID,
             start: event.dateStart,
             end: event.dateEnd);
-        Set<int> groupsID = Set<int>.from(lessons.map((e) => e.group));
-        for (int group in groupsID) {
-          await Api().loadZamenasFull(group, event.dateStart, event.dateEnd);
-          zamenas.addAll(await Api().loadZamenas(
-              groupID: group, start: event.dateStart, end: event.dateEnd));
-          await Api().loadLiquidation(group, event.dateStart, event.dateEnd);
-        }
+        List<int> groupsID = List<int>.from(lessons.map((e) => e.group));
+
+        await Api().loadZamenasFull(groupsID, event.dateStart, event.dateEnd);
+        zamenas.addAll(await Api().loadZamenas(
+            groupsID: groupsID, start: event.dateStart, end: event.dateEnd));
+        await Api().loadLiquidation(groupsID, event.dateStart, event.dateEnd);
+
         await Api()
             .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+
         await Api().loadHolidays(event.dateStart, event.dateEnd);
+
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,
@@ -132,10 +144,27 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadInitial>((event, emit) async {
       ScheduleProvider searchProvider =
           Provider.of<ScheduleProvider>(event.context, listen: false);
+
+      GetIt.I.get<Talker>().debug("fetch data");
+
       emit(ScheduleLoading());
+
       try {
-        await Api().loadGroups(event.context);
+        await Api().loadTimings();
         await Api().loadDepartments();
+        await Api().loadCourses();
+        if (!event.context.mounted) {
+          throw Exception("context ");
+        }
+        await Api().loadGroups(event.context);
+        if (!event.context.mounted) {
+          throw Exception("context ");
+        }
+        await Api().loadTeachers(event.context);
+        if (!event.context.mounted) {
+          throw Exception("context ");
+        }
+        await Api().loadCabinets(event.context);
 
         if (searchProvider.searchType == SearchType.group) {
           if (event.context.mounted) {
@@ -162,11 +191,10 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             DateTime endOfWeek =
                 DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
             if (event.context.mounted) {
-              add(FetchData(
+              add(LoadGroupWeek(
                   groupID: searchProvider.groupIDSeek,
                   dateStart: startOfWeek,
-                  dateEnd: endOfWeek,
-                  context: event.context));
+                  dateEnd: endOfWeek));
             }
           } else {
             emit(ScheduleInitial());
@@ -176,35 +204,29 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(ScheduleFailedLoading(error: err.toString()));
       }
     });
-    on<FetchData>((event, emit) async {
-      emit(ScheduleLoading());
-      try {
-        await Api().loadTeachers(event.context);
-        await Api().loadCourses();
-        if (!event.context.mounted) {
-          throw Exception("context ");
-        }
-        await Api().loadCabinets(event.context);
-        await Api()
-            .loadZamenasFull(event.groupID, event.dateStart, event.dateEnd);
-        await Api().loadTimings();
+    on<LoadGroupWeek>(
+      (event, emit) async {
+        emit(ScheduleLoading());
         await Api()
             .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+
+        await Api()
+            .loadZamenasFull([event.groupID], event.dateStart, event.dateEnd);
         List<Lesson> lessons = await Api().loadWeekSchedule(
             start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
 
         List<Zamena> zamenas = await Api().loadZamenas(
-            groupID: event.groupID, start: event.dateStart, end: event.dateEnd);
+            groupsID: [event.groupID],
+            start: event.dateStart,
+            end: event.dateEnd);
+
         await Api()
-            .loadLiquidation(event.groupID, event.dateStart, event.dateEnd);
-        await Api().loadHolidays(event.dateStart, event.dateEnd);
+            .loadLiquidation([event.groupID], event.dateStart, event.dateEnd);
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,
         ));
-      } catch (err) {
-        emit(ScheduleFailedLoading(error: err.toString()));
-      }
-    });
+      },
+    );
   }
 }
