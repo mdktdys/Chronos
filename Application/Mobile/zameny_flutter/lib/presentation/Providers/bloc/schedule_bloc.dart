@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Services/metrica.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 
