@@ -280,6 +280,18 @@ class Course {
 
   factory Course.fromJson(String source) =>
       Course.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Course copyWith({
+    int? id,
+    String? name,
+    String? color,
+  }) {
+    return Course(
+      id: id ?? this.id,
+      name: name ?? this.name,
+      color: color ?? this.color,
+    );
+  }
 }
 
 class Teacher extends SearchItem {
@@ -468,6 +480,26 @@ class Lesson {
 
   factory Lesson.fromJson(String source) =>
       Lesson.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  Lesson copyWith({
+    int? id,
+    int? number,
+    int? group,
+    DateTime? date,
+    int? course,
+    int? teacher,
+    int? cabinet,
+  }) {
+    return Lesson(
+      id: id ?? this.id,
+      number: number ?? this.number,
+      group: group ?? this.group,
+      date: date ?? this.date,
+      course: course ?? this.course,
+      teacher: teacher ?? this.teacher,
+      cabinet: cabinet ?? this.cabinet,
+    );
+  }
 }
 
 void setChoosedTheme(int index) {

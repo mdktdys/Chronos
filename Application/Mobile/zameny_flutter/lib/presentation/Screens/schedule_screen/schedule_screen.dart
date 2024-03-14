@@ -71,18 +71,23 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   Widget _buildContentForState(ScheduleState state) {
     if (state is ScheduleLoaded) {
       return LessonList(
+        key: UniqueKey(),
         refresh: refresh,
         zamenas: state.zamenas,
         lessons: state.lessons,
       );
     } else if (state is ScheduleFailedLoading) {
       return FailedLoadWidget(
+        key: UniqueKey(),
         error: state.error,
       );
     } else if (state is ScheduleLoading) {
-      return const LoadingWidget();
+      return LoadingWidget(
+        key: UniqueKey(),
+      );
     } else if (state is ScheduleInitial) {
       return Center(
+        key: UniqueKey(),
         child: Text(
           "Тыкни на поиск!\nвыбери группу, препода или кабинет",
           textAlign: TextAlign.center,
@@ -148,8 +153,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
               builder: (context, state) {
                 return SliverToBoxAdapter(
                   child: AnimatedSwitcher(
-                    reverseDuration: const Duration(milliseconds: 500),
-                    duration: const Duration(milliseconds: 500),
+                    reverseDuration: const Duration(milliseconds: 300),
+                    duration: const Duration(milliseconds: 300),
                     child: _buildContentForState(state),
                   ),
                 );

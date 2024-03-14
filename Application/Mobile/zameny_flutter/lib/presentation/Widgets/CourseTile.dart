@@ -17,8 +17,10 @@ class CourseTile extends StatelessWidget {
   final bool? removed;
   final bool saturdayTime;
   final bool obedTime;
+  final bool empty;
 
   const CourseTile({
+    this.empty = false,
     super.key,
     required this.course,
     required this.lesson,
@@ -223,7 +225,7 @@ class CourseTile extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            type != SearchType.cabinet && !isEmpty
+                            (type != SearchType.cabinet && !isEmpty) || type == SearchType.teacher
                                 ? SvgPicture.asset(
                                     "assets/icon/vuesax_linear_location.svg",
                                     color: Theme.of(context)

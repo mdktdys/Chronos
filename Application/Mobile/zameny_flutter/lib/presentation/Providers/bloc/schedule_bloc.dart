@@ -1,3 +1,4 @@
+import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -88,58 +89,64 @@ final class ScheduleLoading extends ScheduleState {}
 
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc() : super(ScheduleInitial()) {
-    on<LoadCabinetWeek>((event, emit) async {
-      emit(ScheduleLoading());
-      try {
-        List<Lesson> lessons = await Api().loadWeekCabinetSchedule(
-            start: event.dateStart,
-            end: event.dateEnd,
-            cabinetID: event.cabinetID);
-        List<Zamena> zamenas = await Api().loadCabinetZamenas(
-            cabinetID: event.cabinetID,
-            start: event.dateStart,
-            end: event.dateEnd);
-        emit(ScheduleLoaded(
-          lessons: lessons,
-          zamenas: zamenas,
-        ));
-        await Api()
-            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
-      } catch (err) {
-        emit(ScheduleFailedLoading(error: err.toString()));
-      }
-    });
-    on<LoadTeacherWeek>((event, emit) async {
-      emit(ScheduleLoading());
-      try {
-        List<Lesson> lessons = await Api().loadWeekTeacherSchedule(
-            start: event.dateStart,
-            end: event.dateEnd,
-            teacherID: event.teacherID);
-        List<Zamena> zamenas = await Api().loadTeacherZamenas(
-            teacherID: event.teacherID,
-            start: event.dateStart,
-            end: event.dateEnd);
-        List<int> groupsID = List<int>.from(lessons.map((e) => e.group));
+    on<LoadCabinetWeek>(
+      (event, emit) async {
+        emit(ScheduleLoading());
+        try {
+          List<Lesson> lessons = await Api().loadWeekCabinetSchedule(
+              start: event.dateStart,
+              end: event.dateEnd,
+              cabinetID: event.cabinetID);
+          List<Zamena> zamenas = await Api().loadCabinetZamenas(
+              cabinetID: event.cabinetID,
+              start: event.dateStart,
+              end: event.dateEnd);
+          emit(ScheduleLoaded(
+            lessons: lessons,
+            zamenas: zamenas,
+          ));
+          await Api()
+              .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+        } catch (err) {
+          emit(ScheduleFailedLoading(error: err.toString()));
+        }
+      },
+      transformer: restartable(),
+    );
+    on<LoadTeacherWeek>(
+      (event, emit) async {
+        emit(ScheduleLoading());
+        try {
+          List<Lesson> lessons = await Api().loadWeekTeacherSchedule(
+              start: event.dateStart,
+              end: event.dateEnd,
+              teacherID: event.teacherID);
+          List<Zamena> zamenas = await Api().loadTeacherZamenas(
+              teacherID: event.teacherID,
+              start: event.dateStart,
+              end: event.dateEnd);
+          List<int> groupsID = List<int>.from(lessons.map((e) => e.group));
 
-        await Api().loadZamenasFull(groupsID, event.dateStart, event.dateEnd);
-        zamenas.addAll(await Api().loadZamenas(
-            groupsID: groupsID, start: event.dateStart, end: event.dateEnd));
-        await Api().loadLiquidation(groupsID, event.dateStart, event.dateEnd);
+          await Api().loadZamenasFull(groupsID, event.dateStart, event.dateEnd);
+          zamenas.addAll(await Api().loadZamenas(
+              groupsID: groupsID, start: event.dateStart, end: event.dateEnd));
+          await Api().loadLiquidation(groupsID, event.dateStart, event.dateEnd);
 
-        await Api()
-            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
+          await Api()
+              .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
 
-        await Api().loadHolidays(event.dateStart, event.dateEnd);
+          await Api().loadHolidays(event.dateStart, event.dateEnd);
 
-        emit(ScheduleLoaded(
-          lessons: lessons,
-          zamenas: zamenas,
-        ));
-      } catch (err) {
-        emit(ScheduleFailedLoading(error: err.toString()));
-      }
-    });
+          emit(ScheduleLoaded(
+            lessons: lessons,
+            zamenas: zamenas,
+          ));
+        } catch (err) {
+          emit(ScheduleFailedLoading(error: err.toString()));
+        }
+      },
+      transformer: restartable(),
+    );
     on<LoadInitial>((event, emit) async {
       ScheduleProvider searchProvider =
           Provider.of<ScheduleProvider>(event.context, listen: false);
@@ -226,6 +233,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           zamenas: zamenas,
         ));
       },
+      transformer: restartable(),
     );
   }
 }
