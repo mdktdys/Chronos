@@ -68,6 +68,37 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     setState(() {});
   }
 
+  Widget _buildContentForState(ScheduleState state) {
+    if (state is ScheduleLoaded) {
+      return LessonList(
+        refresh: refresh,
+        zamenas: state.zamenas,
+        lessons: state.lessons,
+      );
+    } else if (state is ScheduleFailedLoading) {
+      return FailedLoadWidget(
+        error: state.error,
+      );
+    } else if (state is ScheduleLoading) {
+      return const LoadingWidget();
+    } else if (state is ScheduleInitial) {
+      return Center(
+        child: Text(
+          "Тыкни на поиск!\nвыбери группу, препода или кабинет",
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: Theme.of(context).colorScheme.inverseSurface,
+            fontFamily: 'Ubuntu',
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+      );
+    } else {
+      return const SizedBox();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
@@ -115,41 +146,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             padding: const EdgeInsets.symmetric(horizontal: 20),
             sliver: BlocBuilder<ScheduleBloc, ScheduleState>(
               builder: (context, state) {
-                if (state is ScheduleLoaded) {
-                  return SliverToBoxAdapter(
-                    child: LessonList(
-                      refresh: refresh,
-                      zamenas: state.zamenas,
-                      lessons: state.lessons,
-                    ),
-                  );
-                } else if (state is ScheduleFailedLoading) {
-                  return SliverFillRemaining(
-                    hasScrollBody: false,
-                    fillOverscroll: true,
-                    child: FailedLoadWidget(
-                      error: state.error,
-                    ),
-                  );
-                } else if (state is ScheduleLoading) {
-                  return const SliverToBoxAdapter(
-                    child: LoadingWidget(),
-                  );
-                } else if (state is ScheduleInitial) {
-                  return SliverFillRemaining(
-                      child: Center(
-                    child: Text(
-                        "Тыкни на поиск!\nвыбери группу, препода или кабинет",
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                            color: Theme.of(context).colorScheme.inverseSurface,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 24,
-                            fontWeight: FontWeight.bold)),
-                  ));
-                } else {
-                  return const SliverFillRemaining(child: SizedBox());
-                }
+                return SliverToBoxAdapter(
+                  child: AnimatedSwitcher(
+                    reverseDuration: const Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
+                    child: _buildContentForState(state),
+                  ),
+                );
               },
             ),
           ),
