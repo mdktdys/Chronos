@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/dayschedule_header.dart';
@@ -67,6 +68,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     int teacherID = provider.teacherIDSeek;
     List<Widget> tiles =
         newMethod(teacherID, fullzamenas, todayDay, todayMonth, todayYear);
+
     List<CourseTile> courseTiles = [];
     for (Widget i in tiles) {
       if (i is CourseTile) {
@@ -288,6 +290,25 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
 
           final course = getCourseById(lesson.course) ??
               Course(id: -1, name: "err3", color: "50,0,0,1");
+
+          bool hasLiquidation = data.liquidations.any((element) =>
+              element.date == DateTime(todayYear, todayMonth, todayDay) &&
+              element.group == lesson.group);
+
+          if (hasLiquidation) {
+            final Course courseEmpty = course.copyWith(name: "нет");
+            final Lesson lessonEmpty = lesson;
+            final Lesson sec = lesson.copyWith(course: 9539);
+            return CourseTile(
+              type: SearchType.teacher,
+              course: courseEmpty,
+              obedTime: obed,
+              lesson: sec,
+              swaped: lessonEmpty,
+              refresh: widget.refresh,
+              saturdayTime: widget.day == 6,
+            );
+          }
 
           //проверяю не состоит ли группа дефолтного расписания в полной замене
           if (fullzamenas
