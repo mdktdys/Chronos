@@ -93,6 +93,11 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                   child: ListTile(
                     key: UniqueKey(),
                     onTap: () {
+                      setState(() {
+                        searchController.text = '';
+                        FocusScope.of(context).unfocus();
+                        filteredItems.clear();
+                      });
                       if (item is Group) {
                         providerSchedule.groupSelected(item.id, context);
                       }
@@ -102,11 +107,6 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                       if (item is Teacher) {
                         providerSchedule.teacherSelected(item.id, context);
                       }
-                      setState(() {
-                        searchController.text = '';
-                        FocusScope.of(context).unfocus();
-                        filteredItems.clear();
-                      });
                     },
                     title: Text(
                       item.getFiltername(),
