@@ -88,29 +88,32 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
               return SizeTransition(
                 sizeFactor: animation,
                 axisAlignment: -1,
-                child: ListTile(
-                  key: UniqueKey(),
-                  onTap: () {
-                    if (item is Group) {
-                      providerSchedule.groupSelected(item.id, context);
-                    }
-                    if (item is Cabinet) {
-                      providerSchedule.cabinetSelected(item.id, context);
-                    }
-                    if (item is Teacher) {
-                      providerSchedule.teacherSelected(item.id, context);
-                    }
-                    setState(() {
-                      searchController.text = '';
-                      FocusScope.of(context).unfocus();
-                      filteredItems.clear();
-                    });
-                  },
-                  title: Text(
-                    item.getFiltername(),
-                    style: TextStyle(
-                        fontFamily: 'Ubuntu',
-                        color: Theme.of(context).colorScheme.onSurface),
+                child: SizedBox(
+                  height: 50,
+                  child: ListTile(
+                    key: UniqueKey(),
+                    onTap: () {
+                      if (item is Group) {
+                        providerSchedule.groupSelected(item.id, context);
+                      }
+                      if (item is Cabinet) {
+                        providerSchedule.cabinetSelected(item.id, context);
+                      }
+                      if (item is Teacher) {
+                        providerSchedule.teacherSelected(item.id, context);
+                      }
+                      setState(() {
+                        searchController.text = '';
+                        FocusScope.of(context).unfocus();
+                        filteredItems.clear();
+                      });
+                    },
+                    title: Text(
+                      item.getFiltername(),
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Theme.of(context).colorScheme.onSurface),
+                    ),
                   ),
                 ),
               );

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/dayschedule_header.dart';
@@ -42,6 +41,17 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   toggleObed() {
     obed = !obed;
     setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      if (widget.day == widget.currentDay) {
+        Scrollable.ensureVisible(context,
+            duration: const Duration(milliseconds: 500), alignment: 0.5);
+      }
+    });
   }
 
   @override

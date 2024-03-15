@@ -72,7 +72,7 @@ class Api {
     return weekLessons;
   }
 
-  Future<void> loadGroups(BuildContext context) async {
+  Future<void> loadGroups() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -83,14 +83,9 @@ class Api {
       Group groupName = Group.fromMap(element);
       dat.groups.add(groupName);
     }
-
-    if (context.mounted) {
-      pr.Provider.of<SearchProvider>(context, listen: false)
-          .updateSearchItems();
-    }
   }
 
-  Future<void> loadTeachers(BuildContext context) async {
+  Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = List.empty();
@@ -102,13 +97,9 @@ class Api {
       Teacher teacher = Teacher.fromMap(element);
       dat.teachers.add(teacher);
     }
-    if (context.mounted) {
-      pr.Provider.of<SearchProvider>(context, listen: false)
-          .updateSearchItems();
-    }
   }
 
-  Future<void> loadCabinets(BuildContext context) async {
+  Future<void> loadCabinets() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client.from('Cabinets').select('*');
@@ -117,11 +108,6 @@ class Api {
     for (var element in data) {
       Cabinet cab = Cabinet.fromMap(element);
       dat.cabinets.add(cab);
-    }
-
-    if (context.mounted) {
-      pr.Provider.of<SearchProvider>(context, listen: false)
-          .updateSearchItems();
     }
   }
 

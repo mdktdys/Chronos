@@ -7,6 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/CourseTile.dart';
 
 @immutable
@@ -93,20 +94,28 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       (event, emit) async {
         emit(ScheduleLoading());
         try {
-          List<Lesson> lessons = await Api().loadWeekCabinetSchedule(
-              start: event.dateStart,
-              end: event.dateEnd,
-              cabinetID: event.cabinetID);
-          List<Zamena> zamenas = await Api().loadCabinetZamenas(
-              cabinetID: event.cabinetID,
-              start: event.dateStart,
-              end: event.dateEnd);
+          late List<Lesson> lessons;
+          late List<Zamena> zamenas;
+          await Future.wait([
+            Api()
+                .loadWeekCabinetSchedule(
+                    start: event.dateStart,
+                    end: event.dateEnd,
+                    cabinetID: event.cabinetID)
+                .then((value) => lessons = value),
+            Api()
+                .loadCabinetZamenas(
+                    cabinetID: event.cabinetID,
+                    start: event.dateStart,
+                    end: event.dateEnd)
+                .then((value) => zamenas = value),
+            Api()
+                .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd)
+          ]);
           emit(ScheduleLoaded(
             lessons: lessons,
             zamenas: zamenas,
           ));
-          await Api()
-              .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
         } catch (err) {
           emit(ScheduleFailedLoading(error: err.toString()));
         }
@@ -117,25 +126,40 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       (event, emit) async {
         emit(ScheduleLoading());
         try {
-          List<Lesson> lessons = await Api().loadWeekTeacherSchedule(
-              start: event.dateStart,
-              end: event.dateEnd,
-              teacherID: event.teacherID);
-          List<Zamena> zamenas = await Api().loadTeacherZamenas(
-              teacherID: event.teacherID,
-              start: event.dateStart,
-              end: event.dateEnd);
-          List<int> groupsID = List<int>.from(lessons.map((e) => e.group));
+          late List<Lesson> lessons;
+          late List<Zamena> zamenas;
+          late List<int> groupsID;
+          await Future.wait([
+            Api()
+                .loadWeekTeacherSchedule(
+                    start: event.dateStart,
+                    end: event.dateEnd,
+                    teacherID: event.teacherID)
+                .then((value) {
+              lessons = value;
+              groupsID = List<int>.from(lessons.map((e) => e.group));
+            }),
+            Api()
+                .loadTeacherZamenas(
+                    teacherID: event.teacherID,
+                    start: event.dateStart,
+                    end: event.dateEnd)
+                .then((value) => zamenas = value),
+            Api().loadZamenaFileLinks(
+                start: event.dateStart, end: event.dateEnd),
+            Api().loadHolidays(event.dateStart, event.dateEnd)
+          ]);
 
-          await Api().loadZamenasFull(groupsID, event.dateStart, event.dateEnd);
-          zamenas.addAll(await Api().loadZamenas(
-              groupsID: groupsID, start: event.dateStart, end: event.dateEnd));
-          await Api().loadLiquidation(groupsID, event.dateStart, event.dateEnd);
-
-          await Api()
-              .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
-
-          await Api().loadHolidays(event.dateStart, event.dateEnd);
+          await Future.wait([
+            Api().loadZamenasFull(groupsID, event.dateStart, event.dateEnd),
+            Api().loadLiquidation(groupsID, event.dateStart, event.dateEnd),
+            Api()
+                .loadZamenas(
+                    groupsID: groupsID,
+                    start: event.dateStart,
+                    end: event.dateEnd)
+                .then((value) => zamenas.addAll(value))
+          ]);
 
           emit(ScheduleLoaded(
             lessons: lessons,
@@ -150,27 +174,22 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadInitial>((event, emit) async {
       ScheduleProvider searchProvider =
           Provider.of<ScheduleProvider>(event.context, listen: false);
-
-      GetIt.I.get<Talker>().debug("fetch data");
-
       emit(ScheduleLoading());
-
       try {
-        await Api().loadTimings();
-        await Api().loadDepartments();
-        await Api().loadCourses();
-        if (!event.context.mounted) {
-          throw Exception("context ");
+        GetIt.I.get<Talker>().debug("fetch data");
+        await Future.wait([
+          Api().loadTimings(),
+          Api().loadDepartments(),
+          Api().loadCourses(),
+          Api().loadGroups(),
+          Api().loadTeachers(),
+          Api().loadCabinets(),
+        ]);
+        GetIt.I.get<Talker>().debug("data loded");
+        if (event.context.mounted) {
+          Provider.of<SearchProvider>(event.context, listen: false)
+              .updateSearchItems();
         }
-        await Api().loadGroups(event.context);
-        if (!event.context.mounted) {
-          throw Exception("context ");
-        }
-        await Api().loadTeachers(event.context);
-        if (!event.context.mounted) {
-          throw Exception("context ");
-        }
-        await Api().loadCabinets(event.context);
 
         if (searchProvider.searchType == SearchType.group) {
           if (event.context.mounted) {
@@ -213,21 +232,24 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadGroupWeek>(
       (event, emit) async {
         emit(ScheduleLoading());
-        await Api()
-            .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd);
-
-        await Api()
-            .loadZamenasFull([event.groupID], event.dateStart, event.dateEnd);
-        List<Lesson> lessons = await Api().loadWeekSchedule(
-            start: event.dateStart, end: event.dateEnd, groupID: event.groupID);
-
-        List<Zamena> zamenas = await Api().loadZamenas(
-            groupsID: [event.groupID],
-            start: event.dateStart,
-            end: event.dateEnd);
-
-        await Api()
-            .loadLiquidation([event.groupID], event.dateStart, event.dateEnd);
+        late List<Lesson> lessons;
+        late List<Zamena> zamenas;
+        await Future.wait([
+          Api().loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
+          Api()
+              .loadZamenasFull([event.groupID], event.dateStart, event.dateEnd),
+          Api()
+              .loadWeekSchedule(
+                  start: event.dateStart,
+                  end: event.dateEnd,
+                  groupID: event.groupID)
+              .then((value) => lessons = value),
+          Api().loadZamenas(
+              groupsID: [event.groupID],
+              start: event.dateStart,
+              end: event.dateEnd).then((value) => zamenas = value),
+          Api().loadLiquidation([event.groupID], event.dateStart, event.dateEnd)
+        ]);
         emit(ScheduleLoaded(
           lessons: lessons,
           zamenas: zamenas,

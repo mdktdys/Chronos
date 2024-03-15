@@ -44,6 +44,16 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
   }
 
   @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+      if (widget.day == widget.currentDay) {
+        Scrollable.ensureVisible(context,duration: const Duration(milliseconds: 500),alignment: 0.5);
+      }
+    });
+  }
+
+  @override
   Widget build(BuildContext context) {
     bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek

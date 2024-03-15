@@ -3,6 +3,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Providers/schedule_provider.dart';
@@ -72,6 +74,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     if (state is ScheduleLoaded) {
       return LessonList(
         key: UniqueKey(),
+        scrollController: scrollController,
         refresh: refresh,
         zamenas: state.zamenas,
         lessons: state.lessons,
@@ -197,13 +200,14 @@ class LessonList extends StatelessWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
   final Function refresh;
+  final ScrollController scrollController;
 
-  const LessonList({
-    super.key,
-    required this.refresh,
-    required this.zamenas,
-    required this.lessons,
-  });
+  const LessonList(
+      {super.key,
+      required this.refresh,
+      required this.zamenas,
+      required this.lessons,
+      required this.scrollController});
 
   @override
   Widget build(BuildContext context) {
@@ -213,22 +217,25 @@ class LessonList extends StatelessWidget {
     final startDate = provider.navigationDate
         .subtract(Duration(days: provider.navigationDate.weekday - 1));
 
+    List<Widget> list = scheduleList(
+      context,
+      refresh,
+      lessons,
+      data,
+      zamenas,
+      startDate,
+      currentDay,
+      provider.todayWeek,
+      provider.currentWeek,
+    );
+
+
     return Column(children: [
-      zamenas.isNotEmpty ? const SizedBox() : const SearchBannerMessageWidget(),
+      //zamenas.isNotEmpty ? const SizedBox() : const SearchBannerMessageWidget(),
       ListView(
           physics: const NeverScrollableScrollPhysics(),
           shrinkWrap: true,
-          children: scheduleList(
-            context,
-            refresh,
-            lessons,
-            data,
-            zamenas,
-            startDate,
-            currentDay,
-            provider.todayWeek,
-            provider.currentWeek,
-          )),
+          children: list),
     ]);
   }
 }
