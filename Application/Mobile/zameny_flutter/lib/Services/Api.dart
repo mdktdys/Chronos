@@ -1,12 +1,9 @@
-import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart' as pr;
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/Services/Models/group.dart';
 import 'package:zameny_flutter/Services/Models/zamenaFileLink.dart';
-import 'package:zameny_flutter/presentation/Providers/search_provider.dart';
 
 class Api {
   Future<List<Lesson>> loadWeekSchedule(
