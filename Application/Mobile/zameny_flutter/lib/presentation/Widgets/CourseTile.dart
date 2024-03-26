@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
@@ -113,8 +114,10 @@ class CourseTile extends StatelessWidget {
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
-                  LimitedBox(
-                    maxHeight: 100,
+                  ConstrainedBox(
+                    constraints: BoxConstraints(
+                      minHeight: 100
+                    ),
                     child: Container(
                       width: 10,
                       decoration: BoxDecoration(

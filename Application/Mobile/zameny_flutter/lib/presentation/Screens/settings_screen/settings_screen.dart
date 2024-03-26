@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -60,36 +61,36 @@ class _SettingsScreenState extends State<SettingsScreen>
                 const SizedBox(
                   height: 10,
                 ),
-                Column(
-                  children: [
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Оформление",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 20,
-                            color: Theme.of(context).primaryColorLight),
-                      ),
-                    ),
-                    const SizedBox(
-                      height: 5,
-                    ),
-                    Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        "Тема:",
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontSize: 18,
-                            color: Theme.of(context).primaryColorLight),
-                      ),
-                    ),
-                    SettingsSwitchThemeBlock(
-                        sliding: _sliding, onSwitch: onSwitch),
-                  ],
-                ),
+                // Column(
+                //   children: [
+                //     Container(
+                //       alignment: Alignment.centerLeft,
+                //       child: Text(
+                //         "Оформление",
+                //         style: TextStyle(
+                //             fontWeight: FontWeight.bold,
+                //             fontFamily: 'Ubuntu',
+                //             fontSize: 20,
+                //             color: Theme.of(context).primaryColorLight),
+                //       ),
+                //     ),
+                //     const SizedBox(
+                //       height: 5,
+                //     ),
+                //     Container(
+                //       alignment: Alignment.centerLeft,
+                //       child: Text(
+                //         "Тема:",
+                //         style: TextStyle(
+                //             fontFamily: 'Ubuntu',
+                //             fontSize: 18,
+                //             color: Theme.of(context).primaryColorLight),
+                //       ),
+                //     ),
+                //     // SettingsSwitchThemeBlock(
+                //     //     sliding: _sliding, onSwitch: onSwitch),
+                //   ],
+                // ),
                 const SizedBox(
                   height: 10,
                 ),
@@ -253,7 +254,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                             onTap: () async {
                               await launchUrl(
                                   Uri.parse(
-                                      "https://github.com/EventGamer67/Chronos"),
+                                      "https://t.me/bot_uksivt"),
                                   mode: LaunchMode.externalApplication);
                             },
                             child: Container(
@@ -275,7 +276,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "Пользуйтесь свежим!",
+                                          "Актуальные замены!",
                                           style: TextStyle(
                                               fontWeight: FontWeight.bold,
                                               fontSize: 14,
@@ -287,7 +288,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           height: 5,
                                         ),
                                         Text(
-                                          "Следите за разработкой\nи получайте актуальные версии с гитхаба",
+                                          "Получайте уведомления о заменах\nв тг канальчике ;)",
+                                          maxLines: 2,
                                           style: TextStyle(
                                               fontSize: 12,
                                               fontFamily: 'Ubuntu',
