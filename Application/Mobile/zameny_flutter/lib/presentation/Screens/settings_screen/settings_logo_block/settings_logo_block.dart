@@ -8,7 +8,7 @@ class SettingsLogoBlock extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
+      height: 75,
       decoration: const BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,

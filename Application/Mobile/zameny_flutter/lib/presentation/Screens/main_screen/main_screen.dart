@@ -48,9 +48,9 @@ class _MainScreenState extends State<MainScreen> {
                   onPageChanged: (value) => _pageChanged(value),
                   controller: pageController,
                   children: const [
-                    TimeTableScreen(),
+                    TimeTableWrapper(),
                     ScheduleWrapper(),
-                    ExamsScreen(),
+                    //ExamsScreen(),
                     SettingsScreen()
                   ],
                 ),
@@ -58,8 +58,9 @@ class _MainScreenState extends State<MainScreen> {
             ),
             Align(
                 alignment: Alignment.bottomCenter,
-                child: SizedBox(
-                    height: 70,
+                child: Container(
+                    height: 90,
+                    padding: EdgeInsets.all(10),
                     child: ClipRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
@@ -74,6 +75,10 @@ class _MainScreenState extends State<MainScreen> {
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(20),
                                 border: const Border(
+                                  bottom: BorderSide(
+                                        color:
+                                            Color.fromARGB(255, 30, 118, 233),
+                                        width: 1,),
                                     top: BorderSide(
                                         color:
                                             Color.fromARGB(255, 30, 118, 233),
@@ -83,14 +88,15 @@ class _MainScreenState extends State<MainScreen> {
                                 mainAxisAlignment:
                                     MainAxisAlignment.spaceAround,
                                 children: [
-                                  // Expanded(
-                                  //   child: BottomNavigationItem(
-                                  //     index: 0,
-                                  //     onTap: _setPage,
-                                  //     icon: "assets/icon/notification.svg",
-                                  //     text: "Звонки",
-                                  //   ),
-                                  // ),
+                                  Expanded(
+                                    child: BottomNavigationItem(
+                                      enabled: true,
+                                      index: 0,
+                                      onTap: _setPage,
+                                      icon: "assets/icon/notification.svg",
+                                      text: "Звонки",
+                                    ),
+                                  ),
                                   Expanded(
                                     child: BottomNavigationItem(
                                       enabled: true,
@@ -101,20 +107,20 @@ class _MainScreenState extends State<MainScreen> {
                                       text: "Расписание",
                                     ),
                                   ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: false,
-                                      index: 2,
-                                      onTap: _setPage,
-                                      icon:
-                                          "assets/icon/vuesax_linear_award.svg",
-                                      text: "Экзамены",
-                                    ),
-                                  ),
+                                  // Expanded(
+                                  //   child: BottomNavigationItem(
+                                  //     enabled: false,
+                                  //     index: 2,
+                                  //     onTap: _setPage,
+                                  //     icon:
+                                  //         "assets/icon/vuesax_linear_award.svg",
+                                  //     text: "Экзамены",
+                                  //   ),
+                                  // ),
                                   Expanded(
                                     child: BottomNavigationItem(
                                       enabled: true,
-                                      index: 3,
+                                      index: 2,
                                       onTap: _setPage,
                                       icon:
                                           "assets/icon/vuesax_linear_setting-2.svg",
