@@ -1,6 +1,4 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
@@ -44,6 +42,20 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                   const SizedBox(height: 10),
                   const TimeTableHeader(),
                   const SizedBox(height: 10),
+                  Container(
+                    height: 100,
+                    child: Center(
+                      child: Text("До конца осталось:\n${provider.getElapsedTime()} минут",textAlign: TextAlign.center,),
+                    ),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context)
+                          .colorScheme
+                          .onSurface
+                          .withOpacity(0.1),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
                   Expanded(
                     child: Row(
                       children: [
@@ -81,50 +93,52 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                           element.number == (index + 1),
                                     )
                                     .firstOrNull;
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(20)),
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .onSurface
-                                        .withOpacity(0.1),
-                                  ),
-                                  height: 80,
-                                  child: timing == null
-                                      ? SizedBox()
-                                      : Row(
-                                          children: [
-                                            const SizedBox(width: 20),
-                                            Container(
-                                              width: 45,
-                                              height: 45,
-                                              child: Center(
-                                                child: Text(
-                                                  (index + 1).toString(),
+                                return Expanded(
+                                  child: Container(
+                                    margin: const EdgeInsets.only(bottom: 5),
+                                    decoration: BoxDecoration(
+                                      borderRadius: const BorderRadius.all(
+                                          Radius.circular(20)),
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .onSurface
+                                          .withOpacity(0.1),
+                                    ),
+                                    height: 80,
+                                    child: timing == null
+                                        ? const SizedBox()
+                                        : Row(
+                                            children: [
+                                              const SizedBox(width: 20),
+                                              Container(
+                                                width: 45,
+                                                child: Center(
+                                                  child: Text(
+                                                    (index + 1).toString(),
+                                                    style: TextStyle(
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Colors.white,
+                                                        fontSize: 20),
+                                                  ),
+                                                ),
+                                                decoration: BoxDecoration(
+                                                    shape: BoxShape.circle,
+                                                    border: Border.all(
+                                                        color: Theme.of(context)
+                                                            .colorScheme
+                                                            .primary,
+                                                        width: 2)),
+                                              ),
+                                              const SizedBox(width: 20),
+                                              Text(
+                                                  "${timing!.start}-${timing!.end}",
                                                   style: TextStyle(
                                                       fontFamily: 'Ubuntu',
                                                       color: Colors.white,
-                                                      fontSize: 20),
-                                                ),
-                                              ),
-                                              decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  border: Border.all(
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .primary,
-                                                      width: 2)),
-                                            ),
-                                            const SizedBox(width: 20),
-                                            Text(
-                                                "${timing!.start}-${timing!.end}",
-                                                style: TextStyle(
-                                                    fontFamily: 'Ubuntu',
-                                                    color: Colors.white,
-                                                    fontSize: 20))
-                                          ],
-                                        ),
+                                                      fontSize: 20))
+                                            ],
+                                          ),
+                                  ),
                                 );
                               })),
                         ),
