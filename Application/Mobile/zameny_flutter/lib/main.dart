@@ -6,10 +6,10 @@ import 'package:provider/provider.dart' as pr;
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/presentation/Providers/bloc/schedule_bloc.dart';
-import 'package:zameny_flutter/presentation/Providers/theme_provider.dart';
-import 'package:zameny_flutter/presentation/Screens/main_screen/main_screen.dart';
+import 'package:zameny_flutter/domain/Services/Data.dart';
+import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
 import 'package:zameny_flutter/secrets.dart';
 
 Future<void> main() async {
