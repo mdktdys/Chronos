@@ -1,0 +1,12 @@
+export 'course_model.dart';
+export 'department_model.dart';
+export 'group_model.dart';
+export 'holiday_model.dart';
+export 'lesson_model.dart';
+export 'lesson_timings_model.dart';
+export 'liquidation_model.dart';
+export 'teacher_model.dart';
+export 'zamenaFileLink_model.dart';
+export 'zamena_full_model.dart';
+export 'zamena_model.dart';
+export 'zamena_type_model.dart';
