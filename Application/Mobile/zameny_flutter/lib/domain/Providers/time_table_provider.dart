@@ -3,6 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 class TimeTableProvider extends ChangeNotifier {
+
   double getHeight() {
     Talker talker = GetIt.I.get<Talker>();
 
@@ -25,10 +26,5 @@ class TimeTableProvider extends ChangeNotifier {
     talker.debug(progress / totalDuration);
 
     return clampDouble(progress / totalDuration, 0, 1.0);
-  }
-
-  int getElapsedTime(){
-    // LessonTimings timing = GetIt.I.get<Data>().timings.where((element) => element.start)
-    return -1;
   }
 }

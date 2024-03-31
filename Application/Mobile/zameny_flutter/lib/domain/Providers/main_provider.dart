@@ -9,9 +9,11 @@ class MainProvider extends ChangeNotifier {
     pageController.animateToPage(index,
         duration: const Duration(milliseconds: 200),
         curve: Curves.easeOutQuint);
+        notifyListeners();
   }
 
   pageChanged(int value) {
     currentPage = value;
+    notifyListeners();
   }
 }

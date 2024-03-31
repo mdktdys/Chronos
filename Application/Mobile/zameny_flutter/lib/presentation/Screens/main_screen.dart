@@ -26,7 +26,38 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+class BottomBarModel {
+  final String icon;
+  final String title;
+  final bool enabled;
+  final String activeicon;
+
+  BottomBarModel(
+      {required this.activeicon,
+      required this.icon,
+      required this.title,
+      required this.enabled});
+}
+
 class _MainScreenState extends State<MainScreen> {
+  List<BottomBarModel> model = [
+    BottomBarModel(
+        activeicon: "assets/icon/boldnotification.svg",
+        icon: "assets/icon/notification.svg",
+        title: "Звонки",
+        enabled: true),
+    BottomBarModel(
+        icon: "assets/icon/vuesax_linear_note.svg",
+        title: "Расписание",
+        activeicon: "assets/icon/note.svg",
+        enabled: true),
+    BottomBarModel(
+        activeicon: "assets/icon/setting-2.svg",
+        icon: "assets/icon/vuesax_linear_setting-2.svg",
+        title: "Настройки",
+        enabled: true)
+  ];
+
   @override
   Widget build(BuildContext context) {
     MainProvider provider = context.watch<MainProvider>();
@@ -79,50 +110,23 @@ class _MainScreenState extends State<MainScreen> {
                                         width: 1)),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 0,
-                                      onTap: () => provider.setPage(0),
-                                      icon: "assets/icon/notification.svg",
-                                      text: "Звонки",
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 1,
-                                      onTap: () => provider.setPage(1),
-                                      icon:
-                                          "assets/icon/vuesax_linear_note.svg",
-                                      text: "Расписание",
-                                    ),
-                                  ),
-                                  // Expanded(
-                                  //   child: BottomNavigationItem(
-                                  //     enabled: false,
-                                  //     index: 2,
-                                  //     onTap: _setPage,
-                                  //     icon:
-                                  //         "assets/icon/vuesax_linear_award.svg",
-                                  //     text: "Экзамены",
-                                  //   ),
-                                  // ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 2,
-                                      onTap: () => provider.setPage(2),
-                                      icon:
-                                          "assets/icon/vuesax_linear_setting-2.svg",
-                                      text: "Настройки",
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children:
+                                      List.generate(model.length, (index) {
+                                    return Expanded(
+                                      child: BottomNavigationItem(
+                                        activeicon: model[index].activeicon,
+                                        enabled: model[index].enabled,
+                                        index: index,
+                                        onTap: (index) {
+                                          provider.setPage(index);
+                                        },
+                                        icon: model[index].icon,
+                                        text: model[index].title,
+                                      ),
+                                    );
+                                  })),
                             ),
                             const SizedBox(
                               height: 10,

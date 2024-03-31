@@ -144,7 +144,7 @@ class Api {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
-    List<dynamic> data = await client.from('scheduleTimetable').select('*');
+    List<dynamic> data = await client.from('timings').select('*');
     dat.timings = [];
     for (var element in data) {
       LessonTimings timing = LessonTimings.fromMap(element);

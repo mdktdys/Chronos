@@ -8,6 +8,7 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
 import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_turbo_search.dart';
@@ -126,7 +127,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                   ScheduleTurboSearch(),
                   SizedBox(height: 10),
                   DateHeader(),
-                  SizedBox(height: 10),
+                  CurrentLessonTimer(),
                   SizedBox(height: 10),
                 ],
               ),

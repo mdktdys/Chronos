@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
@@ -8,7 +7,6 @@ import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/settings_screen/settings_logo_block.dart';
 
 import '../Widgets/settings_screen/settings_header.dart';
-import '../Widgets/settings_screen/settings_switch_theme.dart';
 import '../Widgets/settings_screen/settings_version_block.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -253,8 +251,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                           child: GestureDetector(
                             onTap: () async {
                               await launchUrl(
-                                  Uri.parse(
-                                      "https://t.me/bot_uksivt"),
+                                  Uri.parse("https://t.me/bot_uksivt"),
                                   mode: LaunchMode.externalApplication);
                             },
                             child: Container(

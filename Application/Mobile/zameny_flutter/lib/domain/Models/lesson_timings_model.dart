@@ -1,14 +1,16 @@
 
 import 'dart:convert';
 
+import 'package:zameny_flutter/domain/Services/tools.dart';
+
 class LessonTimings {
   int number;
-  String start;
-  String end;
-  String saturdayStart;
-  String saturdayEnd;
-  String obedStart;
-  String obedEnd;
+  DateTime start;
+  DateTime end;
+  DateTime saturdayStart;
+  DateTime saturdayEnd;
+  DateTime obedStart;
+  DateTime obedEnd;
   LessonTimings({
     required this.number,
     required this.obedStart,
@@ -56,12 +58,12 @@ class LessonTimings {
   factory LessonTimings.fromMap(Map<String, dynamic> map) {
     return LessonTimings(
       number: map['number'] as int,
-      start: map['start'] as String,
-      end: map['end'] as String,
-      saturdayStart: map['saturdayStart'] as String,
-      saturdayEnd: map['saturdayEnd'] as String,
-      obedStart: map['obedStart'] as String,
-      obedEnd: map['obedEnd'] as String,
+      start: formatTimeToDateTime(map['start'] as String),
+      end: formatTimeToDateTime(map['end'] as String),
+      saturdayStart:formatTimeToDateTime(map['saturdayStart'] as String),
+      saturdayEnd: formatTimeToDateTime(map['saturdayEnd'] as String),
+      obedStart: formatTimeToDateTime(map['obedStart'] as String),
+      obedEnd: formatTimeToDateTime(map['obedEnd'] as String),
     );
   }
 

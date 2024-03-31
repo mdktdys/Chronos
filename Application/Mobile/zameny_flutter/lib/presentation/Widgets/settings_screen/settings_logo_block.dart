@@ -48,10 +48,7 @@ class SettingsLogoBlock extends StatelessWidget {
                 ),
               ),
               const FittedBox(
-                child: Text(
-                  "🐋",
-                  style: TextStyle(fontSize: 48),
-                ),
+                child: Padding(padding: EdgeInsets.all(32),child: Image(image: AssetImage("assets/icon/whale_1f40b.png")))
               )
             ],
           ),

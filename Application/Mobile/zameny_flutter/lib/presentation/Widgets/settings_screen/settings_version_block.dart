@@ -14,10 +14,13 @@ class SettingsVersionBlock extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(height: 8,),
+          SizedBox(
+            height: 8,
+          ),
           Text(
-            "Версия: 26.03.24 билд: 1.0 WEB",
-            style: TextStyle(fontFamily: 'Monospace', color: Colors.grey, fontSize: 12),
+            "Версия: 01.04.24 билд: 1.0 TEST WEB",
+            style: TextStyle(
+                fontFamily: 'Monospace', color: Colors.grey, fontSize: 12),
             textAlign: TextAlign.start,
           ),
         ],
