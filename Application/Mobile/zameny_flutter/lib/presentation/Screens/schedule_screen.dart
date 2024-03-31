@@ -273,37 +273,36 @@ class ScheduleList extends StatelessWidget {
           zamenas.where((element) => element.date.weekday == day).toList();
       dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 
-      if ((dayZamenas.length + lessons.length) > 0) {
-        if (searchType == SearchType.group ||
-            searchType == SearchType.cabinet) {
-          return DayScheduleWidget(
-            refresh: refresh,
-            day: day,
-            dayZamenas: dayZamenas,
-            lessons: lessons,
-            startDate: startDate,
-            data: data,
-            currentDay: currentDay,
-            todayWeek: todayWeek,
-            currentWeek: currentWeek,
-          );
-        } else if (searchType == SearchType.teacher) {
-          return DayScheduleWidgetTeacher(
-            refresh: refresh,
-            day: day,
-            dayZamenas: dayZamenas,
-            lessons: lessons,
-            startDate: startDate,
-            data: data,
-            currentDay: currentDay,
-            todayWeek: todayWeek,
-            currentWeek: currentWeek,
-          );
-        }
-        return const SizedBox();
-      } else {
-        return const SizedBox();
+      //if ((dayZamenas.length + lessons.length) > 0) {
+      if (searchType == SearchType.group || searchType == SearchType.cabinet) {
+        return DayScheduleWidget(
+          refresh: refresh,
+          day: day,
+          dayZamenas: dayZamenas,
+          lessons: lessons,
+          startDate: startDate,
+          data: data,
+          currentDay: currentDay,
+          todayWeek: todayWeek,
+          currentWeek: currentWeek,
+        );
+      } else if (searchType == SearchType.teacher) {
+        return DayScheduleWidgetTeacher(
+          refresh: refresh,
+          day: day,
+          dayZamenas: dayZamenas,
+          lessons: lessons,
+          startDate: startDate,
+          data: data,
+          currentDay: currentDay,
+          todayWeek: todayWeek,
+          currentWeek: currentWeek,
+        );
       }
+      return const SizedBox();
+      // } else {
+      //   return const SizedBox();
+      // }
     }));
   }
 }
