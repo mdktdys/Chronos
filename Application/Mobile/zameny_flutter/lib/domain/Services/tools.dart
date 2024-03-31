@@ -3,6 +3,21 @@ import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 
+DateTime formatTimeToDateTime(String time) {
+  //sample 11:05:20
+  String hours = time.split(':')[0];
+  String minuts = time.split(':')[1];
+  DateTime current = DateTime.now();
+  return DateTime(current.year, current.month, current.day, int.parse(hours),
+      int.parse(minuts));
+}
+
+String getTimeFromDateTime(DateTime date) {
+  String hours = date.hour < 9 ? '0${date.hour}' : '${date.hour}';
+  String minutes = date.minute < 9 ? '0${date.minute}' : '${date.minute}';
+  return "$hours:$minutes";
+}
+
 Department getDepartmentById(int departmentID) {
   final dat = GetIt.I.get<Data>();
   return dat.departments.where((element) => element.id == departmentID).first;
@@ -30,7 +45,10 @@ Group? getGroupById(int groupID) {
 
 Course? getCourseById(int courseID) {
   final dat = GetIt.I.get<Data>();
-  return dat.courses.where((course) => course.id == courseID).toList().firstOrNull;
+  return dat.courses
+      .where((course) => course.id == courseID)
+      .toList()
+      .firstOrNull;
 }
 
 DateTime getFirstDayOfWeek(int year, int week) {
@@ -43,11 +61,20 @@ DateTime getFirstDayOfWeek(int year, int week) {
 
 String getMonthName(int monthNumber) {
   List<String> months = [
-    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
-];
+    "Январь",
+    "Февраль",
+    "Март",
+    "Апрель",
+    "Май",
+    "Июнь",
+    "Июль",
+    "Август",
+    "Сентябрь",
+    "Октябрь",
+    "Ноябрь",
+    "Декабрь"
+  ];
 
-  
   if (monthNumber >= 1 && monthNumber <= 12) {
     return months[monthNumber - 1];
   } else {

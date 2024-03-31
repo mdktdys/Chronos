@@ -2,6 +2,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
@@ -26,10 +28,25 @@ class ScheduleProvider extends ChangeNotifier {
                 septemberFirst.weekday) ~/
             7) +
         1;
-
     todayWeek = currentWeek;
+
+    navigationDate = navigationDate.weekday == 7
+        ? navigationDate.add(const Duration(days: 7))
+        : navigationDate;
+    currentWeek = navigationDate.weekday == 7 ? currentWeek + 1 : currentWeek;
   }
 
+  chas() async {
+    DateTime from = DateTime(2023, 1, 1);
+    DateTime to = DateTime.now();
+    List<dynamic> res = await GetIt.I
+        .get<SupabaseClient>()
+        .from('Zamenas')
+        .select('*')
+        .gt('date', from)
+        .lte('date', to);
+    GetIt.I.get<Talker>().good(res);
+  }
 
   void toggleWeek(int days, BuildContext context) {
     currentWeek += days;
@@ -74,9 +91,7 @@ class ScheduleProvider extends ChangeNotifier {
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     context.read<ScheduleBloc>().add(LoadGroupWeek(
-        groupID: groupIDSeek,
-        dateStart: startOfWeek,
-        dateEnd: endOfWeek));
+        groupID: groupIDSeek, dateStart: startOfWeek, dateEnd: endOfWeek));
     notifyListeners();
   }
 

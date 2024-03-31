@@ -108,15 +108,14 @@ class CourseTile extends StatelessWidget {
                   );
                 });
           },
-          child: Stack(children: [
+          child: Stack(
+            children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
                 children: [
                   ConstrainedBox(
-                    constraints: BoxConstraints(
-                      minHeight: 100
-                    ),
+                    constraints: const BoxConstraints(minHeight: 100),
                     child: Container(
                       width: 10,
                       decoration: BoxDecoration(
@@ -154,10 +153,13 @@ class CourseTile extends StatelessWidget {
                       ),
                       Text(
                           saturdayTime
-                              ? getLessonTimings(lesson.number).saturdayStart
+                              ? getTimeFromDateTime(
+                                  getLessonTimings(lesson.number).saturdayStart)
                               : obedTime
-                                  ? getLessonTimings(lesson.number).obedStart
-                                  : getLessonTimings(lesson.number).start,
+                                  ? getTimeFromDateTime(
+                                      getLessonTimings(lesson.number).obedStart)
+                                  : getTimeFromDateTime(
+                                      getLessonTimings(lesson.number).start),
                           style: TextStyle(
                               fontSize: 16,
                               color: obedTime
@@ -173,10 +175,13 @@ class CourseTile extends StatelessWidget {
                               fontWeight: FontWeight.bold)),
                       Text(
                           saturdayTime
-                              ? getLessonTimings(lesson.number).saturdayEnd
+                              ? getTimeFromDateTime(
+                                  getLessonTimings(lesson.number).saturdayEnd)
                               : obedTime
-                                  ? getLessonTimings(lesson.number).obedEnd
-                                  : getLessonTimings(lesson.number).end,
+                                  ? getTimeFromDateTime(
+                                      getLessonTimings(lesson.number).obedEnd)
+                                  : getTimeFromDateTime(
+                                      getLessonTimings(lesson.number).end),
                           style: TextStyle(
                               color: obedTime
                                   ? (lesson.number > 3
@@ -227,7 +232,8 @@ class CourseTile extends StatelessWidget {
                         ),
                         Row(
                           children: [
-                            (type != SearchType.cabinet && !isEmpty) || type == SearchType.teacher
+                            (type != SearchType.cabinet && !isEmpty) ||
+                                    type == SearchType.teacher
                                 ? SvgPicture.asset(
                                     "assets/icon/vuesax_linear_location.svg",
                                     color: Theme.of(context)

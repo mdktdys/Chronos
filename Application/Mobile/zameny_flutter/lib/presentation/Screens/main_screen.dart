@@ -1,10 +1,23 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigation_item.dart';
-import 'exams_screen.dart';
 import 'schedule_screen.dart';
 import 'settings_screen.dart';
+
+class MainScreenWrapper extends StatelessWidget {
+  const MainScreenWrapper({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return ChangeNotifierProvider(
+      create: (context) => MainProvider(),
+      child: const MainScreen(),
+    );
+  }
+}
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
@@ -13,29 +26,41 @@ class MainScreen extends StatefulWidget {
   State<MainScreen> createState() => _MainScreenState();
 }
 
+class BottomBarModel {
+  final String icon;
+  final String title;
+  final bool enabled;
+  final String activeicon;
+
+  BottomBarModel(
+      {required this.activeicon,
+      required this.icon,
+      required this.title,
+      required this.enabled});
+}
+
 class _MainScreenState extends State<MainScreen> {
-  int selectedPageIndex = 0;
-  late final PageController pageController;
-
-  @override
-  void initState() {
-    pageController = PageController(initialPage: 1);
-    super.initState();
-  }
-
-  _setPage(int index) {
-    int selectedPageIndex = index;
-    pageController.animateToPage(index,
-        duration: const Duration(milliseconds: 200),
-        curve: Curves.easeOutQuint);
-  }
-
-  _pageChanged(int value) {
-    int selectedPageIndex = value;
-  }
+  List<BottomBarModel> model = [
+    BottomBarModel(
+        activeicon: "assets/icon/boldnotification.svg",
+        icon: "assets/icon/notification.svg",
+        title: "Звонки",
+        enabled: true),
+    BottomBarModel(
+        icon: "assets/icon/vuesax_linear_note.svg",
+        title: "Расписание",
+        activeicon: "assets/icon/note.svg",
+        enabled: true),
+    BottomBarModel(
+        activeicon: "assets/icon/setting-2.svg",
+        icon: "assets/icon/vuesax_linear_setting-2.svg",
+        title: "Настройки",
+        enabled: true)
+  ];
 
   @override
   Widget build(BuildContext context) {
+    MainProvider provider = context.watch<MainProvider>();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SafeArea(
@@ -45,8 +70,8 @@ class _MainScreenState extends State<MainScreen> {
               child: ConstrainedBox(
                 constraints: const BoxConstraints(maxWidth: 1200),
                 child: PageView(
-                  onPageChanged: (value) => _pageChanged(value),
-                  controller: pageController,
+                  onPageChanged: (value) => provider.pageChanged(value),
+                  controller: provider.pageController,
                   children: const [
                     TimeTableWrapper(),
                     ScheduleWrapper(),
@@ -60,7 +85,7 @@ class _MainScreenState extends State<MainScreen> {
                 alignment: Alignment.bottomCenter,
                 child: Container(
                     height: 90,
-                    padding: EdgeInsets.all(10),
+                    padding: const EdgeInsets.all(10),
                     child: ClipRect(
                       child: BackdropFilter(
                         filter: ImageFilter.blur(
@@ -75,60 +100,33 @@ class _MainScreenState extends State<MainScreen> {
                                 color: Colors.transparent,
                                 borderRadius: BorderRadius.circular(20),
                                 border: const Border(
-                                  bottom: BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 30, 118, 233),
-                                        width: 1,),
+                                    bottom: BorderSide(
+                                      color: Color.fromARGB(255, 30, 118, 233),
+                                      width: 1,
+                                    ),
                                     top: BorderSide(
                                         color:
                                             Color.fromARGB(255, 30, 118, 233),
                                         width: 1)),
                               ),
                               child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceAround,
-                                children: [
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 0,
-                                      onTap: _setPage,
-                                      icon: "assets/icon/notification.svg",
-                                      text: "Звонки",
-                                    ),
-                                  ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 1,
-                                      onTap: _setPage,
-                                      icon:
-                                          "assets/icon/vuesax_linear_note.svg",
-                                      text: "Расписание",
-                                    ),
-                                  ),
-                                  // Expanded(
-                                  //   child: BottomNavigationItem(
-                                  //     enabled: false,
-                                  //     index: 2,
-                                  //     onTap: _setPage,
-                                  //     icon:
-                                  //         "assets/icon/vuesax_linear_award.svg",
-                                  //     text: "Экзамены",
-                                  //   ),
-                                  // ),
-                                  Expanded(
-                                    child: BottomNavigationItem(
-                                      enabled: true,
-                                      index: 2,
-                                      onTap: _setPage,
-                                      icon:
-                                          "assets/icon/vuesax_linear_setting-2.svg",
-                                      text: "Настройки",
-                                    ),
-                                  ),
-                                ],
-                              ),
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceAround,
+                                  children:
+                                      List.generate(model.length, (index) {
+                                    return Expanded(
+                                      child: BottomNavigationItem(
+                                        activeicon: model[index].activeicon,
+                                        enabled: model[index].enabled,
+                                        index: index,
+                                        onTap: (index) {
+                                          provider.setPage(index);
+                                        },
+                                        icon: model[index].icon,
+                                        text: model[index].title,
+                                      ),
+                                    );
+                                  })),
                             ),
                             const SizedBox(
                               height: 10,
