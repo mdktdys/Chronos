@@ -59,8 +59,6 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I.get<Talker>().good(widget.todayWeek);
-    GetIt.I.get<Talker>().good(widget.currentWeek);
     bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek
         ? true

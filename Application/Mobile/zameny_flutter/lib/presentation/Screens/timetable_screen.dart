@@ -147,6 +147,8 @@ class CurrentLessonTimer extends StatefulWidget {
 
 class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   late Timer ticker;
+  bool obed = false;
+
   @override
   void initState() {
     super.initState();
@@ -159,23 +161,27 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
     setState(() {});
   }
 
-  String getElapsedTime() {
-    LessonTimings timing = getLessonTiming()!;
+  toggleObed() {
+    obed = !obed;
+    setState(() {});
+  }
+
+  String getElapsedTime(bool obed) {
+    LessonTimings timing = getLessonTiming(obed)!;
     bool isSaturday = DateTime.now().weekday == 6;
-    Duration left = isSaturday
-        ? timing.saturdayEnd.difference(DateTime.now())
-        : timing.end.difference(DateTime.now());
+    Duration left = isSaturday ? timing.saturdayEnd.difference(DateTime.now()) : ( obed ? timing.obedEnd.difference(DateTime.now()) :  timing.end.difference(DateTime.now()) );
 
     int hours = left.inHours;
     int minutes = left.inMinutes;
     int seconds = left.inSeconds;
 
     int secs = seconds % 60;
+    int mints = minutes % 60;
 
-    return '$hours:${minutes % 60}:${secs > 9 ? secs : '0$secs'}';
+    return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
   }
 
-  LessonTimings? getLessonTiming() {
+  LessonTimings? getLessonTiming(bool obed) {
     DateTime current = DateTime.now();
     bool isSaturday = current.weekday == 6;
     if (isSaturday) {
@@ -188,52 +194,99 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
           .firstOrNull;
       return timing;
     } else {
-      LessonTimings? timing = GetIt.I
-          .get<Data>()
-          .timings
-          .where((element) =>
-              element.start.isBefore(current) && element.end.isAfter(current))
-          .firstOrNull;
-      return timing;
+      if (obed) {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.obedStart.isBefore(current) && element.obedEnd.isAfter(current))
+            .firstOrNull;
+        return timing;
+      } else {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.start.isBefore(current) && element.end.isAfter(current))
+            .firstOrNull;
+        return timing;
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    LessonTimings? timing = getLessonTiming();
+    LessonTimings? timing = getLessonTiming(obed);
     DateTime current = DateTime.now();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
       child: timing == null || current.weekday == 7
           ? const SizedBox()
-          : SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Сейчас идет ${timing.number} пара",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu')),
-                      const SizedBox(height: 5),
-                      Text("Осталось: ${getElapsedTime()}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .primaryColorLight
-                                  .withOpacity(0.7),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu')),
-                    ]),
-              ),
-            ),
+          : Builder(builder: (context) {
+              bool needObedSwitch = timing.number > 3 && current.weekday != 6;
+              bool isSaturday = current.weekday == 6;
+              return SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Сейчас идет ${timing.number} пара",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorLight,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Ubuntu')),
+                        const SizedBox(height: 5),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Осталось: ${getElapsedTime(obed)}",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: obed
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .primaryColorLight
+                                              .withOpacity(0.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Ubuntu')),
+                              needObedSwitch && !isSaturday
+                                  ? Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 38,
+                                          child: FittedBox(
+                                            child: Switch(
+                                                value: obed,
+                                                onChanged: (value) =>
+                                                    toggleObed()),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          "Без обеда",
+                                          style: TextStyle(
+                                              fontFamily: 'Ubuntu',
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inverseSurface
+                                                  .withOpacity(0.6)),
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox()
+                            ]),
+                      ]),
+                ),
+              );
+            }),
     );
   }
 }
