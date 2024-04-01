@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+
+import '../../domain/Providers/bloc/schedule_bloc.dart';
 
 class TimeTableWrapper extends StatelessWidget {
   const TimeTableWrapper({super.key});
@@ -169,7 +176,11 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   String getElapsedTime(bool obed) {
     LessonTimings timing = getLessonTiming(obed)!;
     bool isSaturday = DateTime.now().weekday == 6;
-    Duration left = isSaturday ? timing.saturdayEnd.difference(DateTime.now()) : ( obed ? timing.obedEnd.difference(DateTime.now()) :  timing.end.difference(DateTime.now()) );
+    Duration left = isSaturday
+        ? timing.saturdayEnd.difference(DateTime.now())
+        : (obed
+            ? timing.obedEnd.difference(DateTime.now())
+            : timing.end.difference(DateTime.now()));
 
     int hours = left.inHours;
     int minutes = left.inMinutes;
@@ -199,7 +210,8 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
             .get<Data>()
             .timings
             .where((element) =>
-                element.obedStart.isBefore(current) && element.obedEnd.isAfter(current))
+                element.obedStart.isBefore(current) &&
+                element.obedEnd.isAfter(current))
             .firstOrNull;
         return timing;
       } else {
@@ -218,6 +230,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   Widget build(BuildContext context) {
     LessonTimings? timing = getLessonTiming(obed);
     DateTime current = DateTime.now();
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
@@ -241,6 +254,92 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                 fontWeight: FontWeight.bold,
                                 fontFamily: 'Ubuntu')),
                         const SizedBox(height: 5),
+                        AnimatedSize(
+                          alignment: Alignment.topCenter,
+                          duration: const Duration(milliseconds: 150),
+                          curve: Curves.ease,
+                          child: BlocBuilder<ScheduleBloc, ScheduleState>(
+                            builder: (context, state) {
+                              if (state is ScheduleLoaded &&
+                                  provider.currentWeek == provider.todayWeek) {
+                                Lesson? lesson = state.lessons
+                                    .where((element) =>
+                                        element.date.weekday ==
+                                            current.weekday &&
+                                        timing.number == element.number)
+                                    .firstOrNull;
+
+                                Zamena? zamena = state.zamenas
+                                    .where((element) =>
+                                        element.date.weekday ==
+                                            current.weekday &&
+                                        timing.number ==
+                                            element.lessonTimingsID)
+                                    .firstOrNull;
+                                if (zamena != null) {
+                                  if (provider.searchType ==
+                                      SearchType.teacher) {
+                                    zamena = zamena!.teacherID ==
+                                            provider.teacherIDSeek
+                                        ? zamena
+                                        : null;
+                                  }
+                                }
+                                if (zamena == null) {
+                                  if (lesson != null) {
+                                    GetIt.I.get<Talker>().debug(GetIt.I
+                                        .get<Data>()
+                                        .zamenasFull
+                                        .where((element) =>
+                                            element.group == lesson.group));
+                                    if (GetIt.I
+                                        .get<Data>()
+                                        .zamenasFull
+                                        .where((element) =>
+                                            element.group == lesson!.group &&
+                                            element.date.day == current.day &&
+                                            element.date.month == current.month)
+                                        .isNotEmpty) {
+                                      return SizedBox();
+                                    }
+                                    return CourseTile(
+                                        short: true,
+                                        course: getCourseById(lesson!.course)!,
+                                        lesson: lesson,
+                                        type: provider.searchType,
+                                        refresh: () {},
+                                        swaped: null,
+                                        saturdayTime: isSaturday,
+                                        obedTime: obed);
+                                  }
+                                }
+                                if (zamena != null) {
+                                  return CourseTile(
+                                      short: true,
+                                      course: getCourseById(zamena!.courseID) ??
+                                          Course(
+                                              id: -1,
+                                              name: "name",
+                                              color: "255,255,255,255"),
+                                      lesson: Lesson(
+                                          id: -1,
+                                          number: zamena.lessonTimingsID,
+                                          group: zamena.groupID,
+                                          date: zamena.date,
+                                          course: zamena.courseID,
+                                          teacher: zamena.teacherID,
+                                          cabinet: zamena.cabinetID),
+                                      type: provider.searchType,
+                                      refresh: () {},
+                                      swaped: lesson,
+                                      saturdayTime: isSaturday,
+                                      obedTime: obed);
+                                }
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [

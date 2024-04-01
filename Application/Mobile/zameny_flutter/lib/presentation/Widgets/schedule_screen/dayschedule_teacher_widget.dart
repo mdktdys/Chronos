@@ -241,6 +241,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
 
             if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
               return CourseTile(
+                short: false,
                 type: SearchType.teacher,
                 course: course,
                 obedTime: obed,
@@ -268,6 +269,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: "err2", color: "100,0,0,0");
           return CourseTile(
+            short: false,
             type: SearchType.teacher,
             course: course,
             obedTime: obed,
@@ -311,6 +313,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             final Lesson lessonEmpty = lesson;
             final Lesson sec = lesson.copyWith(course: 9539);
             return CourseTile(
+              short: false,
               type: SearchType.teacher,
               course: courseEmpty,
               obedTime: obed,
@@ -330,6 +333,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                   element.date.year == todayYear)
               .isEmpty) {
             return CourseTile(
+              short: false,
               type: SearchType.teacher,
               course: course,
               obedTime: obed,
