@@ -226,7 +226,7 @@ class LessonList extends StatelessWidget {
       startDate: startDate,
       currentDay: currentDay,
       todayWeek: provider.todayWeek,
-      currentWeek: provider.todayWeek,
+      currentWeek: provider.currentWeek,
     );
   }
 }

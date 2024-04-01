@@ -48,7 +48,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      if (widget.day == widget.currentDay) {
+      if (widget.day == widget.currentDay && widget.currentWeek == widget.todayWeek) {
         Scrollable.ensureVisible(context,
             duration: const Duration(milliseconds: 500), alignment: 0.5);
       }
