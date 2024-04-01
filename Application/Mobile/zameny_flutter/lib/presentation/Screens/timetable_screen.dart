@@ -1,12 +1,19 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+
+import '../../domain/Providers/bloc/schedule_bloc.dart';
 
 class TimeTableWrapper extends StatelessWidget {
   const TimeTableWrapper({super.key});
@@ -147,6 +154,8 @@ class CurrentLessonTimer extends StatefulWidget {
 
 class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   late Timer ticker;
+  bool obed = false;
+
   @override
   void initState() {
     super.initState();
@@ -159,23 +168,31 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
     setState(() {});
   }
 
-  String getElapsedTime() {
-    LessonTimings timing = getLessonTiming()!;
+  toggleObed() {
+    obed = !obed;
+    setState(() {});
+  }
+
+  String getElapsedTime(bool obed) {
+    LessonTimings timing = getLessonTiming(obed)!;
     bool isSaturday = DateTime.now().weekday == 6;
     Duration left = isSaturday
         ? timing.saturdayEnd.difference(DateTime.now())
-        : timing.end.difference(DateTime.now());
+        : (obed
+            ? timing.obedEnd.difference(DateTime.now())
+            : timing.end.difference(DateTime.now()));
 
     int hours = left.inHours;
     int minutes = left.inMinutes;
     int seconds = left.inSeconds;
 
     int secs = seconds % 60;
+    int mints = minutes % 60;
 
-    return '$hours:${minutes % 60}:${secs > 9 ? secs : '0$secs'}';
+    return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
   }
 
-  LessonTimings? getLessonTiming() {
+  LessonTimings? getLessonTiming(bool obed) {
     DateTime current = DateTime.now();
     bool isSaturday = current.weekday == 6;
     if (isSaturday) {
@@ -188,52 +205,187 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
           .firstOrNull;
       return timing;
     } else {
-      LessonTimings? timing = GetIt.I
-          .get<Data>()
-          .timings
-          .where((element) =>
-              element.start.isBefore(current) && element.end.isAfter(current))
-          .firstOrNull;
-      return timing;
+      if (obed) {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.obedStart.isBefore(current) &&
+                element.obedEnd.isAfter(current))
+            .firstOrNull;
+        return timing;
+      } else {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.start.isBefore(current) && element.end.isAfter(current))
+            .firstOrNull;
+        return timing;
+      }
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    LessonTimings? timing = getLessonTiming();
+    LessonTimings? timing = getLessonTiming(obed);
     DateTime current = DateTime.now();
+    ScheduleProvider provider = context.watch<ScheduleProvider>();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
       child: timing == null || current.weekday == 7
           ? const SizedBox()
-          : SizedBox(
-              width: double.infinity,
-              child: Padding(
-                padding: const EdgeInsets.all(12.0),
-                child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text("Сейчас идет ${timing.number} пара",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              color: Theme.of(context).primaryColorLight,
-                              fontSize: 24,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu')),
-                      const SizedBox(height: 5),
-                      Text("Осталось: ${getElapsedTime()}",
-                          textAlign: TextAlign.start,
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .primaryColorLight
-                                  .withOpacity(0.7),
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
-                              fontFamily: 'Ubuntu')),
-                    ]),
-              ),
-            ),
+          : Builder(builder: (context) {
+              bool needObedSwitch = timing.number > 3 && current.weekday != 6;
+              bool isSaturday = current.weekday == 6;
+              return SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Сейчас идет ${timing.number} пара",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorLight,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Ubuntu')),
+                        const SizedBox(height: 5),
+                        AnimatedSize(
+                          alignment: Alignment.topCenter,
+                          duration: const Duration(milliseconds: 150),
+                          curve: Curves.ease,
+                          child: BlocBuilder<ScheduleBloc, ScheduleState>(
+                            builder: (context, state) {
+                              if (state is ScheduleLoaded &&
+                                  provider.currentWeek == provider.todayWeek) {
+                                Lesson? lesson = state.lessons
+                                    .where((element) =>
+                                        element.date.weekday ==
+                                            current.weekday &&
+                                        timing.number == element.number)
+                                    .firstOrNull;
+
+                                Zamena? zamena = state.zamenas
+                                    .where((element) =>
+                                        element.date.weekday ==
+                                            current.weekday &&
+                                        timing.number ==
+                                            element.lessonTimingsID)
+                                    .firstOrNull;
+                                if (zamena != null) {
+                                  if (provider.searchType ==
+                                      SearchType.teacher) {
+                                    zamena = zamena!.teacherID ==
+                                            provider.teacherIDSeek
+                                        ? zamena
+                                        : null;
+                                  }
+                                }
+                                if (zamena == null) {
+                                  if (lesson != null) {
+                                    GetIt.I.get<Talker>().debug(GetIt.I
+                                        .get<Data>()
+                                        .zamenasFull
+                                        .where((element) =>
+                                            element.group == lesson.group));
+                                    if (GetIt.I
+                                        .get<Data>()
+                                        .zamenasFull
+                                        .where((element) =>
+                                            element.group == lesson!.group &&
+                                            element.date.day == current.day &&
+                                            element.date.month == current.month)
+                                        .isNotEmpty) {
+                                      return SizedBox();
+                                    }
+                                    return CourseTile(
+                                        short: true,
+                                        course: getCourseById(lesson!.course)!,
+                                        lesson: lesson,
+                                        type: provider.searchType,
+                                        refresh: () {},
+                                        swaped: null,
+                                        saturdayTime: isSaturday,
+                                        obedTime: obed);
+                                  }
+                                }
+                                if (zamena != null) {
+                                  return CourseTile(
+                                      short: true,
+                                      course: getCourseById(zamena!.courseID) ??
+                                          Course(
+                                              id: -1,
+                                              name: "name",
+                                              color: "255,255,255,255"),
+                                      lesson: Lesson(
+                                          id: -1,
+                                          number: zamena.lessonTimingsID,
+                                          group: zamena.groupID,
+                                          date: zamena.date,
+                                          course: zamena.courseID,
+                                          teacher: zamena.teacherID,
+                                          cabinet: zamena.cabinetID),
+                                      type: provider.searchType,
+                                      refresh: () {},
+                                      swaped: lesson,
+                                      saturdayTime: isSaturday,
+                                      obedTime: obed);
+                                }
+                              }
+                              return const SizedBox();
+                            },
+                          ),
+                        ),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Осталось: ${getElapsedTime(obed)}",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: obed
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .primaryColorLight
+                                              .withOpacity(0.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Ubuntu')),
+                              needObedSwitch && !isSaturday
+                                  ? Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 38,
+                                          child: FittedBox(
+                                            child: Switch(
+                                                value: obed,
+                                                onChanged: (value) =>
+                                                    toggleObed()),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          "Без обеда",
+                                          style: TextStyle(
+                                              fontFamily: 'Ubuntu',
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inverseSurface
+                                                  .withOpacity(0.6)),
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox()
+                            ]),
+                      ]),
+                ),
+              );
+            }),
     );
   }
 }

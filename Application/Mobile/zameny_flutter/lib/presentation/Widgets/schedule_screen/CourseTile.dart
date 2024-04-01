@@ -18,6 +18,7 @@ class CourseTile extends StatelessWidget {
   final bool saturdayTime;
   final bool obedTime;
   final bool empty;
+  final bool short;
 
   const CourseTile({
     this.empty = false,
@@ -29,7 +30,7 @@ class CourseTile extends StatelessWidget {
     this.removed,
     required this.swaped,
     required this.saturdayTime,
-    required this.obedTime,
+    required this.obedTime, required this.short,
   });
 
   final Course course;
@@ -115,7 +116,7 @@ class CourseTile extends StatelessWidget {
               child: Row(
                 children: [
                   ConstrainedBox(
-                    constraints: const BoxConstraints(minHeight: 100),
+                    constraints: BoxConstraints(minHeight: short ? 60 : 100),
                     child: Container(
                       width: 10,
                       decoration: BoxDecoration(

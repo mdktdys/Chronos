@@ -59,8 +59,6 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    GetIt.I.get<Talker>().good(widget.todayWeek);
-    GetIt.I.get<Talker>().good(widget.currentWeek);
     bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek
         ? true
@@ -263,6 +261,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: "err2", color: "100,0,0,0");
           return CourseTile(
+            short: false,
             type: type,
             obedTime: obed,
             course: course,
@@ -292,6 +291,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: "err2", color: "100,0,0,0");
           return CourseTile(
+            short: false,
             type: type,
             obedTime: obed,
             course: course,
@@ -315,6 +315,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
             final course = getCourseById(lesson.course) ??
                 Course(id: -1, name: "err3", color: "50,0,0,1");
             return CourseTile(
+              short: false,
               saturdayTime: widget.day == 6,
               type: type,
               obedTime: obed,
