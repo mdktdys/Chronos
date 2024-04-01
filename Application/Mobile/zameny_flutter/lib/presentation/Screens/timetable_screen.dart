@@ -48,7 +48,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                 const SizedBox(height: 10),
                 const TimeTableHeader(),
                 const SizedBox(height: 10),
-                const CurrentLessonTimer(),
+                const CurrentTimingTimer(),
                 // const SizedBox(height: 10),
                 Row(
                   children: [
@@ -139,6 +139,164 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               ],
             ),
           )),
+    );
+  }
+}
+
+class CurrentTimingTimer extends StatefulWidget {
+  const CurrentTimingTimer({super.key});
+
+  @override
+  State<CurrentTimingTimer> createState() => _CurrentTimingTimerState();
+}
+
+class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
+  late Timer ticker;
+  bool obed = false;
+
+  @override
+  void initState() {
+    super.initState();
+    ticker = Timer.periodic(const Duration(seconds: 1), (timer) {
+      tick();
+    });
+  }
+
+  tick() {
+    setState(() {});
+  }
+
+  toggleObed() {
+    obed = !obed;
+    setState(() {});
+  }
+
+  String getElapsedTime(bool obed) {
+    LessonTimings timing = getLessonTiming(obed)!;
+    bool isSaturday = DateTime.now().weekday == 6;
+    Duration left = isSaturday
+        ? timing.saturdayEnd.difference(DateTime.now())
+        : (obed
+            ? timing.obedEnd.difference(DateTime.now())
+            : timing.end.difference(DateTime.now()));
+
+    int hours = left.inHours;
+    int minutes = left.inMinutes;
+    int seconds = left.inSeconds;
+
+    int secs = seconds % 60;
+    int mints = minutes % 60;
+
+    return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
+  }
+
+  LessonTimings? getLessonTiming(bool obed) {
+    DateTime current = DateTime.now();
+    bool isSaturday = current.weekday == 6;
+    if (isSaturday) {
+      LessonTimings? timing = GetIt.I
+          .get<Data>()
+          .timings
+          .where((element) =>
+              element.start.isBefore(current) &&
+              element.saturdayEnd.isAfter(current))
+          .firstOrNull;
+      return timing;
+    } else {
+      if (obed) {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.obedStart.isBefore(current) &&
+                element.obedEnd.isAfter(current))
+            .firstOrNull;
+        return timing;
+      } else {
+        LessonTimings? timing = GetIt.I
+            .get<Data>()
+            .timings
+            .where((element) =>
+                element.start.isBefore(current) && element.end.isAfter(current))
+            .firstOrNull;
+        return timing;
+      }
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    LessonTimings? timing = getLessonTiming(obed);
+    DateTime current = DateTime.now();
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 150),
+      curve: Curves.ease,
+      child: timing == null || current.weekday == 7
+          ? const SizedBox()
+          : Builder(builder: (context) {
+              bool needObedSwitch = timing.number > 3 && current.weekday != 6;
+              bool isSaturday = current.weekday == 6;
+              return SizedBox(
+                width: double.infinity,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text("Сейчас идет ${timing.number} пара",
+                            textAlign: TextAlign.start,
+                            style: TextStyle(
+                                color: Theme.of(context).primaryColorLight,
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                                fontFamily: 'Ubuntu')),
+                        const SizedBox(height: 5),
+                        Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text("Осталось: ${getElapsedTime(obed)}",
+                                  textAlign: TextAlign.start,
+                                  style: TextStyle(
+                                      color: obed
+                                          ? Colors.green
+                                          : Theme.of(context)
+                                              .primaryColorLight
+                                              .withOpacity(0.7),
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold,
+                                      fontFamily: 'Ubuntu')),
+                              needObedSwitch && !isSaturday
+                                  ? Row(
+                                      children: [
+                                        SizedBox(
+                                          height: 38,
+                                          child: FittedBox(
+                                            child: Switch(
+                                                value: obed,
+                                                onChanged: (value) =>
+                                                    toggleObed()),
+                                          ),
+                                        ),
+                                        const SizedBox(
+                                          width: 8,
+                                        ),
+                                        Text(
+                                          "Без обеда",
+                                          style: TextStyle(
+                                              fontFamily: 'Ubuntu',
+                                              color: Theme.of(context)
+                                                  .colorScheme
+                                                  .inverseSurface
+                                                  .withOpacity(0.6)),
+                                        ),
+                                      ],
+                                    )
+                                  : const SizedBox()
+                            ]),
+                      ]),
+                ),
+              );
+            }),
     );
   }
 }
