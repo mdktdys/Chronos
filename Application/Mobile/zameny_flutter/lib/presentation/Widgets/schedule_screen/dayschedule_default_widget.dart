@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
@@ -48,14 +49,18 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      if (widget.day == widget.currentDay) {
-        Scrollable.ensureVisible(context,duration: const Duration(milliseconds: 500),alignment: 0.5);
+      if (widget.day == widget.currentDay &&
+          widget.currentWeek == widget.todayWeek) {
+        Scrollable.ensureVisible(context,
+            duration: const Duration(milliseconds: 500), alignment: 0.5);
       }
     });
   }
 
   @override
   Widget build(BuildContext context) {
+    GetIt.I.get<Talker>().good(widget.todayWeek);
+    GetIt.I.get<Talker>().good(widget.currentWeek);
     bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek
         ? true
@@ -67,17 +72,19 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
     int searchMonth =
         widget.startDate.add(Duration(days: widget.day - 1)).month;
     int searchYear = widget.startDate.add(Duration(days: widget.day - 1)).year;
-    if (type == SearchType.group) {
-      fullSwap = GetIt.I
-          .get<Data>()
-          .zamenasFull
-          .where((element) =>
-              (element.group == widget.lessons[0].group) &&
-              (element.date.day == searchDay) &&
-              (element.date.month == searchMonth) &&
-              (element.date.year == searchYear))
-          .toSet()
-          .isNotEmpty;
+    if (widget.lessons.isNotEmpty) {
+      if (type == SearchType.group) {
+        fullSwap = GetIt.I
+            .get<Data>()
+            .zamenasFull
+            .where((element) =>
+                (element.group == widget.lessons[0].group) &&
+                (element.date.day == searchDay) &&
+                (element.date.month == searchMonth) &&
+                (element.date.year == searchYear))
+            .toSet()
+            .isNotEmpty;
+      }
     }
     List<Widget> tiles = newMethod(fullSwap, type, searchYear, searchMonth,
         searchDay, GetIt.I.get<Data>().seekGroup!);
