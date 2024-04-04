@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -12,6 +13,8 @@ import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/timetable_screen/current_timing_timer.dart';
+import 'package:zameny_flutter/presentation/Widgets/timetable_screen/time_table_header.dart';
 
 import '../../domain/Providers/bloc/schedule_bloc.dart';
 
@@ -37,6 +40,7 @@ class TimeTableScreen extends StatefulWidget {
 class _TimeTableScreenState extends State<TimeTableScreen> {
   @override
   Widget build(BuildContext context) {
+    TimeTableProvider provider = context.watch<TimeTableProvider>();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
@@ -45,11 +49,76 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
             padding: const EdgeInsets.symmetric(horizontal: 20),
             child: Column(
               children: [
-                const SizedBox(height: 10),
+                //const SizedBox(height: 10),
                 const TimeTableHeader(),
                 const SizedBox(height: 10),
-                const CurrentTimingTimer(),
-                // const SizedBox(height: 10),
+                const SizedBox(height: 10),
+                CurrentTimingTimer(obed: provider.obed),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        SizedBox(
+                          height: 38,
+                          child: FittedBox(
+                            child: Switch(
+                                value: provider.saturday,
+                                onChanged: (value) =>
+                                    provider.toggleSaturday()),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          "Суббота",
+                          style: TextStyle(
+                              fontFamily: 'Ubuntu',
+                              color: Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                  .withOpacity(0.6)),
+                        ),
+                      ],
+                    ),
+                    AnimatedSwitcher(
+                      duration: const Duration(milliseconds: 300),
+                      switchOutCurve: Easing.legacy,
+                      switchInCurve: Easing.legacy,
+                      child: provider.saturday
+                          ? const SizedBox()
+                          : Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Text(
+                                  "Без обеда",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Theme.of(context)
+                                          .colorScheme
+                                          .inverseSurface
+                                          .withOpacity(0.6)),
+                                ),
+                                const SizedBox(
+                                  width: 8,
+                                ),
+                                SizedBox(
+                                  height: 38,
+                                  child: FittedBox(
+                                    child: Switch(
+                                        value: provider.obed,
+                                        onChanged: (value) =>
+                                            provider.toggleObed()),
+                                  ),
+                                ),
+                              ],
+                            ),
+                    ),
+                  ],
+                ),
+
                 Row(
                   children: [
                     // SizedBox(
@@ -123,12 +192,34 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                       ),
                                     ),
                                     const SizedBox(width: 20),
-                                    Text(
-                                        "${getTimeFromDateTime(timing.start)}-${getTimeFromDateTime(timing.end)}",
-                                        style: const TextStyle(
-                                            fontFamily: 'Ubuntu',
-                                            color: Colors.white,
-                                            fontSize: 20))
+                                    AnimatedSwitcher(
+                                      duration:
+                                          const Duration(milliseconds: 150),
+                                      switchInCurve: Easing.legacy,
+                                      child: Text(
+                                          key: ValueKey(provider.saturday ? UniqueKey() :getTimeFromDateTime(
+                                              provider.obed
+                                                  ? timing.obedStart
+                                                  : timing.start)),
+                                          "${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}",
+                                          style: TextStyle(
+                                              fontFamily: 'Ubuntu',
+                                              color: provider.saturday ? Colors.white : provider.obed
+                                                  ? getTimeFromDateTime(provider
+                                                                  .obed
+                                                              ? timing.obedStart
+                                                              : timing.start) !=
+                                                          getTimeFromDateTime(
+                                                              !provider.obed
+                                                                  ? timing
+                                                                      .obedStart
+                                                                  : timing
+                                                                      .start)
+                                                      ? Colors.green
+                                                      : Colors.white
+                                                  : Colors.white,
+                                              fontSize: 20)),
+                                    )
                                   ],
                                 ),
                         );
@@ -136,167 +227,12 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                     ),
                   ],
                 ),
+                SizedBox(
+                  height: 100,
+                )
               ],
             ),
           )),
-    );
-  }
-}
-
-class CurrentTimingTimer extends StatefulWidget {
-  const CurrentTimingTimer({super.key});
-
-  @override
-  State<CurrentTimingTimer> createState() => _CurrentTimingTimerState();
-}
-
-class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
-  late Timer ticker;
-  bool obed = false;
-
-  @override
-  void initState() {
-    super.initState();
-    ticker = Timer.periodic(const Duration(seconds: 1), (timer) {
-      tick();
-    });
-  }
-
-  tick() {
-    setState(() {});
-  }
-
-  toggleObed() {
-    obed = !obed;
-    setState(() {});
-  }
-
-  String getElapsedTime(bool obed) {
-    LessonTimings timing = getLessonTiming(obed)!;
-    bool isSaturday = DateTime.now().weekday == 6;
-    Duration left = isSaturday
-        ? timing.saturdayEnd.difference(DateTime.now())
-        : (obed
-            ? timing.obedEnd.difference(DateTime.now())
-            : timing.end.difference(DateTime.now()));
-
-    int hours = left.inHours;
-    int minutes = left.inMinutes;
-    int seconds = left.inSeconds;
-
-    int secs = seconds % 60;
-    int mints = minutes % 60;
-
-    return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
-  }
-
-  LessonTimings? getLessonTiming(bool obed) {
-    DateTime current = DateTime.now();
-    bool isSaturday = current.weekday == 6;
-    if (isSaturday) {
-      LessonTimings? timing = GetIt.I
-          .get<Data>()
-          .timings
-          .where((element) =>
-              element.start.isBefore(current) &&
-              element.saturdayEnd.isAfter(current))
-          .firstOrNull;
-      return timing;
-    } else {
-      if (obed) {
-        LessonTimings? timing = GetIt.I
-            .get<Data>()
-            .timings
-            .where((element) =>
-                element.obedStart.isBefore(current) &&
-                element.obedEnd.isAfter(current))
-            .firstOrNull;
-        return timing;
-      } else {
-        LessonTimings? timing = GetIt.I
-            .get<Data>()
-            .timings
-            .where((element) =>
-                element.start.isBefore(current) && element.end.isAfter(current))
-            .firstOrNull;
-        return timing;
-      }
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    LessonTimings? timing = getLessonTiming(obed);
-    DateTime current = DateTime.now();
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.ease,
-      child: timing == null || current.weekday == 7
-          ? const SizedBox()
-          : Builder(builder: (context) {
-              bool needObedSwitch = timing.number > 3 && current.weekday != 6;
-              bool isSaturday = current.weekday == 6;
-              return SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text("Сейчас идет ${timing.number} пара",
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Ubuntu')),
-                        const SizedBox(height: 5),
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Осталось: ${getElapsedTime(obed)}",
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      color: obed
-                                          ? Colors.green
-                                          : Theme.of(context)
-                                              .primaryColorLight
-                                              .withOpacity(0.7),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Ubuntu')),
-                              needObedSwitch && !isSaturday
-                                  ? Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 38,
-                                          child: FittedBox(
-                                            child: Switch(
-                                                value: obed,
-                                                onChanged: (value) =>
-                                                    toggleObed()),
-                                          ),
-                                        ),
-                                        const SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(
-                                          "Без обеда",
-                                          style: TextStyle(
-                                              fontFamily: 'Ubuntu',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withOpacity(0.6)),
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox()
-                            ]),
-                      ]),
-                ),
-              );
-            }),
     );
   }
 }
@@ -544,50 +480,6 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                 ),
               );
             }),
-    );
-  }
-}
-
-class TimeTableHeader extends StatelessWidget {
-  const TimeTableHeader({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        SizedBox(
-            width: 52,
-            height: 52,
-            child: Center(
-                child: SvgPicture.asset(
-              "assets/icon/notification.svg",
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.inverseSurface,
-                  BlendMode.srcIn),
-              width: 32,
-              height: 32,
-            ))),
-        Expanded(
-          child: Text(
-            "Звонки",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-                color: Theme.of(context).primaryColorLight,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Ubuntu'),
-          ),
-        ),
-        const IconButton(
-            onPressed: null,
-            icon: Icon(
-              Icons.more_horiz_rounded,
-              size: 36,
-              color: Colors.transparent,
-            ))
-      ],
     );
   }
 }
