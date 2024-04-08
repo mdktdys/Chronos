@@ -28,6 +28,24 @@ class Data {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
     teacherGroup =
         GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
+    seekCabinet =
+        GetIt.I.get<SharedPreferences>().getInt('SelectedCabinet') ?? -1;
+
+    switch (
+        GetIt.I.get<SharedPreferences>().getString('SearchType') ?? "Group") {
+      case "Group":
+        {
+          latestSearch = SearchType.group;
+        }
+      case "Teacher":
+        {
+          latestSearch = SearchType.teacher;
+        }
+      case "Cabinet":
+        {
+          latestSearch = SearchType.cabinet;
+        }
+    }
   }
 }
 

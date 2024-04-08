@@ -67,74 +67,69 @@ class _MainScreenState extends State<MainScreen> {
         child: Center(
           child: Stack(children: [
             Center(
-              child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
-                child: PageView(
-                  onPageChanged: (value) => provider.pageChanged(value),
-                  controller: provider.pageController,
-                  children: const [
-                    TimeTableWrapper(),
-                    ScheduleWrapper(),
-                    //ExamsScreen(),
-                    SettingsScreen()
-                  ],
-                ),
+              child: PageView(
+                onPageChanged: (value) => provider.pageChanged(value),
+                controller: provider.pageController,
+                children: const [
+                  TimeTableWrapper(),
+                  ScheduleWrapper(),
+                  //ExamsScreen(),
+                  SettingsScreen()
+                ],
               ),
             ),
             Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
+                child: ClipRect(
+                  child: SizedBox(
                     height: 90,
-                    padding: const EdgeInsets.all(10),
-                    child: ClipRect(
-                      child: BackdropFilter(
-                        filter: ImageFilter.blur(
-                          sigmaX: 5,
-                          sigmaY: 5,
-                        ),
-                        child: Column(
-                          children: [
-                            Container(
-                              height: 60,
-                              decoration: BoxDecoration(
-                                color: Colors.transparent,
-                                borderRadius: BorderRadius.circular(20),
-                                border: const Border(
-                                    bottom: BorderSide(
-                                      color: Color.fromARGB(255, 30, 118, 233),
-                                      width: 1,
-                                    ),
-                                    top: BorderSide(
-                                        color:
-                                            Color.fromARGB(255, 30, 118, 233),
-                                        width: 1)),
-                              ),
-                              child: Row(
-                                  mainAxisAlignment:
-                                      MainAxisAlignment.spaceAround,
-                                  children:
-                                      List.generate(model.length, (index) {
-                                    return Expanded(
-                                      child: BottomNavigationItem(
-                                        activeicon: model[index].activeicon,
-                                        enabled: model[index].enabled,
-                                        index: index,
-                                        onTap: (index) {
-                                          provider.setPage(index);
-                                        },
-                                        icon: model[index].icon,
-                                        text: model[index].title,
-                                      ),
-                                    );
-                                  })),
-                            ),
-                            const SizedBox(
-                              height: 10,
-                            ),
-                          ],
-                        ),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(
+                        sigmaX: 5,
+                        sigmaY: 5,
                       ),
-                    ))),
+                      child: Column(
+                        children: [
+                          Container(
+                            height: 60,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(20),
+                              border: const Border(
+                                  bottom: BorderSide(
+                                    color: Color.fromARGB(255, 30, 118, 233),
+                                    width: 1,
+                                  ),
+                                  top: BorderSide(
+                                      color: Color.fromARGB(255, 30, 118, 233),
+                                      width: 1)),
+                            ),
+                            child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceAround,
+                                children: List.generate(model.length, (index) {
+                                  return Expanded(
+                                    child: BottomNavigationItem(
+                                      activeicon: model[index].activeicon,
+                                      enabled: model[index].enabled,
+                                      index: index,
+                                      onTap: (index) {
+                                        provider.setPage(index);
+                                      },
+                                      icon: model[index].icon,
+                                      text: model[index].title,
+                                    ),
+                                  );
+                                })),
+                          ),
+                          const SizedBox(
+                            height: 10,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                )),
           ]),
         ),
       ),

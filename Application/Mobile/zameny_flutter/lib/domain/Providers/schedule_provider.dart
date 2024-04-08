@@ -23,6 +23,8 @@ class ScheduleProvider extends ChangeNotifier {
   ScheduleProvider(BuildContext context) {
     groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
     teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
+    cabinetIDSeek = GetIt.I.get<Data>().seekCabinet ?? -1;
+    searchType = GetIt.I.get<Data>().latestSearch;
 
     currentWeek = ((navigationDate.difference(septemberFirst).inDays +
                 septemberFirst.weekday) ~/
@@ -73,6 +75,7 @@ class ScheduleProvider extends ChangeNotifier {
   void groupSelected(int groupID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
+    GetIt.I.get<SharedPreferences>().setString('SearchType', "Group");
     groupIDSeek = groupID;
     data.seekGroup = groupID;
     data.latestSearch = SearchType.group;
@@ -98,6 +101,7 @@ class ScheduleProvider extends ChangeNotifier {
   void teacherSelected(int teacherID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
+    GetIt.I.get<SharedPreferences>().setString('SearchType', "Teacher");
     teacherIDSeek = teacherID;
     data.teacherGroup = teacherID;
     data.latestSearch = SearchType.teacher;
@@ -108,6 +112,7 @@ class ScheduleProvider extends ChangeNotifier {
   void cabinetSelected(int cabinetID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
+    GetIt.I.get<SharedPreferences>().setString('SearchType', "Cabinet");
     cabinetIDSeek = cabinetID;
     data.seekCabinet = cabinetID;
     data.latestSearch = SearchType.cabinet;

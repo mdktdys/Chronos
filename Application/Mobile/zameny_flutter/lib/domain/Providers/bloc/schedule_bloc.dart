@@ -1,4 +1,5 @@
 import 'package:bloc_concurrency/bloc_concurrency.dart';
+import 'package:equatable/equatable.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
@@ -71,25 +72,36 @@ final class LoadInitial extends ScheduleEvent {
   LoadInitial({required this.context});
 }
 
-sealed class ScheduleState {}
+sealed class ScheduleState extends Equatable {}
 
-final class ScheduleLoaded extends ScheduleState {
+class ScheduleLoaded extends ScheduleState {
   List<Lesson> lessons = [];
   List<Zamena> zamenas = [];
   ScheduleLoaded({required this.lessons, required this.zamenas});
+
+  @override
+  List<Object> get props => [this.lessons, this.zamenas];
 }
 
 final class ScheduleFailedLoading extends ScheduleState {
   final String error;
   ScheduleFailedLoading({required this.error});
+  @override
+  List<Object> get props => [];
 }
 
-final class ScheduleInitial extends ScheduleState {}
+final class ScheduleInitial extends ScheduleState {
+  @override
+  List<Object> get props => [];
+}
 
-final class ScheduleLoading extends ScheduleState {}
+final class ScheduleLoading extends ScheduleState {
+  @override
+  List<Object> get props => [];
+}
 
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
-  ScheduleBloc() : super(ScheduleInitial()) {
+  ScheduleBloc() : super(ScheduleLoading()) {
     on<LoadCabinetWeek>(
       (event, emit) async {
         emit(ScheduleLoading());
@@ -185,10 +197,17 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           Api().loadTeachers(),
           Api().loadCabinets(),
         ]);
-        GetIt.I.get<Talker>().debug("data loded");
+        GetIt.I.get<Talker>().debug(searchProvider.groupIDSeek);
+        GetIt.I.get<Talker>().debug(searchProvider.searchType == SearchType.group);
+
         if (event.context.mounted) {
           Provider.of<SearchProvider>(event.context, listen: false)
               .updateSearchItems();
+        }
+
+        if (searchProvider.groupIDSeek == -1 && searchProvider.searchType == SearchType.group) {
+          emit(ScheduleInitial());
+          return;
         }
 
         if (searchProvider.searchType == SearchType.group) {
