@@ -1,18 +1,15 @@
 import 'package:flutter/foundation.dart';
-import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 class TimeTableProvider extends ChangeNotifier {
-
   bool obed = false;
   bool saturday = false;
 
-  void toggleObed(){
+  void toggleObed() {
     obed = !obed;
     notifyListeners();
   }
 
-  toggleSaturday(){
+  toggleSaturday() {
     saturday = !saturday;
     notifyListeners();
   }

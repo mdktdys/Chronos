@@ -1,9 +1,6 @@
 import 'dart:async';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -45,192 +42,198 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
       backgroundColor: Theme.of(context).colorScheme.background,
       body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                //const SizedBox(height: 10),
-                const TimeTableHeader(),
-                const SizedBox(height: 10),
-                const SizedBox(height: 10),
-                CurrentTimingTimer(obed: provider.obed),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints: const BoxConstraints(maxWidth: 1200),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Column(
                   children: [
+                    //const SizedBox(height: 10),
+                    const TimeTableHeader(),
+                    const SizedBox(height: 10),
+                    const SizedBox(height: 10),
+                    CurrentTimingTimer(obed: provider.obed),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        SizedBox(
-                          height: 38,
-                          child: FittedBox(
-                            child: Switch(
-                                value: provider.saturday,
-                                onChanged: (value) =>
-                                    provider.toggleSaturday()),
-                          ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            SizedBox(
+                              height: 38,
+                              child: FittedBox(
+                                child: Switch(
+                                    value: provider.saturday,
+                                    onChanged: (value) =>
+                                        provider.toggleSaturday()),
+                              ),
+                            ),
+                            const SizedBox(
+                              width: 8,
+                            ),
+                            Text(
+                              "Суббота",
+                              style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.6)),
+                            ),
+                          ],
                         ),
-                        const SizedBox(
-                          width: 8,
-                        ),
-                        Text(
-                          "Суббота",
-                          style: TextStyle(
-                              fontFamily: 'Ubuntu',
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withOpacity(0.6)),
+                        AnimatedSwitcher(
+                          duration: const Duration(milliseconds: 300),
+                          switchOutCurve: Easing.legacy,
+                          switchInCurve: Easing.legacy,
+                          child: provider.saturday
+                              ? const SizedBox()
+                              : Row(
+                                  mainAxisAlignment: MainAxisAlignment.end,
+                                  children: [
+                                    Text(
+                                      "Без обеда",
+                                      style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          color: Theme.of(context)
+                                              .colorScheme
+                                              .inverseSurface
+                                              .withOpacity(0.6)),
+                                    ),
+                                    const SizedBox(
+                                      width: 8,
+                                    ),
+                                    SizedBox(
+                                      height: 38,
+                                      child: FittedBox(
+                                        child: Switch(
+                                            value: provider.obed,
+                                            onChanged: (value) =>
+                                                provider.toggleObed()),
+                                      ),
+                                    ),
+                                  ],
+                                ),
                         ),
                       ],
                     ),
-                    AnimatedSwitcher(
-                      duration: const Duration(milliseconds: 300),
-                      switchOutCurve: Easing.legacy,
-                      switchInCurve: Easing.legacy,
-                      child: provider.saturday
-                          ? const SizedBox()
-                          : Row(
-                              mainAxisAlignment: MainAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "Без обеда",
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface
-                                          .withOpacity(0.6)),
-                                ),
-                                const SizedBox(
-                                  width: 8,
-                                ),
-                                SizedBox(
-                                  height: 38,
-                                  child: FittedBox(
-                                    child: Switch(
-                                        value: provider.obed,
-                                        onChanged: (value) =>
-                                            provider.toggleObed()),
-                                  ),
-                                ),
-                              ],
-                            ),
-                    ),
-                  ],
-                ),
-
-                Row(
-                  children: [
-                    // SizedBox(
-                    //   width: 18,
-                    //   child: Stack(
-                    //     children: [
-                    //       Container(
-                    //         alignment: Alignment.topCenter,
-                    //         width: 8,
-                    //         decoration: BoxDecoration(
-                    //             color: Colors.amber.withOpacity(0.15),
-                    //             borderRadius: BorderRadius.circular(20)),
-                    //       ),
-                    //       FractionallySizedBox(
-                    //         heightFactor: provider.getHeight(),
-                    //         child: Container(
-                    //           alignment: Alignment.topCenter,
-                    //           width: 10,
-                    //           decoration: BoxDecoration(
-                    //               color: Colors.amber.withOpacity(1),
-                    //               borderRadius: BorderRadius.circular(20)),
-                    //         ),
-                    //       ),
-                    //     ],
-                    //   ),
-                    // ),
-                    // const SizedBox(width: 10),
-                    Expanded(
-                      child: Column(
-                          children: List.generate(7, (index) {
-                        LessonTimings? timing = GetIt.I
-                            .get<Data>()
-                            .timings
-                            .where(
-                              (element) => element.number == (index + 1),
-                            )
-                            .firstOrNull;
-                        return Container(
-                          margin: const EdgeInsets.only(bottom: 5),
-                          height: 80,
-                          decoration: BoxDecoration(
-                            borderRadius:
-                                const BorderRadius.all(Radius.circular(20)),
-                            color: Theme.of(context)
-                                .colorScheme
-                                .onSurface
-                                .withOpacity(0.1),
-                          ),
-                          child: timing == null
-                              ? const SizedBox()
-                              : Row(
-                                  children: [
-                                    const SizedBox(width: 20),
-                                    Container(
-                                      width: 45,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                              width: 2)),
-                                      child: Center(
-                                        child: Text(
-                                          (index + 1).toString(),
-                                          style: const TextStyle(
-                                              fontFamily: 'Ubuntu',
-                                              color: Colors.white,
-                                              fontSize: 20),
+              
+                    Row(
+                      children: [
+                        // SizedBox(
+                        //   width: 18,
+                        //   child: Stack(
+                        //     children: [
+                        //       Container(
+                        //         alignment: Alignment.topCenter,
+                        //         width: 8,
+                        //         decoration: BoxDecoration(
+                        //             color: Colors.amber.withOpacity(0.15),
+                        //             borderRadius: BorderRadius.circular(20)),
+                        //       ),
+                        //       FractionallySizedBox(
+                        //         heightFactor: provider.getHeight(),
+                        //         child: Container(
+                        //           alignment: Alignment.topCenter,
+                        //           width: 10,
+                        //           decoration: BoxDecoration(
+                        //               color: Colors.amber.withOpacity(1),
+                        //               borderRadius: BorderRadius.circular(20)),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        // const SizedBox(width: 10),
+                        Expanded(
+                          child: Column(
+                              children: List.generate(7, (index) {
+                            LessonTimings? timing = GetIt.I
+                                .get<Data>()
+                                .timings
+                                .where(
+                                  (element) => element.number == (index + 1),
+                                )
+                                .firstOrNull;
+                            return Container(
+                              margin: const EdgeInsets.only(bottom: 5),
+                              height: 80,
+                              decoration: BoxDecoration(
+                                borderRadius:
+                                    const BorderRadius.all(Radius.circular(20)),
+                                color: Theme.of(context)
+                                    .colorScheme
+                                    .onSurface
+                                    .withOpacity(0.1),
+                              ),
+                              child: timing == null
+                                  ? const SizedBox()
+                                  : Row(
+                                      children: [
+                                        const SizedBox(width: 20),
+                                        Container(
+                                          width: 45,
+                                          decoration: BoxDecoration(
+                                              shape: BoxShape.circle,
+                                              border: Border.all(
+                                                  color: Theme.of(context)
+                                                      .colorScheme
+                                                      .primary,
+                                                  width: 2)),
+                                          child: Center(
+                                            child: Text(
+                                              (index + 1).toString(),
+                                              style: const TextStyle(
+                                                  fontFamily: 'Ubuntu',
+                                                  color: Colors.white,
+                                                  fontSize: 20),
+                                            ),
+                                          ),
                                         ),
-                                      ),
+                                        const SizedBox(width: 20),
+                                        AnimatedSwitcher(
+                                          duration:
+                                              const Duration(milliseconds: 150),
+                                          switchInCurve: Easing.legacy,
+                                          child: Text(
+                                              key: ValueKey(provider.saturday ? UniqueKey() :getTimeFromDateTime(
+                                                  provider.obed
+                                                      ? timing.obedStart
+                                                      : timing.start)),
+                                              "${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}",
+                                              style: TextStyle(
+                                                  fontFamily: 'Ubuntu',
+                                                  color: provider.saturday ? Colors.white : provider.obed
+                                                      ? getTimeFromDateTime(provider
+                                                                      .obed
+                                                                  ? timing.obedStart
+                                                                  : timing.start) !=
+                                                              getTimeFromDateTime(
+                                                                  !provider.obed
+                                                                      ? timing
+                                                                          .obedStart
+                                                                      : timing
+                                                                          .start)
+                                                          ? Colors.green
+                                                          : Colors.white
+                                                      : Colors.white,
+                                                  fontSize: 20)),
+                                        )
+                                      ],
                                     ),
-                                    const SizedBox(width: 20),
-                                    AnimatedSwitcher(
-                                      duration:
-                                          const Duration(milliseconds: 150),
-                                      switchInCurve: Easing.legacy,
-                                      child: Text(
-                                          key: ValueKey(provider.saturday ? UniqueKey() :getTimeFromDateTime(
-                                              provider.obed
-                                                  ? timing.obedStart
-                                                  : timing.start)),
-                                          "${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}",
-                                          style: TextStyle(
-                                              fontFamily: 'Ubuntu',
-                                              color: provider.saturday ? Colors.white : provider.obed
-                                                  ? getTimeFromDateTime(provider
-                                                                  .obed
-                                                              ? timing.obedStart
-                                                              : timing.start) !=
-                                                          getTimeFromDateTime(
-                                                              !provider.obed
-                                                                  ? timing
-                                                                      .obedStart
-                                                                  : timing
-                                                                      .start)
-                                                      ? Colors.green
-                                                      : Colors.white
-                                                  : Colors.white,
-                                              fontSize: 20)),
-                                    )
-                                  ],
-                                ),
-                        );
-                      })),
+                            );
+                          })),
+                        ),
+                      ],
                     ),
+                    SizedBox(
+                      height: 100,
+                    )
                   ],
                 ),
-                SizedBox(
-                  height: 100,
-                )
-              ],
+              ),
             ),
           )),
     );

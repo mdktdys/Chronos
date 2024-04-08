@@ -51,6 +51,7 @@ dependencies:
   dotted_border: ^2.1.0
   flutter_native_splash: ^2.3.10
   bloc_concurrency: ^0.2.4
+  equatable: ^2.0.5
 
 dev_dependencies:
   # flutter_test:
