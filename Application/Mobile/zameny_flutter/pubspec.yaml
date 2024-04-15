@@ -52,6 +52,8 @@ dependencies:
   flutter_native_splash: ^2.3.10
   bloc_concurrency: ^0.2.4
   equatable: ^2.0.5
+  dio: ^5.4.3+1
+  riverpod: ^2.5.1
 
 dev_dependencies:
   # flutter_test:

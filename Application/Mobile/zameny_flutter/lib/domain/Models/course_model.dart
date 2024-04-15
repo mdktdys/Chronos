@@ -1,12 +1,12 @@
-
 import 'dart:convert';
 
 class Course {
   int id;
   String name;
   String color;
+  String? fullname;
 
-  Course({required this.id, required this.name, required this.color});
+  Course({required this.id, required this.name, required this.color, this.fullname});
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

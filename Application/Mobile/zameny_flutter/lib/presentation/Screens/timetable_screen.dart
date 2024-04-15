@@ -272,12 +272,12 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
 
   String getElapsedTime(bool obed) {
     LessonTimings timing = getLessonTiming(obed)!;
-    bool isSaturday = DateTime.now().weekday == 6;
+    bool isSaturday = DateTime.now().add(GetIt.I.get<Data>().networkOffset).weekday == 6;
     Duration left = isSaturday
-        ? timing.saturdayEnd.difference(DateTime.now())
+        ? timing.saturdayEnd.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset))
         : (obed
-            ? timing.obedEnd.difference(DateTime.now())
-            : timing.end.difference(DateTime.now()));
+            ? timing.obedEnd.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset))
+            : timing.end.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset)));
 
     int hours = left.inHours;
     int minutes = left.inMinutes;
@@ -290,7 +290,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   }
 
   LessonTimings? getLessonTiming(bool obed) {
-    DateTime current = DateTime.now();
+    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
     bool isSaturday = current.weekday == 6;
     if (isSaturday) {
       LessonTimings? timing = GetIt.I
@@ -326,7 +326,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   @override
   Widget build(BuildContext context) {
     LessonTimings? timing = getLessonTiming(obed);
-    DateTime current = DateTime.now();
+    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
     ScheduleProvider provider = context.watch<ScheduleProvider>();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),

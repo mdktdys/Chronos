@@ -8,7 +8,6 @@ class Group extends SearchItem {
   int id;
   String name;
   int department;
-
   List<Lesson> lessons = [];
 
   Map<String, dynamic> toMap() {

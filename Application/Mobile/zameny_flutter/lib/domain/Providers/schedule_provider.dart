@@ -7,6 +7,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/main.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 
@@ -15,7 +16,7 @@ class ScheduleProvider extends ChangeNotifier {
   int teacherIDSeek = -1;
   int cabinetIDSeek = -1;
   SearchType searchType = SearchType.group;
-  DateTime navigationDate = DateTime.now();
+  DateTime navigationDate = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
@@ -40,7 +41,7 @@ class ScheduleProvider extends ChangeNotifier {
 
   chas() async {
     DateTime from = DateTime(2023, 1, 1);
-    DateTime to = DateTime.now();
+    DateTime to = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
     List<dynamic> res = await GetIt.I
         .get<SupabaseClient>()
         .from('Zamenas')

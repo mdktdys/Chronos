@@ -18,11 +18,11 @@ class Data {
   Set<ZamenaFull> zamenasFull = {};
   Set<Holiday> holidays = {};
   Set<Liquidation> liquidations = {};
-
   int? seekGroup = -1;
   int? teacherGroup = -1;
   int? seekCabinet = -1;
   SearchType latestSearch = SearchType.group;
+  Duration networkOffset = const Duration(); 
 
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;

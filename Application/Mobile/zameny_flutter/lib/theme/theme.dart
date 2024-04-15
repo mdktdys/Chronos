@@ -27,10 +27,37 @@ ThemeData lightTheme = ThemeData.light().copyWith(
 
 ThemeData darkTheme = ThemeData.dark().copyWith(
   switchTheme: SwitchThemeData(
-      overlayColor: const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37)),
+      overlayColor:
+          const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37)),
       trackOutlineColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.1)),
       thumbColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.1)),
-      trackColor: const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37))),
+      trackColor:
+          const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37))),
+  primaryColorLight: Colors.white,
+  colorScheme: const ColorScheme(
+      inverseSurface: Colors.white,
+      brightness: Brightness.dark,
+      primary: Color.fromARGB(255, 30, 118, 233),
+      onPrimary: Colors.white,
+      secondary: Colors.white,
+      onSecondary: Colors.white,
+      error: Colors.red,
+      onError: Colors.red,
+      background: Color.fromARGB(255, 18, 21, 37),
+      onBackground: Colors.white,
+      surface: Color.fromARGB(255, 30, 118, 233),
+      onSurface: Colors.grey),
+);
+
+
+ThemeData lightThemeAccented = ThemeData.dark().copyWith(
+  switchTheme: SwitchThemeData(
+      overlayColor:
+          const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37)),
+      trackOutlineColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.1)),
+      thumbColor: MaterialStatePropertyAll(Colors.grey.withOpacity(0.1)),
+      trackColor:
+          const MaterialStatePropertyAll(Color.fromARGB(255, 18, 21, 37))),
   primaryColorLight: Colors.white,
   colorScheme: const ColorScheme(
       inverseSurface: Colors.white,
