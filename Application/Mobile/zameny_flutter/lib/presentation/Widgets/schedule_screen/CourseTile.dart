@@ -19,19 +19,21 @@ class CourseTile extends StatelessWidget {
   final bool obedTime;
   final bool empty;
   final bool short;
+  final bool needZamenaAlert;
 
-  const CourseTile({
-    this.empty = false,
-    super.key,
-    required this.course,
-    required this.lesson,
-    required this.type,
-    required this.refresh,
-    this.removed,
-    required this.swaped,
-    required this.saturdayTime,
-    required this.obedTime, required this.short,
-  });
+  const CourseTile(
+      {this.empty = false,
+      super.key,
+      required this.course,
+      required this.lesson,
+      required this.type,
+      required this.refresh,
+      this.removed,
+      required this.swaped,
+      required this.saturdayTime,
+      required this.obedTime,
+      required this.short,
+      this.needZamenaAlert = false});
 
   final Course course;
 
@@ -109,8 +111,7 @@ class CourseTile extends StatelessWidget {
                   );
                 });
           },
-          child: Stack(
-            children: [
+          child: Stack(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: Row(
@@ -282,10 +283,11 @@ class CourseTile extends StatelessWidget {
                 ],
               ),
             ),
+            //Алерт замены
             Positioned(
               top: 0,
               right: 0,
-              child: swaped != null
+              child: (swaped != null || needZamenaAlert)
                   ? const Padding(
                       padding: EdgeInsets.all(8),
                       child: Align(

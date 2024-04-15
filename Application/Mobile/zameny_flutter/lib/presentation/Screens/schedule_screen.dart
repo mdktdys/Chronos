@@ -190,7 +190,7 @@ class LessonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScheduleProvider provider = context.watch<ScheduleProvider>();
-    final currentDay = DateTime.now().weekday;
+    final currentDay = DateTime.now().add(GetIt.I.get<Data>().networkOffset).weekday;
     final data = GetIt.I.get<Data>();
     final startDate = provider.navigationDate
         .subtract(Duration(days: provider.navigationDate.weekday - 1));

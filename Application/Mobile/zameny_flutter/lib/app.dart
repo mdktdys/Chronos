@@ -5,6 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:provider/provider.dart' as pr;
+import 'package:zameny_flutter/main.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
 import 'domain/Providers/theme_provider.dart';
 
@@ -20,7 +21,12 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     Data data = Data.fromShared(context);
     GetIt.I.registerSingleton<Data>(data);
+    syncTime();
     super.initState();
+  }
+
+  syncTime() async {
+    await getTime();
   }
 
   @override

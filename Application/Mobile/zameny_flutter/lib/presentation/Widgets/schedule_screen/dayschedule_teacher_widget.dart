@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_header.dart';
@@ -48,7 +49,8 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-      if (widget.day == widget.currentDay && widget.currentWeek == widget.todayWeek) {
+      if (widget.day == widget.currentDay &&
+          widget.currentWeek == widget.todayWeek) {
         Scrollable.ensureVisible(context,
             duration: const Duration(milliseconds: 500), alignment: 0.5);
       }
@@ -218,6 +220,8 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 .first;
             final course = getCourseById(lesson.course) ??
                 Course(id: -1, name: "err3", color: "50,0,0,1");
+
+            GetIt.I.get<Talker>().debug(lesson.id);
 
             //проверяю не состоит ли группа дефолтного расписания в полной замене
 
