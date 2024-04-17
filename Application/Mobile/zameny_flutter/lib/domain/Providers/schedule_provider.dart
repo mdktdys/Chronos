@@ -39,6 +39,13 @@ class ScheduleProvider extends ChangeNotifier {
     currentWeek = navigationDate.weekday == 7 ? currentWeek + 1 : currentWeek;
   }
 
+  int getWeekNumber(DateTime date){
+    return ((date.difference(septemberFirst).inDays +
+                septemberFirst.weekday) ~/
+            7) +
+        1;
+  }
+
   chas() async {
     DateTime from = DateTime(2023, 1, 1);
     DateTime to = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
@@ -166,6 +173,10 @@ class ScheduleProvider extends ChangeNotifier {
     if (dat.latestSearch == SearchType.group) {
       groupSelected(dat.seekGroup!, context);
     }
+    notifyListeners();
+  }
+
+  void notify(){
     notifyListeners();
   }
 

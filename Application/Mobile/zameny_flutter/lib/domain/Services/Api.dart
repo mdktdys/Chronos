@@ -4,8 +4,8 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 
-class Api {
-  Future<List<Lesson>> loadWeekSchedule(
+abstract class Api {
+  static Future<List<Lesson>> loadWeekSchedule(
       {required int groupID,
       required DateTime start,
       required DateTime end}) async {
@@ -26,7 +26,7 @@ class Api {
     return weekLessons;
   }
 
-  Future<List<Lesson>> loadWeekTeacherSchedule(
+  static Future<List<Lesson>> loadWeekTeacherSchedule(
       {required int teacherID,
       required DateTime start,
       required DateTime end}) async {
@@ -47,7 +47,7 @@ class Api {
     return weekLessons;
   }
 
-  Future<List<Lesson>> loadWeekCabinetSchedule(
+  static Future<List<Lesson>> loadWeekCabinetSchedule(
       {required int cabinetID,
       required DateTime start,
       required DateTime end}) async {
@@ -68,7 +68,7 @@ class Api {
     return weekLessons;
   }
 
-  Future<void> loadGroups() async {
+  static Future<void> loadGroups() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -81,7 +81,7 @@ class Api {
     }
   }
 
-  Future<void> loadTeachers() async {
+  static Future<void> loadTeachers() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = List.empty();
@@ -95,7 +95,7 @@ class Api {
     }
   }
 
-  Future<void> loadCabinets() async {
+  static Future<void> loadCabinets() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
     List<dynamic> data = await client.from('Cabinets').select('*');
@@ -107,7 +107,7 @@ class Api {
     }
   }
 
-  Future<void> loadHolidays(DateTime start, DateTime end) async {
+  static Future<void> loadHolidays(DateTime start, DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -123,7 +123,7 @@ class Api {
     }
   }
 
-  Future<void> loadLiquidation(
+  static Future<void> loadLiquidation(
       List<int> groupsID, DateTime start, DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
@@ -140,7 +140,7 @@ class Api {
     }
   }
 
-  Future<void> loadTimings() async {
+  static Future<void> loadTimings() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -153,7 +153,7 @@ class Api {
     dat.timings.sort(((a, b) => a.number - b.number));
   }
 
-  Future<void> loadZamenasFull(
+ static Future<void> loadZamenasFull(
       List<int> groupsID, DateTime start, DateTime end) async {
     final dat = GetIt.I.get<Data>();
 
@@ -177,7 +177,7 @@ class Api {
     }
   }
 
-  Future<void> loadZamenaFileLinks(
+  static Future<void> loadZamenaFileLinks(
       {required DateTime start, required DateTime end}) async {
     final dat = GetIt.I.get<Data>();
 
@@ -222,7 +222,7 @@ class Api {
   //   }
   // }
 
-  Future<List<Zamena>> loadZamenas(
+  static Future<List<Zamena>> loadZamenas(
       {required List<int> groupsID,
       required DateTime start,
       required DateTime end}) async {
@@ -247,7 +247,7 @@ class Api {
     return zamenaBuffer;
   }
 
-  Future<List<Zamena>> loadTeacherZamenas(
+  static Future<List<Zamena>> loadTeacherZamenas(
       {required int teacherID,
       required DateTime start,
       required DateTime end}) async {
@@ -272,7 +272,7 @@ class Api {
     return zamenaBuffer;
   }
 
-  Future<List<Zamena>> loadCabinetZamenas(
+  static Future<List<Zamena>> loadCabinetZamenas(
       {required int cabinetID,
       required DateTime start,
       required DateTime end}) async {
@@ -320,7 +320,7 @@ class Api {
   //   }
   // }
 
-  Future<void> loadCourses() async {
+  static Future<void> loadCourses() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -333,7 +333,7 @@ class Api {
     }
   }
 
-  Future<void> loadDepartments() async {
+  static Future<void> loadDepartments() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 

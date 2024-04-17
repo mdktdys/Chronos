@@ -244,6 +244,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 element.group == lesson.group);
 
             if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
+              GetIt.I.get<Talker>().debug("1 ${course.name}");
               return CourseTile(
                 short: false,
                 type: SearchType.teacher,
@@ -272,6 +273,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
               .first;
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: "err2", color: "100,0,0,0");
+              GetIt.I.get<Talker>().debug("2 ${course.name}");
           return CourseTile(
             short: false,
             type: SearchType.teacher,
@@ -279,6 +281,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             obedTime: obed,
             refresh: widget.refresh,
             saturdayTime: widget.day == 6,
+            needZamenaAlert: true,
             lesson: Lesson(
                 id: -1,
                 course: course.id,
@@ -316,6 +319,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             final Course courseEmpty = course.copyWith(name: "нет");
             final Lesson lessonEmpty = lesson;
             final Lesson sec = lesson.copyWith(course: 9539);
+            GetIt.I.get<Talker>().debug("3 ${course.name}");
             return CourseTile(
               short: false,
               type: SearchType.teacher,
@@ -336,6 +340,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                   element.date.month == todayMonth &&
                   element.date.year == todayYear)
               .isEmpty) {
+                GetIt.I.get<Talker>().debug("4 ${course.name}");
             return CourseTile(
               short: false,
               type: SearchType.teacher,

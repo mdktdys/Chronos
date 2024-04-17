@@ -18,7 +18,7 @@ class SettingsVersionBlock extends StatelessWidget {
             height: 8,
           ),
           Text(
-            "Версия: 01.04.24 билд: 1.1 TEST WEB",
+            "Версия: 18.04.24 билд: 1.1 TEST WEB",
             style: TextStyle(
                 fontFamily: 'Monospace', color: Colors.grey, fontSize: 12),
             textAlign: TextAlign.start,

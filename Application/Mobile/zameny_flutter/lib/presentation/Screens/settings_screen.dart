@@ -115,7 +115,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   padding: const EdgeInsets.all(
                                     3,
                                   ),
-                                  child: GestureDetector(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
                                       await launchUrl(
                                           Uri.parse("https://www.uksivt.ru/"),
@@ -185,7 +186,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   padding: const EdgeInsets.all(
                                     3,
                                   ),
-                                  child: GestureDetector(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
                                       await launchUrl(
                                           Uri.parse("https://t.me/mdktdys"),
@@ -255,7 +257,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   padding: const EdgeInsets.all(
                                     3,
                                   ),
-                                  child: GestureDetector(
+                                  child: InkWell(
+                                    borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
                                       await launchUrl(
                                           Uri.parse("https://t.me/bot_uksivt"),
