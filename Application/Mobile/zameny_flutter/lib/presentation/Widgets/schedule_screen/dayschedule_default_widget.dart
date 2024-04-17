@@ -290,7 +290,6 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
               .first;
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: "err2", color: "100,0,0,0");
-                GetIt.I.get<Talker>().debug("${course.name} ${todayDay}");
 
           return CourseTile(
             needZamenaAlert: true,

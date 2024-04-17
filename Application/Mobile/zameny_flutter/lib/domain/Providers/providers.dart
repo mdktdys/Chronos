@@ -35,7 +35,6 @@ Future<List<ZamenaFileLink>> getZamenaFileLinks(
         .gte('date', start.toIso8601String());
 
     for (var element in data) {
-      GetIt.I.get<Talker>().debug(element);
       ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);  
       dat.zamenaFileLinks.add(zamenaLink);
     }
