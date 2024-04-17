@@ -384,11 +384,6 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                 }
                                 if (zamena == null) {
                                   if (lesson != null) {
-                                    GetIt.I.get<Talker>().debug(GetIt.I
-                                        .get<Data>()
-                                        .zamenasFull
-                                        .where((element) =>
-                                            element.group == lesson.group));
                                     if (GetIt.I
                                         .get<Data>()
                                         .zamenasFull

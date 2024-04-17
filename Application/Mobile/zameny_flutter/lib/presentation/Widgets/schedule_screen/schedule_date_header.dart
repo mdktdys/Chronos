@@ -100,7 +100,6 @@ class DateHeaderDatePicker extends StatelessWidget {
                           DateTime time = (p0 as DateTime);
                           provider.navigationDate = time;
                           provider.currentWeek = provider.getWeekNumber(time);
-                          GetIt.I.get<Talker>().debug(p0);
                           provider.dateSwitched(ctx);
                           Navigator.of(context).pop();
                         },

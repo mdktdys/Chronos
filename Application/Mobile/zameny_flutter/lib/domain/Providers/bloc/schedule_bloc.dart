@@ -197,9 +197,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           Api.loadTeachers(),
           Api.loadCabinets(),
         ]);
-        GetIt.I.get<Talker>().debug(searchProvider.groupIDSeek);
-        GetIt.I.get<Talker>().debug(searchProvider.searchType == SearchType.group);
-
         if (event.context.mounted) {
           Provider.of<SearchProvider>(event.context, listen: false)
               .updateSearchItems();
