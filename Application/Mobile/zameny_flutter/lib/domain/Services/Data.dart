@@ -22,7 +22,7 @@ class Data {
   int? teacherGroup = -1;
   int? seekCabinet = -1;
   SearchType latestSearch = SearchType.group;
-  Duration networkOffset = const Duration(); 
+  Duration networkOffset = const Duration(milliseconds: 1); 
 
   Data.fromShared(context) {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
