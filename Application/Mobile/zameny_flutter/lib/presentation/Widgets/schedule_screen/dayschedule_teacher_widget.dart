@@ -204,15 +204,10 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
       ];
     }
     return widget.data.timings.map((para) {
-      for (Zamena zam in widget.dayZamenas) {
-        GetIt.I.get<Talker>().debug(
-            "Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}");
-      }
       GetIt.I.get<Talker>().debug("Смотрю на пару - ${para.number}");
       //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
       if (widget.dayZamenas
           .any((element) => element.lessonTimingsID == para.number)) {
-        GetIt.I.get<Talker>().debug("Есть замена в эту пару");
         //если есть любая замена в этот день, неважно дети или препод
         List<Zamena>? zamena = widget.dayZamenas
             .where((element) => element.lessonTimingsID == para.number)
@@ -278,6 +273,8 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
           }
           //если это замена препода, ставлю ее
           else {
+            GetIt.I.get<Talker>().debug(
+                "Есть замена на препода б ${getGroupById(zam.groupID)!.name} ${getCabinetById(zam.courseID)!.name}    ");
             //пара которая меняется
             Lesson? swapedPara = widget.lessons
                 .where((element) => element.number == para.number)
