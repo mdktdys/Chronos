@@ -93,7 +93,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         element.lesson.number == 5 ||
         element.lesson.number == 6 ||
         element.lesson.number == 7);
-
+    
     GetIt.I.get<Talker>().good("ДЕНЬ ${widget.day}");
     return Container(
       padding: const EdgeInsets.all(8),
@@ -204,109 +204,101 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
       ];
     }
     return widget.data.timings.map((para) {
+      for(Zamena zam in widget.dayZamenas){
+        GetIt.I.get<Talker>().debug("Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}");
+      }
       GetIt.I.get<Talker>().debug("Смотрю на пару - ${para.number}");
       //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
-      if (widget.dayZamenas
-          .any((element) => element.lessonTimingsID == para.number)) {
+      if (widget.dayZamenas.any((element) => element.lessonTimingsID == para.number)) {
+        GetIt.I.get<Talker>().debug("Есть замена в эту пару");
         //если есть любая замена в этот день, неважно дети или препод
-        List<Zamena>? zamena = widget.dayZamenas
+        Zamena? zamena = widget.dayZamenas
             .where((element) => element.lessonTimingsID == para.number)
-            .toList();
+            .first;
+        GetIt.I.get<Talker>().debug("Замена ${getCourseById(zamena.courseID)!.name} ${getGroupById(zamena.groupID)!.name}");
+        //если это замена детей и она не  меняет на моего препода
+        if (zamena.teacherID != teacherID) {
+          GetIt.I.get<Talker>().debug("Не тот же препод ${getTeacherById(zamena.teacherID).name}");
+          //пытаюсь поставить дефолтную пару препода
+          //проверяю не состоит ли эта пара в полной замене
+          if (widget.lessons.any((element) => element.number == para.number)) {
+            Lesson lesson = widget.lessons
+                .where((element) => element.number == para.number)
+                .first;
 
-        for (Zamena zam in zamena) {
-          GetIt.I.get<Talker>().debug(
-              "Замена ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}");
-          //если это замена детей и она не меняет на моего препода
-          if (zam.teacherID != teacherID) {
-            GetIt.I.get<Talker>().debug(
-                "Не тот же препод ${getTeacherById(zam.teacherID).name}");
-            //пытаюсь поставить дефолтную пару препода
-            //проверяю не состоит ли эта пара в полной замене
-            if (widget.lessons
-                .any((element) => element.number == para.number)) {
-              Lesson lesson = widget.lessons
-                  .where((element) => element.number == para.number)
-                  .first;
+            final course = getCourseById(lesson.course) ??
+                Course(id: -1, name: "err3", color: "50,0,0,1");
 
-              final course = getCourseById(lesson.course) ??
-                  Course(id: -1, name: "err3", color: "50,0,0,1");
+            GetIt.I.get<Talker>().debug("Есть в дефолтном расписании ${course.name}");
 
-              GetIt.I
-                  .get<Talker>()
-                  .debug("Есть в дефолтном расписании ${course.name}");
+            //проверяю не состоит ли группа дефолтного расписания в полной замене
 
-              //проверяю не состоит ли группа дефолтного расписания в полной замене
+            bool hasFullZamena = fullzamenas
+                .where((element) =>
+                    element.group == lesson.group &&
+                    element.date.day == todayDay &&
+                    element.date.month == todayMonth &&
+                    element.date.year == todayYear)
+                .isNotEmpty;
 
-              bool hasFullZamena = fullzamenas
-                  .where((element) =>
-                      element.group == lesson.group &&
-                      element.date.day == todayDay &&
-                      element.date.month == todayMonth &&
-                      element.date.year == todayYear)
-                  .isNotEmpty;
+            bool hasOtherZamena = widget.dayZamenas
+                .where((element) =>
+                    element.groupID == lesson.group &&
+                    element.lessonTimingsID == para.number)
+                .isNotEmpty;
 
-              bool hasOtherZamena = widget.dayZamenas
-                  .where((element) =>
-                      element.groupID == lesson.group &&
-                      element.lessonTimingsID == para.number)
-                  .isNotEmpty;
+            bool hasLiquidation = data.liquidations.any((element) =>
+                element.date == DateTime(todayYear, todayMonth, todayDay) &&
+                element.group == lesson.group);
 
-              bool hasLiquidation = data.liquidations.any((element) =>
-                  element.date == DateTime(todayYear, todayMonth, todayDay) &&
-                  element.group == lesson.group);
-
-              if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
-                GetIt.I.get<Talker>().debug(
-                    "Ставлю ${course.name} нет полной замены нет другой замены нет в ликвидцаиях");
-                return CourseTile(
-                  short: false,
-                  type: SearchType.teacher,
-                  course: course,
-                  obedTime: obed,
-                  lesson: lesson,
-                  swaped: null,
-                  refresh: widget.refresh,
-                  saturdayTime: widget.day == 6,
-                );
-              }
+            if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
+              GetIt.I.get<Talker>().debug("Ставлю ${course.name} нет полной замены нет другой замены нет в ликвидцаиях");
+              return CourseTile(
+                short: false,
+                type: SearchType.teacher,
+                course: course,
+                obedTime: obed,
+                lesson: lesson,
+                swaped: null,
+                refresh: widget.refresh,
+                saturdayTime: widget.day == 6,
+              );
             }
           }
-          //если это замена препода, ставлю ее
-          else {
-            GetIt.I.get<Talker>().debug(
-                "Есть замена на препода б ${getGroupById(zam.groupID)!.name} ${getCabinetById(zam.courseID)!.name}    ");
-            //пара которая меняется
-            Lesson? swapedPara = widget.lessons
-                .where((element) => element.number == para.number)
-                .firstOrNull;
-            //замена этой пары
+        }
+        //если это замена препода, ставлю ее
+        else {
+          //пара которая меняется
+          Lesson? swapedPara = widget.lessons
+              .where((element) => element.number == para.number)
+              .firstOrNull;
+          //замена этой пары
 
-            Zamena zamena = widget.dayZamenas
-                .where((element) =>
-                    element.lessonTimingsID == para.number &&
-                    element.teacherID == teacherID)
-                .first;
-            final course = getCourseById(zamena.courseID) ??
-                Course(id: -1, name: "err2", color: "100,0,0,0");
-            return CourseTile(
-              short: false,
-              type: SearchType.teacher,
-              course: course,
-              obedTime: obed,
-              refresh: widget.refresh,
-              saturdayTime: widget.day == 6,
-              needZamenaAlert: true,
-              lesson: Lesson(
-                  id: -1,
-                  course: course.id,
-                  cabinet: zamena.cabinetID,
-                  number: zamena.lessonTimingsID,
-                  teacher: zamena.teacherID,
-                  group: zamena.groupID,
-                  date: zamena.date),
-              swaped: swapedPara,
-            );
-          }
+          Zamena zamena = widget.dayZamenas
+              .where((element) =>
+                  element.lessonTimingsID == para.number &&
+                  element.teacherID == teacherID)
+              .first;
+          final course = getCourseById(zamena.courseID) ??
+              Course(id: -1, name: "err2", color: "100,0,0,0");
+          return CourseTile(
+            short: false,
+            type: SearchType.teacher,
+            course: course,
+            obedTime: obed,
+            refresh: widget.refresh,
+            saturdayTime: widget.day == 6,
+            needZamenaAlert: true,
+            lesson: Lesson(
+                id: -1,
+                course: course.id,
+                cabinet: zamena.cabinetID,
+                number: zamena.lessonTimingsID,
+                teacher: zamena.teacherID,
+                group: zamena.groupID,
+                date: zamena.date),
+            swaped: swapedPara,
+          );
         }
       }
 
