@@ -4,6 +4,7 @@ import 'package:zameny_flutter/domain/Models/course_model.dart';
 import 'package:zameny_flutter/domain/Models/lesson_model.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 class ExportCourseTile extends StatelessWidget {
   final SearchType type;
@@ -133,13 +134,11 @@ class ExportCourseTile extends StatelessWidget {
                       Row(
                         children: [
                           SvgPicture.asset(
-                                    "assets/icon/vuesax_linear_location.svg",
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface,
-                                    width: 18,
-                                    height: 18,
-                                  ),
+                            "assets/icon/vuesax_linear_location.svg",
+                            color: Theme.of(context).colorScheme.inverseSurface,
+                            width: 18,
+                            height: 18,
+                          ),
                           Text(
                             type == SearchType.teacher
                                 ? getCabinetById(e.cabinet).name
@@ -163,5 +162,37 @@ class ExportCourseTile extends StatelessWidget {
             ),
           ),
         ));
+  }
+}
+
+class ExportCourseTileEmpty extends StatelessWidget {
+  const ExportCourseTileEmpty({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        width: 500,
+        child: Container(
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                color: Colors.transparent,
+                border: DashedBorder.all(
+                    dashLength: 10,
+                    width: 1,
+                    color: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withOpacity(0.6))),
+            child: Padding(
+                padding: const EdgeInsets.all(20),
+                child: Center(
+                    child: Text(
+                  "Нет пар",
+                  style: TextStyle(
+                      fontFamily: 'Ubuntu',
+                      fontSize: 20,
+                      color: Theme.of(context).colorScheme.inversePrimary),
+                )))));
   }
 }

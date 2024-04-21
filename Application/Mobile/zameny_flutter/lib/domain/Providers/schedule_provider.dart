@@ -14,6 +14,7 @@ import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.d
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
 import 'dart:html' as html;
+
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
   int teacherIDSeek = -1;
@@ -132,17 +133,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: mondayLessons.map((e) {
-                                      final bool saturdayTime = false;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: mondayLessons.isNotEmpty
+                                        ? mondayLessons.map((e) {
+                                            final bool saturdayTime = false;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                           SizedBox(
                             width: 20,
@@ -159,17 +163,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: thursdayLessons.map((e) {
-                                      final bool saturdayTime = false;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: thursdayLessons.isNotEmpty
+                                        ? thursdayLessons.map((e) {
+                                            final bool saturdayTime = false;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                         ],
                       ),
@@ -188,17 +195,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: tuesdayLessons.map((e) {
-                                      final bool saturdayTime = false;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: tuesdayLessons.isNotEmpty
+                                        ? tuesdayLessons.map((e) {
+                                            final bool saturdayTime = false;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                           SizedBox(
                             width: 20,
@@ -215,17 +225,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: fridayLessons.map((e) {
-                                      final bool saturdayTime = false;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: fridayLessons.isNotEmpty
+                                        ? fridayLessons.map((e) {
+                                            final bool saturdayTime = false;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                         ],
                       ),
@@ -244,17 +257,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: wednesdayLessons.map((e) {
-                                      final bool saturdayTime = false;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: wednesdayLessons.isNotEmpty
+                                        ? wednesdayLessons.map((e) {
+                                            final bool saturdayTime = false;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                           SizedBox(
                             width: 20,
@@ -271,17 +287,20 @@ class ScheduleProvider extends ChangeNotifier {
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
-                                    children: saturdayLessons.map((e) {
-                                      final bool saturdayTime = true;
-                                      final bool obedTime = false;
-                                      Course course = getCourseById(e.course)!;
-                                      return ExportCourseTile(
-                                          type: searchType,
-                                          course: course,
-                                          e: e,
-                                          obedTime: obedTime,
-                                          saturdayTime: saturdayTime);
-                                    }).toList())
+                                    children: saturdayLessons.isNotEmpty
+                                        ? saturdayLessons.map((e) {
+                                            final bool saturdayTime = true;
+                                            final bool obedTime = false;
+                                            Course course =
+                                                getCourseById(e.course)!;
+                                            return ExportCourseTile(
+                                                type: searchType,
+                                                course: course,
+                                                e: e,
+                                                obedTime: obedTime,
+                                                saturdayTime: saturdayTime);
+                                          }).toList()
+                                        : [ExportCourseTileEmpty()])
                               ]),
                         ],
                       )
