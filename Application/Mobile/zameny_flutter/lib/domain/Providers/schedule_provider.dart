@@ -1,22 +1,26 @@
-import 'package:flutter/cupertino.dart';
+import 'dart:developer';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:get_it/get_it.dart';
+import 'package:screenshot/screenshot.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
-import 'package:zameny_flutter/main.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
-
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
+import 'dart:html' as html;
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
   int teacherIDSeek = -1;
   int cabinetIDSeek = -1;
   SearchType searchType = SearchType.group;
-  DateTime navigationDate = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
+  DateTime navigationDate =
+      DateTime.now().add(GetIt.I.get<Data>().networkOffset);
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
@@ -39,11 +43,266 @@ class ScheduleProvider extends ChangeNotifier {
     currentWeek = navigationDate.weekday == 7 ? currentWeek + 1 : currentWeek;
   }
 
-  int getWeekNumber(DateTime date){
-    return ((date.difference(septemberFirst).inDays +
-                septemberFirst.weekday) ~/
+  int getWeekNumber(DateTime date) {
+    return ((date.difference(septemberFirst).inDays + septemberFirst.weekday) ~/
             7) +
         1;
+  }
+
+  exportSchedulePNG(BuildContext context) async {
+    List<Lesson> lessons = [];
+    String searchName = '';
+    switch (searchType) {
+      case SearchType.cabinet:
+        {
+          return;
+        }
+      case SearchType.teacher:
+        {
+          Teacher teacher = getTeacherById(teacherIDSeek);
+          lessons = teacher.lessons;
+          lessons.sort((a, b) => a.number > b.number ? 1 : -1);
+
+          searchName = teacher.name;
+        }
+      case SearchType.group:
+        {
+          Group group = getGroupById(groupIDSeek)!;
+          lessons = group.lessons;
+          searchName = group.name;
+        }
+      default:
+        {
+          return;
+        }
+    }
+    final mondayLessons =
+        lessons.where((element) => element.date.weekday == 1).toList();
+    final tuesdayLessons =
+        lessons.where((element) => element.date.weekday == 2).toList();
+    final wednesdayLessons =
+        lessons.where((element) => element.date.weekday == 3).toList();
+    final thursdayLessons =
+        lessons.where((element) => element.date.weekday == 4).toList();
+    final fridayLessons =
+        lessons.where((element) => element.date.weekday == 5).toList();
+    final saturdayLessons =
+        lessons.where((element) => element.date.weekday == 6).toList();
+
+    final ScreenshotController controller = ScreenshotController();
+    var savedFile = await controller.captureFromWidget(
+        pixelRatio: 4,
+        context: context,
+        Container(
+          color: Theme.of(context).colorScheme.background,
+          padding: const EdgeInsets.all(16),
+          child: SizedBox(
+            width: 600,
+            child: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    "Расписание ${searchName}",
+                    style: TextStyle(
+                        fontFamily: 'Ubuntu',
+                        color: Colors.white,
+                        fontWeight: FontWeight.bold,
+                        fontSize: 24),
+                  ),
+                  SizedBox(
+                    height: 5,
+                  ),
+                  Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Понедельник",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: mondayLessons.map((e) {
+                                      final bool saturdayTime = false;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Четверг",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: thursdayLessons.map((e) {
+                                      final bool saturdayTime = false;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Вторник",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: tuesdayLessons.map((e) {
+                                      final bool saturdayTime = false;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Пятница",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: fridayLessons.map((e) {
+                                      final bool saturdayTime = false;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                        ],
+                      ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Среда",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: wednesdayLessons.map((e) {
+                                      final bool saturdayTime = false;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                          SizedBox(
+                            width: 20,
+                          ),
+                          Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Суббота",
+                                  style: TextStyle(
+                                      fontFamily: 'Ubuntu',
+                                      color: Colors.white,
+                                      fontSize: 20),
+                                ),
+                                Column(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: saturdayLessons.map((e) {
+                                      final bool saturdayTime = true;
+                                      final bool obedTime = false;
+                                      Course course = getCourseById(e.course)!;
+                                      return ExportCourseTile(
+                                          type: searchType,
+                                          course: course,
+                                          e: e,
+                                          obedTime: obedTime,
+                                          saturdayTime: saturdayTime);
+                                    }).toList())
+                              ]),
+                        ],
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        ));
+
+    final XFile file =
+        XFile.fromData(savedFile, name: "Расписание ${searchName}");
+    final html.Blob blob = html.Blob([savedFile], 'image/png');
+    final String url = html.Url.createObjectUrlFromBlob(blob);
+
+    html.AnchorElement(href: url)
+      ..setAttribute('download', "Расписание ${searchName}.png")
+      ..click();
+
+    html.Url.revokeObjectUrl(url);
   }
 
   chas() async {
@@ -176,7 +435,7 @@ class ScheduleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void notify(){
+  void notify() {
     notifyListeners();
   }
 
