@@ -1,11 +1,13 @@
 
 import 'dart:convert';
 
+import 'package:zameny_flutter/domain/Models/lesson_model.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_turbo_search.dart';
 
 class Teacher extends SearchItem {
   int id;
   String name;
+  List<Lesson> lessons = [];
   Teacher({
     required this.id,
     required this.name,

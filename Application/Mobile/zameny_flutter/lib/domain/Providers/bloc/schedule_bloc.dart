@@ -8,6 +8,7 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Api.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
+import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 
@@ -148,6 +149,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                     end: event.dateEnd,
                     teacherID: event.teacherID)
                 .then((value) {
+                  Teacher teacher = GetIt.I.get<Data>().teachers.where((element) => element.id == event.teacherID).first;
+                  teacher.lessons = value;
               lessons = value;
               groupsID = List<int>.from(lessons.map((e) => e.group));
             }),

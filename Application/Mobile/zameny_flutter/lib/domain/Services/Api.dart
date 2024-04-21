@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/domain/Services/tools.dart';
 
 abstract class Api {
   static Future<List<Lesson>> loadWeekSchedule(
@@ -18,10 +19,13 @@ abstract class Api {
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
 
+    Group group = getGroupById(groupID)!;
+    group.lessons = [];
     List<Lesson> weekLessons = [];
     for (var element in data) {
       Lesson lesson = Lesson.fromMap(element);
       weekLessons.add(lesson);
+      group.lessons.add(lesson);
     }
     return weekLessons;
   }

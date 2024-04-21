@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -26,7 +27,7 @@ Future<void> main() async {
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
 
   runApp(
-    const MyApp(),
+    const Portal(child: MyApp()),
   );
 }
 
