@@ -1,7 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:riverpod/riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 

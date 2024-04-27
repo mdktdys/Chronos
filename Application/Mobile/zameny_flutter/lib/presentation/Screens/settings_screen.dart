@@ -53,7 +53,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                 constraints: const BoxConstraints(maxWidth: 1200),
                 child: Column(
                   children: [
-                    SettingsHeader(),
+                    const SettingsHeader(),
                     Column(
                       children: [
                         const SizedBox(

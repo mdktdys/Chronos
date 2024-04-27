@@ -81,7 +81,7 @@ class ScheduleLoaded extends ScheduleState {
   ScheduleLoaded({required this.lessons, required this.zamenas});
 
   @override
-  List<Object> get props => [this.lessons, this.zamenas];
+  List<Object> get props => [lessons, zamenas];
 }
 
 final class ScheduleFailedLoading extends ScheduleState {

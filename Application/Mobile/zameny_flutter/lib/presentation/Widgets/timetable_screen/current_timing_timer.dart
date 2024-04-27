@@ -55,7 +55,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
   }
 
   LessonTimings? getLessonTiming(bool obed) {
-    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);;
+    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
     bool isSaturday = current.weekday == 6;
     if (isSaturday) {
       LessonTimings? timing = GetIt.I

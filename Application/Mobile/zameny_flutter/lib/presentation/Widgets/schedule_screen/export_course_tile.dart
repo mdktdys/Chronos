@@ -23,7 +23,7 @@ class ExportCourseTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        margin: EdgeInsets.symmetric(vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 5),
         width: 500,
         child: Container(
           decoration: BoxDecoration(
