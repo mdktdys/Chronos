@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
@@ -228,7 +227,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                         ),
                       ],
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 100,
                     )
                   ],
@@ -376,7 +375,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                 if (zamena != null) {
                                   if (provider.searchType ==
                                       SearchType.teacher) {
-                                    zamena = zamena!.teacherID ==
+                                    zamena = zamena.teacherID ==
                                             provider.teacherIDSeek
                                         ? zamena
                                         : null;
@@ -388,15 +387,15 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                         .get<Data>()
                                         .zamenasFull
                                         .where((element) =>
-                                            element.group == lesson!.group &&
+                                            element.group == lesson.group &&
                                             element.date.day == current.day &&
                                             element.date.month == current.month)
                                         .isNotEmpty) {
-                                      return SizedBox();
+                                      return const SizedBox();
                                     }
                                     return CourseTile(
                                         short: true,
-                                        course: getCourseById(lesson!.course)!,
+                                        course: getCourseById(lesson.course)!,
                                         lesson: lesson,
                                         type: provider.searchType,
                                         refresh: () {},
@@ -408,7 +407,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                 if (zamena != null) {
                                   return CourseTile(
                                       short: true,
-                                      course: getCourseById(zamena!.courseID) ??
+                                      course: getCourseById(zamena.courseID) ??
                                           Course(
                                               id: -1,
                                               name: "name",

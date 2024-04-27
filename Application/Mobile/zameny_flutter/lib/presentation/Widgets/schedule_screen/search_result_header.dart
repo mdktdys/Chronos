@@ -1,13 +1,8 @@
-import 'dart:developer';
 import 'dart:ui';
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/secrets.dart';
@@ -31,53 +26,6 @@ class _SearchResultHeaderState extends State<SearchResultHeader> {
     return Stack(
       alignment: Alignment.center,
       children: [
-        provider.searchType != SearchType.cabinet ? Align(
-          alignment: Alignment.topRight,
-          child: Modal(
-            visible: opened,
-            modal: Dialog(
-              alignment: Alignment.topRight,
-              child: Container(
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(26),
-                      border: Border.all(
-                          width: 1, color: Colors.white.withOpacity(0.15))),
-                  child: Column(mainAxisSize: MainAxisSize.min, children: [
-                    GestureDetector(
-                      onTap: () async {
-                        await provider.exportSchedulePNG(context);
-                        setState(() => opened = false);
-                      },
-                      child: SizedBox(
-                        height: 30,
-                        child: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Icon(Icons.image),
-                            SizedBox(
-                              width: 5,
-                            ),
-                            Text(
-                              'Экспортировать расписание',
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu', color: Colors.white),
-                            ),
-                          ],
-                        ),
-                      ),
-                    )
-                  ])),
-            ),
-            onClose: () => setState(() => opened = false),
-            child: IconButton(
-              icon: Icon(Icons.more_vert),
-              onPressed: () {
-                setState(() => opened = true);
-              },
-            ),
-          ),
-        ) : SizedBox(),
         Column(
           children: [
             Text(provider.getSearchTypeNamed(),
@@ -96,13 +44,20 @@ class _SearchResultHeaderState extends State<SearchResultHeader> {
             enabled && IS_DEV
                 ? Container(
                     margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-                    padding: EdgeInsets.all(8),
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(
+                          color: Theme.of(context)
+                              .colorScheme
+                              .onSurface
+                              .withOpacity(0.1)),
+                    ),
                     child: Row(
                       children: [
                         GestureDetector(
                           onTap: () async {
-                            await provider.exportSchedulePNG(
-                                 context);
+                            await provider.exportSchedulePNG(context);
                           },
                           child: Container(
                             width: 45,
@@ -117,18 +72,62 @@ class _SearchResultHeaderState extends State<SearchResultHeader> {
                         )
                       ],
                     ),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(
-                          color: Theme.of(context)
-                              .colorScheme
-                              .onSurface
-                              .withOpacity(0.1)),
-                    ),
                   )
                 : const SizedBox()
           ],
         ),
+        provider.searchType != SearchType.cabinet
+            ? Align(
+                alignment: Alignment.topRight,
+                child: Modal(
+                  visible: opened,
+                  modal: Dialog(
+                    alignment: Alignment.topRight,
+                    child: Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(26),
+                            border: Border.all(
+                                width: 1,
+                                color: Colors.white.withOpacity(0.15))),
+                        child:
+                            Column(mainAxisSize: MainAxisSize.min, children: [
+                          GestureDetector(
+                            onTap: () async {
+                              await provider.exportSchedulePNG(context);
+                              setState(() => opened = false);
+                            },
+                            child: const SizedBox(
+                              height: 30,
+                              child: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(Icons.image),
+                                  SizedBox(
+                                    width: 5,
+                                  ),
+                                  Text(
+                                    'Экспортировать расписание',
+                                    style: TextStyle(
+                                        fontFamily: 'Ubuntu',
+                                        color: Colors.white),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ])),
+                  ),
+                  onClose: () => setState(() => opened = false),
+                  child: IconButton(
+                    icon: const Icon(Icons.more_vert),
+                    onPressed: () {
+                      setState(() => opened = true);
+                    },
+                  ),
+                ),
+              )
+            : const SizedBox(),
       ],
     );
   }

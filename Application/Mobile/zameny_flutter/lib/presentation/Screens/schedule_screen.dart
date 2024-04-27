@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
@@ -83,7 +82,8 @@ class _ScheduleScreenState extends State<ScheduleScreen>
             child: Align(
               alignment: Alignment.topCenter,
               child: ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 1200),
+                constraints:
+                    BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width),
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(children: [
@@ -190,8 +190,8 @@ class LessonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScheduleProvider provider = context.watch<ScheduleProvider>();
-    final currentDay = DateTime.now().add(GetIt.I.get<Data>().networkOffset).weekday;
-    final data = GetIt.I.get<Data>();
+    final currentDay =
+        DateTime.now().add(GetIt.I.get<Data>().networkOffset).weekday;
     final startDate = provider.navigationDate
         .subtract(Duration(days: provider.navigationDate.weekday - 1));
 
@@ -199,7 +199,6 @@ class LessonList extends StatelessWidget {
       context: context,
       refresh: refresh,
       weekLessons: lessons,
-      data: data,
       zamenas: zamenas,
       startDate: startDate,
       currentDay: currentDay,
@@ -213,18 +212,16 @@ class ScheduleList extends StatelessWidget {
   final BuildContext context;
   final Function refresh;
   final List<Lesson> weekLessons;
-  final Data data;
   final List<Zamena> zamenas;
   final DateTime startDate;
   final int currentDay;
-  final todayWeek;
-  final currentWeek;
+  final int todayWeek;
+  final int currentWeek;
   const ScheduleList(
       {super.key,
       required this.context,
       required this.refresh,
       required this.weekLessons,
-      required this.data,
       required this.zamenas,
       required this.startDate,
       required this.currentDay,
@@ -235,52 +232,105 @@ class ScheduleList extends StatelessWidget {
   Widget build(BuildContext context) {
     ScheduleProvider provider = context.watch<ScheduleProvider>();
     SearchType searchType = provider.searchType;
-    return Column(
-        children: List.generate(6, (iter) {
-      final day = iter + 1;
-      List<Lesson> lessons = [];
-      try {
-        lessons =
-            weekLessons.where((lesson) => lesson.date.weekday == day).toList();
-        lessons.sort((a, b) => a.number > b.number ? 1 : -1);
-      } catch (e) {
-        return const SizedBox();
-      }
+    final isDesktop = Adaptive.isDesktop(context);
+    List<Widget> days = List.generate(6, (iter) {
+      return ScheduleListWidget(
+        iter: iter,
+        weekLessons: weekLessons,
+        zamenas: zamenas,
+        searchType: searchType,
+        refresh: refresh,
+        startDate: startDate,
+        currentDay: currentDay,
+        todayWeek: todayWeek,
+        currentWeek: currentWeek,
+      );
+    });
+    return isDesktop
+        ? Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: days
+                .map((e) => Expanded(
+                      child: e,
+                    ))
+                .toList(),
+          )
+        : Column(children: days);
+  }
+}
 
-      List<Zamena> dayZamenas =
-          zamenas.where((element) => element.date.weekday == day).toList();
-      dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+class ScheduleListWidget extends StatelessWidget {
+  final int iter;
+  final List<Lesson> weekLessons;
+  final List<Zamena> zamenas;
+  final SearchType searchType;
+  final Function refresh;
+  final DateTime startDate;
+  final int currentDay;
+  final int todayWeek;
+  final int currentWeek;
 
-      //if ((dayZamenas.length + lessons.length) > 0) {
-      if (searchType == SearchType.group || searchType == SearchType.cabinet) {
-        return DayScheduleWidget(
-          refresh: refresh,
-          day: day,
-          dayZamenas: dayZamenas,
-          lessons: lessons,
-          startDate: startDate,
-          data: data,
-          currentDay: currentDay,
-          todayWeek: todayWeek,
-          currentWeek: currentWeek,
-        );
-      } else if (searchType == SearchType.teacher) {
-        return DayScheduleWidgetTeacher(
-          refresh: refresh,
-          day: day,
-          dayZamenas: dayZamenas,
-          lessons: lessons,
-          startDate: startDate,
-          data: data,
-          currentDay: currentDay,
-          todayWeek: todayWeek,
-          currentWeek: currentWeek,
-        );
-      }
+  const ScheduleListWidget({
+    super.key,
+    required this.iter,
+    required this.weekLessons,
+    required this.zamenas,
+    required this.searchType,
+    required this.refresh,
+    required this.startDate,
+    required this.currentDay,
+    required this.todayWeek,
+    required this.currentWeek,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final day = iter + 1;
+    List<Lesson> lessons = [];
+    final Data data = GetIt.I.get<Data>();
+    try {
+      lessons =
+          weekLessons.where((lesson) => lesson.date.weekday == day).toList();
+      lessons.sort((a, b) => a.number > b.number ? 1 : -1);
+    } catch (e) {
       return const SizedBox();
-      // } else {
-      //   return const SizedBox();
-      // }
-    }));
+    }
+
+    List<Zamena> dayZamenas =
+        zamenas.where((element) => element.date.weekday == day).toList();
+    dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+
+    //if ((dayZamenas.length + lessons.length) > 0) {
+    if (searchType == SearchType.group || searchType == SearchType.cabinet) {
+      return DayScheduleWidget(
+        key: ValueKey(day),
+        refresh: refresh,
+        day: day,
+        dayZamenas: dayZamenas,
+        lessons: lessons,
+        startDate: startDate,
+        data: data,
+        currentDay: currentDay,
+        todayWeek: todayWeek,
+        currentWeek: currentWeek,
+      );
+    } else if (searchType == SearchType.teacher) {
+      return DayScheduleWidgetTeacher(
+        key: ValueKey(day),
+        refresh: refresh,
+        day: day,
+        dayZamenas: dayZamenas,
+        lessons: lessons,
+        startDate: startDate,
+        data: data,
+        currentDay: currentDay,
+        todayWeek: todayWeek,
+        currentWeek: currentWeek,
+      );
+    }
+    return const SizedBox();
+    // } else {
+    //   return const SizedBox();
+    // }
   }
 }

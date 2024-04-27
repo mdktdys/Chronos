@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:get_it/get_it.dart';
@@ -13,7 +12,6 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
-import 'dart:html' as html;
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -105,14 +103,14 @@ class ScheduleProvider extends ChangeNotifier {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Расписание ${searchName}",
-                    style: TextStyle(
+                    "Расписание $searchName",
+                    style: const TextStyle(
                         fontFamily: 'Ubuntu',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
                         fontSize: 24),
                   ),
-                  SizedBox(
+                  const SizedBox(
                     height: 5,
                   ),
                   Column(
@@ -124,7 +122,7 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Понедельник",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -135,8 +133,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: mondayLessons.isNotEmpty
                                         ? mondayLessons.map((e) {
-                                            final bool saturdayTime = false;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = false;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -146,15 +144,15 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Четверг",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -165,8 +163,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: thursdayLessons.isNotEmpty
                                         ? thursdayLessons.map((e) {
-                                            final bool saturdayTime = false;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = false;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -176,7 +174,7 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
                         ],
                       ),
@@ -186,7 +184,7 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Вторник",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -197,8 +195,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: tuesdayLessons.isNotEmpty
                                         ? tuesdayLessons.map((e) {
-                                            final bool saturdayTime = false;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = false;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -208,15 +206,15 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Пятница",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -227,8 +225,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: fridayLessons.isNotEmpty
                                         ? fridayLessons.map((e) {
-                                            final bool saturdayTime = false;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = false;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -238,7 +236,7 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
                         ],
                       ),
@@ -248,7 +246,7 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Среда",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -259,8 +257,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: wednesdayLessons.isNotEmpty
                                         ? wednesdayLessons.map((e) {
-                                            final bool saturdayTime = false;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = false;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -270,15 +268,15 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
-                          SizedBox(
+                          const SizedBox(
                             width: 20,
                           ),
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
+                                const Text(
                                   "Суббота",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
@@ -289,8 +287,8 @@ class ScheduleProvider extends ChangeNotifier {
                                     mainAxisSize: MainAxisSize.min,
                                     children: saturdayLessons.isNotEmpty
                                         ? saturdayLessons.map((e) {
-                                            final bool saturdayTime = true;
-                                            final bool obedTime = false;
+                                            const bool saturdayTime = true;
+                                            const bool obedTime = false;
                                             Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
@@ -300,7 +298,7 @@ class ScheduleProvider extends ChangeNotifier {
                                                 obedTime: obedTime,
                                                 saturdayTime: saturdayTime);
                                           }).toList()
-                                        : [ExportCourseTileEmpty()])
+                                        : [const ExportCourseTileEmpty()])
                               ]),
                         ],
                       )
@@ -313,15 +311,15 @@ class ScheduleProvider extends ChangeNotifier {
         ));
 
     final XFile file =
-        XFile.fromData(savedFile, name: "Расписание ${searchName}");
-    final html.Blob blob = html.Blob([savedFile], 'image/png');
-    final String url = html.Url.createObjectUrlFromBlob(blob);
+        XFile.fromData(savedFile, name: "Расписание $searchName");
+    // final html.Blob blob = html.Blob([savedFile], 'image/png');
+    // final String url = html.Url.createObjectUrlFromBlob(blob);
 
-    html.AnchorElement(href: url)
-      ..setAttribute('download', "Расписание ${searchName}.png")
-      ..click();
+    // html.AnchorElement(href: url)
+    //   ..setAttribute('download', "Расписание ${searchName}.png")
+    //   ..click();
 
-    html.Url.revokeObjectUrl(url);
+    // html.Url.revokeObjectUrl(url);
   }
 
   chas() async {

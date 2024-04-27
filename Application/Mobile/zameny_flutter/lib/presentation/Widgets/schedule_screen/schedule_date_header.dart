@@ -1,16 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:zameny_flutter/domain/Providers/providers.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
-import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/theme/colors.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
 
 class DateHeader extends StatelessWidget {

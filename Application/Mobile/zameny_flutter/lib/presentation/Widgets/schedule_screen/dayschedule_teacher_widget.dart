@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_header.dart';
@@ -50,7 +51,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
       if (widget.day == widget.currentDay &&
-          widget.currentWeek == widget.todayWeek) {
+          widget.currentWeek == widget.todayWeek && !Adaptive.isDesktop(context)) {
         Scrollable.ensureVisible(context,
             duration: const Duration(milliseconds: 500), alignment: 0.5);
       }
@@ -134,7 +135,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                     )
                   ],
                 )
-              : const SizedBox(),
+              : Adaptive.isDesktop(context) ? const SizedBox(height: 38,) : const SizedBox(),
           courseTiles.isNotEmpty
               ? Column(children: courseTiles)
               : Container(
