@@ -120,7 +120,7 @@ class _SearchResultHeaderState extends State<SearchResultHeader> {
                   ),
                   onClose: () => setState(() => opened = false),
                   child: IconButton(
-                    icon: const Icon(Icons.more_vert),
+                    icon: const Icon(Icons.more_vert,color: Colors.white,),
                     onPressed: () {
                       setState(() => opened = true);
                     },

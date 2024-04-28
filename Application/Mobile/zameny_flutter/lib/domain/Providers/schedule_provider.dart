@@ -12,6 +12,7 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
+import 'dart:html' as html;
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -310,16 +311,15 @@ class ScheduleProvider extends ChangeNotifier {
           ),
         ));
 
-    final XFile file =
-        XFile.fromData(savedFile, name: "Расписание $searchName");
-    // final html.Blob blob = html.Blob([savedFile], 'image/png');
-    // final String url = html.Url.createObjectUrlFromBlob(blob);
+    final XFile file = XFile.fromData(savedFile, name: "Расписание $searchName");
+    final html.Blob blob = html.Blob([savedFile], 'image/png');
+    final String url = html.Url.createObjectUrlFromBlob(blob);
 
-    // html.AnchorElement(href: url)
-    //   ..setAttribute('download', "Расписание ${searchName}.png")
-    //   ..click();
+    html.AnchorElement(href: url)
+      ..setAttribute('download', "Расписание $searchName.png")
+      ..click();
 
-    // html.Url.revokeObjectUrl(url);
+    html.Url.revokeObjectUrl(url);
   }
 
   chas() async {

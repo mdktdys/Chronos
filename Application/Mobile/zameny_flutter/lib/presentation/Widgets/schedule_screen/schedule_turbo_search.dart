@@ -115,7 +115,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                         item.getFiltername(),
                         style: TextStyle(
                             fontFamily: 'Ubuntu',
-                            color: Theme.of(context).colorScheme.onSurface),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(1.0)),
                       ),
                     ),
                   ),

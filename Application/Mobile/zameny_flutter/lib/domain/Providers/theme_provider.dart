@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zameny_flutter/theme/theme.dart';
 
 class ThemeProvider extends ChangeNotifier {
-  ThemeData theme = darkTheme;
+  ThemeData theme = lightTheme;
 
   int getCurrentIndex() {
     return theme == darkTheme ? 0 : 1;
