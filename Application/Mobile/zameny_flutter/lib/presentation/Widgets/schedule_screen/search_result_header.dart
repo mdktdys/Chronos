@@ -1,15 +1,12 @@
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/export_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
-import 'package:zameny_flutter/secrets.dart';
 
 class SearchResultHeader extends ConsumerStatefulWidget {
   const SearchResultHeader({
