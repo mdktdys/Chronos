@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
@@ -12,7 +13,8 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
-import 'dart:html' as html;
+
+import 'sharing/sharing.dart';
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -49,7 +51,7 @@ class ScheduleProvider extends ChangeNotifier {
         1;
   }
 
-  exportSchedulePNG(BuildContext context) async {
+  exportSchedulePNG(BuildContext context, WidgetRef ref) async {
     List<Lesson> lessons = [];
     String searchName = '';
     switch (searchType) {
@@ -311,15 +313,8 @@ class ScheduleProvider extends ChangeNotifier {
           ),
         ));
 
-    final XFile file = XFile.fromData(savedFile, name: "Расписание $searchName");
-    final html.Blob blob = html.Blob([savedFile], 'image/png');
-    final String url = html.Url.createObjectUrlFromBlob(blob);
-
-    html.AnchorElement(href: url)
-      ..setAttribute('download', "Расписание $searchName.png")
-      ..click();
-
-    html.Url.revokeObjectUrl(url);
+    String name = "Расписание $searchName";
+    ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
   }
 
   chas() async {
@@ -331,7 +326,6 @@ class ScheduleProvider extends ChangeNotifier {
         .select('*')
         .gt('date', from)
         .lte('date', to);
-    GetIt.I.get<Talker>().good(res);
   }
 
   void toggleWeek(int days, BuildContext context) {
