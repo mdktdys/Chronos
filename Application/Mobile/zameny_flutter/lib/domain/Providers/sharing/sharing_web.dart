@@ -1,13 +1,20 @@
-import 'dart:html' as html;
+import 'dart:developer';
 import 'dart:typed_data';
+import 'package:web/web.dart';
+import 'dart:convert';
 
 share({required String text, required List<Uint8List> files}) async {
-  final html.Blob blob = html.Blob(files, 'image/png');
-  final String url = html.Url.createObjectUrlFromBlob(blob);
-
-  html.AnchorElement(href: url)
-    ..setAttribute('download', "$text.png")
-    ..click();
-
-  html.Url.revokeObjectUrl(url);
+  try {
+    files.asMap().forEach((index, bytes) {
+      String base64Image = base64Encode(bytes);
+      String dataUrl = 'data:image/png;base64,$base64Image';
+      HTMLAnchorElement link = document.createElement('a') as HTMLAnchorElement;
+      link.href = dataUrl;
+      link.download = dataUrl;
+      link.setAttribute("download", '$text.png');
+      link.click();
+    });
+  } catch (error) {
+    log(error.toString());
+  }
 }
