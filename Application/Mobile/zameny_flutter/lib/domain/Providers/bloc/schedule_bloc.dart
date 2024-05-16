@@ -110,20 +110,17 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           late List<Lesson> lessons;
           late List<Zamena> zamenas;
           await Future.wait([
-            Api
-                .loadWeekCabinetSchedule(
+            Api.loadWeekCabinetSchedule(
                     start: event.dateStart,
                     end: event.dateEnd,
                     cabinetID: event.cabinetID)
                 .then((value) => lessons = value),
-            Api
-                .loadCabinetZamenas(
+            Api.loadCabinetZamenas(
                     cabinetID: event.cabinetID,
                     start: event.dateStart,
                     end: event.dateEnd)
                 .then((value) => zamenas = value),
-            Api
-                .loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd)
+            Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd)
           ]);
           emit(ScheduleLoaded(
             lessons: lessons,
@@ -143,33 +140,33 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           late List<Zamena> zamenas;
           late List<int> groupsID;
           await Future.wait([
-            Api
-                .loadWeekTeacherSchedule(
+            Api.loadWeekTeacherSchedule(
                     start: event.dateStart,
                     end: event.dateEnd,
                     teacherID: event.teacherID)
                 .then((value) {
-                  Teacher teacher = GetIt.I.get<Data>().teachers.where((element) => element.id == event.teacherID).first;
-                  teacher.lessons = value;
+              Teacher teacher = GetIt.I
+                  .get<Data>()
+                  .teachers
+                  .where((element) => element.id == event.teacherID)
+                  .first;
+              teacher.lessons = value;
               lessons = value;
               groupsID = List<int>.from(lessons.map((e) => e.group));
             }),
-            Api
-                .loadTeacherZamenas(
+            Api.loadTeacherZamenas(
                     teacherID: event.teacherID,
                     start: event.dateStart,
                     end: event.dateEnd)
                 .then((value) => zamenas = value),
-            Api.loadZamenaFileLinks(
-                start: event.dateStart, end: event.dateEnd),
+            Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
             Api.loadHolidays(event.dateStart, event.dateEnd)
           ]);
 
           await Future.wait([
             Api.loadZamenasFull(groupsID, event.dateStart, event.dateEnd),
             Api.loadLiquidation(groupsID, event.dateStart, event.dateEnd),
-            Api
-                .loadZamenas(
+            Api.loadZamenas(
                     groupsID: groupsID,
                     start: event.dateStart,
                     end: event.dateEnd)
@@ -205,7 +202,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
               .updateSearchItems();
         }
 
-        if (searchProvider.groupIDSeek == -1 && searchProvider.searchType == SearchType.group) {
+        if (searchProvider.groupIDSeek == -1 &&
+            searchProvider.searchType == SearchType.group) {
           emit(ScheduleInitial());
           return;
         }
@@ -251,28 +249,36 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<LoadGroupWeek>(
       (event, emit) async {
         emit(ScheduleLoading());
-        late List<Lesson> lessons;
-        late List<Zamena> zamenas;
-        await Future.wait([
-          Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
-          Api
-              .loadZamenasFull([event.groupID], event.dateStart, event.dateEnd),
-          Api
-              .loadWeekSchedule(
-                  start: event.dateStart,
-                  end: event.dateEnd,
-                  groupID: event.groupID)
-              .then((value) => lessons = value),
-          Api.loadZamenas(
-              groupsID: [event.groupID],
-              start: event.dateStart,
-              end: event.dateEnd).then((value) => zamenas = value),
-          Api.loadLiquidation([event.groupID], event.dateStart, event.dateEnd)
-        ]);
-        emit(ScheduleLoaded(
-          lessons: lessons,
-          zamenas: zamenas,
-        ));
+
+        try {
+          // Запускаем все асинхронные операции параллельно
+          final results = await Future.wait([
+            Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
+            Api.loadZamenasFull(
+                [event.groupID], event.dateStart, event.dateEnd),
+            Api.loadWeekSchedule(
+                start: event.dateStart,
+                end: event.dateEnd,
+                groupID: event.groupID),
+            Api.loadZamenas(
+                groupsID: [event.groupID],
+                start: event.dateStart,
+                end: event.dateEnd),
+            Api.loadLiquidation([event.groupID], event.dateStart, event.dateEnd)
+          ]);
+
+          // Извлекаем результаты
+          final List<Lesson> lessons = results[2] as List<Lesson>;
+          final List<Zamena> zamenas = results[3] as List<Zamena>;
+
+          emit(ScheduleLoaded(
+            lessons: lessons,
+            zamenas: zamenas,
+          ));
+        } catch (e) {
+          // Обработка ошибок
+          emit(ScheduleFailedLoading(error: e.toString()));
+        }
       },
       transformer: restartable(),
     );

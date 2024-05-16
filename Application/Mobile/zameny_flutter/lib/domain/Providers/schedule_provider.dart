@@ -123,9 +123,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Понедельник",
-                                  style: TextStyle(
+                                Text(
+                                  "Понедельник ${navigationDate.day}.${navigationDate.month}",
+                                  style: const TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
                                       fontSize: 20),
