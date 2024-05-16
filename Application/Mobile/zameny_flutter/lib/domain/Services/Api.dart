@@ -134,7 +134,7 @@ abstract class Api {
     List<dynamic> data = await client
         .from('Liquidation')
         .select('*')
-        .in_('group', groupsID)
+        .inFilter('group', groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
     for (var element in data) {
@@ -156,7 +156,7 @@ abstract class Api {
     dat.timings.sort(((a, b) => a.number - b.number));
   }
 
- static Future<void> loadZamenasFull(
+  static Future<void> loadZamenasFull(
       List<int> groupsID, DateTime start, DateTime end) async {
     final dat = GetIt.I.get<Data>();
 
@@ -170,7 +170,7 @@ abstract class Api {
     List<dynamic> data = await client
         .from("ZamenasFull")
         .select("*")
-        .in_("group", groupsID)
+        .inFilter("group", groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String());
     for (var element in data) {
@@ -227,7 +227,7 @@ abstract class Api {
       {required List<int> groupsID,
       required DateTime start,
       required DateTime end}) async {
-    if (groupsID.isEmpty == -1) {
+    if (groupsID.isEmpty == true) {
       return [];
     }
     final client = GetIt.I.get<SupabaseClient>();
@@ -235,7 +235,7 @@ abstract class Api {
     List<dynamic> data = await client
         .from('Zamenas')
         .select('*')
-        .in_('group', groupsID)
+        .inFilter('group', groupsID)
         .lte('date', end.toIso8601String())
         .gte('date', start.toIso8601String())
         .order('date');

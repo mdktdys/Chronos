@@ -95,7 +95,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         element.lesson.number == 6 ||
         element.lesson.number == 7);
     
-    GetIt.I.get<Talker>().good("ДЕНЬ ${widget.day}");
+    GetIt.I.get<Talker>().info("ДЕНЬ ${widget.day}");
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: isToday
