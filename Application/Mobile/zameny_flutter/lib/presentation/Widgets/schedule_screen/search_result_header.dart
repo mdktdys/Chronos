@@ -173,12 +173,12 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
 
 class Modal extends StatefulWidget {
   const Modal({
-    Key? key,
+    super.key,
     required this.visible,
     required this.onClose,
     required this.modal,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final Widget modal;
@@ -234,11 +234,11 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
 
 class Barrier extends StatelessWidget {
   const Barrier({
-    Key? key,
+    super.key,
     required this.onClose,
     required this.visible,
     required this.child,
-  }) : super(key: key);
+  });
 
   final Widget child;
   final VoidCallback onClose;

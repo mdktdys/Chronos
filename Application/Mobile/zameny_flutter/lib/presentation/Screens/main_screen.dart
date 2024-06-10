@@ -62,7 +62,7 @@ class _MainScreenState extends State<MainScreen> {
   Widget build(BuildContext context) {
     MainProvider provider = context.watch<MainProvider>();
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
           child: Stack(children: [

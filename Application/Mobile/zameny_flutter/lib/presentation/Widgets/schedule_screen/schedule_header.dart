@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
@@ -47,7 +46,7 @@ class ScheduleHeader extends ConsumerWidget {
             onPressed: () {
               showModalBottomSheet(
                   barrierColor: Colors.black.withOpacity(0.3),
-                  backgroundColor: Theme.of(context).colorScheme.background,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
                   context: context,
                   builder: (context) => SizedBox(
                         height: 100,

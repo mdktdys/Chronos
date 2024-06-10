@@ -90,7 +90,7 @@ class DayScheduleHeader extends StatelessWidget {
                               padding: const EdgeInsets.all(8),
                               decoration: BoxDecoration(
                                   color:
-                                      Theme.of(context).colorScheme.background,
+                                      Theme.of(context).colorScheme.surface,
                                   border: Border.all(
                                       color:
                                           Theme.of(context).colorScheme.primary,
@@ -181,7 +181,7 @@ class DayScheduleHeader extends StatelessWidget {
                                       shape: BoxShape.circle,
                                       color: Theme.of(context)
                                           .colorScheme
-                                          .background,
+                                          .surface,
                                       border: Border.all(
                                           width: 1,
                                           color: Theme.of(context)

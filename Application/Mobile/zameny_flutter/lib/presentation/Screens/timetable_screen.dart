@@ -38,7 +38,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
   Widget build(BuildContext context) {
     TimeTableProvider provider = context.watch<TimeTableProvider>();
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Align(

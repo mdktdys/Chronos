@@ -74,7 +74,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
     super.build(context);
     ThemeProvider themeProvider = context.watch<ThemeProvider>();
     return Scaffold(
-        backgroundColor: themeProvider.theme.colorScheme.background,
+        backgroundColor: themeProvider.theme.colorScheme.surface,
         key: myGlobals.scaffoldKey,
         body: SingleChildScrollView(
             controller: scrollController,

@@ -94,7 +94,7 @@ class ScheduleProvider extends ChangeNotifier {
         pixelRatio: 4,
         context: context,
         Container(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.all(16),
           child: SizedBox(
             width: 600,
