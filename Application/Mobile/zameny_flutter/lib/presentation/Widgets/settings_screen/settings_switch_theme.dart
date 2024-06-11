@@ -15,7 +15,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
         width: double.infinity,
         child: CupertinoSlidingSegmentedControl(
             thumbColor: Theme.of(context).colorScheme.primary,
-            backgroundColor: Theme.of(context).colorScheme.background,
+            backgroundColor: Theme.of(context).colorScheme.surface,
             groupValue: sliding,
             children: {
               0: Padding(

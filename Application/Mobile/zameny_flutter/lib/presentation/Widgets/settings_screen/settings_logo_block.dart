@@ -22,7 +22,7 @@ class SettingsLogoBlock extends StatelessWidget {
         padding: const EdgeInsets.all(5),
         child: Container(
           decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.background,
+            color: Theme.of(context).colorScheme.surface,
             borderRadius: const BorderRadius.all(Radius.circular(15)),
           ),
           child: Row(

@@ -1,31 +1,39 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:zameny_flutter/domain/Providers/drawer_provider.dart';
 
-class ScheduleHeader extends StatelessWidget {
+
+class ScheduleHeader extends ConsumerWidget {
   const ScheduleHeader({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref ) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(
-            width: 52,
-            height: 52,
-            child: Center(
-                child: SvgPicture.asset(
-              "assets/icon/vuesax_linear_note.svg",
-              colorFilter: ColorFilter.mode(
-                  Theme.of(context).colorScheme.inverseSurface,
-                  BlendMode.srcIn),
-              width: 32,
-              height: 32,
-            ))),
+        GestureDetector(
+          onTap: () {
+            ref.read(drawerProvider).openDrawer();
+          },
+          child: SizedBox(
+              width: 52,
+              height: 52,
+              child: Center(
+                  child: SvgPicture.asset(
+                "assets/icon/vuesax_linear_note.svg",
+                colorFilter: ColorFilter.mode(
+                    Theme.of(context).colorScheme.inverseSurface,
+                    BlendMode.srcIn),
+                width: 32,
+                height: 32,
+              ))),
+        ),
         Text(
           "Расписание",
           style: TextStyle(
@@ -38,7 +46,7 @@ class ScheduleHeader extends StatelessWidget {
             onPressed: () {
               showModalBottomSheet(
                   barrierColor: Colors.black.withOpacity(0.3),
-                  backgroundColor: Theme.of(context).colorScheme.background,
+                  backgroundColor: Theme.of(context).colorScheme.surface,
                   context: context,
                   builder: (context) => SizedBox(
                         height: 100,

@@ -42,7 +42,7 @@ class _SettingsScreenState extends State<SettingsScreen>
     super.build(context);
 
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.background,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SingleChildScrollView(
           physics: const BouncingScrollPhysics(),
           child: Padding(

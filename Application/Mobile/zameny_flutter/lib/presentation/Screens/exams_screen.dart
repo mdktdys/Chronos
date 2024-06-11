@@ -16,7 +16,7 @@ class _ExamsScreenState extends State<ExamsScreen>
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.background,
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Padding(
         padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 0),
         child: Column(

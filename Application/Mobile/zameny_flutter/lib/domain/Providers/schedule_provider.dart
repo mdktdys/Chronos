@@ -94,7 +94,7 @@ class ScheduleProvider extends ChangeNotifier {
         pixelRatio: 4,
         context: context,
         Container(
-          color: Theme.of(context).colorScheme.background,
+          color: Theme.of(context).colorScheme.surface,
           padding: const EdgeInsets.all(16),
           child: SizedBox(
             width: 600,
@@ -123,9 +123,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
-                                  "Понедельник",
-                                  style: TextStyle(
+                                Text(
+                                  "Понедельник ${navigationDate.day}.${navigationDate.month}",
+                                  style: const TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
                                       fontSize: 20),

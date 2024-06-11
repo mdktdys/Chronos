@@ -51,7 +51,8 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timestamp) {
       if (widget.day == widget.currentDay &&
-          widget.currentWeek == widget.todayWeek && !Adaptive.isDesktop(context)) {
+          widget.currentWeek == widget.todayWeek &&
+          !Adaptive.isDesktop(context)) {
         Scrollable.ensureVisible(context,
             duration: const Duration(milliseconds: 500), alignment: 0.5);
       }
@@ -83,19 +84,21 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     List<Widget> tiles =
         newMethod(teacherID, fullzamenas, todayDay, todayMonth, todayYear);
 
-    List<CourseTile> courseTiles = [];
+    List<Widget> courseTiles = [];
     for (Widget i in tiles) {
-      if (i is CourseTile) {
+      if (i is CourseTile || i is MixedCourseTile) {
         courseTiles.add(i);
       }
     }
-    bool needObedSwitch = courseTiles.any((element) =>
-        element.lesson.number == 4 ||
-        element.lesson.number == 5 ||
-        element.lesson.number == 6 ||
-        element.lesson.number == 7);
-    
-    GetIt.I.get<Talker>().good("ДЕНЬ ${widget.day}");
+    // bool needObedSwitch = courseTiles.any((element) =>
+    //     element.lesson.number == 4 ||
+    //     element.lesson.number == 5 ||
+    //     element.lesson.number == 6 ||
+    //     element.lesson.number == 7);
+
+    bool needObedSwitch = true;
+
+    GetIt.I.get<Talker>().info("ДЕНЬ ${widget.day}");
     return Container(
       padding: const EdgeInsets.all(8),
       decoration: isToday
@@ -135,7 +138,11 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                     )
                   ],
                 )
-              : Adaptive.isDesktop(context) ? const SizedBox(height: 38,) : const SizedBox(),
+              : Adaptive.isDesktop(context)
+                  ? const SizedBox(
+                      height: 38,
+                    )
+                  : const SizedBox(),
           courseTiles.isNotEmpty
               ? Column(children: courseTiles)
               : Container(
@@ -205,21 +212,25 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
       ];
     }
     return widget.data.timings.map((para) {
-      for(Zamena zam in widget.dayZamenas){
-        GetIt.I.get<Talker>().debug("Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}");
+      for (Zamena zam in widget.dayZamenas) {
+        GetIt.I.get<Talker>().debug(
+            "Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}");
       }
       GetIt.I.get<Talker>().debug("Смотрю на пару - ${para.number}");
       //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
-      if (widget.dayZamenas.any((element) => element.lessonTimingsID == para.number)) {
+      if (widget.dayZamenas
+          .any((element) => element.lessonTimingsID == para.number)) {
         GetIt.I.get<Talker>().debug("Есть замена в эту пару");
         //если есть любая замена в этот день, неважно дети или препод
         Zamena? zamena = widget.dayZamenas
             .where((element) => element.lessonTimingsID == para.number)
             .first;
-        GetIt.I.get<Talker>().debug("Замена ${getCourseById(zamena.courseID)!.name} ${getGroupById(zamena.groupID)!.name}");
+        GetIt.I.get<Talker>().debug(
+            "Замена ${getCourseById(zamena.courseID)!.name} ${getGroupById(zamena.groupID)!.name}");
         //если это замена детей и она не  меняет на моего препода
         if (zamena.teacherID != teacherID) {
-          GetIt.I.get<Talker>().debug("Не тот же препод ${getTeacherById(zamena.teacherID).name}");
+          GetIt.I.get<Talker>().debug(
+              "Не тот же препод ${getTeacherById(zamena.teacherID).name}");
           //пытаюсь поставить дефолтную пару препода
           //проверяю не состоит ли эта пара в полной замене
           if (widget.lessons.any((element) => element.number == para.number)) {
@@ -230,7 +241,9 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             final course = getCourseById(lesson.course) ??
                 Course(id: -1, name: "err3", color: "50,0,0,1");
 
-            GetIt.I.get<Talker>().debug("Есть в дефолтном расписании ${course.name}");
+            GetIt.I
+                .get<Talker>()
+                .debug("Есть в дефолтном расписании ${course.name}");
 
             //проверяю не состоит ли группа дефолтного расписания в полной замене
 
@@ -253,7 +266,8 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 element.group == lesson.group);
 
             if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
-              GetIt.I.get<Talker>().debug("Ставлю ${course.name} нет полной замены нет другой замены нет в ликвидцаиях");
+              GetIt.I.get<Talker>().debug(
+                  "Ставлю ${course.name} нет полной замены нет другой замены нет в ликвидцаиях");
               return CourseTile(
                 short: false,
                 type: SearchType.teacher,
@@ -312,52 +326,80 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         //   GetIt.I.get<Talker>().good(para.number);
         // });
         if (widget.lessons.any((element) => element.number == para.number)) {
-          Lesson lesson = widget.lessons
+          List<Lesson> lessons = widget.lessons
               .where((element) => element.number == para.number)
-              .first;
+              .toList();
+          GetIt.I.get<Talker>().warning(lessons.length.toString());
 
-          final course = getCourseById(lesson.course) ??
-              Course(id: -1, name: "err3", color: "50,0,0,1");
+          final List<TileData> tiles = [];
 
-          bool hasLiquidation = data.liquidations.any((element) =>
-              element.date == DateTime(todayYear, todayMonth, todayDay) &&
-              element.group == lesson.group);
+          for (var lesson in lessons) {
+            final course = getCourseById(lesson.course) ??
+                Course(id: -1, name: "err3", color: "50,0,0,1");
 
-          if (hasLiquidation) {
-            final Course courseEmpty = course.copyWith(name: "нет");
-            final Lesson lessonEmpty = lesson;
-            final Lesson sec = lesson.copyWith(course: 9539);
-            return CourseTile(
-              short: false,
-              type: SearchType.teacher,
-              course: courseEmpty,
-              obedTime: obed,
-              lesson: sec,
-              swaped: lessonEmpty,
-              refresh: widget.refresh,
-              saturdayTime: widget.day == 6,
-            );
+            final group = getGroupById(lesson.group);
+            final cabinet = getCabinetById(lesson.cabinet);
+            final color = getCourseColor(course.color);
+
+            bool hasLiquidation = data.liquidations.any((element) =>
+                element.date == DateTime(todayYear, todayMonth, todayDay) &&
+                element.group == lesson.group);
+
+            if (hasLiquidation) {
+// CourseTile(
+//                 short: false,
+//                 type: SearchType.teacher,
+//                 course: courseEmpty,
+//                 obedTime: obed,
+//                 lesson: sec,
+//                 swaped: lessonEmpty,
+//                 refresh: widget.refresh,
+//                 saturdayTime: widget.day == 6,
+//               )
+
+              tiles.add(TileData(
+                  liqidated: true,
+                  title: course.copyWith(name: '${course.name} - Снято').name,
+                  number: lesson.number,
+                  subTitle: group?.name??'',
+                  location: cabinet.name,
+                  color: color,
+                  zamenaAlert: false));
+            }
+
+//проверяю не состоит ли группа дефолтного расписания в полной замене
+            if (fullzamenas
+                .where((element) =>
+                    element.group == lesson.group &&
+                    element.date.day == todayDay &&
+                    element.date.month == todayMonth &&
+                    element.date.year == todayYear)
+                .isEmpty) {
+// CourseTile(
+//                 short: false,
+//                 type: SearchType.teacher,
+//                 course: course,
+//                 obedTime: obed,
+//                 lesson: lesson,
+//                 swaped: null,
+//                 refresh: widget.refresh,
+//                 saturdayTime: widget.day == 6,
+//               )
+
+              tiles.add(TileData(
+                  title: course.name,
+                  number: lesson.number,
+                  subTitle: group?.name ?? '',
+                  location: cabinet.name,
+                  color: color,
+                  zamenaAlert: false));
+            }
           }
-
-          //проверяю не состоит ли группа дефолтного расписания в полной замене
-          if (fullzamenas
-              .where((element) =>
-                  element.group == lesson.group &&
-                  element.date.day == todayDay &&
-                  element.date.month == todayMonth &&
-                  element.date.year == todayYear)
-              .isEmpty) {
-            return CourseTile(
-              short: false,
-              type: SearchType.teacher,
-              course: course,
-              obedTime: obed,
-              lesson: lesson,
-              swaped: null,
-              refresh: widget.refresh,
-              saturdayTime: widget.day == 6,
-            );
-          }
+          return MixedCourseTile(
+            tilesData: tiles,
+            saturdayTime: widget.day == 6,
+            obedTime: obed,
+          );
         }
       }
 
