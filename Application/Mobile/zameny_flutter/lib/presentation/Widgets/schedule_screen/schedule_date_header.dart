@@ -72,7 +72,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                           color: Provider.of<ThemeProvider>(context)
                               .theme
                               .colorScheme
-                              .background,
+                              .surface,
                           borderRadius: BorderRadius.circular(20)),
                       child: sf.SfDateRangePicker(
                         selectionColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
