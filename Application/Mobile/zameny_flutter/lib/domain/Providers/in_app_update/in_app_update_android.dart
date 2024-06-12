@@ -23,11 +23,13 @@ class Updater extends ChangeNotifier {
           GetIt.I.get<Talker>().info(result);
           InAppUpdate.completeFlexibleUpdate();
           GetIt.I.get<Talker>().info("Updated");
+          return;
         }
 
         if (_updateInfo!.immediateUpdateAllowed) {
           result = await InAppUpdate.performImmediateUpdate();
           GetIt.I.get<Talker>().info(result);
+          return;
         }
       }
     } catch (e) {
