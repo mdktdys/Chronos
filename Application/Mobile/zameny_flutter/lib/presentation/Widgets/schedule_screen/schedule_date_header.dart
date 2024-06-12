@@ -83,7 +83,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                           selectionShape:
                               sf.DateRangePickerSelectionShape.circle,
                           initialDisplayDate: DateTime.now()
-                              .add(GetIt.I.get<Data>().networkOffset),
+                              ,
                           showActionButtons: true,
                           onViewChanged: (dateRangePickerViewChangedArgs) {
                             GetIt.I.get<Talker>().debug("need load");
@@ -211,10 +211,10 @@ class MonthCell extends river.ConsumerWidget {
             .holidays
             .any((element) => element.date == details.date);
     bool isToday = details.date.day ==
-            DateTime.now().add(GetIt.I.get<Data>().networkOffset).day &&
+            DateTime.now().day &&
         details.date.month ==
-            DateTime.now().add(GetIt.I.get<Data>().networkOffset).month &&
-        DateTime.now().add(GetIt.I.get<Data>().networkOffset).year ==
+            DateTime.now().month &&
+        DateTime.now().year ==
             details.date.year;
     if (isToday) {
       //GetIt.I.get<Talker>().good("da");

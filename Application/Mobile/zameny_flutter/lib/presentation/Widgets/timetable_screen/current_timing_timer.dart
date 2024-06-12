@@ -37,12 +37,12 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
 
   String getElapsedTime(bool obed) {
     LessonTimings timing = getLessonTiming(obed)!;
-    bool isSaturday = DateTime.now().add(GetIt.I.get<Data>().networkOffset).weekday == 6;
+    bool isSaturday = DateTime.now().weekday == 6;
     Duration left = isSaturday
-        ? timing.saturdayEnd.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset))
+        ? timing.saturdayEnd.difference(DateTime.now())
         : (obed
-            ? timing.obedEnd.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset))
-            : timing.end.difference(DateTime.now().add(GetIt.I.get<Data>().networkOffset)));
+            ? timing.obedEnd.difference(DateTime.now())
+            : timing.end.difference(DateTime.now()));
 
     int hours = left.inHours;
     int minutes = left.inMinutes;
@@ -55,7 +55,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
   }
 
   LessonTimings? getLessonTiming(bool obed) {
-    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
+    DateTime current = DateTime.now();
     bool isSaturday = current.weekday == 6;
     if (isSaturday) {
       LessonTimings? timing = GetIt.I
@@ -91,7 +91,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
   @override
   Widget build(BuildContext context) {
     LessonTimings? timing = getLessonTiming(widget.obed);
-    DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
+    DateTime current = DateTime.now();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
