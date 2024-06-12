@@ -112,8 +112,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                             Column(
                               children: [
                                 Padding(
-                                  padding: const EdgeInsets.all(
-                                    3,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 3,
                                   ),
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(20),
@@ -136,31 +136,34 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Сайтик колледжа",
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 14,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "В представлении не нуждается",
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                )
-                                              ],
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Сайтик колледжа",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "В представлении не нуждается",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             Padding(
                                                 padding:
@@ -183,8 +186,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(
-                                    3,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 3,
                                   ),
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(20),
@@ -207,31 +210,34 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Есть идеи или предложения?",
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 14,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "Отпишите мне в телеграмчике",
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                )
-                                              ],
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Есть идеи или предложения?",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "Отпишите мне в телеграмчике",
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             Padding(
                                                 padding:
@@ -254,8 +260,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   ),
                                 ),
                                 Padding(
-                                  padding: const EdgeInsets.all(
-                                    3,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 3,
                                   ),
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(20),
@@ -278,32 +284,35 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  "Актуальные замены!",
-                                                  style: TextStyle(
-                                                      fontWeight: FontWeight.bold,
-                                                      fontSize: 14,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                ),
-                                                const SizedBox(
-                                                  height: 5,
-                                                ),
-                                                Text(
-                                                  "Получайте уведомления о заменах\nв тг канальчике ;)",
-                                                  maxLines: 2,
-                                                  style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Theme.of(context)
-                                                          .primaryColorLight),
-                                                )
-                                              ],
+                                            Expanded(
+                                              child: Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    "Актуальные замены!",
+                                                    style: TextStyle(
+                                                        fontWeight:
+                                                            FontWeight.bold,
+                                                        fontSize: 14,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  ),
+                                                  const SizedBox(
+                                                    height: 5,
+                                                  ),
+                                                  Text(
+                                                    "Получайте уведомления о заменах\nв тг канальчике ;)",
+                                                    maxLines: 2,
+                                                    style: TextStyle(
+                                                        fontSize: 12,
+                                                        fontFamily: 'Ubuntu',
+                                                        color: Theme.of(context)
+                                                            .primaryColorLight),
+                                                  )
+                                                ],
+                                              ),
                                             ),
                                             Padding(
                                                 padding:
