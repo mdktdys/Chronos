@@ -1,14 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/in_app_update/in_app_update_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:provider/provider.dart' as pr;
 import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
+import 'package:zameny_flutter/theme/colors.dart';
 import 'domain/Providers/theme_provider.dart';
 
 class MyApp extends ConsumerStatefulWidget {
@@ -63,9 +65,29 @@ class _MyAppState extends ConsumerState<MyApp> {
                 theme: pr.Provider.of<ThemeProvider>(context).theme,
                 home: BlocProvider(
                     create: (context) => ScheduleBloc(),
-                    child: const Scaffold(
-                        backgroundColor: Color.fromARGB(255, 18, 21, 37),
-                        body: MainScreenWrapper()))));
+                    child: Scaffold(
+                        backgroundColor: const Color.fromARGB(255, 18, 21, 37),
+                        body: Column(
+                          children: [
+                            Container(
+                                color: Colors.transparent,
+                                height: 30,
+                                child: Center(
+                                    child: GestureDetector(
+                                        onTap: () {
+                                          launchUrl(Uri.parse(
+                                              'https://t.me/bot_uksivt'));
+                                        },
+                                        child: const Text(
+                                          "Актуальные замены в тг ✨ *тык*",
+                                          style: TextStyle(
+                                              fontFamily: 'Ubuntu',
+                                              color: Colors.white,
+                                              fontWeight: FontWeight.w500),
+                                        )))),
+                            const Expanded(child: MainScreenWrapper()),
+                          ],
+                        )))));
       },
     );
   }
