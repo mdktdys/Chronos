@@ -16,13 +16,12 @@ class DateHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Container(
-        height: 80,
         width: double.infinity,
         decoration: BoxDecoration(
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         ),
-        padding: const EdgeInsets.symmetric(horizontal: 10),
+        padding: const EdgeInsets.all(10),
         child: Row(
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -33,7 +32,7 @@ class DateHeader extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            DateHeaderDatePicker(provider: provider),
+            Expanded(child: DateHeaderDatePicker(provider: provider)),
             const SizedBox(
               width: 5,
             ),
@@ -53,136 +52,146 @@ class DateHeaderDatePicker extends StatelessWidget {
 
   @override
   Widget build(BuildContext ctx) {
-    return Expanded(
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: Material(
-          color: Colors.transparent,
-          child: InkWell(
-            onTap: () {
-              true? showDialog(
-                  context: ctx,
-                  builder: (context) {
-                    return Center(
-                        child: Container(
-                      width: 380,
-                      height: 450,
-                      padding: const EdgeInsets.all(8),
-                      decoration: BoxDecoration(
-                          color: Provider.of<ThemeProvider>(context)
-                              .theme
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(20),
+      child: Material(
+        color: Colors.transparent,
+        child: InkWell(
+          onTap: () {
+            true
+                ? showDialog(
+                    context: ctx,
+                    builder: (context) {
+                      return Center(
+                          child: Container(
+                        width: 380,
+                        height: 450,
+                        padding: const EdgeInsets.all(8),
+                        decoration: BoxDecoration(
+                            color: Provider.of<ThemeProvider>(context)
+                                .theme
+                                .colorScheme
+                                .surface,
+                            borderRadius: BorderRadius.circular(20)),
+                        child: sf.SfDateRangePicker(
+                          selectionColor: Theme.of(context)
                               .colorScheme
-                              .surface,
-                          borderRadius: BorderRadius.circular(20)),
-                      child: sf.SfDateRangePicker(
-                        selectionColor: Theme.of(context).colorScheme.primary.withOpacity(0.6),
-                        backgroundColor: Colors.transparent,
-                        selectionRadius: 10,
-                        selectionShape: sf.DateRangePickerSelectionShape.circle,
-                        initialDisplayDate: DateTime.now()
-                            .add(GetIt.I.get<Data>().networkOffset),
-                        showActionButtons: true,
-                        onViewChanged: (dateRangePickerViewChangedArgs) {
-                          GetIt.I.get<Talker>().debug("need load");
-                        },
-                        allowViewNavigation: false,
-                        selectionMode: sf.DateRangePickerSelectionMode.single,
-                        onCancel: () => Navigator.of(context).pop(),
-                        onSubmit: (p0) {
-                          if(p0 == null){
+                              .primary
+                              .withOpacity(0.6),
+                          backgroundColor: Colors.transparent,
+                          selectionRadius: 10,
+                          selectionShape:
+                              sf.DateRangePickerSelectionShape.circle,
+                          initialDisplayDate: DateTime.now()
+                              ,
+                          showActionButtons: true,
+                          onViewChanged: (dateRangePickerViewChangedArgs) {
+                            GetIt.I.get<Talker>().debug("need load");
+                          },
+                          allowViewNavigation: false,
+                          selectionMode:
+                              sf.DateRangePickerSelectionMode.single,
+                          onCancel: () => Navigator.of(context).pop(),
+                          onSubmit: (p0) {
+                            if (p0 == null) {
+                              Navigator.of(context).pop();
+                              return;
+                            }
+                            DateTime time = (p0 as DateTime);
+                            provider.navigationDate = time;
+                            provider.currentWeek =
+                                provider.getWeekNumber(time);
+                            provider.dateSwitched(ctx);
                             Navigator.of(context).pop();
-                            return;
-                          }
-                          DateTime time = (p0 as DateTime);
-                          provider.navigationDate = time;
-                          provider.currentWeek = provider.getWeekNumber(time);
-                          provider.dateSwitched(ctx);
-                          Navigator.of(context).pop();
-                        },
-                        monthViewSettings: sf.DateRangePickerMonthViewSettings(
-                            firstDayOfWeek: DateTime.monday,
-                            blackoutDates: GetIt.I
-                                .get<Data>()
-                                .holidays
-                                .map((e) => e.date)
-                                .toList()),
-                        showTodayButton: true,
-                        showNavigationArrow: true,
-                        navigationDirection:
-                            sf.DateRangePickerNavigationDirection.vertical,
-                        navigationMode: sf.DateRangePickerNavigationMode.scroll,
-                        headerStyle: const sf.DateRangePickerHeaderStyle(
-                            backgroundColor: Colors.transparent),
-                        extendableRangeSelectionDirection:
-                            sf.ExtendableRangeSelectionDirection.both,
-                        view: sf.DateRangePickerView.month,
-                        cellBuilder: (context, cellDetails) {
-                          return MonthCell(details: cellDetails);
-                        },
-                      ),
-                    ));
-                  }) : null;
-            },
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  "Весенний семестр 2023/2024",
-                  style: TextStyle(
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu',
-                      fontSize: 16,
-                      color: Theme.of(ctx).colorScheme.inverseSurface),
-                ),
-                const SizedBox(
-                  height: 5,
-                ),
-                SizedBox(
-                  height: 32,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        "Неделя ${provider.currentWeek}",
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 16,
-                            color: Theme.of(ctx).colorScheme.inverseSurface),
-                      ),
-                      const SizedBox(
-                        width: 5,
-                      ),
-                      AnimatedSize(
-                        curve: Curves.easeOutCubic,
-                        duration: const Duration(milliseconds: 150),
-                        alignment: Alignment.center,
-                        child: provider.todayWeek == provider.currentWeek
-                            ? Container(
-                                decoration: const BoxDecoration(
-                                    color: Color.fromARGB(255, 30, 118, 233),
-                                    borderRadius:
-                                        BorderRadius.all(Radius.circular(20))),
-                                child: const Padding(
-                                  padding: EdgeInsets.all(6.0),
-                                  child: Text(
-                                    "Текущий",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 14,
-                                        fontFamily: 'Ubuntu',
-                                        fontWeight: FontWeight.bold),
-                                  ),
+                          },
+                          monthViewSettings:
+                              sf.DateRangePickerMonthViewSettings(
+                                  firstDayOfWeek: DateTime.monday,
+                                  blackoutDates: GetIt.I
+                                      .get<Data>()
+                                      .holidays
+                                      .map((e) => e.date)
+                                      .toList()),
+                          showTodayButton: true,
+                          showNavigationArrow: true,
+                          navigationDirection: sf
+                              .DateRangePickerNavigationDirection.vertical,
+                          navigationMode:
+                              sf.DateRangePickerNavigationMode.scroll,
+                          headerStyle: const sf.DateRangePickerHeaderStyle(
+                              backgroundColor: Colors.transparent),
+                          extendableRangeSelectionDirection:
+                              sf.ExtendableRangeSelectionDirection.both,
+                          view: sf.DateRangePickerView.month,
+                          cellBuilder: (context, cellDetails) {
+                            return MonthCell(details: cellDetails);
+                          },
+                        ),
+                      ));
+                    })
+                : null;
+          },
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Весенний семестр 2023/2024",
+                maxLines: 2,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Ubuntu',
+                    fontSize: 16,
+                    color: Theme.of(ctx).colorScheme.inverseSurface),
+              ),
+              const SizedBox(
+                height: 5,
+              ),
+              SizedBox(
+                height: 32,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Неделя ${provider.currentWeek}",
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Ubuntu',
+                          fontSize: 16,
+                          color: Theme.of(ctx).colorScheme.inverseSurface),
+                    ),
+                    const SizedBox(
+                      width: 5,
+                    ),
+                    AnimatedSize(
+                      curve: Curves.easeOutCubic,
+                      duration: const Duration(milliseconds: 150),
+                      alignment: Alignment.center,
+                      child: provider.todayWeek == provider.currentWeek
+                          ? Container(
+                              decoration: const BoxDecoration(
+                                  color: Color.fromARGB(255, 30, 118, 233),
+                                  borderRadius: BorderRadius.all(
+                                      Radius.circular(20))),
+                              child: const Padding(
+                                padding: EdgeInsets.all(6.0),
+                                child: Text(
+                                  "Текущий",
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 14,
+                                      fontFamily: 'Ubuntu',
+                                      fontWeight: FontWeight.bold),
                                 ),
-                              )
-                            : Container(),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
+                              ),
+                            )
+                          : Container(),
+                    ),
+                  ],
+                ),
+              )
+            ],
           ),
         ),
       ),
@@ -202,7 +211,11 @@ class MonthCell extends river.ConsumerWidget {
             .holidays
             .any((element) => element.date == details.date);
     bool isToday = details.date.day ==
-        DateTime.now().add(GetIt.I.get<Data>().networkOffset).day && details.date.month == DateTime.now().add(GetIt.I.get<Data>().networkOffset).month && DateTime.now().add(GetIt.I.get<Data>().networkOffset).year == details.date.year;
+            DateTime.now().day &&
+        details.date.month ==
+            DateTime.now().month &&
+        DateTime.now().year ==
+            details.date.year;
     if (isToday) {
       //GetIt.I.get<Talker>().good("da");
     }
