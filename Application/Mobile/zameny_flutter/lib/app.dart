@@ -58,7 +58,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                     .theme
                     .colorScheme
                     .surface,
-                title: "Расписание и замены УКСИВТ",
+                title: "Замены уксивтика",
                 debugShowCheckedModeBanner: false,
                 theme: pr.Provider.of<ThemeProvider>(context).theme,
                 home: BlocProvider(
