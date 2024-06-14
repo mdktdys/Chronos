@@ -8,7 +8,7 @@ DateTime formatTimeToDateTime(String time) {
   //sample 11:05:20
   String hours = time.split(':')[0];
   String minuts = time.split(':')[1];
-  DateTime current = DateTime.now().add(GetIt.I.get<Data>().networkOffset)  ;
+  DateTime current = DateTime.now()  ;
   return DateTime(current.year, current.month, current.day, int.parse(hours),
       int.parse(minuts));
 }
