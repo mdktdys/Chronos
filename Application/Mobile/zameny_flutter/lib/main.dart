@@ -1,3 +1,5 @@
+import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,9 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/app.dart';
+import 'package:zameny_flutter/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
 
-Future<void> main() async {
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await Supabase.initialize(
@@ -16,6 +19,7 @@ Future<void> main() async {
     anonKey: API_ANON_KEY,
   );
 
+  //await FirebaseApi().initNotifications();
   SupabaseClient client = Supabase.instance.client;
   GetIt.I.registerSingleton<SupabaseClient>(client);
 
@@ -24,6 +28,8 @@ Future<void> main() async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
+
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     const ProviderScope(child: Portal(child: MyApp())),

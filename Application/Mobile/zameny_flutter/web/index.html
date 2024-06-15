@@ -2,19 +2,6 @@
 <html>
 
 <head>
-  <!--
-    If you are serving your web app in a path other than the root, change the
-    href value below to reflect the base path you are serving from.
-
-    The path provided below has to start and end with a slash "/" in order for
-    it to work correctly.
-
-    For more details:
-    * https://developer.mozilla.org/en-US/docs/Web/HTML/Element/base
-
-    This is a placeholder for base href that will be replaced by the value of
-    the `--base-href` argument provided to `flutter build`.
-  -->
   <!-- <base href="./"> -->
   <base href="/">
 
@@ -25,25 +12,20 @@
   <meta name="keywords"
     content="уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт">
   <meta name="tittle" content="Замены уксивтика">
-  <!-- iOS meta tags & icons -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black">
   <meta name="apple-mobile-web-app-title" content="Замены уксивтика">
   <meta name="yandex-verification" content="447523e06eb8fe0d">
   <link rel="apple-touch-icon" href="icons/Icon-192.png">
-
-  <!-- Favicon -->
   <link rel="icon" type="image/png" href="favicon.png">
-
   <title>Замены уксивтика</title>
   <link rel="manifest" href="manifest.json">
 
   <script>
-    // The value below is injected by flutter build, do not touch.
-    const serviceWorkerVersion = null;
+    { { flutter_service_worker_version } }
   </script>
   <!-- This script adds the flutter initialization JS code -->
-  <script src="metrica.js" defer=""></script>
+  <!-- <script src="metrica.js" defer=""></script> -->
 
   <script src="flutter.js" defer=""></script>
   <!-- Yandex.Metrika counter -->
@@ -146,6 +128,34 @@
 </head>
 
 <body>
+
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyATPTeDPIpSg9KA1kpOs1rt60eKXZuSBXo",
+      authDomain: "chronos-29a6e.firebaseapp.com",
+      projectId: "chronos-29a6e",
+      storageBucket: "chronos-29a6e.appspot.com",
+      messagingSenderId: "504912878580",
+      appId: "1:504912878580:web:0bcb045c42293824af77a1",
+      measurementId: "G-FCND0JX3N6"
+    }
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig)
+
+  </script>
+
+  <script>
+    if ("serviceWorker" in navigator) {
+      window.addEventListener("load", function () {
+        navigator.serviceWorker.register("/firebase-messaging-sw.js");
+      });
+    }
+  </script>
+
   <picture id="splash" style="pointer-events: none; touch-action: none; user-select: none;">
     <source
       srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x"
@@ -157,10 +167,13 @@
   </picture>
 
   <script defer="" src="main.dart.js" type="application/javascript"></script>
+
   <script>
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
+        entrypointUrl: "/main.dart.js",
+        serviceWorkerUrl: "/flutter_service_worker.js?v=",
         serviceWorker: {
           serviceWorkerVersion: serviceWorkerVersion,
         },
@@ -170,6 +183,13 @@
           });
         }
       });
+      if (!navigator.userAgent.includes('Safari')) {
+        if ('serviceWorker' in navigator) {
+          navigator.serviceWorker.register(
+            '/firebase-messaging-sw.js?v=' + serviceWorkerVersion
+          )
+        }
+      }
     });
   </script>
 </body>

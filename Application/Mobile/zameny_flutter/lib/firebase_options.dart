@@ -66,4 +66,5 @@ class DefaultFirebaseOptions {
     projectId: 'chronos-29a6e',
     storageBucket: 'chronos-29a6e.appspot.com',
   );
+
 }
