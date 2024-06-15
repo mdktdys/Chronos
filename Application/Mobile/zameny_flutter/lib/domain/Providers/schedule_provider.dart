@@ -20,7 +20,7 @@ class ScheduleProvider extends ChangeNotifier {
   int cabinetIDSeek = -1;
   SearchType searchType = SearchType.group;
   DateTime navigationDate =
-      DateTime.now().add(GetIt.I.get<Data>().networkOffset);
+      DateTime.now();
   DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
@@ -313,17 +313,6 @@ class ScheduleProvider extends ChangeNotifier {
 
     String name = "Расписание $searchName";
     ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
-  }
-
-  chas() async {
-    DateTime from = DateTime(2023, 1, 1);
-    DateTime to = DateTime.now().add(GetIt.I.get<Data>().networkOffset);
-    List<dynamic> res = await GetIt.I
-        .get<SupabaseClient>()
-        .from('Zamenas')
-        .select('*')
-        .gt('date', from)
-        .lte('date', to);
   }
 
   void toggleWeek(int days, BuildContext context) {

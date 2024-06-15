@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:zameny_flutter/theme/colors.dart';
 
 // ThemeData lightTheme = ThemeData.light().copyWith(
 //   switchTheme: const SwitchThemeData(

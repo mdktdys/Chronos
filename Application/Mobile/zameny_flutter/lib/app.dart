@@ -6,6 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/in_app_update/in_app_update_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:provider/provider.dart' as pr;
 import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
@@ -23,8 +24,8 @@ class _MyAppState extends ConsumerState<MyApp> {
   void initState() {
     Data data = Data.fromShared(context);
     GetIt.I.registerSingleton<Data>(data);
-    //syncTime();
     super.initState();
+
   }
 
   // syncTime() async {
@@ -42,9 +43,12 @@ class _MyAppState extends ConsumerState<MyApp> {
       builder: (context, child) {
         SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
             statusBarColor: Color.fromARGB(255, 18, 21, 37)));
+
         return ProviderScope(
             child: MaterialApp(
                 builder: (context, child) {
+    ref.watch(inAppUpdateProvider).checkForUpdate();
+
                   return MediaQuery(
                     data: MediaQuery.of(context)
                         .copyWith(textScaler: const TextScaler.linear(1.0)),
@@ -55,7 +59,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                     .theme
                     .colorScheme
                     .surface,
-                title: "Расписание и замены УКСИВТ",
+                title: "Замены уксивтика",
                 debugShowCheckedModeBanner: false,
                 theme: pr.Provider.of<ThemeProvider>(context).theme,
                 home: BlocProvider(
