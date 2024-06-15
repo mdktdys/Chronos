@@ -98,7 +98,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                       Uri.parse('https://t.me/bot_uksivt'));
                                 },
                                 child: const Text(
-                                  "Актуальные замены в тг ✨ *тык*",
+                                  "Новое расписание тут ❤️ *тык*",
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
