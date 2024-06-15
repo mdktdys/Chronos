@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -39,7 +40,7 @@ class FirebaseApi {
   late final _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<String?> initNotifications() async {
-    await _firebaseMessaging.requestPermission();
+    await _firebaseMessaging.requestPermission(provisional: kIsWeb ? false : true);
     final fCMToken = await _firebaseMessaging.getToken(
         vapidKey:
             "BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0");
@@ -48,24 +49,22 @@ class FirebaseApi {
 
     GetIt.I.get<SharedPreferences>().setString('FCM', fCMToken ?? '');
 
-
-
     try {
       await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert(
-          {'token': fCMToken, 'clientID': -1, 'subType': -1, 'subID': -1});
+          {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1});
       GetIt.I.get<Talker>().info('Subscribed to global channel');
 
       initPushNotifications();
 
       return fCMToken;
     } catch (e) {
-
       GetIt.I.get<Talker>().critical(e.toString());
       return fCMToken;
-    }
+    } 
   }
 
   Future<void> handleMessage(RemoteMessage? message) async {
+    GetIt.I.get<Talker>().debug(message);
     await Future.delayed(Duration.zero);
     if (message == null) return;
 
@@ -78,6 +77,6 @@ class FirebaseApi {
       FirebaseMessaging.onBackgroundMessage(handleMessage);
       FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
       FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
-    }
+    } else {}
   }
 }

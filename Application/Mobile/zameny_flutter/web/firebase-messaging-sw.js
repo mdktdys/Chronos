@@ -17,13 +17,13 @@ const messagingApp = firebaseApp.messaging();
 
 messagingApp.onBackgroundMessage((payload) => {
   // Customize notification here
-  const notificationTitle = payload.notification?.title ?? "Замены уксивтика";
+  console.log("onBackgroundMeasdssage", payload.data);
+  const notificationTitle = payload.data?.title ?? "Замены уксивтика";
   const notificationOptions = {
     badge: "https://uksivt.xyz/icons/Icon-192.png",
-    body: payload.notification?.body,
-    image: payload.notification?.image,
+    body: payload.data?.body,
+    image: payload.data?.image,
   };
-
   self.registration.showNotification(notificationTitle, notificationOptions);
 });
 
