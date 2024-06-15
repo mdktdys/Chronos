@@ -4,35 +4,61 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Providers/drawer_provider.dart';
+import 'package:zameny_flutter/domain/Services/firebase.dart';
 
-
-class ScheduleHeader extends ConsumerWidget {
-  const ScheduleHeader({
-    super.key,
-  });
+class ScheduleHeader extends ConsumerStatefulWidget {
+  const ScheduleHeader({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref ) {
+  ConsumerState<ConsumerStatefulWidget> createState() => _ScheduleHeaderState();
+}
+
+class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
+  @override
+  Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        GestureDetector(
-          onTap: () {
-            ref.read(drawerProvider).openDrawer();
-          },
-          child: SizedBox(
-              width: 52,
-              height: 52,
-              child: Center(
-                  child: SvgPicture.asset(
-                "assets/icon/vuesax_linear_note.svg",
-                colorFilter: ColorFilter.mode(
-                    Theme.of(context).colorScheme.inverseSurface,
-                    BlendMode.srcIn),
-                width: 32,
-                height: 32,
-              ))),
+        Row(
+          children: [
+            // GestureDetector(
+            //   onTap: () {
+            //     ref.read(drawerProvider).openDrawer();
+            //   },
+            //   child: SizedBox(
+            //       width: 52,
+            //       height: 52,
+            //       child: Center(
+            //           child: SvgPicture.asset(
+            //         "assets/icon/vuesax_linear_note.svg",
+            //         colorFilter: ColorFilter.mode(
+            //             Theme.of(context).colorScheme.inverseSurface,
+            //             BlendMode.srcIn),
+            //         width: 32,
+            //         height: 32,
+            //       ))),
+            // ),
+            GestureDetector(
+              onTap: () {
+                ref.watch(norificationProvider).enableNotifications();
+              },
+              child: SizedBox(
+                  width: 52,
+                  height: 52,
+                  child: Center(
+                      child: SvgPicture.asset(
+                    "assets/icon/notification.svg",
+                    colorFilter: ColorFilter.mode(
+                        ref.watch(norificationProvider).fcmToken == null
+                            ? Theme.of(context).colorScheme.inverseSurface
+                            : Colors.green,
+                        BlendMode.srcIn),
+                    width: 32,
+                    height: 32,
+                  ))),
+            ),
+          ],
         ),
         Text(
           "Расписание",

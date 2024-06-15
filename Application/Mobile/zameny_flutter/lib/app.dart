@@ -9,7 +9,6 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:provider/provider.dart' as pr;
 import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
-import 'package:zameny_flutter/theme/colors.dart';
 import 'domain/Providers/theme_provider.dart';
 
 class MyApp extends ConsumerStatefulWidget {
