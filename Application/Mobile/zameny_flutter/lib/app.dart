@@ -25,7 +25,6 @@ class _MyAppState extends ConsumerState<MyApp> {
     Data data = Data.fromShared(context);
     GetIt.I.registerSingleton<Data>(data);
     super.initState();
-
   }
 
   // syncTime() async {
@@ -47,7 +46,7 @@ class _MyAppState extends ConsumerState<MyApp> {
         return ProviderScope(
             child: MaterialApp(
                 builder: (context, child) {
-    ref.watch(inAppUpdateProvider).checkForUpdate();
+                  ref.watch(inAppUpdateProvider).checkForUpdate();
 
                   return MediaQuery(
                     data: MediaQuery.of(context)
@@ -64,29 +63,9 @@ class _MyAppState extends ConsumerState<MyApp> {
                 theme: pr.Provider.of<ThemeProvider>(context).theme,
                 home: BlocProvider(
                     create: (context) => ScheduleBloc(),
-                    child: Scaffold(
-                        backgroundColor: const Color.fromARGB(255, 18, 21, 37),
-                        body: Column(
-                          children: [
-                            Container(
-                                color: Colors.transparent,
-                                height: 30,
-                                child: Center(
-                                    child: GestureDetector(
-                                        onTap: () {
-                                          launchUrl(Uri.parse(
-                                              'https://t.me/bot_uksivt'));
-                                        },
-                                        child: const Text(
-                                          "Актуальные замены в тг ✨ *тык*",
-                                          style: TextStyle(
-                                              fontFamily: 'Ubuntu',
-                                              color: Colors.white,
-                                              fontWeight: FontWeight.w500),
-                                        )))),
-                            const Expanded(child: MainScreenWrapper()),
-                          ],
-                        )))));
+                    child: const Scaffold(
+                        backgroundColor: Color.fromARGB(255, 18, 21, 37),
+                        body: MainScreenWrapper()))));
       },
     );
   }
