@@ -1,12 +1,18 @@
 import 'dart:ui';
 import 'package:get_it/get_it.dart';
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/Services/Models/group.dart';
+import 'package:zameny_flutter/domain/Models/course_model.dart';
+import 'package:zameny_flutter/domain/Models/department_model.dart';
+import 'package:zameny_flutter/domain/Models/group_model.dart';
+import 'package:zameny_flutter/domain/Models/lesson_timings_model.dart';
+import 'package:zameny_flutter/domain/Models/teacher_model.dart';
+import 'package:zameny_flutter/domain/Models/zamena_type_model.dart';
+import 'package:zameny_flutter/domain/Services/Data.dart';
 
 Department getDepartmentById(int departmentID) {
   final dat = GetIt.I.get<Data>();
   return dat.departments.where((element) => element.id == departmentID).first;
 }
+
 
 LessonTimings getLessonTimings(int lesson) {
   final dat = GetIt.I.get<Data>();
