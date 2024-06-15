@@ -160,6 +160,17 @@
   <script defer="" src="main.dart.js" type="application/javascript"></script>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async function () {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      });
+    }
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -174,11 +185,7 @@
           });
         }
       });
-      if ("serviceWorker" in navigator) {
-        window.addEventListener("load", function () {
-          navigator.serviceWorker.register("/firebase-messaging-sw.js");
-        });
-      }
+
     });
   </script>
 </body>
