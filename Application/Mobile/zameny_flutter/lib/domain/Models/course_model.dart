@@ -19,8 +19,10 @@ class Course {
   factory Course.fromMap(Map<String, dynamic> map) {
     return Course(
       id: map['id'] as int,
-      name: map['name'] as String,
+      //костылище
+      name: (map['fullname'] ?? map['name']) as String,
       color: map['color'] as String,
+      fullname: map['fullname'] as String?
     );
   }
 
@@ -33,11 +35,13 @@ class Course {
     int? id,
     String? name,
     String? color,
+    String? fullname
   }) {
     return Course(
       id: id ?? this.id,
       name: name ?? this.name,
       color: color ?? this.color,
+      fullname: fullname ?? this.fullname,
     );
   }
 }
