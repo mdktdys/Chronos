@@ -27,12 +27,9 @@ class _MyAppState extends ConsumerState<MyApp> {
     super.initState();
   }
 
-  // syncTime() async {
-  //   await getTime();
-  // }
-
   @override
   Widget build(BuildContext context) {
+    ref.watch(inAppUpdateProvider).checkForUpdate();
     return pr.MultiProvider(
       providers: [
         pr.ChangeNotifierProvider<ThemeProvider>(
@@ -46,8 +43,6 @@ class _MyAppState extends ConsumerState<MyApp> {
         return ProviderScope(
             child: MaterialApp(
                 builder: (context, child) {
-                  ref.watch(inAppUpdateProvider).checkForUpdate();
-
                   return MediaQuery(
                     data: MediaQuery.of(context)
                         .copyWith(textScaler: const TextScaler.linear(1.0)),
