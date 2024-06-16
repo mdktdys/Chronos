@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
@@ -87,7 +89,41 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(children: [
-                    const SizedBox(height: 10),
+                    Container(
+                        color: Colors.transparent,
+                        height: 30,
+                        child: Center(
+                            child: GestureDetector(
+                                onTap: () {
+                                  launchUrl(
+                                      Uri.parse('https://t.me/bot_uksivt'));
+                                },
+                                child: Row(
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
+                                    const Text(
+                                      "Новое расписание тут ",
+                                      style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                     Text(
+                                      "❤️",
+                                      style: GoogleFonts.notoEmoji(
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                    const Text(
+                                      " *тык*",
+                                      style: TextStyle(
+                                          fontFamily: 'Ubuntu',
+                                          color: Colors.white,
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ],
+                                )))),
+                    // const SizedBox(height: 10),
                     const ScheduleHeader(),
                     const SizedBox(height: 10),
                     const ScheduleTurboSearch(),
@@ -190,8 +226,7 @@ class LessonList extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ScheduleProvider provider = context.watch<ScheduleProvider>();
-    final currentDay =
-        DateTime.now().weekday;
+    final currentDay = DateTime.now().weekday;
     final startDate = provider.navigationDate
         .subtract(Duration(days: provider.navigationDate.weekday - 1));
 

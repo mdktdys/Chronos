@@ -54,9 +54,6 @@
 
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 
-
-
-
   <style id="splash-screen-style">
     html {
       height: 100%
@@ -129,7 +126,7 @@
 
 <body>
 
-  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first -->
+  <!-- Firebase App (the core Firebase SDK) is always required and must be listed first
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-analytics.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"></script>
@@ -146,15 +143,9 @@
     // Initialize Firebase
     firebase.initializeApp(firebaseConfig)
 
-  </script>
+  </script> -->
 
-  <script>
-    if ("serviceWorker" in navigator) {
-      window.addEventListener("load", function () {
-        navigator.serviceWorker.register("/firebase-messaging-sw.js");
-      });
-    }
-  </script>
+
 
   <picture id="splash" style="pointer-events: none; touch-action: none; user-select: none;">
     <source
@@ -169,6 +160,17 @@
   <script defer="" src="main.dart.js" type="application/javascript"></script>
 
   <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async function () {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      });
+    }
     window.addEventListener('load', function (ev) {
       // Download main.dart.js
       _flutter.loader.loadEntrypoint({
@@ -183,13 +185,7 @@
           });
         }
       });
-      if (!navigator.userAgent.includes('Safari')) {
-        if ('serviceWorker' in navigator) {
-          navigator.serviceWorker.register(
-            '/firebase-messaging-sw.js?v=' + serviceWorkerVersion
-          )
-        }
-      }
+
     });
   </script>
 </body>
