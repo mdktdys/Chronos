@@ -95,8 +95,13 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                         child: Center(
                             child: GestureDetector(
                                 onTap: () {
-                                  launchUrl(
-                                      Uri.parse('https://t.me/bot_uksivt'));
+                                  try {
+                                    launchUrl(Uri.parse(
+                                        'tg://resolve?domain=bot_uksivt'));
+                                  } catch (e) {
+                                    launchUrl(
+                                        Uri.parse('https://t.me/bot_uksivt'));
+                                  }
                                 },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,
@@ -108,7 +113,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
                                     ),
-                                     Text(
+                                    Text(
                                       "❤️",
                                       style: GoogleFonts.notoEmoji(
                                           color: Colors.white,
