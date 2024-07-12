@@ -210,8 +210,11 @@
   </style>
   <script id="splash-screen-script">
     function removeSplashFromWeb() {
+      conlose.log("hui");
       const splash = document.getElementById("splash");
       const splashBranding = document.getElementById("splash-branding");
+
+      alert("a");
 
       if (splash) {
         splash.style.opacity = '0';
