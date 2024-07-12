@@ -54,7 +54,13 @@
 
   <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 
+
   <style id="splash-screen-style">
+    #splash,
+    #splash-branding {
+      transition: opacity 1s ease;
+    }
+
     @keyframes move {
       100% {
         transform: translate3d(0, 0, 1px) rotate(360deg);
@@ -197,10 +203,26 @@
   </style>
   <script id="splash-screen-script">
     function removeSplashFromWeb() {
-      document.getElementById("splash")?.style.display = 'none';
-      document.getElementById("splash-branding")?.style.display = 'none'
-      document.body.style.background = "transparent";
-    }
+      const splash = document.getElementById("splash");
+      const splashBranding = document.getElementById("splash-branding");
+
+      if (splash) {
+        splash.style.opacity = '0';
+      }
+      if (splashBranding) {
+        splashBranding.style.opacity = '0';
+      }
+
+      setTimeout(() => {
+        if (splash) {
+          splash.style.display = 'none';
+        }
+        if (splashBranding) {
+          splashBranding.style.display = 'none';
+        }
+        document.body.style.background = "transparent";
+      }, 1000); // 1000 milliseconds = 1 second
+    } ment.body.style.background = "transparent";
   </script>
 </head>
 
