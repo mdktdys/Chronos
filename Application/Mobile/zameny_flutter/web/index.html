@@ -213,6 +213,7 @@
       const splash = document.getElementById("splash");
       const splashBranding = document.getElementById("splash-branding");
 
+
       if (splash) {
         splash.style.opacity = '0';
       }
@@ -299,6 +300,8 @@
         },
         onEntrypointLoaded: function (engineInitializer) {
           engineInitializer.initializeEngine().then(function (appRunner) {
+            alert("a");
+            conlose.log("hui");
             appRunner.runApp();
           });
         }
