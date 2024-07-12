@@ -210,11 +210,9 @@
   </style>
   <script id="splash-screen-script">
     function removeSplashFromWeb() {
-      conlose.log("hui");
       const splash = document.getElementById("splash");
       const splashBranding = document.getElementById("splash-branding");
 
-      alert("a");
 
       if (splash) {
         splash.style.opacity = '0';
@@ -302,6 +300,8 @@
         },
         onEntrypointLoaded: function (engineInitializer) {
           engineInitializer.initializeEngine().then(function (appRunner) {
+            alert("a");
+            conlose.log("hui");
             appRunner.runApp();
           });
         }
