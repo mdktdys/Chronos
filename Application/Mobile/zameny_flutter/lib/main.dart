@@ -10,14 +10,22 @@ import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/app.dart';
 import 'package:zameny_flutter/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
+import 'package:flutter_native_splash/flutter_native_splash.dart';
+import 'dart:js';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
+  WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
+  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Supabase.initialize(
     url: API_URL,
     anonKey: API_ANON_KEY,
   );
+
+  context.callMethod("a");
+
+  // context.callMethod('rremoveSplashFromWeb');
+  //FlutterNativeSplash.remove();
 
   //await FirebaseApi().initNotifications();
   SupabaseClient client = Supabase.instance.client;
@@ -29,7 +37,7 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
 
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(
     const ProviderScope(child: Portal(child: MyApp())),

@@ -26,7 +26,7 @@ dependencies:
   animated_list_plus: ^0.5.2
   shimmer: ^3.0.0
   dotted_border: ^2.1.0
-  flutter_native_splash: ^2.4.0
+  flutter_native_splash: ^2.4.1
   bloc_concurrency: ^0.2.5
   equatable: ^2.0.5
   dio: ^5.4.3+1
