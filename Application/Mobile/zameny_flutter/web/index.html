@@ -228,6 +228,26 @@
         opacity: 0;
       }
     }
+
+    .fade-inn {
+      opacity: 1;
+      animation: fadeInn 1s  ease-in-out forwards;
+    }
+
+    /* Keyframes for the fadeIn animation */
+    @keyframes fadeInn {
+      0% {
+        opacity: 0;
+      }
+
+      60% {
+        opacity: 0;
+      }
+
+      100% {
+        opacity: 1;
+      }
+    }
   </style>
   <!-- <script id="splash-screen-script">
     function rrremoveSplashFromWeb() {
@@ -305,9 +325,19 @@
     });
   </script>
   <script>
-    function a() {
+    function addDelay() {
+        return new Promise((resolve) => setTimeout(resolve, 1000));
+    }
+  </script>
+  <script>
+    async function a() {
       document.getElementById("splashscreen").classList.add("fade-in");
-    };
+      document.querySelector("flutter-view").classList.add("fade-inn");
+
+      await addDelay();
+
+      document.getElementById("splashscreen").remove();
+    }; 
   </script>
   <div id="splashscreen" style="z-index: 1; position: relative; height: 100vh;">
     <picture id="splash"
