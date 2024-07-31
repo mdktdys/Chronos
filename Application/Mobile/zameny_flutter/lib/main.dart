@@ -25,7 +25,7 @@ void main() async {
   context.callMethod("a");
 
   // context.callMethod('rremoveSplashFromWeb');
-  //FlutterNativeSplash.remove();
+  FlutterNativeSplash.remove();
 
   //await FirebaseApi().initNotifications();
   SupabaseClient client = Supabase.instance.client;

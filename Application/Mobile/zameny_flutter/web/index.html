@@ -60,93 +60,67 @@
     #splash-branding {
       opacity: 1;
       transition: opacity 1s ease;
-      background-color: #f0f0f0;
-      padding: 20px;
       text-align: center;
       font-size: 20px;
       display: block;
       /* Ensure they are visible initially */
     }
 
-    @keyframes move {
+    /* @keyframes move {
       100% {
         transform: translate3d(0, 0, 1px) rotate(360deg);
       }
-    }
+    } */
 
     .background {
-      position: fixed;
-      width: 100vw;
-      height: 100vh;
-      top: 0;
-      left: 0;
+      width: 100%;
+      height: 100%;
       background: #121525;
       overflow: hidden;
     }
 
     .background span {
-      width: 50vmin;
-      height: 50vmin;
+      width: 59vmin;
+      height: 59vmin;
       border-radius: 50vmin;
       backface-visibility: hidden;
       position: absolute;
-      animation: move;
-      animation-duration: 45;
-      animation-timing-function: linear;
-      animation-iteration-count: infinite;
+      display: block;
+      transform: translate(-50%,-50%);
     }
 
+    @keyframes move {
+      0% {
+        transform: translate(0, 0) rotate(0deg);
+      }
 
-    .background span:nth-child(0) {
-      color: #FFACAC;
-      top: 79%;
-      left: 16%;
-      animation-duration: 11s;
-      animation-delay: -14s;
-      transform-origin: -20vw -20vh;
-      box-shadow: 100vmin 0 12.853941122323148vmin currentColor;
+      100% {
+        transform: translate(0, 0) rotate(360deg);
+      }
     }
 
     .background span:nth-child(1) {
-      color: #583C87;
-      top: 38%;
-      left: 75%;
-      animation-duration: 32s;
-      animation-delay: -7s;
-      transform-origin: 5vw 24vh;
-      box-shadow: 100vmin 0 13.246516205622873vmin currentColor;
-    }
+      transform-origin: 2px 2px;
+      margin: auto;
+      color: #45873c;
+      animation-duration: 7s;
+      margin: 50% 50%;
+      animation-delay: -17s;
+      animation: move 14s linear infinite;
 
-    .background span:nth-child(2) {
-      color: #FFACAC;
-      top: 1%;
-      left: 85%;
-      animation-duration: 44s;
-      animation-delay: -11s;
-      transform-origin: -4vw -16vh;
       box-shadow: -100vmin 0 12.667975834837419vmin currentColor;
     }
 
-    .background span:nth-child(3) {
-      color: #E45A84;
-      top: 85%;
-      left: 28%;
-      animation-duration: 26s;
-      animation-delay: -12s;
-      transform-origin: -21vw -7vh;
-      box-shadow: -100vmin 0 12.61581246101897vmin currentColor;
+    .background span:nth-child(2) {
+      transform-origin: 2px px;
+      margin: auto;
+      color: #3c5f87;
+      animation-duration: 7s;
+      margin: 50% 50%;
+      animation-delay: -17s;
+      animation: move 14s linear infinite reverse ;
+      box-shadow: -100vmin 0 12.667975834837419vmin currentColor;
     }
-
-    .background span:nth-child(4) {
-      color: #583C87;
-      top: 81%;
-      left: 47%;
-      animation-duration: 15s;
-      animation-delay: -49s;
-      transform-origin: 14vw -3vh;
-      box-shadow: -100vmin 0 13.316257643681247vmin currentColor;
-    }
-
 
     html {
       height: 100%
@@ -231,7 +205,7 @@
 
     .fade-inn {
       opacity: 1;
-      animation: fadeInn 1s  ease-in-out forwards;
+      animation: fadeInn 1s ease-in-out forwards;
     }
 
     /* Keyframes for the fadeIn animation */
@@ -273,6 +247,9 @@
       }, 1000); // 1000 milliseconds = 1 second
     } ment.body.style.background = "transparent";
   </script> -->
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
+    <!-- ... -->
+</head>
 </head>
 
 <body>
@@ -326,7 +303,7 @@
   </script>
   <script>
     function addDelay() {
-        return new Promise((resolve) => setTimeout(resolve, 1000));
+      return new Promise((resolve) => setTimeout(resolve, 1000));
     }
   </script>
   <script>
@@ -339,17 +316,11 @@
       document.getElementById("splashscreen").remove();
     }; 
   </script>
-  <div id="splashscreen" style="z-index: 1; position: relative; height: 100vh;">
+  
+  <div id="splashscreen" style="z-index: 1; position: relative; height: 100%;">
     <picture id="splash"
       style="pointer-events: none; touch-action: none; user-select: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
       <div class="background">
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
-        <span></span>
         <span></span>
         <span></span>
       </div>
