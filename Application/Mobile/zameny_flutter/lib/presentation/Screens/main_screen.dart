@@ -33,7 +33,7 @@ class _UksivtScreenState extends ConsumerState<UksivtScreen> {
   @override
   Widget build(BuildContext context) {
     return InAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri("https://www.uksivt.ru/")),
+      initialUrlRequest: URLRequest(url: WebUri("185.178.208.185")),
     );
   }
 }

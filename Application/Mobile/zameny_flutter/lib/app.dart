@@ -60,7 +60,7 @@ class _MyAppState extends ConsumerState<MyApp> {
                     create: (context) => ScheduleBloc(),
                     child: const Scaffold(
                         backgroundColor: Color.fromARGB(255, 18, 21, 37),
-                        body: UksivtScreen()))));
+                        body: MainScreenWrapper()))));
       },
     );
   }
