@@ -1,5 +1,7 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
+import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
@@ -15,6 +17,23 @@ class MainScreenWrapper extends StatelessWidget {
     return ChangeNotifierProvider(
       create: (context) => MainProvider(),
       child: const MainScreen(),
+    );
+  }
+}
+
+class UksivtScreen extends ConsumerStatefulWidget {
+  const UksivtScreen({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _UksivtScreenState();
+}
+
+class _UksivtScreenState extends ConsumerState<UksivtScreen> {
+
+  @override
+  Widget build(BuildContext context) {
+    return InAppWebView(
+      initialUrlRequest: URLRequest(url: WebUri("https://www.uksivt.ru/")),
     );
   }
 }
