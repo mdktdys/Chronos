@@ -2,8 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
-import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 
@@ -173,7 +173,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                             child: Container(
                               width: 10,
                               decoration: BoxDecoration(
-                                  color: data.color.withOpacity(
+                                  color: getColorForText(data.title).withOpacity(
                                       data.liqidated == true ? 0.3 : 1.0),
                                   borderRadius: BorderRadius.only(
                                     topLeft: index == 0
@@ -202,7 +202,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                       width: 30,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: data.color),
+                                          color: getColorForText(data.title) ),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
@@ -518,7 +518,7 @@ class CourseTile extends StatelessWidget {
                       decoration: BoxDecoration(
                           color: isEmpty
                               ? getCourseColor(course.color).withOpacity(0.6)
-                              : getCourseColor(course.color),
+                              : getColorForText(course.name),
                           borderRadius:
                               const BorderRadius.all(Radius.circular(20))),
                     ),
@@ -535,7 +535,7 @@ class CourseTile extends StatelessWidget {
                             shape: BoxShape.circle,
                             color: isEmpty
                                 ? getCourseColor(course.color).withOpacity(0.6)
-                                : getCourseColor(course.color)),
+                                : getColorForText(course.name),),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(

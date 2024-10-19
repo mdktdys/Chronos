@@ -1,3 +1,4 @@
+import 'dart:math';
 import 'dart:ui';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
@@ -111,3 +112,25 @@ Color getCourseColor(String color) {
       int.parse(color.split(',')[2]),
       int.parse(color.split(',')[3]));
 }
+
+ Color getColorForText(String text) {
+    final hash = text.hashCode;
+    final random = Random(hash);
+
+    int red = random.nextInt(256);
+    int green = random.nextInt(256);
+    int blue = random.nextInt(256);
+
+    int maxValue = max(red, max(green, blue));
+    if (maxValue == red) {
+      red = 230;
+    } else if (maxValue == green) {
+      green = 230;
+    } else {
+      blue = 230;
+    }
+
+    return Color.fromARGB(255, red, green, blue);
+  }
+
+  

@@ -1,4 +1,4 @@
-import 'dart:ui';
+import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/domain/Models/course_model.dart';
 import 'package:zameny_flutter/domain/Models/department_model.dart';
