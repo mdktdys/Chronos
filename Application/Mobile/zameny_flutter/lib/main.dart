@@ -1,5 +1,4 @@
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -16,7 +15,7 @@ import 'dart:js';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
-  //FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
+  // FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
   await Supabase.initialize(
     url: API_URL,
     anonKey: API_ANON_KEY,
@@ -43,14 +42,3 @@ void main() async {
     const ProviderScope(child: Portal(child: MyApp())),
   );
 }
-
-// Future<void> getTime() async {
-//   var res = await Dio()
-//       .get('http://worldtimeapi.org/api/timezone/Asia/Yekaterinburg');
-//   if (res.statusCode == 200) {
-//     DateTime networkTime = DateTime.parse(res.data['datetime'])
-//         .add(Duration(seconds: res.data['raw_offset']));
-//     Duration networkOffset = networkTime.difference(DateTime.now());
-//     GetIt.I.get<Data>().networkOffset = networkOffset;
-//   }
-// }
