@@ -107,14 +107,14 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                                   mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     const Text(
-                                      "Новое расписание тут ",
+                                      "Новое расписание и замены тут ",
                                       style: TextStyle(
                                           fontFamily: 'Ubuntu',
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
                                     ),
                                     Text(
-                                      "❤️",
+                                      "🤙",
                                       style: GoogleFonts.notoEmoji(
                                           color: Colors.white,
                                           fontWeight: FontWeight.w500),
