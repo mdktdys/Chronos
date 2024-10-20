@@ -10,7 +10,8 @@ import 'package:zameny_flutter/app.dart';
 import 'package:zameny_flutter/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
-import 'dart:js';
+
+import 'domain/Services/splashscreen/splashscreen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -21,7 +22,7 @@ void main() async {
     anonKey: API_ANON_KEY,
   );
 
-  context.callMethod("a");
+  removeSplashScreen();
 
   // context.callMethod('rremoveSplashFromWeb');
   FlutterNativeSplash.remove();
