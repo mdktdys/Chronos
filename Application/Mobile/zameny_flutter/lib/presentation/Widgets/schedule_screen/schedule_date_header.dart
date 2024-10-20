@@ -135,7 +135,7 @@ class DateHeaderDatePicker extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Весенний семестр 2023/2024",
+                "Осенний семестр 2024/2025",
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(

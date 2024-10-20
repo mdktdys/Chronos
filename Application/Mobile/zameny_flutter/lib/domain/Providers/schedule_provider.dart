@@ -21,7 +21,7 @@ class ScheduleProvider extends ChangeNotifier {
   SearchType searchType = SearchType.group;
   DateTime navigationDate =
       DateTime.now();
-  DateTime septemberFirst = DateTime(2023, 9, 1); // 1 сентября
+  DateTime septemberFirst = DateTime(2024, 9, 2); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
 
