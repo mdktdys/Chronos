@@ -1,6 +1,5 @@
 import 'dart:ui';
 import 'package:flutter/material.dart';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
@@ -21,22 +20,22 @@ class MainScreenWrapper extends StatelessWidget {
   }
 }
 
-class UksivtScreen extends ConsumerStatefulWidget {
-  const UksivtScreen({super.key});
+// class UksivtScreen extends ConsumerStatefulWidget {
+//   const UksivtScreen({super.key});
 
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _UksivtScreenState();
-}
+//   @override
+//   ConsumerState<ConsumerStatefulWidget> createState() => _UksivtScreenState();
+// }
 
-class _UksivtScreenState extends ConsumerState<UksivtScreen> {
+// class _UksivtScreenState extends ConsumerState<UksivtScreen> {
 
-  @override
-  Widget build(BuildContext context) {
-    return InAppWebView(
-      initialUrlRequest: URLRequest(url: WebUri("185.178.208.185")),
-    );
-  }
-}
+//   @override
+//   Widget build(BuildContext context) {
+//     return InAppWebView(
+//       initialUrlRequest: URLRequest(url: WebUri("185.178.208.185")),
+//     );
+//   }
+// }
 
 class MainScreen extends StatefulWidget {
   const MainScreen({super.key});
