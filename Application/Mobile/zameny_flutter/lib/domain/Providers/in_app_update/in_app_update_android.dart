@@ -13,7 +13,7 @@ class Updater extends ChangeNotifier {
   Future<void> checkForUpdate() async {
     try {
       GetIt.I.get<Talker>().info("mobile update check");
-      _updateInfo = await InAppUpdate.checkForUpdate();
+      // _updateInfo = await InAppUpdate.checkForUpdate();
       GetIt.I.get<Talker>().info(_updateInfo);
       GetIt.I.get<Talker>().info(_updateInfo!.updateAvailability);
       if (_updateInfo!.updateAvailability ==

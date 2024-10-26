@@ -1,10 +1,11 @@
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zameny_flutter/domain/Services/Data.dart';
-import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/settings_screen/settings_logo_block.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 import '../Widgets/settings_screen/settings_header.dart';
 import '../Widgets/settings_screen/settings_version_block.dart';
@@ -16,31 +17,28 @@ class SettingsScreen extends StatefulWidget {
   State<SettingsScreen> createState() => _SettingsScreenState();
 }
 
-class _SettingsScreenState extends State<SettingsScreen>
-    with AutomaticKeepAliveClientMixin {
-  int _sliding = 0;
+class _SettingsScreenState extends State<SettingsScreen> {
+  // final int _sliding = 0;
 
-  @override
-  bool get wantKeepAlive => true;
+  // @override
+  // bool get wantKeepAlive => true;
 
-  @override
-  void initState() {
-    _sliding = context.read<ThemeProvider>().getCurrentIndex();
-    super.initState();
-  }
+  // @override
+  // void initState() {
+  //   _sliding = context.read<ThemeProvider>().getCurrentIndex();
+  //   super.initState();
+  // }
 
-  void onSwitch(int index) {
-    setState(() {
-      _sliding = index;
-      context.read<ThemeProvider>().toggleTheme();
-      setChoosedTheme(index);
-    });
-  }
+  // void onSwitch(int index) {
+  //   setState(() {
+  //     _sliding = index;
+  //     context.read<ThemeProvider>().toggleTheme();
+  //     setChoosedTheme(index);
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
-
     return Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: SingleChildScrollView(
@@ -106,7 +104,8 @@ class _SettingsScreenState extends State<SettingsScreen>
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Ubuntu',
                                     fontSize: 20,
-                                    color: Theme.of(context).primaryColorLight),
+                                    color:
+                                        Theme.of(context).colorScheme.primary),
                               ),
                             ),
                             Column(
@@ -136,7 +135,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -144,23 +143,21 @@ class _SettingsScreenState extends State<SettingsScreen>
                                                   Text(
                                                     "Сайтик колледжа",
                                                     style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   ),
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     height: 5,
                                                   ),
                                                   Text(
                                                     "В представлении не нуждается",
                                                     style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontSize: 12,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -210,7 +207,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -218,23 +215,21 @@ class _SettingsScreenState extends State<SettingsScreen>
                                                   Text(
                                                     "Есть идеи или предложения?",
                                                     style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   ),
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     height: 5,
                                                   ),
                                                   Text(
                                                     "Отпишите мне в телеграмчике",
                                                     style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontSize: 12,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -284,7 +279,7 @@ class _SettingsScreenState extends State<SettingsScreen>
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            Expanded(
+                                            const Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
@@ -292,24 +287,22 @@ class _SettingsScreenState extends State<SettingsScreen>
                                                   Text(
                                                     "Актуальные замены!",
                                                     style: TextStyle(
-                                                        fontWeight:
-                                                            FontWeight.bold,
-                                                        fontSize: 14,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   ),
-                                                  const SizedBox(
+                                                  SizedBox(
                                                     height: 5,
                                                   ),
                                                   Text(
                                                     "Получайте уведомления о заменах\nв тг канальчике ;)",
                                                     maxLines: 2,
                                                     style: TextStyle(
-                                                        fontSize: 12,
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Theme.of(context)
-                                                            .primaryColorLight),
+                                                      fontSize: 12,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),
                                                   )
                                                 ],
                                               ),
@@ -335,7 +328,11 @@ class _SettingsScreenState extends State<SettingsScreen>
                                   ),
                                 )
                               ],
-                            )
+                            ),
+                            const SizedBox(
+                              height: 3,
+                            ),
+                            const ThemeSwitchBlock()
                           ],
                         ),
                         const SettingsVersionBlock()
@@ -347,5 +344,141 @@ class _SettingsScreenState extends State<SettingsScreen>
             ),
           ),
         ));
+  }
+}
+
+class ThemeSwitchBlock extends ConsumerStatefulWidget {
+  const ThemeSwitchBlock({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() =>
+      _ThemeSwitchBlockState();
+}
+
+class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
+  @override
+  Widget build(BuildContext context) {
+    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark
+        ? true
+        : false;
+    return Column(children: [
+      Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(10),
+        decoration: BoxDecoration(
+            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+            borderRadius: const BorderRadius.all(Radius.circular(20))),
+        child: SegmentedButtonTheme(
+          data: Theme.of(context).segmentedButtonTheme,
+          child: SegmentedButton(
+              onSelectionChanged: (p0) {
+                ref.read(lightThemeProvider).setThemeMode(p0.first);
+              },
+              segments: const [
+                ButtonSegment(value: 1, icon: Icon(Icons.dark_mode)),
+                ButtonSegment(value: 2, icon: Icon(Icons.light_mode)),
+                ButtonSegment(value: 3, icon: Icon(Icons.phone_android))
+              ],
+              selected: {
+                ref.watch(lightThemeProvider).themeModeIndex
+              }),
+        ),
+      ),
+      const SizedBox(
+        height: 8,
+      ),
+      Container(
+          height: 80,
+          padding: const EdgeInsets.all(10),
+          decoration: BoxDecoration(
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+              borderRadius: const BorderRadius.all(Radius.circular(20))),
+          child: SingleChildScrollView(
+            scrollDirection: Axis.horizontal,
+            child: Row(
+              children: themes.map((theme) {    
+              return Row(
+                children: [
+                  ThemeTile(
+                      ref: ref,
+                      scheme: theme.$2,
+                      flexScheme: theme.$1,
+                      isDark: isDark),
+                      const SizedBox(width: 5)
+                ],
+              );
+            }).toList()),
+          ))
+    ]);
+  }
+}
+
+class ThemeTile extends StatelessWidget {
+  final FlexSchemeData scheme;
+  final FlexScheme flexScheme;
+  final bool isDark;
+
+  const ThemeTile(
+      {super.key,
+      required this.ref,
+      required this.scheme,
+      required this.flexScheme,
+      required this.isDark});
+
+  final WidgetRef ref;
+
+  @override
+  Widget build(BuildContext context) {
+    final theme = isDark ? scheme.dark : scheme.light;
+    final bool isCurrent = ref.watch(lightThemeProvider).scheme == flexScheme;
+    return Bounceable(
+      onTap: () {
+        ref.read(lightThemeProvider).setScheme(scheme, flexScheme);
+      },
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 100),
+        decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(14),
+          border: isCurrent ? Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 4) :  null )
+        ,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular( isCurrent ? 10 : 6),
+          child: SizedBox(
+            width: 40,
+            height: 40,
+            child: Column(
+              children: [
+                Expanded(
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(color: theme.primary),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: theme.tertiary,
+                      ),
+                    )
+                  ]),
+                ),
+                Expanded(
+                  child: Row(children: [
+                    Expanded(
+                      child: Container(
+                        color: theme.primaryContainer,
+                      ),
+                    ),
+                    Expanded(
+                      child: Container(
+                        color: theme.secondary,
+                      ),
+                    )
+                  ]),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 }

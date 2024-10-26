@@ -27,7 +27,7 @@ class SettingsHeader extends StatelessWidget {
         Text(
           "Настроечки",
           style: TextStyle(
-              color: Theme.of(context).primaryColorLight,
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Ubuntu'),

@@ -23,12 +23,12 @@ class TimeTableHeader extends StatelessWidget {
               width: 32,
               height: 32,
             ))),
-        Expanded(
+         Expanded(
           child: Text(
             "Звонки",
             textAlign: TextAlign.center,
             style: TextStyle(
-                color: Theme.of(context).primaryColorLight,
+                color: Theme.of(context).colorScheme.primary,
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Ubuntu'),

@@ -72,14 +72,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                             const SizedBox(
                               width: 8,
                             ),
-                            Text(
+                            const Text(
                               "Суббота",
                               style: TextStyle(
                                   fontFamily: 'Ubuntu',
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface
-                                      .withOpacity(0.6)),
+                              ),
                             ),
                           ],
                         ),
@@ -92,14 +89,11 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                               : Row(
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
-                                    Text(
+                                    const Text(
                                       "Без обеда",
                                       style: TextStyle(
                                           fontFamily: 'Ubuntu',
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface
-                                              .withOpacity(0.6)),
+                                          ),
                                     ),
                                     const SizedBox(
                                       width: 8,
@@ -121,31 +115,6 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
               
                     Row(
                       children: [
-                        // SizedBox(
-                        //   width: 18,
-                        //   child: Stack(
-                        //     children: [
-                        //       Container(
-                        //         alignment: Alignment.topCenter,
-                        //         width: 8,
-                        //         decoration: BoxDecoration(
-                        //             color: Colors.amber.withOpacity(0.15),
-                        //             borderRadius: BorderRadius.circular(20)),
-                        //       ),
-                        //       FractionallySizedBox(
-                        //         heightFactor: provider.getHeight(),
-                        //         child: Container(
-                        //           alignment: Alignment.topCenter,
-                        //           width: 10,
-                        //           decoration: BoxDecoration(
-                        //               color: Colors.amber.withOpacity(1),
-                        //               borderRadius: BorderRadius.circular(20)),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-                        // const SizedBox(width: 10),
                         Expanded(
                           child: Column(
                               children: List.generate(7, (index) {
@@ -186,7 +155,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                               (index + 1).toString(),
                                               style: const TextStyle(
                                                   fontFamily: 'Ubuntu',
-                                                  color: Colors.white,
+                                                  // color: Colors.white,
                                                   fontSize: 20),
                                             ),
                                           ),
@@ -204,7 +173,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                               "${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}",
                                               style: TextStyle(
                                                   fontFamily: 'Ubuntu',
-                                                  color: provider.saturday ? Colors.white : provider.obed
+                                                  color: provider.saturday ? null : provider.obed
                                                       ? getTimeFromDateTime(provider
                                                                       .obed
                                                                   ? timing.obedStart
@@ -216,8 +185,8 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                                                       : timing
                                                                           .start)
                                                           ? Colors.green
-                                                          : Colors.white
-                                                      : Colors.white,
+                                                          : null
+                                                      : null,
                                                   fontSize: 20)),
                                         )
                                       ],
