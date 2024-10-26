@@ -59,7 +59,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
           //       ]
           //     : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
-          color: Theme.of(context).colorScheme.onSurface,
+          color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
           border: null,
         ),
         child: Column(
@@ -74,7 +74,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                           Container(
                             width: 45,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: data.color),
+                                shape: BoxShape.circle, color: getColorForText(data.title)),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -173,8 +173,9 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                             child: Container(
                               width: 10,
                               decoration: BoxDecoration(
-                                  color: getColorForText(data.title).withOpacity(
-                                      data.liqidated == true ? 0.3 : 1.0),
+                                  color: getColorForText(data.title)
+                                      .withOpacity(
+                                          data.liqidated == true ? 0.3 : 1.0),
                                   borderRadius: BorderRadius.only(
                                     topLeft: index == 0
                                         ? const Radius.circular(20)
@@ -202,7 +203,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                       width: 30,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: getColorForText(data.title) ),
+                                          color: getColorForText(data.title)),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
@@ -442,10 +443,7 @@ class CourseTile extends StatelessWidget {
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: isEmpty
               ? Colors.transparent
-              : Theme.of(context)
-                                              .colorScheme
-                                              .onSurface
-                                              .withOpacity(0.1),
+              : Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
           border: isEmpty
               ? DashedBorder.all(
                   dashLength: 10,
@@ -535,10 +533,11 @@ class CourseTile extends StatelessWidget {
                       Container(
                         width: 30,
                         decoration: BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: isEmpty
-                                ? getCourseColor(course.color).withOpacity(0.6)
-                                : getColorForText(course.name),),
+                          shape: BoxShape.circle,
+                          color: isEmpty
+                              ? getCourseColor(course.color).withOpacity(0.6)
+                              : getColorForText(course.name),
+                        ),
                         child: Padding(
                           padding: const EdgeInsets.all(8.0),
                           child: Text(
