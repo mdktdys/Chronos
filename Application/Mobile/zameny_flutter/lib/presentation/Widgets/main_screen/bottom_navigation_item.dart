@@ -57,7 +57,7 @@ class BottomNavigationItem extends StatelessWidget {
                             color: enabled
                                 ? provider.currentPage == index
                                     ? Theme.of(context).colorScheme.primary
-                                    : Colors.white.withOpacity(0.3)
+                                    : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.4)
                                 : Theme.of(context)
                                     .colorScheme
                                     .primary
@@ -79,7 +79,7 @@ class BottomNavigationItem extends StatelessWidget {
                                           ? Theme.of(context)
                                               .colorScheme
                                               .primary
-                                          : Colors.white.withOpacity(0.3)
+                                          : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.4)
                                       : Theme.of(context)
                                           .colorScheme
                                           .primary

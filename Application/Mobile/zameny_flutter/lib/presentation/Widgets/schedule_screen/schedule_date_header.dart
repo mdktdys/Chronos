@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 import 'package:talker_flutter/talker_flutter.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/domain/Providers/theme_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
@@ -68,8 +67,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                         height: 450,
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            color: Provider.of<ThemeProvider>(context)
-                                .theme
+                            color: Theme.of(context)
                                 .colorScheme
                                 .surface,
                             borderRadius: BorderRadius.circular(20)),
@@ -170,16 +168,16 @@ class DateHeaderDatePicker extends StatelessWidget {
                       alignment: Alignment.center,
                       child: provider.todayWeek == provider.currentWeek
                           ? Container(
-                              decoration: const BoxDecoration(
-                                  color: Color.fromARGB(255, 30, 118, 233),
-                                  borderRadius: BorderRadius.all(
+                              decoration: BoxDecoration(
+                                  color: Theme.of(ctx).colorScheme.primary,
+                                  borderRadius: const BorderRadius.all(
                                       Radius.circular(20))),
-                              child: const Padding(
-                                padding: EdgeInsets.all(6.0),
+                              child: Padding(
+                                padding: const EdgeInsets.all(6.0),
                                 child: Text(
                                   "Текущий",
                                   style: TextStyle(
-                                      color: Colors.white,
+                                      color: Theme.of(ctx).canvasColor ,
                                       fontSize: 14,
                                       fontFamily: 'Ubuntu',
                                       fontWeight: FontWeight.bold),

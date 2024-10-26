@@ -9,15 +9,15 @@ class SettingsLogoBlock extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(5),
-      decoration: const BoxDecoration(
+      decoration: BoxDecoration(
           gradient: LinearGradient(
               begin: Alignment.topLeft,
               end: Alignment.bottomRight,
               colors: [
-                Color.fromRGBO(193, 101, 221, 1),
-                Color.fromRGBO(92, 39, 254, 1),
+                Theme.of(context).colorScheme.primary,
+                Theme.of(context).colorScheme.tertiary,
               ]),
-          borderRadius: BorderRadius.all(Radius.circular(20))),
+          borderRadius: const BorderRadius.all(Radius.circular(20))),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(

@@ -41,7 +41,7 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
             // ),
             GestureDetector(
               onTap: () {
-                ref.watch(norificationProvider).enableNotifications();
+                // ref.watch(norificationProvider).enableNotifications();
               },
               child: SizedBox(
                   width: 52,
@@ -51,8 +51,8 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                     "assets/icon/notification.svg",
                     colorFilter: ColorFilter.mode(
                         ref.watch(norificationProvider).fcmToken == null
-                            ? Theme.of(context).colorScheme.inverseSurface
-                            : Colors.green,
+                            ? Colors.transparent
+                            : Colors.transparent,
                         BlendMode.srcIn),
                     width: 32,
                     height: 32,
@@ -63,7 +63,7 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
         Text(
           "Расписание",
           style: TextStyle(
-              color: Theme.of(context).primaryColorLight,
+              color: Theme.of(context).colorScheme.primary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
               fontFamily: 'Ubuntu'),
@@ -81,12 +81,9 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                           child: Column(
                             children: [
                               ListTile(
-                                title: Text(
+                                title: const Text(
                                   "Показать логи Talker",
                                   style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inversePrimary,
                                       fontFamily: 'Ubuntu'),
                                 ),
                                 onTap: () => Navigator.of(context).push(
@@ -112,10 +109,10 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                         ),
                       ));
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.more_horiz_rounded,
               size: 36,
-              color: Theme.of(context).primaryColorLight,
+              // color: Theme.of(context).primaryColorLight,
             ))
       ],
     );

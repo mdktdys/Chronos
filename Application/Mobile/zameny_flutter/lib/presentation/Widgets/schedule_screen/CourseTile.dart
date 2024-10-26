@@ -50,14 +50,14 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-          boxShadow: Theme.of(context).brightness == Brightness.light
-              ? [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      offset: const Offset(0, 1),
-                      blurRadius: 5)
-                ]
-              : null,
+          // boxShadow: Theme.of(context).brightness == Brightness.light
+          //     ? [
+          //         BoxShadow(
+          //             color: Colors.black.withOpacity(0.15),
+          //             offset: const Offset(0, 1),
+          //             blurRadius: 5)
+          //       ]
+          //     : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: Theme.of(context).colorScheme.onSurface,
           border: null,
@@ -431,18 +431,21 @@ class CourseTile extends StatelessWidget {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
-          boxShadow: Theme.of(context).brightness == Brightness.light
-              ? [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.15),
-                      offset: const Offset(0, 1),
-                      blurRadius: 5)
-                ]
-              : null,
+          // boxShadow: Theme.of(context).brightness == Brightness.light
+          //     ? [
+          //         BoxShadow(
+          //             color: Colors.black.withOpacity(0.15),
+          //             offset: const Offset(0, 1),
+          //             blurRadius: 5)
+          //       ]
+          //     : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: isEmpty
               ? Colors.transparent
-              : Theme.of(context).colorScheme.onSurface,
+              : Theme.of(context)
+                                              .colorScheme
+                                              .onSurface
+                                              .withOpacity(0.1),
           border: isEmpty
               ? DashedBorder.all(
                   dashLength: 10,

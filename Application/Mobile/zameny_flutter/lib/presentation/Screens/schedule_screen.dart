@@ -74,9 +74,9 @@ class _ScheduleScreenState extends State<ScheduleScreen>
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    ThemeProvider themeProvider = context.watch<ThemeProvider>();
+    // ThemeProvider themeProvider = context.watch<ThemeProvider>();
     return Scaffold(
-        backgroundColor: themeProvider.theme.colorScheme.surface,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         key: myGlobals.scaffoldKey,
         body: SingleChildScrollView(
             controller: scrollController,
