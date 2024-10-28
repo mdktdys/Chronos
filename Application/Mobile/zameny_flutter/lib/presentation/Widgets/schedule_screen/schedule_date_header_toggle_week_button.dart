@@ -1,24 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 
 class ToggleWeekButton extends StatelessWidget {
   final bool next;
-  const ToggleWeekButton({super.key, required this.next});
+  final Function(int way, BuildContext context) onTap;
+  const ToggleWeekButton({super.key, required this.next, required this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Bounceable(
       onTap: () {
-        provider.toggleWeek(next ? 1 : -1, context);
+        onTap.call(next ? 1 : -1, context);
+        // provider.toggleWeek(next ? 1 : -1, context);
       },
       child: Container(
         decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.primary,
-            shape: BoxShape.circle,
-           ),
+          color: Theme.of(context).colorScheme.primary,
+          shape: BoxShape.circle,
+        ),
         child: Padding(
           padding: const EdgeInsets.all(2.0),
           child: Icon(

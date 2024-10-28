@@ -209,15 +209,15 @@ class DayScheduleHeader extends StatelessWidget {
                 ),
           isToday
               ? Container(
-                  decoration: const BoxDecoration(
-                      color: Color.fromARGB(255, 30, 118, 233),
-                      borderRadius: BorderRadius.all(Radius.circular(20))),
-                  child: const Padding(
-                    padding: EdgeInsets.all(8.0),
+                  decoration:  BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      borderRadius: const BorderRadius.all(Radius.circular(20))),
+                  child:  Padding(
+                    padding: const EdgeInsets.all(8.0),
                     child: Text(
                       "Сегодня",
                       style: TextStyle(
-                          color: Colors.white,
+                          color: Theme.of(context).canvasColor,
                           fontSize: 16,
                           fontFamily: 'Ubuntu',
                           fontWeight: FontWeight.bold),

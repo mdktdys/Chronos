@@ -408,6 +408,7 @@ class CourseTile extends StatelessWidget {
   final bool empty;
   final bool short;
   final bool needZamenaAlert;
+  final bool clickabe;
 
   const CourseTile(
       {this.empty = false,
@@ -421,6 +422,7 @@ class CourseTile extends StatelessWidget {
       required this.saturdayTime,
       required this.obedTime,
       required this.short,
+      this.clickabe = true,
       this.needZamenaAlert = false});
 
   final Course course;
@@ -457,7 +459,7 @@ class CourseTile extends StatelessWidget {
           highlightColor:
               Theme.of(context).colorScheme.primary.withOpacity(0.1),
           radius: 100,
-          onLongPress: () {
+          onLongPress: clickabe? () {
             showModalBottomSheet(
                 backgroundColor: Colors.transparent,
                 barrierColor: Colors.black.withOpacity(0.1),
@@ -506,7 +508,7 @@ class CourseTile extends StatelessWidget {
                     ),
                   );
                 });
-          },
+          } : null,
           child: Stack(children: [
             Padding(
               padding: const EdgeInsets.all(8.0),

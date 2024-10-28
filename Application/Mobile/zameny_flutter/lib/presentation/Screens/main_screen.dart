@@ -2,6 +2,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/zamena_screen/exams_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigation_item.dart';
 import 'schedule_screen.dart';
@@ -52,6 +53,11 @@ class _MainScreenState extends State<MainScreen> {
         activeicon: "assets/icon/note.svg",
         enabled: true),
     BottomBarModel(
+        activeicon: "assets/icon/zamena_bold.svg",
+        icon: "assets/icon/zamena.svg",
+        title: "Замены",
+        enabled: true),
+    BottomBarModel(
         activeicon: "assets/icon/setting-2.svg",
         icon: "assets/icon/vuesax_linear_setting-2.svg",
         title: "Настройки",
@@ -73,7 +79,7 @@ class _MainScreenState extends State<MainScreen> {
                 children: const [
                   TimeTableWrapper(),
                   ScheduleWrapper(),
-                  //ExamsScreen(),
+                  ZamenaScreen(),
                   SettingsScreen()
                 ],
               ),
