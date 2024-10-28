@@ -25,8 +25,9 @@ class DateHeader extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            const ToggleWeekButton(
+            ToggleWeekButton(
               next: false,
+              onTap: provider.toggleWeek,
             ),
             const SizedBox(
               width: 5,
@@ -35,7 +36,7 @@ class DateHeader extends StatelessWidget {
             const SizedBox(
               width: 5,
             ),
-            const ToggleWeekButton(next: true),
+            ToggleWeekButton(next: true, onTap: provider.toggleWeek),
           ],
         ));
   }
@@ -67,9 +68,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                         height: 450,
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
-                            color: Theme.of(context)
-                                .colorScheme
-                                .surface,
+                            color: Theme.of(context).colorScheme.surface,
                             borderRadius: BorderRadius.circular(20)),
                         child: sf.SfDateRangePicker(
                           selectionColor: Theme.of(context)
@@ -80,15 +79,13 @@ class DateHeaderDatePicker extends StatelessWidget {
                           selectionRadius: 10,
                           selectionShape:
                               sf.DateRangePickerSelectionShape.circle,
-                          initialDisplayDate: DateTime.now()
-                              ,
+                          initialDisplayDate: DateTime.now(),
                           showActionButtons: true,
                           onViewChanged: (dateRangePickerViewChangedArgs) {
                             GetIt.I.get<Talker>().debug("need load");
                           },
                           allowViewNavigation: false,
-                          selectionMode:
-                              sf.DateRangePickerSelectionMode.single,
+                          selectionMode: sf.DateRangePickerSelectionMode.single,
                           onCancel: () => Navigator.of(context).pop(),
                           onSubmit: (p0) {
                             if (p0 == null) {
@@ -97,8 +94,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                             }
                             DateTime time = (p0 as DateTime);
                             provider.navigationDate = time;
-                            provider.currentWeek =
-                                provider.getWeekNumber(time);
+                            provider.currentWeek = provider.getWeekNumber(time);
                             provider.dateSwitched(ctx);
                             Navigator.of(context).pop();
                           },
@@ -112,8 +108,8 @@ class DateHeaderDatePicker extends StatelessWidget {
                                       .toList()),
                           showTodayButton: true,
                           showNavigationArrow: true,
-                          navigationDirection: sf
-                              .DateRangePickerNavigationDirection.vertical,
+                          navigationDirection:
+                              sf.DateRangePickerNavigationDirection.vertical,
                           navigationMode:
                               sf.DateRangePickerNavigationMode.scroll,
                           headerStyle: const sf.DateRangePickerHeaderStyle(
@@ -177,7 +173,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                                 child: Text(
                                   "Текущий",
                                   style: TextStyle(
-                                      color: Theme.of(ctx).canvasColor ,
+                                      color: Theme.of(ctx).canvasColor,
                                       fontSize: 14,
                                       fontFamily: 'Ubuntu',
                                       fontWeight: FontWeight.bold),
@@ -208,12 +204,9 @@ class MonthCell extends river.ConsumerWidget {
             .get<Data>()
             .holidays
             .any((element) => element.date == details.date);
-    bool isToday = details.date.day ==
-            DateTime.now().day &&
-        details.date.month ==
-            DateTime.now().month &&
-        DateTime.now().year ==
-            details.date.year;
+    bool isToday = details.date.day == DateTime.now().day &&
+        details.date.month == DateTime.now().month &&
+        DateTime.now().year == details.date.year;
     if (isToday) {
       //GetIt.I.get<Talker>().good("da");
     }

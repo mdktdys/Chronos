@@ -179,6 +179,23 @@ abstract class Api {
     }
   }
 
+  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate(
+      {required DateTime date}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    List<dynamic> data = await client
+        .from('ZamenaFileLinks')
+        .select('id,link,date,created_at')
+        .eq('date',date);
+
+    final List<ZamenaFileLink> res = [];
+    for (var element in data) {
+      ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+      res.add(zamenaLink);
+    }
+    return res;
+  }
+
   static Future<void> loadZamenaFileLinks(
       {required DateTime start, required DateTime end}) async {
     final dat = GetIt.I.get<Data>();
@@ -222,6 +239,33 @@ abstract class Api {
   //     dat.zamenaTypes.add(zamenaType);
   //   }
   // }
+
+  static Future<List<ZamenaFull>> getFullZamenasByDate(DateTime date) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    List<dynamic> data =
+        await client.from("ZamenasFull").select("*").eq('date', date);
+    List<ZamenaFull> zamenaBuffer = [];
+    for (var element in data) {
+      ZamenaFull zamena = ZamenaFull.fromMap(element);
+      zamenaBuffer.add(zamena);
+    }
+    return zamenaBuffer;
+  }
+
+  static Future<List<Zamena>> getZamenasByDate({required DateTime date}) async {
+    final client = GetIt.I.get<SupabaseClient>();
+    List<dynamic> data = await client
+        .from('Zamenas')
+        .select('*')
+        .eq('date', date.toIso8601String())
+        .order('id',ascending: true);
+    List<Zamena> zamenaBuffer = [];
+    for (var element in data) {
+      Zamena zamena = Zamena.fromMap(element);
+      zamenaBuffer.add(zamena);
+    }
+    return zamenaBuffer;
+  }
 
   static Future<List<Zamena>> loadZamenas(
       {required List<int> groupsID,
