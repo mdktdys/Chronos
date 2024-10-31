@@ -6,7 +6,7 @@ import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/domain/Services/Api.dart';
 
 
-enum ZamenaView {
+enum ZamenaViewType {
   teacher,
   group
 }
@@ -21,13 +21,18 @@ class ZamenaProvider extends ChangeNotifier{
   ZamenaProvider({required this.ref});
 
   DateTime currentDate = DateTime.now();
-  ZamenaView zamenaView = ZamenaView.group;
+  ZamenaViewType zamenaView = ZamenaViewType.teacher;
 
   void toggleWeek(int days, BuildContext context) {
     currentDate = currentDate.add(Duration(days: days));
     if(currentDate.weekday == 7){
       currentDate = currentDate.add(Duration(days: days));
     }
+    notifyListeners();
+  }
+
+  void changeView(ZamenaViewType view){
+    zamenaView = view;
     notifyListeners();
   }
 }
@@ -37,6 +42,7 @@ extension DateTimeExtension on DateTime{
     return "$year.$month.$day";
   }
 }
+
 
 final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((ref) async {
   final currentDate = ref.watch(zamenaProvider).currentDate;

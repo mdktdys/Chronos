@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -44,7 +45,43 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> {
             // const DateHeader(),
             const SizedBox(height: 10),
             const ZamenaDateNavigation(),
-            const SizedBox(height: 10),
+            const SizedBox(height: 8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: (){
+                    ref.read(zamenaProvider).changeView(ZamenaViewType.group);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Группы",style: TextStyle(
+                              fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group ? FontWeight.bold : FontWeight.w400,
+                              fontFamily: 'Ubuntu',
+                              fontSize: 16,
+                              color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group ?
+                                  Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),),
+                  ),
+                ),
+                GestureDetector(
+                  behavior: HitTestBehavior.translucent,
+                  onTap: (){
+                    ref.read(zamenaProvider).changeView(ZamenaViewType.teacher);
+                  },
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text("Преподы",style: TextStyle(
+                              fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher ? FontWeight.bold : FontWeight.w400,
+                              fontFamily: 'Ubuntu',
+                              fontSize: 16,
+                              color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher ?
+                                  Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),),
+                  ),
+                ),
+              ],
+            ),
+            const SizedBox(height: 8),
             Container(
               width: double.infinity,
               padding: const EdgeInsets.all(10),
@@ -109,11 +146,20 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
               child: Text("Нет замен"),
             );
           }
-          return ZamenaViewGroup(
-            key: const ValueKey('data'),
-            zamenas: data.$1,
-            fullZamenas: data.$2,
-          );
+        switch (ref.watch(zamenaProvider).zamenaView) {
+          case ZamenaViewType.group:
+            return ZamenaViewGroup(
+              key: const ValueKey('data'),
+              zamenas: data.$1,
+              fullZamenas: data.$2,
+            );
+          case ZamenaViewType.teacher:
+            return ZamenaViewTeacher(
+              key: const ValueKey('data'),
+              zamenas: data.$1,
+              fullZamenas: data.$2,
+            );
+        }
         },
         error: (error, trace) {
           return Center(
@@ -218,6 +264,71 @@ class ZamenaFileBlock extends ConsumerWidget {
     }, loading: () {
       return const SizedBox();
     });
+  }
+}
+
+class ZamenaViewTeacher extends StatelessWidget {
+  final List<Zamena> zamenas;
+  final List<ZamenaFull> fullZamenas;
+  const ZamenaViewTeacher({super.key, required this.zamenas, required this.fullZamenas});
+
+  @override
+  Widget build(BuildContext context) {
+    final Set<int> teachersList = zamenas.map((zamena) => zamena.teacherID).toSet();
+    final date = DateTime.now();
+    return Column(
+        mainAxisSize: MainAxisSize.min,
+        children: teachersList.map((teacherId) {
+          final groupZamenas =
+              zamenas.where((zamena) => zamena.teacherID == teacherId).toList();
+              groupZamenas.sort((a,b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+          final teacher = getTeacherById(teacherId);
+          if(teacher.name.replaceAll(' ', '') == ''){
+            return const SizedBox();
+          }
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(teacher.name,
+                      style: TextStyle(
+                          color: Theme.of(context).colorScheme.inverseSurface,
+                          fontSize: 20,
+                          fontFamily: 'Ubuntu')),
+                ],
+              ),
+              Column(
+                mainAxisSize: MainAxisSize.min,
+                children: groupZamenas.map((zamena) {
+                  final course = getCourseById(zamena.courseID)!;
+                  final cabinet = getCabinetById(zamena.cabinetID);
+                  final group = getGroupById(zamena.groupID);
+                  return CourseTile(
+                    clickabe: false,
+                      course: course,
+                      lesson: Lesson(
+                          id: course.id,
+                          number: zamena.lessonTimingsID,
+                          group: group!.id,
+                          date: date,
+                          course: course.id,
+                          teacher: teacher.id,
+                          cabinet: cabinet.id),
+                      swaped: null,
+                      needZamenaAlert: false,
+                      type: SearchType.teacher,
+                      refresh: () {},
+                      saturdayTime: false,
+                      obedTime: false,
+                      short: true);
+                }).toList(),
+              )
+            ],
+          );
+        }).toList());
   }
 }
 
