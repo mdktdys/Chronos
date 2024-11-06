@@ -55,7 +55,8 @@ class _MyAppState extends ConsumerState<MyApp> {
                                   width: MediaQuery.sizeOf(context).width,
                                   height: MediaQuery.sizeOf(context).height,
                                   child: const FlutterFall(
-                                    particleImage: [Images.autumnLeaves]),
+                                    totalObjects: 25,
+                                    particleImage: [Images.snowflake]),
                                 ),
                               ),
                             ],
@@ -66,9 +67,3 @@ class _MyAppState extends ConsumerState<MyApp> {
     );
   }
 }
-
-
-                // color: pr.Provider.of<ThemeProvider>(context)
-                //     .theme
-                //     .colorScheme
-                //     .surface,
