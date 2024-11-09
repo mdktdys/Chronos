@@ -1,7 +1,9 @@
 
 import 'package:flutter/material.dart';
 import 'package:flutterfall/flutterfall.dart';
+import 'package:provider/provider.dart';
 import 'package:zameny_flutter/configs/images.dart';
+import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 
 class SnowFall extends StatelessWidget {
   const SnowFall({
@@ -23,7 +25,7 @@ class SnowFall extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final List<String>? images = _defineFallImages();
-    return images == null
+    return images == null || (!context.watch<MainProvider>().falling)
     ? const SizedBox()
     : const IgnorePointer(
       child: RepaintBoundary(

@@ -10,6 +10,7 @@ import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
+import 'package:zameny_flutter/secrets.dart';
 
 import 'sharing/sharing.dart';
 
@@ -440,15 +441,15 @@ class ScheduleProvider extends ChangeNotifier {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == SearchType.teacher) {
       Teacher teacher = getTeacherById(dat.teacherGroup!);
-      return teacher.name;
+      return "${teacher.name}${IS_DEV? ' ${teacher.id}' : ''}";
     }
     if (dat.latestSearch == SearchType.cabinet) {
       Cabinet cabinet = getCabinetById(dat.seekCabinet!);
-      return cabinet.name;
+      return "${cabinet.name}${IS_DEV? ' ${cabinet.id}' : ''}";
     }
     if (dat.latestSearch == SearchType.group) {
       Group? group = getGroupById(dat.seekGroup!);
-      return group == null ? "Error" : group.name;
+      return "${group?.name}${IS_DEV? ' ${group?.id}' : ''}";
     }
     return "Not found";
   }
