@@ -54,8 +54,7 @@ class ScheduleScreen extends StatefulWidget {
   State<ScheduleScreen> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen>
-    with AutomaticKeepAliveClientMixin {
+class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
   late final ScrollController scrollController;
@@ -88,45 +87,7 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 child: Padding(
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   child: Column(children: [
-                    Container(
-                        color: Colors.transparent,
-                        height: 30,
-                        child: Center(
-                            child: GestureDetector(
-                                onTap: () {
-                                  try {
-                                    launchUrl(Uri.parse(
-                                        'tg://resolve?domain=bot_uksivt'));
-                                  } catch (e) {
-                                    launchUrl(
-                                        Uri.parse('https://t.me/bot_uksivt'));
-                                  }
-                                },
-                                child: Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    const Text(
-                                      "Новое расписание и замены тут ",
-                                      style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    Text(
-                                      "🤙",
-                                      style: GoogleFonts.notoEmoji(
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                    const Text(
-                                      " *тык*",
-                                      style: TextStyle(
-                                          fontFamily: 'Ubuntu',
-                                          color: Colors.white,
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ],
-                                )))),
+                    const Banner(),
                     const SizedBox(height: 10),
                     const ScheduleHeader(),
                     const SizedBox(height: 10),
@@ -190,6 +151,55 @@ class _ScheduleScreenState extends State<ScheduleScreen>
                 ),
               ),
             )));
+  }
+}
+
+class Banner extends StatelessWidget {
+  const Banner({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        color: Colors.transparent,
+        height: 30,
+        child: Center(
+            child: GestureDetector(
+                onTap: () {
+                  try {
+                    launchUrl(Uri.parse(
+                        'tg://resolve?domain=bot_uksivt'));
+                  } catch (e) {
+                    launchUrl(
+                        Uri.parse('https://t.me/bot_uksivt'));
+                  }
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    const Text(
+                      "Новое расписание и замены тут ",
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    Text(
+                      "❄️",
+                      style: GoogleFonts.notoEmoji(
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                    const Text(
+                      " *тык*",
+                      style: TextStyle(
+                          fontFamily: 'Ubuntu',
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500),
+                    ),
+                  ],
+                ))));
   }
 }
 

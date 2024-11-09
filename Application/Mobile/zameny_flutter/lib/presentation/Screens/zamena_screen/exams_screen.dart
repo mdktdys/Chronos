@@ -4,10 +4,12 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/zamena_screen/widget/zamena_view_chooser.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/warning_dev_blank.dart';
 
 class ZamenaScreen extends ConsumerStatefulWidget {
   const ZamenaScreen({super.key});
@@ -17,7 +19,7 @@ class ZamenaScreen extends ConsumerStatefulWidget {
 }
 
 class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepAliveClientMixin {
-    @override
+  @override
   bool get wantKeepAlive => true;
 
   @override
@@ -26,11 +28,12 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
-        padding: const EdgeInsets.fromLTRB(20.0, 10, 20, 0),
+        padding: const EdgeInsets.symmetric(horizontal: 20.0),
         physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
+            const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -49,70 +52,9 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
             const SizedBox(height: 10),
             const ZamenaDateNavigation(),
             const SizedBox(height: 8),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: (){
-                    ref.read(zamenaProvider).changeView(ZamenaViewType.group);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Группы",style: TextStyle(
-                              fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group ? FontWeight.bold : FontWeight.w400,
-                              fontFamily: 'Ubuntu',
-                              fontSize: 16,
-                              color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group ?
-                                  Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),),
-                  ),
-                ),
-                GestureDetector(
-                  behavior: HitTestBehavior.translucent,
-                  onTap: (){
-                    ref.read(zamenaProvider).changeView(ZamenaViewType.teacher);
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: Text("Преподы",style: TextStyle(
-                              fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher ? FontWeight.bold : FontWeight.w400,
-                              fontFamily: 'Ubuntu',
-                              fontSize: 16,
-                              color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher ?
-                                  Theme.of(context).colorScheme.primary : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),),
-                  ),
-                ),
-              ],
-            ),
+            const ZamenaViewChooser(),
             const SizedBox(height: 8),
-            Container(
-              width: double.infinity,
-              padding: const EdgeInsets.all(10),
-              decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.error.withOpacity(0.2),
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-              ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("⚠️ Фича в деве",
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Ubuntu',
-                          fontSize: 16,
-                          color: Theme.of(context).colorScheme.inverseSurface)),
-                  const SizedBox(
-                    height: 5,
-                  ),
-                  const Text(
-                    "Данные могут быть некорректны, для уверенности свертесь с файлом замен",
-                    style: TextStyle(
-                        fontFamily: 'Ubuntu', fontWeight: FontWeight.w400),
-                  ),
-                ],
-              ),
-            ),
+            const WarningDevBlank(),
             const SizedBox(height: 10),
             const ZamenaFileBlock(),
             const SizedBox(height: 10),
