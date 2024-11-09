@@ -8,18 +8,6 @@ import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigatio
 import 'schedule_screen.dart';
 import 'settings_screen.dart';
 
-class MainScreenWrapper extends StatelessWidget {
-  const MainScreenWrapper({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return ChangeNotifierProvider(
-      create: (context) => MainProvider(),
-      child: const MainScreen(),
-    );
-  }
-}
-
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
+import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/main_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/snowfall.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
@@ -34,16 +36,19 @@ class Application extends ConsumerWidget {
             statusBarIconBrightness: brightness,
             systemNavigationBarIconBrightness: brightness
           ),
-          child: BlocProvider(
-            create: (context) => ScheduleBloc(),
-            child: const Scaffold(
-              body: Stack(
-                children: [
-                  MainScreenWrapper(),
-                  SnowFall(),
-                ],
+          child: ChangeNotifierProvider(
+              create: (context) => MainProvider(),
+              child: BlocProvider(
+              create: (context) => ScheduleBloc(),
+              child: const Scaffold(
+                body: Stack(
+                  children: [
+                    MainScreen(),
+                    SnowFall(),
+                  ],
+                )
               )
-            )
+            ),
           ),
         )
       )

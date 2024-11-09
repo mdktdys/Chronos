@@ -1,14 +1,15 @@
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/settings_screen/settings_logo_block.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 import '../Widgets/settings_screen/settings_header.dart';
-import '../Widgets/settings_screen/settings_version_block.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -332,7 +333,9 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const SizedBox(
                               height: 3,
                             ),
-                            const ThemeSwitchBlock()
+                            const ThemeSwitchBlock(),
+                            const SizedBox(height: 5),
+                            const DevTools()
                           ],
                         ),
                         // const SettingsVersionBlock()
@@ -344,6 +347,103 @@ class _SettingsScreenState extends State<SettingsScreen> {
             ),
           ),
         ));
+  }
+}
+
+
+class BaseBlank extends StatelessWidget {
+  final Widget child;
+
+  const BaseBlank({super.key, 
+    required this.child
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+          color: Theme.of(context)
+              .colorScheme
+              .onSurface
+              .withOpacity(0.1),
+          borderRadius: const BorderRadius.all(Radius.circular(20))
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(10),
+        child: child,
+      )
+    );
+  }
+}
+
+class DevTools extends ConsumerWidget {
+  const DevTools({super.key});
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    MainProvider provider =  context.watch<MainProvider>();
+    return Column(
+      children: [
+        Align(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Прочее",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Ubuntu',
+                fontSize: 20,
+                color:
+                    Theme.of(context).colorScheme.primary),
+          ),
+        ),
+        const SizedBox(height: 5),
+        BaseBlank(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("Партиклы",style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),),
+              SizedBox(
+                height: 38,
+                child: FittedBox(
+                  child: Switch(
+                      value: provider.falling,
+                      onChanged: (value) =>
+                          provider.switchFalling()),
+                ),
+              ),
+            ],
+          ),
+        ),
+        const SizedBox(height: 6),
+        BaseBlank(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text("DEV",style: TextStyle(
+                                                      fontWeight:
+                                                          FontWeight.bold,
+                                                      fontSize: 14,
+                                                      fontFamily: 'Ubuntu',
+                                                    ),),
+              SizedBox(
+                height: 38,
+                child: FittedBox(
+                  child: Switch(
+                      value: provider.isDev,
+                      onChanged: (value) =>
+                          provider.switchDev()),
+                ),
+              ),
+            ],
+          ),
+        )
+      ],
+    );
   }
 }
 
@@ -361,55 +461,71 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
     bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark
         ? true
         : false;
-    return Column(children: [
-      Container(
-        width: double.infinity,
-        padding: const EdgeInsets.all(10),
-        decoration: BoxDecoration(
-            color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-            borderRadius: const BorderRadius.all(Radius.circular(20))),
-        child: SegmentedButtonTheme(
-          data: Theme.of(context).segmentedButtonTheme,
-          child: SegmentedButton(
-              onSelectionChanged: (p0) {
-                ref.read(lightThemeProvider).setThemeMode(p0.first);
-              },
-              segments: const [
-                ButtonSegment(value: 1, icon: Icon(Icons.dark_mode)),
-                ButtonSegment(value: 2, icon: Icon(Icons.light_mode)),
-                ButtonSegment(value: 3, icon: Icon(Icons.phone_android))
-              ],
-              selected: {
-                ref.watch(lightThemeProvider).themeModeIndex
-              }),
+    return Column(
+      children: [
+        Container(
+          alignment: Alignment.centerLeft,
+          child: Text(
+            "Тема",
+            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Ubuntu',
+                fontSize: 20,
+                color:
+                    Theme.of(context).colorScheme.primary),
+          ),
         ),
-      ),
-      const SizedBox(
-        height: 8,
-      ),
-      Container(
-          height: 80,
+        const SizedBox(height: 5),
+        Container(
+          width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
               borderRadius: const BorderRadius.all(Radius.circular(20))),
-          child: SingleChildScrollView(
-            scrollDirection: Axis.horizontal,
-            child: Row(
-              children: themes.map((theme) {    
-              return Row(
-                children: [
-                  ThemeTile(
-                      ref: ref,
-                      scheme: theme.$2,
-                      flexScheme: theme.$1,
-                      isDark: isDark),
-                      const SizedBox(width: 5)
+          child: SegmentedButtonTheme(
+            data: Theme.of(context).segmentedButtonTheme,
+            child: SegmentedButton(
+                onSelectionChanged: (p0) {
+                  ref.read(lightThemeProvider).setThemeMode(p0.first);
+                },
+                segments: const [
+                  ButtonSegment(value: 1, icon: Icon(Icons.dark_mode)),
+                  ButtonSegment(value: 2, icon: Icon(Icons.light_mode)),
+                  ButtonSegment(value: 3, icon: Icon(Icons.phone_android))
                 ],
-              );
-            }).toList()),
-          ))
-    ]);
+                selected: {
+                  ref.watch(lightThemeProvider).themeModeIndex
+                }),
+          ),
+        ),
+        const SizedBox(
+          height: 8,
+        ),
+        Container(
+            height: 80,
+            padding: const EdgeInsets.all(10),
+            decoration: BoxDecoration(
+                color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+                borderRadius: const BorderRadius.all(Radius.circular(20))),
+            child: SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                children: themes.map((theme) {    
+                return Row(
+                  children: [
+                    ThemeTile(
+                        ref: ref,
+                        scheme: theme.$2,
+                        flexScheme: theme.$1,
+                        isDark: isDark),
+                        const SizedBox(width: 5)
+                  ],
+                );
+              }).toList()),
+            )
+          )
+        ]
+      );
   }
 }
 
