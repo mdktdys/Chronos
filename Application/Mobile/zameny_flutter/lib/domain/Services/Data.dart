@@ -24,7 +24,7 @@ class Data {
   SearchType latestSearch = SearchType.group;
   Duration networkOffset = const Duration(milliseconds: 1); 
 
-  Data.fromShared(context) {
+  Data.fromShared() {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
     teacherGroup =
         GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;

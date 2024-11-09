@@ -68,6 +68,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
           alignment: Alignment.topCenter,
           curve: Easing.legacy,
           child: ImplicitlyAnimatedList<SearchItem>(
+              spawnIsolate: true,
               physics: const NeverScrollableScrollPhysics(),
               shrinkWrap: true,
               items: filteredItems,
