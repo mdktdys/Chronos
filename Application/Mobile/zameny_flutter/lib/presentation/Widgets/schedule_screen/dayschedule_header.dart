@@ -98,7 +98,7 @@ class DayScheduleHeader extends StatelessWidget {
                                   borderRadius: const BorderRadius.all(
                                       Radius.circular(20))),
                               child: ListView.separated(
-                                shrinkWrap: true,
+                                // shrinkWrap: true,
                                 separatorBuilder: (context, index) =>
                                     const Divider(),
                                 itemCount: links.length,
