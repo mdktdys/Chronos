@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "504912878580",
+    "project_id": "chronos-29a6e",
+    "storage_bucket": "chronos-29a6e.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:504912878580:android:d3cc7a3651272d05af77a1",
+        "android_client_info": {
+          "package_name": "com.mdktdys.zameny_flutter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAgQCnc6OTrPQ8SH3ghndJ3C0zl-bBys5E"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
