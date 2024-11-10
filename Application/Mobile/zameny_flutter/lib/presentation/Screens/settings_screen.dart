@@ -335,7 +335,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             ),
                             const ThemeSwitchBlock(),
                             const SizedBox(height: 5),
-                            const DevTools()
+                            const DevTools(),
+                            const SizedBox(height: 120)
                           ],
                         ),
                         // const SettingsVersionBlock()
