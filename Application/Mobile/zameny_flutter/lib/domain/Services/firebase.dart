@@ -42,15 +42,15 @@ class FirebaseApi {
     await _firebaseMessaging.requestPermission(provisional: kIsWeb ? false : true);
     final fCMToken = await _firebaseMessaging.getToken(
         vapidKey:
-            "BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0");
+            'BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0',);
 
-    GetIt.I.get<Talker>().info("$fCMToken");
+    GetIt.I.get<Talker>().info('$fCMToken');
 
     GetIt.I.get<SharedPreferences>().setString('FCM', fCMToken ?? '');
 
     try {
       await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert(
-          {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1});
+          {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1},);
       GetIt.I.get<Talker>().info('Subscribed to global channel');
 
       initPushNotifications();
@@ -65,14 +65,16 @@ class FirebaseApi {
   Future<void> handleMessage(RemoteMessage? message) async {
     GetIt.I.get<Talker>().debug(message);
     await Future.delayed(Duration.zero);
-    if (message == null) return;
+    if (message == null){
+      return;
+    }
 
     GetIt.I.get<Talker>().debug(message.data.toString());
   }
 
   Future initPushNotifications() async {
     if (!kIsWeb) {
-      await FirebaseMessaging.instance.subscribeToTopic("main");
+      await FirebaseMessaging.instance.subscribeToTopic('main');
       FirebaseMessaging.onBackgroundMessage(handleMessage);
       FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
       FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);

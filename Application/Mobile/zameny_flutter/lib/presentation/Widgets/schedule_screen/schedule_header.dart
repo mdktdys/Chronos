@@ -6,18 +6,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((ref) async {
-  log("refreshed");
-  final res = await GetIt.I
-      .get<SupabaseClient>()
-      .from('checks')
-      .select('*')
-      .order('id')
-      .limit(1);
-  log(res.toString());
-  final datetime = DateTime.parse(res[0]['updated_at']);
-  log(datetime.toString());
-  return datetime;
+  final res = await GetIt.I.get<SupabaseClient>().from('checks').select().order('id').limit(1);
+  return DateTime.parse(res[0]['updated_at']);
 });
 
 class ZamenaCheckTime extends ConsumerStatefulWidget {
@@ -42,7 +34,7 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
     if (duration.isNegative) {
       duration = const Duration(seconds: 10);
     }
-    log("Timer set for ${duration.inSeconds} seconds");
+    log('Timer set for ${duration.inSeconds} seconds');
 
     _timer = Timer(duration, () {
       ref.invalidate(zamenaTimerProvider);
@@ -60,10 +52,10 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
         return CheckZamenaTimeDisplay(time: data,refreshing: provider.isRefreshing);
       },
       error: (e, o) {
-        return const Text("Ошибка");
+        return const Text('Ошибка');
       },
       loading: () {
-        return const Text("Загрузка...");
+        return const Text('Загрузка...');
       },
     );
   }
@@ -73,7 +65,7 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
   final DateTime time;
   final bool refreshing;
 
-  const CheckZamenaTimeDisplay({super.key, required this.time, required this.refreshing});
+  const CheckZamenaTimeDisplay({required this.time, required this.refreshing, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -82,17 +74,17 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
       children: [
         Row(
           children: [
-            Text("${time.hour}:${time.minute}",
-                style: const TextStyle(fontFamily: 'Ubuntu')),
+            Text('${time.hour}:${time.minute}',
+                style: const TextStyle(fontFamily: 'Ubuntu'),),
             refreshing? 
             const SizedBox(
               height: 10,
               width: 10,
-              child: CircularProgressIndicator()) : const SizedBox()
+              child: CircularProgressIndicator(),) : const SizedBox(),
           ],
         ),
         Text(
-          refreshing? "Проверяю" : "Проверено",
+          refreshing? 'Проверяю' : 'Проверено',
           style: TextStyle(
             fontFamily: 'Ubuntu',
             fontSize: 10,
@@ -123,17 +115,16 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
           height: 55,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
                 child: Text(
-                  "Расписание",
+                  'Расписание',
                   textAlign: TextAlign.center,
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.primary,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu'),
+                      fontFamily: 'Ubuntu',),
                 ),
               ),
             ],
@@ -141,7 +132,6 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             const Spacer(),
             // const ZamenaCheckTime(),
@@ -159,14 +149,14 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                                 children: [
                                   ListTile(
                                     title: const Text(
-                                      "Показать логи Talker",
+                                      'Показать логи Talker',
                                       style: TextStyle(fontFamily: 'Ubuntu'),
                                     ),
                                     onTap: () => Navigator.of(context).push(
                                         MaterialPageRoute(
                                             builder: (context) => TalkerScreen(
                                                 talker:
-                                                    GetIt.I.get<Talker>()))),
+                                                    GetIt.I.get<Talker>(),),),),
                                   ),
                                   // ListTile(
                                   //     title: Text(
@@ -184,13 +174,13 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                                 ],
                               ),
                             ),
-                          ));
+                          ),);
                 },
                 icon: const Icon(
                   Icons.more_horiz_rounded,
                   size: 36,
                   // color: Theme.of(context).primaryColorLight,
-                ))
+                ),),
           ],
         ),
       ],

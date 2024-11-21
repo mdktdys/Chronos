@@ -8,7 +8,7 @@ class LoadingWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.only(top: 0),
+      margin: const EdgeInsets.only(),
       child: Shimmer.fromColors(
         baseColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         highlightColor:
@@ -21,12 +21,11 @@ class LoadingWidget extends StatelessWidget {
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(20),
                   color:
-                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
+                      Theme.of(context).colorScheme.onSurface.withOpacity(0.6),),
             ),
             const SizedBox(height: 15,),
             Column(
                 mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: List.generate(6, (index) {
                   return Column(
@@ -40,7 +39,7 @@ class LoadingWidget extends StatelessWidget {
                                 .colorScheme
                                 .onSurface
                                 .withOpacity(0.6),
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(20),),
                       ),
                       const SizedBox(
                         height: 20,
@@ -58,12 +57,12 @@ class LoadingWidget extends StatelessWidget {
                                           .colorScheme
                                           .onSurface
                                           .withOpacity(0.6),
-                                      borderRadius: BorderRadius.circular(20)),
-                                )),
+                                      borderRadius: BorderRadius.circular(20),),
+                                ),),
                       ),
                     ],
                   );
-                })),
+                }),),
           ],
         ),
       ),

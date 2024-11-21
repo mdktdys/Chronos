@@ -12,10 +12,10 @@ class SnowFall extends StatelessWidget {
 
   List<String>? _defineFallImages() {
     final DateTime date = DateTime.now();
-    if (date.betweenIgnoreYear(DateTime(2024, 10, 1), DateTime(2024, 11, 1))) {
+    if (date.betweenIgnoreYear(DateTime(2024, 10), DateTime(2024, 11))) {
       return [Images.autumnLeaves];
     }
-    if (date.betweenIgnoreYear(DateTime(2024, 11, 1), DateTime(2025, 2, 28))) {
+    if (date.betweenIgnoreYear(DateTime(2024, 11), DateTime(2025, 2, 28))) {
       return [Images.snowflake];
     }
     return null;
@@ -31,7 +31,7 @@ class SnowFall extends StatelessWidget {
       child: RepaintBoundary(
         child: FlutterFall(
           totalObjects: 25,
-          particleImage: [Images.snowflake]
+          particleImage: [Images.snowflake],
         ),
       ),
     );

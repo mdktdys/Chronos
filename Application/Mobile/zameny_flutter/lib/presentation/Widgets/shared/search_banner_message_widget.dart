@@ -27,12 +27,12 @@ class SearchBannerMessageWidget extends StatelessWidget {
               width: 10,
             ),
             Text(
-              "Нет замен",
+              'Нет замен',
               style: TextStyle(
                   fontFamily: 'Ubuntu',
                   fontSize: 18,
-                  color: Theme.of(context).colorScheme.inverseSurface),
-            )
+                  color: Theme.of(context).colorScheme.inverseSurface,),
+            ),
           ],
         ),
       ),

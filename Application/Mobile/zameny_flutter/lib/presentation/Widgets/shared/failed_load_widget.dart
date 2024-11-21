@@ -6,11 +6,11 @@ import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 class FailedLoadWidget extends StatelessWidget {
   final String error;
   const FailedLoadWidget(
-      {super.key, required this.error});
+      {required this.error, super.key,});
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
@@ -21,13 +21,13 @@ class FailedLoadWidget extends StatelessWidget {
           shadows: [Shadow(color: Colors.red, blurRadius: 4)],
         ),
         const Text(
-          "Ошибка :(",
+          'Ошибка :(',
           textAlign: TextAlign.center,
           style: TextStyle(
               color: Colors.red,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.bold,
-              fontSize: 26),
+              fontSize: 26,),
         ),
         Text(
           error,
@@ -36,7 +36,7 @@ class FailedLoadWidget extends StatelessWidget {
               color: Colors.red,
               fontFamily: 'Ubuntu',
               fontWeight: FontWeight.w400,
-              fontSize: 14),
+              fontSize: 14,),
         ),
         const SizedBox(
           height: 10,
@@ -51,12 +51,12 @@ class FailedLoadWidget extends StatelessWidget {
             decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(width: 2, color: Colors.red),
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),),
             child: const Center(
               child: Text(
-                "Перезагрузить",
+                'Перезагрузить',
                 style: TextStyle(
-                    color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18),
+                    color: Colors.white, fontFamily: 'Ubuntu', fontSize: 18,),
               ),
             ),
           ),

@@ -3,7 +3,7 @@ import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
 
@@ -28,8 +28,8 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
 
   @override
   Widget build(BuildContext context) {
-    SearchProvider providerSearch = context.read<SearchProvider>();
-    ScheduleProvider providerSchedule = context.watch<ScheduleProvider>();
+    final SearchProvider providerSearch = context.read<SearchProvider>();
+    final ScheduleProvider providerSchedule = context.watch<ScheduleProvider>();
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -54,7 +54,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                       .where((element) => element
                           .getFiltername()
                           .toLowerCase()
-                          .contains(value.toLowerCase().trim()))
+                          .contains(value.toLowerCase().trim()),)
                       .toList();
                 });
               });
@@ -116,12 +116,12 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                         item.getFiltername(),
                         style: TextStyle(
                             fontFamily: 'Ubuntu',
-                            color: Theme.of(context).colorScheme.onSurface.withOpacity(1.0)),
+                            color: Theme.of(context).colorScheme.onSurface.withOpacity(1.0),),
                       ),
                     ),
                   ),
                 );
-              }),
+              },),
         ),
       ],
     );
@@ -140,6 +140,6 @@ abstract class SearchItem {
     if (this is Teacher) {
       return (this as Teacher).name;
     }
-    return "";
+    return '';
   }
 }

@@ -4,7 +4,7 @@ import 'package:flutter_svg/svg.dart';
 
 class SettingsSwitchThemeBlock extends StatelessWidget {
   const SettingsSwitchThemeBlock(
-      {super.key, required this.sliding, required this.onSwitch});
+      {required this.sliding, required this.onSwitch, super.key,});
 
   final int sliding;
   final Function onSwitch;
@@ -23,15 +23,15 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset("assets/icon/vuesax_linear_moon.svg", color: Colors.white,),
+                    SvgPicture.asset('assets/icon/vuesax_linear_moon.svg', color: Colors.white,),
                     const SizedBox(
                       width: 3,
                     ),
                     Text(
-                      "Темная",
+                      'Темная',
                       style: TextStyle(
                           color: Theme.of(context).primaryColorLight,
-                          fontSize: 16),
+                          fontSize: 16,),
                     ),
                   ],
                 ),
@@ -41,15 +41,15 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    SvgPicture.asset("assets/icon/vuesax_linear_sun-2.svg", color: Colors.white,),
+                    SvgPicture.asset('assets/icon/vuesax_linear_sun-2.svg', color: Colors.white,),
                     const SizedBox(
                       width: 3,
                     ),
                     Text(
-                      "Светлая",
+                      'Светлая',
                       style: TextStyle(
                           color: Theme.of(context).primaryColorLight,
-                          fontSize: 16),
+                          fontSize: 16,),
                     ),
                   ],
                 ),
@@ -57,6 +57,6 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
             },
             onValueChanged: (index) {
               onSwitch(index);
-            }));
+            },),);
   }
 }

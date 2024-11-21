@@ -18,9 +18,9 @@ import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.d
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/search_result_header.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
-import '../Widgets/schedule_screen/dayschedule_default_widget.dart';
-import '../Widgets/schedule_screen/dayschedule_teacher_widget.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_teacher_widget.dart';
 
 MyGlobals myGlobals = MyGlobals();
 
@@ -65,7 +65,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
     scrollController = ScrollController();
   }
 
-  refresh(int teacher, BuildContext context) {
+  void refresh(int teacher, BuildContext context) {
     setState(() {});
   }
 
@@ -112,8 +112,8 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                                     refresh: refresh,
                                     zamenas: state.zamenas,
                                     lessons: state.lessons,
-                                  )
-                                ]);
+                                  ),
+                                ],);
                               } else if (state is ScheduleFailedLoading) {
                                 return FailedLoadWidget(
                                   error: state.error,
@@ -125,7 +125,7 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                                   height: 500,
                                   child: Center(
                                     child: Text(
-                                      "Тыкни на поиск!\nвыбери группу, преподавателя или кабинет",
+                                      'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                         color: Theme.of(context)
@@ -142,15 +142,15 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                                 return const SizedBox();
                               }
                             },
-                          ));
-                    }),
+                          ),);
+                    },),
                     const SizedBox(
                       height: 100,
                     ),
-                  ]),
+                  ],),
                 ),
               ),
-            )));
+            ),),);
   }
 }
 
@@ -169,37 +169,37 @@ class Banner extends StatelessWidget {
                 onTap: () {
                   try {
                     launchUrl(Uri.parse(
-                        'tg://resolve?domain=bot_uksivt'));
+                        'tg://resolve?domain=bot_uksivt',),);
                   } catch (e) {
                     launchUrl(
-                        Uri.parse('https://t.me/bot_uksivt'));
+                        Uri.parse('https://t.me/bot_uksivt'),);
                   }
                 },
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     const Text(
-                      "Новое расписание и замены тут ",
+                      'Новое расписание и замены тут ',
                       style: TextStyle(
                           fontFamily: 'Ubuntu',
                           color: Colors.white,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                     Text(
-                      "❄️",
+                      '❄️',
                       style: GoogleFonts.notoEmoji(
                           color: Colors.white,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                     const Text(
-                      " *тык*",
+                      ' *тык*',
                       style: TextStyle(
                           fontFamily: 'Ubuntu',
                           color: Colors.white,
-                          fontWeight: FontWeight.w500),
+                          fontWeight: FontWeight.w500,),
                     ),
                   ],
-                ))));
+                ),),),);
   }
 }
 
@@ -219,8 +219,8 @@ class ShimmerContainer extends StatelessWidget {
           width: double.infinity,
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6)),
-        ));
+              color: Theme.of(context).colorScheme.onSurface.withOpacity(0.6),),
+        ),);
   }
 }
 
@@ -230,16 +230,17 @@ class LessonList extends StatelessWidget {
   final Function refresh;
   final ScrollController scrollController;
 
-  const LessonList(
-      {super.key,
-      required this.refresh,
-      required this.zamenas,
-      required this.lessons,
-      required this.scrollController});
+  const LessonList({
+    required this.refresh,
+    required this.zamenas,
+    required this.lessons,
+    required this.scrollController,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
     final currentDay = DateTime.now().weekday;
     final startDate = provider.navigationDate
         .subtract(Duration(days: provider.navigationDate.weekday - 1));
@@ -267,22 +268,14 @@ class ScheduleList extends StatelessWidget {
   final int todayWeek;
   final int currentWeek;
   const ScheduleList(
-      {super.key,
-      required this.context,
-      required this.refresh,
-      required this.weekLessons,
-      required this.zamenas,
-      required this.startDate,
-      required this.currentDay,
-      required this.todayWeek,
-      required this.currentWeek});
+      {required this.context, required this.refresh, required this.weekLessons, required this.zamenas, required this.startDate, required this.currentDay, required this.todayWeek, required this.currentWeek, super.key,});
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
-    SearchType searchType = provider.searchType;
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final SearchType searchType = provider.searchType;
     final isDesktop = Adaptive.isDesktop(context);
-    List<Widget> days = List.generate(6, (iter) {
+    final List<Widget> days = List.generate(6, (iter) {
       return ScheduleListWidget(
         iter: iter,
         weekLessons: weekLessons,
@@ -301,7 +294,7 @@ class ScheduleList extends StatelessWidget {
             children: days
                 .map((e) => Expanded(
                       child: e,
-                    ))
+                    ),)
                 .toList(),
           )
         : Column(children: days);
@@ -320,16 +313,7 @@ class ScheduleListWidget extends StatelessWidget {
   final int currentWeek;
 
   const ScheduleListWidget({
-    super.key,
-    required this.iter,
-    required this.weekLessons,
-    required this.zamenas,
-    required this.searchType,
-    required this.refresh,
-    required this.startDate,
-    required this.currentDay,
-    required this.todayWeek,
-    required this.currentWeek,
+    required this.iter, required this.weekLessons, required this.zamenas, required this.searchType, required this.refresh, required this.startDate, required this.currentDay, required this.todayWeek, required this.currentWeek, super.key,
   });
 
   @override
@@ -345,7 +329,7 @@ class ScheduleListWidget extends StatelessWidget {
       return const SizedBox();
     }
 
-    List<Zamena> dayZamenas =
+    final List<Zamena> dayZamenas =
         zamenas.where((element) => element.date.weekday == day).toList();
     dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 

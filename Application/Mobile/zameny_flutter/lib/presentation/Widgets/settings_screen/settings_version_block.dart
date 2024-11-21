@@ -11,16 +11,15 @@ class SettingsVersionBlock extends StatelessWidget {
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.symmetric(horizontal: 5),
       child: const Column(
-        mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: 8,
           ),
           Text(
-            "Версия: 18.04.24 билд: 1.1 TEST WEB",
+            'Версия: 18.04.24 билд: 1.1 TEST WEB',
             style: TextStyle(
-                fontFamily: 'Monospace', color: Colors.grey, fontSize: 12),
+                fontFamily: 'Monospace', color: Colors.grey, fontSize: 12,),
             textAlign: TextAlign.start,
           ),
         ],

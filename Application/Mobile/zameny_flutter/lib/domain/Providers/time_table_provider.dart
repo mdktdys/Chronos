@@ -9,7 +9,7 @@ class TimeTableProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  toggleSaturday() {
+  void toggleSaturday() {
     saturday = !saturday;
     notifyListeners();
   }

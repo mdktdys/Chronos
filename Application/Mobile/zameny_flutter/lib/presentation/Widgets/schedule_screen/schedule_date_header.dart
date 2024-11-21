@@ -13,7 +13,7 @@ class DateHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -22,7 +22,6 @@ class DateHeader extends StatelessWidget {
         ),
         padding: const EdgeInsets.all(10),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
             ToggleWeekButton(
@@ -38,14 +37,13 @@ class DateHeader extends StatelessWidget {
             ),
             ToggleWeekButton(next: true, onTap: provider.toggleWeek),
           ],
-        ));
+        ),);
   }
 }
 
 class DateHeaderDatePicker extends StatelessWidget {
   const DateHeaderDatePicker({
-    super.key,
-    required this.provider,
+    required this.provider, super.key,
   });
 
   final ScheduleProvider provider;
@@ -69,7 +67,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                         padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             color: Theme.of(context).colorScheme.surface,
-                            borderRadius: BorderRadius.circular(20)),
+                            borderRadius: BorderRadius.circular(20),),
                         child: sf.SfDateRangePicker(
                           selectionColor: Theme.of(context)
                               .colorScheme
@@ -77,22 +75,19 @@ class DateHeaderDatePicker extends StatelessWidget {
                               .withOpacity(0.6),
                           backgroundColor: Colors.transparent,
                           selectionRadius: 10,
-                          selectionShape:
-                              sf.DateRangePickerSelectionShape.circle,
                           initialDisplayDate: DateTime.now(),
                           showActionButtons: true,
                           onViewChanged: (dateRangePickerViewChangedArgs) {
-                            GetIt.I.get<Talker>().debug("need load");
+                            GetIt.I.get<Talker>().debug('need load');
                           },
                           allowViewNavigation: false,
-                          selectionMode: sf.DateRangePickerSelectionMode.single,
                           onCancel: () => Navigator.of(context).pop(),
                           onSubmit: (p0) {
                             if (p0 == null) {
                               Navigator.of(context).pop();
                               return;
                             }
-                            DateTime time = (p0 as DateTime);
+                            final DateTime time = (p0 as DateTime);
                             provider.navigationDate = time;
                             provider.currentWeek = provider.getWeekNumber(time);
                             provider.dateSwitched(ctx);
@@ -105,7 +100,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                                       .get<Data>()
                                       .holidays
                                       .map((e) => e.date)
-                                      .toList()),
+                                      .toList(),),
                           showTodayButton: true,
                           showNavigationArrow: true,
                           navigationDirection:
@@ -113,47 +108,41 @@ class DateHeaderDatePicker extends StatelessWidget {
                           navigationMode:
                               sf.DateRangePickerNavigationMode.scroll,
                           headerStyle: const sf.DateRangePickerHeaderStyle(
-                              backgroundColor: Colors.transparent),
-                          extendableRangeSelectionDirection:
-                              sf.ExtendableRangeSelectionDirection.both,
-                          view: sf.DateRangePickerView.month,
+                              backgroundColor: Colors.transparent,),
                           cellBuilder: (context, cellDetails) {
                             return MonthCell(details: cellDetails);
                           },
                         ),
-                      ));
-                    })
+                      ),);
+                    },)
                 : null;
           },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Осенний семестр 2024/2025",
+                'Осенний семестр 2024/2025',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontWeight: FontWeight.bold,
                     fontFamily: 'Ubuntu',
                     fontSize: 16,
-                    color: Theme.of(ctx).colorScheme.inverseSurface),
+                    color: Theme.of(ctx).colorScheme.inverseSurface,),
               ),
-              const SizedBox(
-                height: 5,
-              ),
+              const SizedBox(height: 5),
               SizedBox(
                 height: 32,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     Text(
-                      "Неделя ${provider.currentWeek}",
+                      'Неделя ${provider.currentWeek}',
                       style: TextStyle(
                           fontWeight: FontWeight.bold,
                           fontFamily: 'Ubuntu',
                           fontSize: 16,
-                          color: Theme.of(ctx).colorScheme.inverseSurface),
+                          color: Theme.of(ctx).colorScheme.inverseSurface,),
                     ),
                     const SizedBox(
                       width: 5,
@@ -161,22 +150,21 @@ class DateHeaderDatePicker extends StatelessWidget {
                     AnimatedSize(
                       curve: Curves.easeOutCubic,
                       duration: const Duration(milliseconds: 150),
-                      alignment: Alignment.center,
                       child: provider.todayWeek == provider.currentWeek
                           ? Container(
                               decoration: BoxDecoration(
                                   color: Theme.of(ctx).colorScheme.primary,
                                   borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
+                                      Radius.circular(20),),),
                               child: Padding(
                                 padding: const EdgeInsets.all(6.0),
                                 child: Text(
-                                  "Текущий",
+                                  'Текущий',
                                   style: TextStyle(
                                       color: Theme.of(ctx).canvasColor,
                                       fontSize: 14,
                                       fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold),
+                                      fontWeight: FontWeight.bold,),
                                 ),
                               ),
                             )
@@ -184,7 +172,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                     ),
                   ],
                 ),
-              )
+              ),
             ],
           ),
         ),
@@ -194,17 +182,17 @@ class DateHeaderDatePicker extends StatelessWidget {
 }
 
 class MonthCell extends river.ConsumerWidget {
-  const MonthCell({super.key, required this.details});
+  const MonthCell({required this.details, super.key});
   final sf.DateRangePickerCellDetails details;
 
   @override
   Widget build(BuildContext context, river.WidgetRef ref) {
-    bool chillday = details.date.weekday == 7 ||
+    final bool chillday = details.date.weekday == 7 ||
         GetIt.I
             .get<Data>()
             .holidays
             .any((element) => element.date == details.date);
-    bool isToday = details.date.day == DateTime.now().day &&
+    final bool isToday = details.date.day == DateTime.now().day &&
         details.date.month == DateTime.now().month &&
         DateTime.now().year == details.date.year;
     if (isToday) {
@@ -219,32 +207,17 @@ class MonthCell extends river.ConsumerWidget {
             decoration: !chillday
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: Colors.white.withOpacity(0.1))
+                    color: Colors.white.withOpacity(0.1),)
                 : null,
             child: Center(child: Text(details.date.day.toString())),
           ),
         ),
-        // GetIt.I.get<Data>().zamenaFileLinks.any(
-        //   (element) {
-        //     return element.date == details.date;
-        //   },
-        // )
-        //     ? Align(
-        //         alignment: Alignment.topRight,
-        //         child: Container(
-        //           width: 5,
-        //           height: 5,
-        //           decoration: const BoxDecoration(
-        //               color: Colors.green, shape: BoxShape.circle),
-        //         ))
-        //     : const SizedBox(),
         isToday
             ? Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
                     border: Border.all(
-                        width: 1,
-                        color: Theme.of(context).colorScheme.primary)),
+                        color: Theme.of(context).colorScheme.primary,),),
               )
             : const SizedBox(),
       ],

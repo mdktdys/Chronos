@@ -12,17 +12,11 @@ class BottomNavigationItem extends StatelessWidget {
   final String activeicon;
 
   const BottomNavigationItem(
-      {super.key,
-      required this.index,
-      required this.onTap,
-      required this.icon,
-      required this.text,
-      required this.activeicon,
-      required this.enabled});
+      {required this.index, required this.onTap, required this.icon, required this.text, required this.activeicon, required this.enabled, super.key,});
 
   @override
   Widget build(BuildContext context) {
-    MainProvider provider = context.watch<MainProvider>();
+    final MainProvider provider = context.watch<MainProvider>();
     return Material(
       color: Colors.transparent,
       child: InkWell(
@@ -85,13 +79,13 @@ class BottomNavigationItem extends StatelessWidget {
                                           .primary
                                           .withOpacity(0.6),
                                   fontFamily: 'Ubuntu',
-                                  fontWeight: FontWeight.w500),
+                                  fontWeight: FontWeight.w500,),
                             ),
                           ),
-                        )
-                      ]),
+                        ),
+                      ],),
                 ),
-              )),
+              ),),
         ),
       ),
     );

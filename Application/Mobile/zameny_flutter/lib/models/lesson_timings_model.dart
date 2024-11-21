@@ -29,7 +29,7 @@ class LessonTimings {
       'saturdayStart': saturdayStart,
       'saturdayEnd': saturdayEnd,
       'obedStart': obedStart,
-      'obedEnd': obedEnd
+      'obedEnd': obedEnd,
     };
   }
 
@@ -37,7 +37,9 @@ class LessonTimings {
 
   @override
   bool operator ==(covariant LessonTimings other) {
-    if (identical(this, other)) return true;
+    if (identical(this, other)){
+      return true;
+    }
 
     return other.number == number &&
         other.start == start &&

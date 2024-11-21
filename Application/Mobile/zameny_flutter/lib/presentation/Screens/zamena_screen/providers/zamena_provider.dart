@@ -2,7 +2,7 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Services/Api.dart';
 
 
@@ -39,7 +39,7 @@ class ZamenaProvider extends ChangeNotifier{
 
 extension DateTimeExtension on DateTime{
   String formatyyyymmdd(){
-    return "$year.$month.$day";
+    return '$year.$month.$day';
   }
 }
 
@@ -50,11 +50,11 @@ final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<Z
     final result = await Future.wait([
       Api.getZamenasByDate(date: currentDate),
       Api.getFullZamenasByDate(currentDate),
-      Api.loadZamenaFileLinksByDate(date: currentDate)
+      Api.loadZamenaFileLinksByDate(date: currentDate),
     ]);
     return (result[0] as List<Zamena>,result[1] as List<ZamenaFull>,result[2] as List<ZamenaFileLink>);
   } catch (e) {
-    log("Ошибка загрузки замен: $e");
+    log('Ошибка загрузки замен: $e');
     return (List<Zamena>.empty(),List<ZamenaFull>.empty(),List<ZamenaFileLink>.empty());
   }
 });

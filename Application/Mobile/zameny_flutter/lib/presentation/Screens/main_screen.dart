@@ -2,37 +2,40 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/map/view/map_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/exams_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigation_item.dart';
-import 'schedule_screen.dart';
-import 'settings_screen.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
+import 'package:zameny_flutter/presentation/Screens/settings_screen.dart';
 
 class MainScreen extends StatelessWidget {
   const MainScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    MainProvider provider = context.watch<MainProvider>();
+    final MainProvider provider = context.watch<MainProvider>();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Center(
-          child: Stack(children: [
-            Center(
-              child: PageView(
-                onPageChanged: (value) => provider.pageChanged(value),
-                controller: provider.pageController,
-                children: const [
-                  TimeTableWrapper(),
-                  ScheduleWrapper(),
-                  ZamenaScreen(),
-                  SettingsScreen()
-                ],
+          child: Stack(
+            children: [
+              Center(
+                child: PageView(
+                  onPageChanged: (value) => provider.pageChanged(value),
+                  controller: provider.pageController,
+                  children: const [
+                    TimeTableWrapper(),
+                    ScheduleWrapper(),
+                    ZamenaScreen(),
+                    MapScreen(),
+                    SettingsScreen(),
+                  ],
+                ),
               ),
-            ),
             const BottomBar(),
-          ]),
+          ],),
         ),
       ),
     );
@@ -46,7 +49,7 @@ class BottomBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    MainProvider provider = context.watch<MainProvider>();
+    final MainProvider provider = context.watch<MainProvider>();
     return Align(
         alignment: Alignment.bottomCenter,
         child: ClipRect(
@@ -67,11 +70,9 @@ class BottomBar extends StatelessWidget {
                       border: Border(
                           bottom: BorderSide(
                             color: Theme.of(context).colorScheme.primary,
-                            width: 1,
                           ),
                           top: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,
-                              width: 1)),
+                              color: Theme.of(context).colorScheme.primary,),),
                     ),
                     child: Row(
                         mainAxisAlignment:
@@ -89,7 +90,7 @@ class BottomBar extends StatelessWidget {
                               text: model[index].title,
                             ),
                           );
-                        })),
+                        }),),
                   ),
                   const SizedBox(
                     height: 10,
@@ -98,7 +99,7 @@ class BottomBar extends StatelessWidget {
               ),
             ),
           ),
-        )
+        ),
       );
   }
 }
@@ -113,29 +114,34 @@ class BottomBarModel {
     required this.activeicon,
     required this.icon,
     required this.title,
-    required this.enabled
+    required this.enabled,
   });
 }
 
 List<BottomBarModel> model = [
   BottomBarModel(
-      activeicon: "assets/icon/boldnotification.svg",
-      icon: "assets/icon/notification.svg",
-      title: "Звонки",
-      enabled: true),
+      activeicon: 'assets/icon/boldnotification.svg',
+      icon: 'assets/icon/notification.svg',
+      title: 'Звонки',
+      enabled: true,),
   BottomBarModel(
-      icon: "assets/icon/vuesax_linear_note.svg",
-      title: "Расписание",
-      activeicon: "assets/icon/note.svg",
-      enabled: true),
+      icon: 'assets/icon/vuesax_linear_note.svg',
+      title: 'Расписание',
+      activeicon: 'assets/icon/note.svg',
+      enabled: true,),
   BottomBarModel(
-      activeicon: "assets/icon/zamena_bold.svg",
-      icon: "assets/icon/zamena.svg",
-      title: "Замены",
-      enabled: true),
+      activeicon: 'assets/icon/zamena_bold.svg',
+      icon: 'assets/icon/zamena.svg',
+      title: 'Замены',
+      enabled: true,),
   BottomBarModel(
-      activeicon: "assets/icon/setting-2.svg",
-      icon: "assets/icon/vuesax_linear_setting-2.svg",
-      title: "Настройки",
-      enabled: true)
+      activeicon: 'assets/icon/vuesax_linear_location.svg',
+      icon: 'assets/icon/vuesax_linear_location.svg',
+      title: 'Карта',
+      enabled: true,),
+  BottomBarModel(
+      activeicon: 'assets/icon/setting-2.svg',
+      icon: 'assets/icon/vuesax_linear_setting-2.svg',
+      title: 'Настройки',
+      enabled: true,),
 ];

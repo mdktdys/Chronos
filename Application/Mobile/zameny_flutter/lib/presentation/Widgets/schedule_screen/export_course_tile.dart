@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:zameny_flutter/domain/Models/course_model.dart';
-import 'package:zameny_flutter/domain/Models/lesson_model.dart';
+import 'package:zameny_flutter/models/course_model.dart';
+import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
@@ -13,12 +13,7 @@ class ExportCourseTile extends StatelessWidget {
   final bool obedTime;
   final bool saturdayTime;
   const ExportCourseTile(
-      {super.key,
-      required this.type,
-      required this.course,
-      required this.e,
-      required this.obedTime,
-      required this.saturdayTime});
+      {required this.type, required this.course, required this.e, required this.obedTime, required this.saturdayTime, super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +39,7 @@ class ExportCourseTile extends StatelessWidget {
                       width: 30,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: getCourseColor(course.color)),
+                          color: getCourseColor(course.color),),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
@@ -53,19 +48,19 @@ class ExportCourseTile extends StatelessWidget {
                           style: const TextStyle(
                               fontWeight: FontWeight.bold,
                               color: Colors.white,
-                              fontSize: 14),
+                              fontSize: 14,),
                         ),
                       ),
                     ),
                     Text(
                         saturdayTime
                             ? getTimeFromDateTime(
-                                getLessonTimings(e.number).saturdayStart)
+                                getLessonTimings(e.number).saturdayStart,)
                             : obedTime
                                 ? getTimeFromDateTime(
-                                    getLessonTimings(e.number).obedStart)
+                                    getLessonTimings(e.number).obedStart,)
                                 : getTimeFromDateTime(
-                                    getLessonTimings(e.number).start),
+                                    getLessonTimings(e.number).start,),
                         style: TextStyle(
                             fontSize: 16,
                             color: obedTime
@@ -76,16 +71,16 @@ class ExportCourseTile extends StatelessWidget {
                                         .inverseSurface)
                                 : Theme.of(context).colorScheme.inverseSurface,
                             fontFamily: 'Ubuntu',
-                            fontWeight: FontWeight.bold)),
+                            fontWeight: FontWeight.bold,),),
                     Text(
                         saturdayTime
                             ? getTimeFromDateTime(
-                                getLessonTimings(e.number).saturdayEnd)
+                                getLessonTimings(e.number).saturdayEnd,)
                             : obedTime
                                 ? getTimeFromDateTime(
-                                    getLessonTimings(e.number).obedEnd)
+                                    getLessonTimings(e.number).obedEnd,)
                                 : getTimeFromDateTime(
-                                    getLessonTimings(e.number).end),
+                                    getLessonTimings(e.number).end,),
                         style: TextStyle(
                             color: obedTime
                                 ? (e.number > 3
@@ -98,7 +93,7 @@ class ExportCourseTile extends StatelessWidget {
                                     .colorScheme
                                     .inverseSurface
                                     .withAlpha(200),
-                            fontFamily: 'Ubuntu')),
+                            fontFamily: 'Ubuntu',),),
                   ],
                 ),
                 const SizedBox(
@@ -110,7 +105,7 @@ class ExportCourseTile extends StatelessWidget {
                     children: [
                       Text(
                           (getCourseById(e.course) ??
-                                  Course(id: -1, name: "err", color: "0,0,0,0"))
+                                  Course(id: -1, name: 'err', color: '0,0,0,0'))
                               .name,
                           overflow: TextOverflow.fade,
                           style: TextStyle(
@@ -118,23 +113,23 @@ class ExportCourseTile extends StatelessWidget {
                                   Theme.of(context).colorScheme.inverseSurface,
                               fontFamily: 'Ubuntu',
                               fontWeight: FontWeight.bold,
-                              fontSize: 20)),
+                              fontSize: 20,),),
                       Text(
                         type == SearchType.teacher
                             ? getGroupById(e.group)!.name
                             : type == SearchType.group
                                 ? getTeacherById(e.teacher).name
                                 : type == SearchType.cabinet
-                                    ? ""
-                                    : "",
+                                    ? ''
+                                    : '',
                         style: TextStyle(
                             color: Theme.of(context).colorScheme.inverseSurface,
-                            fontFamily: 'Ubuntu'),
+                            fontFamily: 'Ubuntu',),
                       ),
                       Row(
                         children: [
                           SvgPicture.asset(
-                            "assets/icon/vuesax_linear_location.svg",
+                            'assets/icon/vuesax_linear_location.svg',
                             color: Theme.of(context).colorScheme.inverseSurface,
                             width: 18,
                             height: 18,
@@ -146,12 +141,12 @@ class ExportCourseTile extends StatelessWidget {
                                     ? getCabinetById(e.cabinet).name
                                     : type == SearchType.cabinet
                                         ? getGroupById(e.group)!.name
-                                        : "",
+                                        : '',
                             style: TextStyle(
                                 color: Theme.of(context)
                                     .colorScheme
                                     .inverseSurface,
-                                fontFamily: 'Ubuntu'),
+                                fontFamily: 'Ubuntu',),
                           ),
                         ],
                       ),
@@ -161,7 +156,7 @@ class ExportCourseTile extends StatelessWidget {
               ],
             ),
           ),
-        ));
+        ),);
   }
 }
 
@@ -179,20 +174,19 @@ class ExportCourseTileEmpty extends StatelessWidget {
                 color: Colors.transparent,
                 border: DashedBorder.all(
                     dashLength: 10,
-                    width: 1,
                     color: Theme.of(context)
                         .colorScheme
                         .primary
-                        .withOpacity(0.6))),
+                        .withOpacity(0.6),),),
             child: Padding(
                 padding: const EdgeInsets.all(20),
                 child: Center(
                     child: Text(
-                  "Нет пар",
+                  'Нет пар',
                   style: TextStyle(
                       fontFamily: 'Ubuntu',
                       fontSize: 20,
-                      color: Theme.of(context).colorScheme.inversePrimary),
-                )))));
+                      color: Theme.of(context).colorScheme.inversePrimary,),
+                ),),),),);
   }
 }

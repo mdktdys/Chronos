@@ -23,7 +23,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
 
   @override
   Widget build(BuildContext context) {
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
     //bool enabled = provider.searchType == SearchType.group ? true : false;
     return Stack(
       alignment: Alignment.center,
@@ -35,14 +35,14 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.inverseSurface,
                     fontFamily: 'Ubuntu',
-                    fontSize: 18)),
+                    fontSize: 18,),),
             Text(provider.searchDiscribtion(),
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     color: Theme.of(context).colorScheme.inverseSurface,
                     fontFamily: 'Ubuntu',
                     fontSize: 24,
-                    fontWeight: FontWeight.bold)),
+                    fontWeight: FontWeight.bold,),),
             // enabled && IS_DEV
             //     ? Container(
             //         margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
@@ -76,8 +76,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(26),
                             border: Border.all(
-                                width: 1,
-                                color: Colors.white.withOpacity(0.15))),
+                                color: Colors.white.withOpacity(0.15),),),
                         child:
                             Column(mainAxisSize: MainAxisSize.min, children: [
                           BlocBuilder<ExportBloc, ExportState>(
@@ -102,7 +101,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                                   state.reason,
                                                   style: const TextStyle(
                                                       fontFamily: 'Ubuntu',
-                                                      color: Colors.red),
+                                                      color: Colors.red,),
                                                 ),
                                               ],
                                             ),
@@ -118,14 +117,14 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .primary,
-                                            )),
+                                            ),),
                                           );
                                         }
                                         if (state is ExportReady) {
                                           return GestureDetector(
                                             onTap: () async {
                                               exportBloc.add(ExportStart(
-                                                  context: context, ref: ref));
+                                                  context: context, ref: ref,),);
                                             },
                                             child: const SizedBox(
                                               height: 30,
@@ -140,7 +139,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                                     'Экспортировать расписание',
                                                     style: TextStyle(
                                                         fontFamily: 'Ubuntu',
-                                                        color: Colors.white),
+                                                        color: Colors.white,),
                                                   ),
                                                 ],
                                               ),
@@ -148,10 +147,10 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                           );
                                         }
                                         return const SizedBox();
-                                      }),
+                                      },),
                                 );
-                              })
-                        ])),
+                              },),
+                        ],),),
                   ),
                   onClose: () => setState(() => opened = false),
                   child: IconButton(
@@ -173,11 +172,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
 
 class Modal extends StatefulWidget {
   const Modal({
-    super.key,
-    required this.visible,
-    required this.onClose,
-    required this.modal,
-    required this.child,
+    required this.visible, required this.onClose, required this.modal, required this.child, super.key,
   });
 
   final Widget child;
@@ -213,7 +208,7 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
         visible: widget.visible,
         closeDuration: const Duration(milliseconds: 150),
         anchor: const Aligned(
-            follower: Alignment.topRight, target: Alignment.topRight),
+            follower: Alignment.topRight, target: Alignment.topRight,),
         portalFollower: Animate(
           controller: controller,
           value: 0.05,
@@ -222,7 +217,7 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
             ScaleEffect(
                 duration: Duration(milliseconds: 250),
                 alignment: Alignment.topRight,
-                curve: Curves.fastLinearToSlowEaseIn)
+                curve: Curves.fastLinearToSlowEaseIn,),
           ],
           child: widget.modal,
         ),
@@ -234,10 +229,7 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
 
 class Barrier extends StatelessWidget {
   const Barrier({
-    super.key,
-    required this.onClose,
-    required this.visible,
-    required this.child,
+    required this.onClose, required this.visible, required this.child, super.key,
   });
 
   final Widget child;
@@ -252,7 +244,7 @@ class Barrier extends StatelessWidget {
       portalFollower: GestureDetector(
           behavior: HitTestBehavior.opaque,
           onTap: onClose,
-          child: const SizedBox()),
+          child: const SizedBox(),),
       child: child,
     );
   }

@@ -16,8 +16,8 @@ class SettingsLogoBlock extends StatelessWidget {
               colors: [
                 Theme.of(context).colorScheme.primary,
                 Theme.of(context).colorScheme.tertiary,
-              ]),
-          borderRadius: const BorderRadius.all(Radius.circular(20))),
+              ],),
+          borderRadius: const BorderRadius.all(Radius.circular(20)),),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -32,16 +32,16 @@ class SettingsLogoBlock extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Chronos",
+                    'Chronos',
                     textAlign: TextAlign.start,
                     style: TextStyle(
                         color: Theme.of(context).colorScheme.inverseSurface,
                         fontSize: 20,
-                        fontWeight: FontWeight.bold),
+                        fontWeight: FontWeight.bold,),
                   ),
-                  Text("Будьте терпеливы, я все еще пилю ❤️",
+                  Text('Будьте терпеливы, я все еще пилю ❤️',
                       style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface)),
+                          color: Theme.of(context).colorScheme.inverseSurface,),),
                 ],
               ),
             ),
@@ -51,7 +51,7 @@ class SettingsLogoBlock extends StatelessWidget {
                   'assets/icon/whale_1f40b.png',
                   width: 60,
                   height: 60,
-                ))
+                ),),
           ],
         ),
       ),

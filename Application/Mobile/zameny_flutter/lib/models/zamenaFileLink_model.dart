@@ -18,7 +18,7 @@ class ZamenaFileLink {
       'id': id,
       'link': link,
       'date': date.millisecondsSinceEpoch,
-      'created_at' : created.millisecondsSinceEpoch
+      'created_at' : created.millisecondsSinceEpoch,
     };
   }
 
@@ -27,7 +27,7 @@ class ZamenaFileLink {
       id: map['id'] as int,
       link: map['link'] as String,
       date: DateTime.parse(map['date']),
-      created: DateTime.parse(map['created_at'] as String).toUtc()
+      created: DateTime.parse(map['created_at'] as String).toUtc(),
     );
   }
 
