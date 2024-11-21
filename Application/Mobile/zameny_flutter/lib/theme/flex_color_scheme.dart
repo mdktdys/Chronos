@@ -92,7 +92,7 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   void _updateTheme() {
     // Определяем текущий системный режим (светлый или тёмный)
     final brightness = WidgetsBinding.instance.window.platformBrightness;
-    bool isSystemDarkMode = brightness == Brightness.dark;
+    final bool isSystemDarkMode = brightness == Brightness.dark;
 
     switch (themeMode) {
       case ThemeMode.dark:

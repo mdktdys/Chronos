@@ -8,11 +8,11 @@ import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
 import 'package:zameny_flutter/secrets.dart';
 
-import 'sharing/sharing.dart';
+import 'package:zameny_flutter/domain/Providers/sharing/sharing.dart';
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -49,7 +49,7 @@ class ScheduleProvider extends ChangeNotifier {
         1;
   }
 
-  exportSchedulePNG(BuildContext context, WidgetRef ref) async {
+  Future<void> exportSchedulePNG(BuildContext context, WidgetRef ref) async {
     List<Lesson> lessons = [];
     String searchName = '';
     switch (searchType) {
@@ -59,7 +59,7 @@ class ScheduleProvider extends ChangeNotifier {
         }
       case SearchType.teacher:
         {
-          Teacher teacher = getTeacherById(teacherIDSeek);
+          final Teacher teacher = getTeacherById(teacherIDSeek);
           lessons = teacher.lessons;
           lessons.sort((a, b) => a.number > b.number ? 1 : -1);
 
@@ -67,7 +67,7 @@ class ScheduleProvider extends ChangeNotifier {
         }
       case SearchType.group:
         {
-          Group group = getGroupById(groupIDSeek)!;
+          final Group group = getGroupById(groupIDSeek)!;
           lessons = group.lessons;
           searchName = group.name;
         }
@@ -90,7 +90,7 @@ class ScheduleProvider extends ChangeNotifier {
         lessons.where((element) => element.date.weekday == 6).toList();
 
     final ScreenshotController controller = ScreenshotController();
-    var savedFile = await controller.captureFromWidget(
+    final savedFile = await controller.captureFromWidget(
         pixelRatio: 4,
         context: context,
         Container(
@@ -104,12 +104,12 @@ class ScheduleProvider extends ChangeNotifier {
                 mainAxisSize: MainAxisSize.min,
                 children: [
                   Text(
-                    "Расписание $searchName",
+                    'Расписание $searchName',
                     style: const TextStyle(
                         fontFamily: 'Ubuntu',
                         color: Colors.white,
                         fontWeight: FontWeight.bold,
-                        fontSize: 24),
+                        fontSize: 24,),
                   ),
                   const SizedBox(
                     height: 5,
@@ -124,11 +124,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  "Понедельник ${navigationDate.day}.${navigationDate.month}",
+                                  'Понедельник ${navigationDate.day}.${navigationDate.month}',
                                   style: const TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -136,17 +136,17 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? mondayLessons.map((e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                           const SizedBox(
                             width: 20,
                           ),
@@ -154,11 +154,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Четверг",
+                                  'Четверг',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -166,17 +166,17 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? thursdayLessons.map((e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                         ],
                       ),
                       Row(
@@ -186,11 +186,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Вторник",
+                                  'Вторник',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -198,17 +198,17 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? tuesdayLessons.map((e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                           const SizedBox(
                             width: 20,
                           ),
@@ -216,11 +216,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Пятница",
+                                  'Пятница',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -228,17 +228,17 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? fridayLessons.map((e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                         ],
                       ),
                       Row(
@@ -248,11 +248,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Среда",
+                                  'Среда',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -260,17 +260,17 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? wednesdayLessons.map((e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                           const SizedBox(
                             width: 20,
                           ),
@@ -278,11 +278,11 @@ class ScheduleProvider extends ChangeNotifier {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 const Text(
-                                  "Суббота",
+                                  'Суббота',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.white,
-                                      fontSize: 20),
+                                      fontSize: 20,),
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -290,28 +290,28 @@ class ScheduleProvider extends ChangeNotifier {
                                         ? saturdayLessons.map((e) {
                                             const bool saturdayTime = true;
                                             const bool obedTime = false;
-                                            Course course =
+                                            final Course course =
                                                 getCourseById(e.course)!;
                                             return ExportCourseTile(
                                                 type: searchType,
                                                 course: course,
                                                 e: e,
                                                 obedTime: obedTime,
-                                                saturdayTime: saturdayTime);
+                                                saturdayTime: saturdayTime,);
                                           }).toList()
-                                        : [const ExportCourseTileEmpty()])
-                              ]),
+                                        : [const ExportCourseTileEmpty()],),
+                              ],),
                         ],
-                      )
+                      ),
                     ],
-                  )
+                  ),
                 ],
               ),
             ),
           ),
-        ));
+        ),);
 
-    String name = "Расписание $searchName";
+    final String name = 'Расписание $searchName';
     ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
   }
 
@@ -326,12 +326,12 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   DateTime getStartOfWeek(DateTime week) {
-    DateTime monday = week.subtract(Duration(days: week.weekday - 1));
+    final DateTime monday = week.subtract(Duration(days: week.weekday - 1));
     return DateTime(monday.year, monday.month, monday.day);
   }
 
   DateTime getEndOfWeek(DateTime week) {
-    DateTime sunday = week
+    final DateTime sunday = week
         .subtract(Duration(days: week.weekday - 1))
         .add(const Duration(days: 6));
     return DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
@@ -340,7 +340,7 @@ class ScheduleProvider extends ChangeNotifier {
   void groupSelected(int groupID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', "Group");
+    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Group');
     groupIDSeek = groupID;
     data.seekGroup = groupID;
     data.latestSearch = SearchType.group;
@@ -349,24 +349,24 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   void loadWeekSchedule(BuildContext context) async {
-    DateTime monday =
+    final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
+    final DateTime sunday = monday.add(const Duration(days: 6));
 
     // Устанавливаем время для понедельника и воскресенья
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
+    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    final DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     context.read<ScheduleBloc>().add(LoadGroupWeek(
-        groupID: groupIDSeek, dateStart: startOfWeek, dateEnd: endOfWeek));
+        groupID: groupIDSeek, dateStart: startOfWeek, dateEnd: endOfWeek,),);
     notifyListeners();
   }
 
   void teacherSelected(int teacherID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', "Teacher");
+    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Teacher');
     teacherIDSeek = teacherID;
     data.teacherGroup = teacherID;
     data.latestSearch = SearchType.teacher;
@@ -377,7 +377,7 @@ class ScheduleProvider extends ChangeNotifier {
   void cabinetSelected(int cabinetID, BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', "Cabinet");
+    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Cabinet');
     cabinetIDSeek = cabinetID;
     data.seekCabinet = cabinetID;
     data.latestSearch = SearchType.cabinet;
@@ -386,36 +386,36 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   void loadCabinetWeekSchedule(BuildContext context) async {
-    DateTime monday =
+    final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
+    final DateTime sunday = monday.add(const Duration(days: 6));
 
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
+    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    final DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     context.read<ScheduleBloc>().add(LoadCabinetWeek(
           cabinetID: cabinetIDSeek,
           dateStart: startOfWeek,
           dateEnd: endOfWeek,
-        ));
+        ),);
     notifyListeners();
   }
 
   void loadWeekTeahcerSchedule(BuildContext context) async {
-    DateTime monday =
+    final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    DateTime sunday = monday.add(const Duration(days: 6));
+    final DateTime sunday = monday.add(const Duration(days: 6));
 
-    DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    DateTime endOfWeek =
+    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    final DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     context.read<ScheduleBloc>().add(LoadTeacherWeek(
           teacherID: teacherIDSeek,
           dateStart: startOfWeek,
           dateEnd: endOfWeek,
-        ));
+        ),);
     notifyListeners();
   }
 
@@ -440,31 +440,31 @@ class ScheduleProvider extends ChangeNotifier {
   String searchDiscribtion() {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == SearchType.teacher) {
-      Teacher teacher = getTeacherById(dat.teacherGroup!);
+      final Teacher teacher = getTeacherById(dat.teacherGroup!);
       return "${teacher.name}${IS_DEV? ' ${teacher.id}' : ''}";
     }
     if (dat.latestSearch == SearchType.cabinet) {
-      Cabinet cabinet = getCabinetById(dat.seekCabinet!);
+      final Cabinet cabinet = getCabinetById(dat.seekCabinet!);
       return "${cabinet.name}${IS_DEV? ' ${cabinet.id}' : ''}";
     }
     if (dat.latestSearch == SearchType.group) {
-      Group? group = getGroupById(dat.seekGroup!);
+      final Group? group = getGroupById(dat.seekGroup!);
       return "${group?.name}${IS_DEV? ' ${group?.id}' : ''}";
     }
-    return "Not found";
+    return 'Not found';
   }
 
   String getSearchTypeNamed() {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == SearchType.teacher) {
-      return "Преподаватель";
+      return 'Преподаватель';
     }
     if (dat.latestSearch == SearchType.cabinet) {
-      return "Кабинет";
+      return 'Кабинет';
     }
     if (dat.latestSearch == SearchType.group) {
-      return "Группа";
+      return 'Группа';
     }
-    return "Not found";
+    return 'Not found';
   }
 }

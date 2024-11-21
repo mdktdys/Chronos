@@ -6,13 +6,13 @@ import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/timetable_screen/current_timing_timer.dart';
 import 'package:zameny_flutter/presentation/Widgets/timetable_screen/time_table_header.dart';
 
-import '../../domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 
 class TimeTableWrapper extends StatelessWidget {
   const TimeTableWrapper({super.key});
@@ -36,7 +36,7 @@ class TimeTableScreen extends StatefulWidget {
 class _TimeTableScreenState extends State<TimeTableScreen> {
   @override
   Widget build(BuildContext context) {
-    TimeTableProvider provider = context.watch<TimeTableProvider>();
+    final TimeTableProvider provider = context.watch<TimeTableProvider>();
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
@@ -66,14 +66,14 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                 child: Switch(
                                     value: provider.saturday,
                                     onChanged: (value) =>
-                                        provider.toggleSaturday()),
+                                        provider.toggleSaturday(),),
                               ),
                             ),
                             const SizedBox(
                               width: 8,
                             ),
                             const Text(
-                              "Суббота",
+                              'Суббота',
                               style: TextStyle(
                                   fontFamily: 'Ubuntu',
                               ),
@@ -90,7 +90,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                   mainAxisAlignment: MainAxisAlignment.end,
                                   children: [
                                     const Text(
-                                      "Без обеда",
+                                      'Без обеда',
                                       style: TextStyle(
                                           fontFamily: 'Ubuntu',
                                           ),
@@ -104,7 +104,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                         child: Switch(
                                             value: provider.obed,
                                             onChanged: (value) =>
-                                                provider.toggleObed()),
+                                                provider.toggleObed(),),
                                       ),
                                     ),
                                   ],
@@ -118,7 +118,7 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                         Expanded(
                           child: Column(
                               children: List.generate(7, (index) {
-                            LessonTimings? timing = GetIt.I
+                            final LessonTimings? timing = GetIt.I
                                 .get<Data>()
                                 .timings
                                 .where(
@@ -149,14 +149,14 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .primary,
-                                                  width: 2)),
+                                                  width: 2,),),
                                           child: Center(
                                             child: Text(
                                               (index + 1).toString(),
                                               style: const TextStyle(
                                                   fontFamily: 'Ubuntu',
                                                   // color: Colors.white,
-                                                  fontSize: 20),
+                                                  fontSize: 20,),
                                             ),
                                           ),
                                         ),
@@ -169,41 +169,41 @@ class _TimeTableScreenState extends State<TimeTableScreen> {
                                               key: ValueKey(provider.saturday ? UniqueKey() :getTimeFromDateTime(
                                                   provider.obed
                                                       ? timing.obedStart
-                                                      : timing.start)),
-                                              "${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}",
+                                                      : timing.start,),),
+                                              '${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}',
                                               style: TextStyle(
                                                   fontFamily: 'Ubuntu',
                                                   color: provider.saturday ? null : provider.obed
                                                       ? getTimeFromDateTime(provider
                                                                       .obed
                                                                   ? timing.obedStart
-                                                                  : timing.start) !=
+                                                                  : timing.start,) !=
                                                               getTimeFromDateTime(
                                                                   !provider.obed
                                                                       ? timing
                                                                           .obedStart
                                                                       : timing
-                                                                          .start)
+                                                                          .start,)
                                                           ? Colors.green
                                                           : null
                                                       : null,
-                                                  fontSize: 20)),
-                                        )
+                                                  fontSize: 20,),),
+                                        ),
                                       ],
                                     ),
                             );
-                          })),
+                          }),),
                         ),
                       ],
                     ),
                     const SizedBox(
                       height: 100,
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
-          )),
+          ),),
     );
   }
 }
@@ -229,62 +229,62 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
     });
   }
 
-  tick() {
+  void tick() {
     setState(() {});
   }
 
-  toggleObed() {
+  void toggleObed() {
     obed = !obed;
     setState(() {});
   }
 
   String getElapsedTime(bool obed) {
-    LessonTimings timing = getLessonTiming(obed)!;
-    bool isSaturday = DateTime.now().weekday == 6;
-    Duration left = isSaturday
+    final LessonTimings timing = getLessonTiming(obed)!;
+    final bool isSaturday = DateTime.now().weekday == 6;
+    final Duration left = isSaturday
         ? timing.saturdayEnd.difference(DateTime.now())
         : (obed
             ? timing.obedEnd.difference(DateTime.now())
             : timing.end.difference(DateTime.now()));
 
-    int hours = left.inHours;
-    int minutes = left.inMinutes;
-    int seconds = left.inSeconds;
+    final int hours = left.inHours;
+    final int minutes = left.inMinutes;
+    final int seconds = left.inSeconds;
 
-    int secs = seconds % 60;
-    int mints = minutes % 60;
+    final int secs = seconds % 60;
+    final int mints = minutes % 60;
 
     return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
   }
 
   LessonTimings? getLessonTiming(bool obed) {
-    DateTime current = DateTime.now();
-    bool isSaturday = current.weekday == 6;
+    final DateTime current = DateTime.now();
+    final bool isSaturday = current.weekday == 6;
     if (isSaturday) {
-      LessonTimings? timing = GetIt.I
+      final LessonTimings? timing = GetIt.I
           .get<Data>()
           .timings
           .where((element) =>
               element.start.isBefore(current) &&
-              element.saturdayEnd.isAfter(current))
+              element.saturdayEnd.isAfter(current),)
           .firstOrNull;
       return timing;
     } else {
       if (obed) {
-        LessonTimings? timing = GetIt.I
+        final LessonTimings? timing = GetIt.I
             .get<Data>()
             .timings
             .where((element) =>
                 element.obedStart.isBefore(current) &&
-                element.obedEnd.isAfter(current))
+                element.obedEnd.isAfter(current),)
             .firstOrNull;
         return timing;
       } else {
-        LessonTimings? timing = GetIt.I
+        final LessonTimings? timing = GetIt.I
             .get<Data>()
             .timings
             .where((element) =>
-                element.start.isBefore(current) && element.end.isAfter(current))
+                element.start.isBefore(current) && element.end.isAfter(current),)
             .firstOrNull;
         return timing;
       }
@@ -293,17 +293,17 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
 
   @override
   Widget build(BuildContext context) {
-    LessonTimings? timing = getLessonTiming(obed);
-    DateTime current = DateTime.now();
-    ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final LessonTimings? timing = getLessonTiming(obed);
+    final DateTime current = DateTime.now();
+    final ScheduleProvider provider = context.watch<ScheduleProvider>();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
       child: timing == null || current.weekday == 7
           ? const SizedBox()
           : Builder(builder: (context) {
-              bool needObedSwitch = timing.number > 3 && current.weekday != 6;
-              bool isSaturday = current.weekday == 6;
+              final bool needObedSwitch = timing.number > 3 && current.weekday != 6;
+              final bool isSaturday = current.weekday == 6;
               return SizedBox(
                 width: double.infinity,
                 child: Padding(
@@ -311,13 +311,13 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text("Сейчас идет ${timing.number} пара",
+                        Text('Сейчас идет ${timing.number} пара',
                             textAlign: TextAlign.start,
                             style: TextStyle(
                                 color: Theme.of(context).primaryColorLight,
                                 fontSize: 24,
                                 fontWeight: FontWeight.bold,
-                                fontFamily: 'Ubuntu')),
+                                fontFamily: 'Ubuntu',),),
                         const SizedBox(height: 5),
                         AnimatedSize(
                           alignment: Alignment.topCenter,
@@ -327,11 +327,11 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                             builder: (context, state) {
                               if (state is ScheduleLoaded &&
                                   provider.currentWeek == provider.todayWeek) {
-                                Lesson? lesson = state.lessons
+                                final Lesson? lesson = state.lessons
                                     .where((element) =>
                                         element.date.weekday ==
                                             current.weekday &&
-                                        timing.number == element.number)
+                                        timing.number == element.number,)
                                     .firstOrNull;
 
                                 Zamena? zamena = state.zamenas
@@ -339,7 +339,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                         element.date.weekday ==
                                             current.weekday &&
                                         timing.number ==
-                                            element.lessonTimingsID)
+                                            element.lessonTimingsID,)
                                     .firstOrNull;
                                 if (zamena != null) {
                                   if (provider.searchType ==
@@ -358,7 +358,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                         .where((element) =>
                                             element.group == lesson.group &&
                                             element.date.day == current.day &&
-                                            element.date.month == current.month)
+                                            element.date.month == current.month,)
                                         .isNotEmpty) {
                                       return const SizedBox();
                                     }
@@ -370,7 +370,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                         refresh: () {},
                                         swaped: null,
                                         saturdayTime: isSaturday,
-                                        obedTime: obed);
+                                        obedTime: obed,);
                                   }
                                 }
                                 if (zamena != null) {
@@ -379,8 +379,8 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                       course: getCourseById(zamena.courseID) ??
                                           Course(
                                               id: -1,
-                                              name: "name",
-                                              color: "255,255,255,255"),
+                                              name: 'name',
+                                              color: '255,255,255,255',),
                                       lesson: Lesson(
                                           id: -1,
                                           number: zamena.lessonTimingsID,
@@ -388,12 +388,12 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                           date: zamena.date,
                                           course: zamena.courseID,
                                           teacher: zamena.teacherID,
-                                          cabinet: zamena.cabinetID),
+                                          cabinet: zamena.cabinetID,),
                                       type: provider.searchType,
                                       refresh: () {},
                                       swaped: lesson,
                                       saturdayTime: isSaturday,
-                                      obedTime: obed);
+                                      obedTime: obed,);
                                 }
                               }
                               return const SizedBox();
@@ -403,7 +403,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text("Осталось: ${getElapsedTime(obed)}",
+                              Text('Осталось: ${getElapsedTime(obed)}',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
                                       color: obed
@@ -413,7 +413,7 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                               .withOpacity(0.7),
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold,
-                                      fontFamily: 'Ubuntu')),
+                                      fontFamily: 'Ubuntu',),),
                               needObedSwitch && !isSaturday
                                   ? Row(
                                       children: [
@@ -423,29 +423,29 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                                             child: Switch(
                                                 value: obed,
                                                 onChanged: (value) =>
-                                                    toggleObed()),
+                                                    toggleObed(),),
                                           ),
                                         ),
                                         const SizedBox(
                                           width: 8,
                                         ),
                                         Text(
-                                          "Без обеда",
+                                          'Без обеда',
                                           style: TextStyle(
                                               fontFamily: 'Ubuntu',
                                               color: Theme.of(context)
                                                   .colorScheme
                                                   .inverseSurface
-                                                  .withOpacity(0.6)),
+                                                  .withOpacity(0.6),),
                                         ),
                                       ],
                                     )
-                                  : const SizedBox()
-                            ]),
-                      ]),
+                                  : const SizedBox(),
+                            ],),
+                      ],),
                 ),
               );
-            }),
+            },),
     );
   }
 }

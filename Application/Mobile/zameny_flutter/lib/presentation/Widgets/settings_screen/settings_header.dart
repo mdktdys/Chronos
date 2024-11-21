@@ -10,27 +10,26 @@ class SettingsHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-      crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         SizedBox(
             width: 52,
             height: 52,
             child: Center(
                 child: SvgPicture.asset(
-              "assets/icon/vuesax_linear_setting-2.svg",
+              'assets/icon/vuesax_linear_setting-2.svg',
               colorFilter: ColorFilter.mode(
                   Theme.of(context).colorScheme.inverseSurface,
-                  BlendMode.srcIn),
+                  BlendMode.srcIn,),
               width: 32,
               height: 32,
-            ))),
+            ),),),
         Text(
-          "Настроечки",
+          'Настроечки',
           style: TextStyle(
               color: Theme.of(context).colorScheme.primary,
               fontSize: 24,
               fontWeight: FontWeight.bold,
-              fontFamily: 'Ubuntu'),
+              fontFamily: 'Ubuntu',),
         ),
         const IconButton(
             onPressed: null,
@@ -38,7 +37,7 @@ class SettingsHeader extends StatelessWidget {
               Icons.more_horiz_rounded,
               size: 36,
               color: Colors.transparent,
-            ))
+            ),),
       ],
     );
   }

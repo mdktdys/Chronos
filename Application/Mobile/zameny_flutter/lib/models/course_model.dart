@@ -22,7 +22,7 @@ class Course {
       //костылище
       name: (map['fullname'] ?? map['name']) as String,
       color: map['color'] as String,
-      fullname: map['fullname'] as String?
+      fullname: map['fullname'] as String?,
     );
   }
 
@@ -35,7 +35,7 @@ class Course {
     int? id,
     String? name,
     String? color,
-    String? fullname
+    String? fullname,
   }) {
     return Course(
       id: id ?? this.id,

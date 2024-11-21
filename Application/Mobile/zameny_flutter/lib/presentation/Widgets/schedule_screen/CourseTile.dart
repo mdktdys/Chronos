@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 enum SearchType { teacher, group, cabinet }
 
@@ -25,9 +25,8 @@ class TileData {
       required this.subTitle,
       required this.location,
       required this.color,
-      this.swapedFromTitle,
-      this.liqidated,
-      required this.zamenaAlert});
+      required this.zamenaAlert, this.swapedFromTitle,
+      this.liqidated,});
 }
 
 class MixedCourseTile extends StatefulWidget {
@@ -35,10 +34,7 @@ class MixedCourseTile extends StatefulWidget {
   final bool saturdayTime;
   final bool obedTime;
   const MixedCourseTile(
-      {super.key,
-      required this.tilesData,
-      required this.saturdayTime,
-      required this.obedTime});
+      {required this.tilesData, required this.saturdayTime, required this.obedTime, super.key,});
 
   @override
   State<MixedCourseTile> createState() => _MixedCourseTileState();
@@ -60,7 +56,6 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
           //     : null,
           borderRadius: const BorderRadius.all(Radius.circular(20)),
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-          border: null,
         ),
         child: Column(
           children: [
@@ -74,7 +69,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                           Container(
                             width: 45,
                             decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: getColorForText(data.title)),
+                                shape: BoxShape.circle, color: getColorForText(data.title),),
                             child: Padding(
                               padding: const EdgeInsets.all(8.0),
                               child: Text(
@@ -83,7 +78,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                 style: const TextStyle(
                                     fontWeight: FontWeight.bold,
                                     color: Colors.white,
-                                    fontSize: 14),
+                                    fontSize: 14,),
                               ),
                             ),
                           ),
@@ -97,14 +92,14 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                   widget.saturdayTime
                                       ? getTimeFromDateTime(
                                           getLessonTimings(data.number)
-                                              .saturdayStart)
+                                              .saturdayStart,)
                                       : widget.obedTime
                                           ? getTimeFromDateTime(
                                               getLessonTimings(data.number)
-                                                  .obedStart)
+                                                  .obedStart,)
                                           : getTimeFromDateTime(
                                               getLessonTimings(data.number)
-                                                  .start),
+                                                  .start,),
                                   style: TextStyle(
                                       fontSize: 22,
                                       color: widget.obedTime
@@ -117,19 +112,19 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                               .colorScheme
                                               .inverseSurface,
                                       fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold)),
+                                      fontWeight: FontWeight.bold,),),
                               Text(
                                   widget.saturdayTime
                                       ? getTimeFromDateTime(
                                           getLessonTimings(data.number)
-                                              .saturdayEnd)
+                                              .saturdayEnd,)
                                       : widget.obedTime
                                           ? getTimeFromDateTime(
                                               getLessonTimings(data.number)
-                                                  .obedEnd)
+                                                  .obedEnd,)
                                           : getTimeFromDateTime(
                                               getLessonTimings(data.number)
-                                                  .end),
+                                                  .end,),
                                   style: TextStyle(
                                       color: widget.obedTime
                                           ? (data.number > 3
@@ -143,18 +138,18 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                               .inverseSurface
                                               .withAlpha(200),
                                       fontSize: 18,
-                                      fontFamily: 'Ubuntu')),
+                                      fontFamily: 'Ubuntu',),),
                             ],
-                          )
+                          ),
                         ],
                       ),
                     );
-                  })
+                  },)
                 : const SizedBox(),
             Column(
                 children: List.generate(widget.tilesData.length, (index) {
-              TileData data = widget.tilesData[index];
-              bool isLast = widget.tilesData.length - 1 == index;
+              final TileData data = widget.tilesData[index];
+              final bool isLast = widget.tilesData.length - 1 == index;
               return InkWell(
                   borderRadius: BorderRadius.circular(20),
                   splashColor:
@@ -165,7 +160,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                   child: Stack(children: [
                     Padding(
                       padding: EdgeInsets.fromLTRB(
-                          8, index == 0 ? 8.0 : 0, 10, isLast ? 8.0 : 0),
+                          8, index == 0 ? 8.0 : 0, 10, isLast ? 8.0 : 0,),
                       child: Row(
                         children: [
                           ConstrainedBox(
@@ -175,7 +170,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                               decoration: BoxDecoration(
                                   color: getColorForText(data.title)
                                       .withOpacity(
-                                          data.liqidated == true ? 0.3 : 1.0),
+                                          data.liqidated == true ? 0.3 : 1.0,),
                                   borderRadius: BorderRadius.only(
                                     topLeft: index == 0
                                         ? const Radius.circular(20)
@@ -189,7 +184,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                     bottomLeft: isLast
                                         ? const Radius.circular(20)
                                         : const Radius.circular(0),
-                                  )),
+                                  ),),
                             ),
                           ),
                           const SizedBox(
@@ -203,7 +198,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                       width: 30,
                                       decoration: BoxDecoration(
                                           shape: BoxShape.circle,
-                                          color: getColorForText(data.title)),
+                                          color: getColorForText(data.title),),
                                       child: Padding(
                                         padding: const EdgeInsets.all(8.0),
                                         child: Text(
@@ -212,7 +207,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                           style: const TextStyle(
                                               fontWeight: FontWeight.bold,
                                               color: Colors.white,
-                                              fontSize: 14),
+                                              fontSize: 14,),
                                         ),
                                       ),
                                     ),
@@ -220,16 +215,16 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                         widget.saturdayTime
                                             ? getTimeFromDateTime(
                                                 getLessonTimings(data.number)
-                                                    .saturdayStart)
+                                                    .saturdayStart,)
                                             : widget.obedTime
                                                 ? getTimeFromDateTime(
                                                     getLessonTimings(
-                                                            data.number)
-                                                        .obedStart)
+                                                            data.number,)
+                                                        .obedStart,)
                                                 : getTimeFromDateTime(
                                                     getLessonTimings(
-                                                            data.number)
-                                                        .start),
+                                                            data.number,)
+                                                        .start,),
                                         style: TextStyle(
                                             fontSize: 16,
                                             color: widget.obedTime
@@ -242,21 +237,21 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                     .colorScheme
                                                     .inverseSurface,
                                             fontFamily: 'Ubuntu',
-                                            fontWeight: FontWeight.bold)),
+                                            fontWeight: FontWeight.bold,),),
                                     Text(
                                         widget.saturdayTime
                                             ? getTimeFromDateTime(
                                                 getLessonTimings(data.number)
-                                                    .saturdayEnd)
+                                                    .saturdayEnd,)
                                             : widget.obedTime
                                                 ? getTimeFromDateTime(
                                                     getLessonTimings(
-                                                            data.number)
-                                                        .obedEnd)
+                                                            data.number,)
+                                                        .obedEnd,)
                                                 : getTimeFromDateTime(
                                                     getLessonTimings(
-                                                            data.number)
-                                                        .end),
+                                                            data.number,)
+                                                        .end,),
                                         style: TextStyle(
                                             color: widget.obedTime
                                                 ? (data.number > 3
@@ -270,7 +265,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                     .colorScheme
                                                     .inverseSurface
                                                     .withAlpha(200),
-                                            fontFamily: 'Ubuntu')),
+                                            fontFamily: 'Ubuntu',),),
                                   ],
                                 )
                               : const SizedBox(),
@@ -289,10 +284,10 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                             .inverseSurface
                                             .withOpacity(data.liqidated == true
                                                 ? 0.3
-                                                : 1.0),
+                                                : 1.0,),
                                         fontFamily: 'Ubuntu',
                                         fontWeight: FontWeight.bold,
-                                        fontSize: 20)),
+                                        fontSize: 20,),),
                                 Text(
                                   data.subTitle,
                                   style: TextStyle(
@@ -301,21 +296,21 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                           .inverseSurface
                                           .withOpacity(data.liqidated == true
                                               ? 0.3
-                                              : 1.0),
-                                      fontFamily: 'Ubuntu'),
+                                              : 1.0,),
+                                      fontFamily: 'Ubuntu',),
                                 ),
                                 Row(
                                   children: [
-                                    data.location != ""
+                                    data.location != ''
                                         ? SvgPicture.asset(
-                                            "assets/icon/vuesax_linear_location.svg",
+                                            'assets/icon/vuesax_linear_location.svg',
                                             color: Theme.of(context)
                                                 .colorScheme
                                                 .inverseSurface
                                                 .withOpacity(
                                                     data.liqidated == true
                                                         ? 0.3
-                                                        : 1.0),
+                                                        : 1.0,),
                                             width: 18,
                                             height: 18,
                                           )
@@ -329,8 +324,8 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                               .withOpacity(
                                                   data.liqidated == true
                                                       ? 0.3
-                                                      : 1.0),
-                                          fontFamily: 'Ubuntu'),
+                                                      : 1.0,),
+                                          fontFamily: 'Ubuntu',),
                                     ),
                                   ],
                                 ),
@@ -340,7 +335,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                         padding:
                                             const EdgeInsets.only(top: 8.0),
                                         child: Text(
-                                          "Замена с: ${data.swapedFromTitle}",
+                                          'Замена с: ${data.swapedFromTitle}',
                                           style: TextStyle(
                                               color: Theme.of(context)
                                                   .colorScheme
@@ -348,10 +343,10 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                   .withOpacity(0.3),
                                               fontFamily: 'Ubuntu',
                                               fontWeight: FontWeight.bold,
-                                              fontSize: 12),
+                                              fontSize: 12,),
                                         ),
                                       )
-                                    : const SizedBox()
+                                    : const SizedBox(),
                               ],
                             ),
                           ),
@@ -367,13 +362,13 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
-                                  "Замена",
+                                  'Замена',
                                   style: TextStyle(
                                       fontFamily: 'Ubuntu',
                                       color: Colors.red,
                                       shadows: [
-                                        Shadow(color: Colors.red, blurRadius: 4)
-                                      ]),
+                                        Shadow(color: Colors.red, blurRadius: 4),
+                                      ],),
                                 ),
                                 SizedBox(
                                   width: 5,
@@ -382,7 +377,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                   Icons.warning_amber_rounded,
                                   color: Colors.red,
                                   shadows: [
-                                    Shadow(color: Colors.red, blurRadius: 4)
+                                    Shadow(color: Colors.red, blurRadius: 4),
                                   ],
                                   size: 24,
                                 ),
@@ -390,10 +385,10 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                             ),
                           )
                         : const SizedBox(),
-                  ]));
-            })),
+                  ],),);
+            }),),
           ],
-        ));
+        ),);
   }
 }
 
@@ -411,26 +406,18 @@ class CourseTile extends StatelessWidget {
   final bool clickabe;
 
   const CourseTile(
-      {this.empty = false,
+      {required this.course, required this.lesson, required this.type, required this.refresh, required this.swaped, required this.saturdayTime, required this.obedTime, required this.short, this.empty = false,
       super.key,
-      required this.course,
-      required this.lesson,
-      required this.type,
-      required this.refresh,
       this.removed,
-      required this.swaped,
-      required this.saturdayTime,
-      required this.obedTime,
-      required this.short,
       this.clickabe = true,
-      this.needZamenaAlert = false});
+      this.needZamenaAlert = false,});
 
   final Course course;
 
   @override
   Widget build(BuildContext context) {
-    bool isEmpty =
-        course.name.toLowerCase() == "нет" || course.name.trim() == '';
+    final bool isEmpty =
+        course.name.toLowerCase() == 'нет' || course.name.trim() == '';
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
@@ -449,8 +436,7 @@ class CourseTile extends StatelessWidget {
           border: isEmpty
               ? DashedBorder.all(
                   dashLength: 10,
-                  width: 1,
-                  color: Theme.of(context).colorScheme.primary.withOpacity(0.6))
+                  color: Theme.of(context).colorScheme.primary.withOpacity(0.6),)
               : null,
         ),
         child: InkWell(
@@ -472,10 +458,9 @@ class CourseTile extends StatelessWidget {
                       width: double.infinity,
                       decoration: BoxDecoration(
                           border: Border.all(
-                              width: 1,
-                              color: Theme.of(context).colorScheme.primary),
+                              color: Theme.of(context).colorScheme.primary,),
                           borderRadius: BorderRadius.circular(20),
-                          color: Theme.of(context).colorScheme.surface),
+                          color: Theme.of(context).colorScheme.surface,),
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Column(
@@ -486,7 +471,7 @@ class CourseTile extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 Navigator.of(
-                                        myGlobals.scaffoldKey.currentContext!)
+                                        myGlobals.scaffoldKey.currentContext!,)
                                     .pop();
                                 myGlobals.scaffoldKey.currentContext!
                                     .read<ScheduleProvider>()
@@ -498,16 +483,16 @@ class CourseTile extends StatelessWidget {
                               child: Container(
                                   padding: const EdgeInsets.all(8),
                                   child: Text(
-                                      "Показать расписание для группы\n${getGroupById(lesson.group)!.name}",
+                                      'Показать расписание для группы\n${getGroupById(lesson.group)!.name}',
                                       style: const TextStyle(
-                                          fontFamily: 'Ubuntu'))),
+                                          fontFamily: 'Ubuntu',),),),
                             ),
                           ],
                         ),
                       ),
                     ),
                   );
-                });
+                },);
           } : null,
           child: Stack(children: [
             Padding(
@@ -523,7 +508,7 @@ class CourseTile extends StatelessWidget {
                               ? getCourseColor(course.color).withOpacity(0.6)
                               : getColorForText(course.name),
                           borderRadius:
-                              const BorderRadius.all(Radius.circular(20))),
+                              const BorderRadius.all(Radius.circular(20)),),
                     ),
                   ),
                   const SizedBox(
@@ -548,19 +533,19 @@ class CourseTile extends StatelessWidget {
                             style: const TextStyle(
                                 fontWeight: FontWeight.bold,
                                 color: Colors.white,
-                                fontSize: 14),
+                                fontSize: 14,),
                           ),
                         ),
                       ),
                       Text(
                           saturdayTime
                               ? getTimeFromDateTime(
-                                  getLessonTimings(lesson.number).saturdayStart)
+                                  getLessonTimings(lesson.number).saturdayStart,)
                               : obedTime
                                   ? getTimeFromDateTime(
-                                      getLessonTimings(lesson.number).obedStart)
+                                      getLessonTimings(lesson.number).obedStart,)
                                   : getTimeFromDateTime(
-                                      getLessonTimings(lesson.number).start),
+                                      getLessonTimings(lesson.number).start,),
                           style: TextStyle(
                               fontSize: 16,
                               color: obedTime
@@ -573,16 +558,16 @@ class CourseTile extends StatelessWidget {
                                       .colorScheme
                                       .inverseSurface,
                               fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.bold)),
+                              fontWeight: FontWeight.bold,),),
                       Text(
                           saturdayTime
                               ? getTimeFromDateTime(
-                                  getLessonTimings(lesson.number).saturdayEnd)
+                                  getLessonTimings(lesson.number).saturdayEnd,)
                               : obedTime
                                   ? getTimeFromDateTime(
-                                      getLessonTimings(lesson.number).obedEnd)
+                                      getLessonTimings(lesson.number).obedEnd,)
                                   : getTimeFromDateTime(
-                                      getLessonTimings(lesson.number).end),
+                                      getLessonTimings(lesson.number).end,),
                           style: TextStyle(
                               color: obedTime
                                   ? (lesson.number > 3
@@ -595,7 +580,7 @@ class CourseTile extends StatelessWidget {
                                       .colorScheme
                                       .inverseSurface
                                       .withAlpha(200),
-                              fontFamily: 'Ubuntu')),
+                              fontFamily: 'Ubuntu',),),
                     ],
                   ),
                   const SizedBox(
@@ -608,7 +593,7 @@ class CourseTile extends StatelessWidget {
                         Text(
                             (getCourseById(lesson.course) ??
                                     Course(
-                                        id: -1, name: "err", color: "0,0,0,0"))
+                                        id: -1, name: 'err', color: '0,0,0,0',))
                                 .name,
                             overflow: TextOverflow.fade,
                             style: TextStyle(
@@ -617,26 +602,26 @@ class CourseTile extends StatelessWidget {
                                     .inverseSurface,
                                 fontFamily: 'Ubuntu',
                                 fontWeight: FontWeight.bold,
-                                fontSize: 20)),
+                                fontSize: 20,),),
                         Text(
                           type == SearchType.teacher
                               ? getGroupById(lesson.group)!.name
                               : type == SearchType.group
                                   ? getTeacherById(lesson.teacher).name
                                   : type == SearchType.cabinet
-                                      ? ""
-                                      : "",
+                                      ? ''
+                                      : '',
                           style: TextStyle(
                               color:
                                   Theme.of(context).colorScheme.inverseSurface,
-                              fontFamily: 'Ubuntu'),
+                              fontFamily: 'Ubuntu',),
                         ),
                         Row(
                           children: [
                             (type != SearchType.cabinet && !isEmpty) ||
                                     type == SearchType.teacher
                                 ? SvgPicture.asset(
-                                    "assets/icon/vuesax_linear_location.svg",
+                                    'assets/icon/vuesax_linear_location.svg',
                                     color: Theme.of(context)
                                         .colorScheme
                                         .inverseSurface,
@@ -651,12 +636,12 @@ class CourseTile extends StatelessWidget {
                                       ? getCabinetById(lesson.cabinet).name
                                       : type == SearchType.cabinet
                                           ? getGroupById(lesson.group)!.name
-                                          : "",
+                                          : '',
                               style: TextStyle(
                                   color: Theme.of(context)
                                       .colorScheme
                                       .inverseSurface,
-                                  fontFamily: 'Ubuntu'),
+                                  fontFamily: 'Ubuntu',),
                             ),
                           ],
                         ),
@@ -664,7 +649,7 @@ class CourseTile extends StatelessWidget {
                             ? Padding(
                                 padding: const EdgeInsets.only(top: 8.0),
                                 child: Text(
-                                  "Замена с: ${getCourseById(swaped!.course)!.name}",
+                                  'Замена с: ${getCourseById(swaped!.course)!.name}',
                                   style: TextStyle(
                                       color: Theme.of(context)
                                           .colorScheme
@@ -672,10 +657,10 @@ class CourseTile extends StatelessWidget {
                                           .withOpacity(0.3),
                                       fontFamily: 'Ubuntu',
                                       fontWeight: FontWeight.bold,
-                                      fontSize: 12),
+                                      fontSize: 12,),
                                 ),
                               )
-                            : const SizedBox()
+                            : const SizedBox(),
                       ],
                     ),
                   ),
@@ -694,13 +679,13 @@ class CourseTile extends StatelessWidget {
                         child: Row(
                           children: [
                             Text(
-                              "Замена",
+                              'Замена',
                               style: TextStyle(
                                   fontFamily: 'Ubuntu',
                                   color: Colors.red,
                                   shadows: [
-                                    Shadow(color: Colors.red, blurRadius: 4)
-                                  ]),
+                                    Shadow(color: Colors.red, blurRadius: 4),
+                                  ],),
                             ),
                             SizedBox(
                               width: 5,
@@ -709,7 +694,7 @@ class CourseTile extends StatelessWidget {
                               Icons.warning_amber_rounded,
                               color: Colors.red,
                               shadows: [
-                                Shadow(color: Colors.red, blurRadius: 4)
+                                Shadow(color: Colors.red, blurRadius: 4),
                               ],
                               size: 24,
                             ),
@@ -718,8 +703,8 @@ class CourseTile extends StatelessWidget {
                       ),
                     )
                   : Container(),
-            )
-          ]),
-        ));
+            ),
+          ],),
+        ),);
   }
 }

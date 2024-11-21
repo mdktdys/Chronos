@@ -13,7 +13,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
 
   @override
   Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent) {
+      BuildContext context, double shrinkOffset, bool overlapsContent,) {
     double paddingValue = 20.0; // начальное значение отступа
 
     // Изменяем отступ в зависимости от shrinkOffset
@@ -35,14 +35,14 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
               BoxShadow(
                   color: Color.fromARGB(255, 43, 43, 58),
                   blurStyle: BlurStyle.outer,
-                  blurRadius: 12)
-            ]),
+                  blurRadius: 12,),
+            ],),
         child: const Center(
             child: Text(
-          "втф чзх",
+          'втф чзх',
           style: TextStyle(
-              fontSize: 30, color: Colors.red, fontWeight: FontWeight.bold),
-        )),
+              fontSize: 30, color: Colors.red, fontWeight: FontWeight.bold,),
+        ),),
       ),
     );
   }

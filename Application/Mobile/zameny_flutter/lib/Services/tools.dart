@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get_it/get_it.dart';
-import 'package:zameny_flutter/domain/Models/course_model.dart';
-import 'package:zameny_flutter/domain/Models/department_model.dart';
-import 'package:zameny_flutter/domain/Models/group_model.dart';
-import 'package:zameny_flutter/domain/Models/lesson_timings_model.dart';
-import 'package:zameny_flutter/domain/Models/teacher_model.dart';
-import 'package:zameny_flutter/domain/Models/zamena_type_model.dart';
+import 'package:zameny_flutter/models/course_model.dart';
+import 'package:zameny_flutter/models/department_model.dart';
+import 'package:zameny_flutter/models/group_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/models/zamena_type_model.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 
 Department getDepartmentById(int departmentID) {
@@ -40,45 +40,45 @@ Course? getCourseById(int courseID) {
 }
 
 DateTime getFirstDayOfWeek(int year, int week) {
-  DateTime januaryFirst = DateTime(year, 1, 1);
-  int firstMondayOffset = (DateTime.monday - januaryFirst.weekday + 7) % 7;
-  DateTime firstMonday = januaryFirst.add(Duration(days: firstMondayOffset));
-  int daysToAdd = (week - 1) * 7;
+  final DateTime januaryFirst = DateTime(year);
+  final int firstMondayOffset = (DateTime.monday - januaryFirst.weekday + 7) % 7;
+  final DateTime firstMonday = januaryFirst.add(Duration(days: firstMondayOffset));
+  final int daysToAdd = (week - 1) * 7;
   return firstMonday.add(Duration(days: daysToAdd));
 }
 
 String getMonthName(int monthNumber) {
-  List<String> months = [
-    "Январь", "Февраль", "Март", "Апрель", "Май", "Июнь",
-    "Июль", "Август", "Сентябрь", "Октябрь", "Ноябрь", "Декабрь"
+  final List<String> months = [
+    'Январь', 'Февраль', 'Март', 'Апрель', 'Май', 'Июнь',
+    'Июль', 'Август', 'Сентябрь', 'Октябрь', 'Ноябрь', 'Декабрь',
 ];
 
   
   if (monthNumber >= 1 && monthNumber <= 12) {
     return months[monthNumber - 1];
   } else {
-    return "err";
+    return 'err';
   }
 }
 
 String getDayName(int day) {
   switch (day) {
     case 1:
-      return "Понедельник";
+      return 'Понедельник';
     case 2:
-      return "Вторник";
+      return 'Вторник';
     case 3:
-      return "Среда";
+      return 'Среда';
     case 4:
-      return "Четверг";
+      return 'Четверг';
     case 5:
-      return "Пятница";
+      return 'Пятница';
     case 6:
-      return "Суббота";
+      return 'Суббота';
     case 7:
-      return "Воскресенье";
+      return 'Воскресенье';
     default:
-      return "Invalid";
+      return 'Invalid';
   }
 }
 
@@ -87,5 +87,5 @@ Color getCourseColor(String color) {
       int.parse(color.split(',')[0]),
       int.parse(color.split(',')[1]),
       int.parse(color.split(',')[2]),
-      int.parse(color.split(',')[3]));
+      int.parse(color.split(',')[3]),);
 }

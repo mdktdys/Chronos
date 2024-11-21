@@ -4,17 +4,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
-import 'package:zameny_flutter/domain/Models/zamenaFileLink_model.dart';
+import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 
 class DayScheduleHeader extends StatelessWidget {
   final bool? fullSwap;
   const DayScheduleHeader(
-      {super.key,
-      required this.day,
-      required this.startDate,
-      required this.isToday,
-      this.fullSwap});
+      {required this.day, required this.startDate, required this.isToday, super.key,
+      this.fullSwap,});
 
   final int day;
   final DateTime startDate;
@@ -22,10 +19,10 @@ class DayScheduleHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    int searchDay = startDate.add(Duration(days: day - 1)).day;
-    int searchMonth = startDate.add(Duration(days: day - 1)).month;
-    int searchYear = startDate.add(Duration(days: day - 1)).year;
-    Set<ZamenaFileLink> links = GetIt.I
+    final int searchDay = startDate.add(Duration(days: day - 1)).day;
+    final int searchMonth = startDate.add(Duration(days: day - 1)).month;
+    final int searchYear = startDate.add(Duration(days: day - 1)).year;
+    final Set<ZamenaFileLink> links = GetIt.I
         .get<Data>()
         .zamenaFileLinks
         .where(
@@ -49,31 +46,31 @@ class DayScheduleHeader extends StatelessWidget {
                   style: TextStyle(
                       color: Theme.of(context).colorScheme.inverseSurface,
                       fontSize: 24,
-                      fontFamily: 'Ubuntu'),
+                      fontFamily: 'Ubuntu',),
                 ),
                 Text(
-                  "${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}",
+                  '${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}',
                   style: TextStyle(
                       color: Theme.of(context)
                           .colorScheme
                           .inverseSurface
                           .withOpacity(0.7),
                       fontSize: 18,
-                      fontFamily: 'Ubuntu'),
+                      fontFamily: 'Ubuntu',),
                 ),
               ],
             ),
           ),
           fullSwap == true
               ? Text(
-                  "Полная замена",
+                  'Полная замена',
                   style: TextStyle(
                       color: Theme.of(context)
                           .colorScheme
                           .inverseSurface
                           .withOpacity(0.7),
                       fontSize: 18,
-                      fontFamily: 'Ubuntu'),
+                      fontFamily: 'Ubuntu',),
                 )
               : const SizedBox(),
           links.isNotEmpty
@@ -93,10 +90,9 @@ class DayScheduleHeader extends StatelessWidget {
                                       Theme.of(context).colorScheme.surface,
                                   border: Border.all(
                                       color:
-                                          Theme.of(context).colorScheme.primary,
-                                      width: 1),
+                                          Theme.of(context).colorScheme.primary,),
                                   borderRadius: const BorderRadius.all(
-                                      Radius.circular(20))),
+                                      Radius.circular(20),),),
                               child: ListView.separated(
                                 // shrinkWrap: true,
                                 separatorBuilder: (context, index) =>
@@ -105,7 +101,7 @@ class DayScheduleHeader extends StatelessWidget {
                                 itemBuilder: (context, index) {
                                   return GestureDetector(
                                     onTap: () => launchUrl(
-                                        Uri.parse(links.toList()[index].link)),
+                                        Uri.parse(links.toList()[index].link),),
                                     child: Container(
                                         padding: const EdgeInsets.all(8),
                                         child: Column(
@@ -113,13 +109,13 @@ class DayScheduleHeader extends StatelessWidget {
                                               CrossAxisAlignment.start,
                                           children: [
                                             Text(
-                                              "Ссылка:",
+                                              'Ссылка:',
                                               style: TextStyle(
                                                   fontFamily: 'Ubuntu',
                                                   fontSize: 14,
                                                   color: Theme.of(context)
                                                       .colorScheme
-                                                      .inverseSurface),
+                                                      .inverseSurface,),
                                             ),
                                             Text(links.toList()[index].link,
                                                 style: TextStyle(
@@ -128,34 +124,34 @@ class DayScheduleHeader extends StatelessWidget {
                                                     color: Theme.of(context)
                                                         .colorScheme
                                                         .inverseSurface
-                                                        .withOpacity(0.6))),
+                                                        .withOpacity(0.6),),),
                                             Text(
-                                              "Время добавления в систему:",
+                                              'Время добавления в систему:',
                                               style: TextStyle(
                                                   fontFamily: 'Ubuntu',
                                                   fontSize: 14,
                                                   color: Theme.of(context)
                                                       .colorScheme
-                                                      .inverseSurface),
+                                                      .inverseSurface,),
                                             ),
                                             Text(
-                                              "${links.toList()[index].created}",
+                                              '${links.toList()[index].created}',
                                               style: TextStyle(
                                                   fontFamily: 'Ubuntu',
                                                   fontSize: 10,
                                                   color: Theme.of(context)
                                                       .colorScheme
                                                       .inverseSurface
-                                                      .withOpacity(0.6)),
+                                                      .withOpacity(0.6),),
                                             ),
                                           ],
-                                        )),
+                                        ),),
                                   );
                                 },
                               ),
                             ),
                           );
-                        });
+                        },);
                   },
                   icon: SizedBox(
                     width: 30,
@@ -167,7 +163,7 @@ class DayScheduleHeader extends StatelessWidget {
                               ? Alignment.bottomLeft
                               : Alignment.center,
                           child: SvgPicture.asset(
-                            "assets/icon/link-2.svg",
+                            'assets/icon/link-2.svg',
                             color: Theme.of(context).colorScheme.inverseSurface,
                           ),
                         ),
@@ -183,23 +179,22 @@ class DayScheduleHeader extends StatelessWidget {
                                           .colorScheme
                                           .surface,
                                       border: Border.all(
-                                          width: 1,
                                           color: Theme.of(context)
                                               .colorScheme
                                               .inverseSurface
-                                              .withOpacity(0.3))),
+                                              .withOpacity(0.3),),),
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
                                         links.length.toString(),
                                         style: const TextStyle(
-                                            fontFamily: 'Ubuntu'),
+                                            fontFamily: 'Ubuntu',),
                                       ),
                                     ),
                                   ),
                                 ),
                               )
-                            : const SizedBox()
+                            : const SizedBox(),
                       ],
                     ),
                   ),
@@ -211,20 +206,20 @@ class DayScheduleHeader extends StatelessWidget {
               ? Container(
                   decoration:  BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,
-                      borderRadius: const BorderRadius.all(Radius.circular(20))),
+                      borderRadius: const BorderRadius.all(Radius.circular(20)),),
                   child:  Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: Text(
-                      "Сегодня",
+                      'Сегодня',
                       style: TextStyle(
                           color: Theme.of(context).canvasColor,
                           fontSize: 16,
                           fontFamily: 'Ubuntu',
-                          fontWeight: FontWeight.bold),
+                          fontWeight: FontWeight.bold,),
                     ),
                   ),
                 )
-              : const SizedBox()
+              : const SizedBox(),
         ],
       ),
     );

@@ -15,7 +15,7 @@ class Application extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     // ref.watch(inAppUpdateProvider).checkForUpdate();
-    Brightness brightness = ref.watch(lightThemeProvider).theme?.brightness == Brightness.dark 
+    final Brightness brightness = ref.watch(lightThemeProvider).theme?.brightness == Brightness.dark 
       ? Brightness.light
       : Brightness.dark;
     return ProviderScope(
@@ -26,7 +26,7 @@ class Application extends ConsumerWidget {
             child: child!,
           );
         },
-        title: "Замены уксивтика",
+        title: 'Замены уксивтика',
         debugShowCheckedModeBanner: false,
         theme: ref.watch(lightThemeProvider).theme,
         themeMode: ref.watch(lightThemeProvider).themeMode,
@@ -34,7 +34,7 @@ class Application extends ConsumerWidget {
           value: SystemUiOverlayStyle(
             statusBarColor: ref.watch(lightThemeProvider).theme?.canvasColor,
             statusBarIconBrightness: brightness,
-            systemNavigationBarIconBrightness: brightness
+            systemNavigationBarIconBrightness: brightness,
           ),
           child: ChangeNotifierProvider(
               create: (context) => MainProvider(),
@@ -46,12 +46,12 @@ class Application extends ConsumerWidget {
                     MainScreen(),
                     SnowFall(),
                   ],
-                )
-              )
+                ),
+              ),
             ),
           ),
-        )
-      )
+        ),
+      ),
     );
   }
 }

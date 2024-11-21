@@ -6,12 +6,12 @@ import 'dart:convert';
 share({required String text, required List<Uint8List> files}) async {
   try {
     files.asMap().forEach((index, bytes) {
-      String base64Image = base64Encode(bytes);
-      String dataUrl = 'data:image/png;base64,$base64Image';
-      HTMLAnchorElement link = document.createElement('a') as HTMLAnchorElement;
+      final String base64Image = base64Encode(bytes);
+      final String dataUrl = 'data:image/png;base64,$base64Image';
+      final HTMLAnchorElement link = document.createElement('a') as HTMLAnchorElement;
       link.href = dataUrl;
       link.download = dataUrl;
-      link.setAttribute("download", '$text.png');
+      link.setAttribute('download', '$text.png');
       link.click();
     });
   } catch (error) {

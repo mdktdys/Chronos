@@ -1,6 +1,6 @@
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 
 // ignore_for_file: public_member_api_docs, sort_constructors_first
@@ -32,16 +32,16 @@ class Data {
         GetIt.I.get<SharedPreferences>().getInt('SelectedCabinet') ?? -1;
 
     switch (
-        GetIt.I.get<SharedPreferences>().getString('SearchType') ?? "Group") {
-      case "Group":
+        GetIt.I.get<SharedPreferences>().getString('SearchType') ?? 'Group') {
+      case 'Group':
         {
           latestSearch = SearchType.group;
         }
-      case "Teacher":
+      case 'Teacher':
         {
           latestSearch = SearchType.teacher;
         }
-      case "Cabinet":
+      case 'Cabinet':
         {
           latestSearch = SearchType.cabinet;
         }
@@ -50,5 +50,5 @@ class Data {
 }
 
 void setChoosedTheme(int index) {
-  GetIt.I.get<SharedPreferences>().setInt("Theme", index);
+  GetIt.I.get<SharedPreferences>().setInt('Theme', index);
 }

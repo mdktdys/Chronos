@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zameny_flutter/domain/Models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/widget/zamena_view_chooser.dart';
@@ -36,15 +36,14 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
             const SizedBox(height: 10),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Text(
-                  "Замены",
+                  'Замены',
                   style: TextStyle(
                       color: Theme.of(context).primaryColorLight,
                       fontSize: 24,
                       fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu'),
+                      fontFamily: 'Ubuntu',),
                 ),
               ],
             ),
@@ -88,7 +87,7 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
           if (data.$1.isEmpty) {
             return const Center(
               key: ValueKey('noData'),
-              child: Text("Нет замен"),
+              child: Text('Нет замен'),
             );
           }
         switch (ref.watch(zamenaProvider).zamenaView) {
@@ -113,9 +112,7 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
           );
         },
         loading: () {
-          return const LoadingWidget(
-            key: ValueKey('loading'),
-          );
+          return const LoadingWidget(key: ValueKey('loading'));
         },
       ),
     );
@@ -154,68 +151,67 @@ class ZamenaFileBlock extends ConsumerWidget {
                     Expanded(
                       child: GestureDetector(
                         onTap: () => launchUrl(Uri.parse(link.link)),
-                        child: Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Ссылка:",
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface),
-                                ),
-                                Text(link.link,
-                                    style: TextStyle(
-                                        fontFamily: 'Ubuntu',
-                                        fontSize: 10,
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .inverseSurface
-                                            .withOpacity(0.6))),
-                                            const SizedBox(height: 5,),
-                                Text(
-                                  "Время добавления в систему:",
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 12,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface),
-                                ),
-                                Text(
-                                  "${link.created}",
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      fontSize: 10,
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface
-                                          .withOpacity(0.6)),
-                                ),
-                              ],
-                            )),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Ссылка:',
+                              style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,),
+                            ),
+                            Text(link.link,
+                                style: TextStyle(
+                                    fontFamily: 'Ubuntu',
+                                    fontSize: 10,
+                                    color: Theme.of(context)
+                                        .colorScheme
+                                        .inverseSurface
+                                        .withOpacity(0.6),),),
+                                        const SizedBox(height: 5,),
+                            Text(
+                              'Время добавления в систему:',
+                              style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 12,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface,),
+                            ),
+                            Text(
+                              '${link.created}',
+                              style: TextStyle(
+                                  fontFamily: 'Ubuntu',
+                                  fontSize: 10,
+                                  color: Theme.of(context)
+                                      .colorScheme
+                                      .inverseSurface
+                                      .withOpacity(0.6),),
+                            ),
+                          ],
+                        ),
                       ),
-                    )
+                    ),
                   ],
                 );
-              }).toList()),
+              }).toList(),),
             ],
-          ));
+          ),);
     }, error: (error, obj) {
       return const SizedBox();
     }, loading: () {
       return const SizedBox();
-    });
+    },);
   }
 }
 
 class ZamenaViewTeacher extends StatelessWidget {
   final List<Zamena> zamenas;
   final List<ZamenaFull> fullZamenas;
-  const ZamenaViewTeacher({super.key, required this.zamenas, required this.fullZamenas});
+  const ZamenaViewTeacher({required this.zamenas, required this.fullZamenas, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +238,7 @@ class ZamenaViewTeacher extends StatelessWidget {
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.inverseSurface,
                           fontSize: 20,
-                          fontFamily: 'Ubuntu')),
+                          fontFamily: 'Ubuntu',),),
                 ],
               ),
               Column(
@@ -261,19 +257,18 @@ class ZamenaViewTeacher extends StatelessWidget {
                           date: date,
                           course: course.id,
                           teacher: teacher.id,
-                          cabinet: cabinet.id),
+                          cabinet: cabinet.id,),
                       swaped: null,
-                      needZamenaAlert: false,
                       type: SearchType.teacher,
                       refresh: () {},
                       saturdayTime: false,
                       obedTime: false,
-                      short: true);
+                      short: true,);
                 }).toList(),
-              )
+              ),
             ],
           );
-        }).toList());
+        }).toList(),);
   }
 }
 
@@ -281,7 +276,7 @@ class ZamenaViewGroup extends StatelessWidget {
   final List<Zamena> zamenas;
   final List<ZamenaFull> fullZamenas;
   const ZamenaViewGroup(
-      {super.key, required this.zamenas, required this.fullZamenas});
+      {required this.zamenas, required this.fullZamenas, super.key,});
 
   @override
   Widget build(BuildContext context) {
@@ -305,19 +300,19 @@ class ZamenaViewGroup extends StatelessWidget {
                       style: TextStyle(
                           color: Theme.of(context).colorScheme.inverseSurface,
                           fontSize: 20,
-                          fontFamily: 'Ubuntu')),
+                          fontFamily: 'Ubuntu',),),
                   isFullZamena
                       ? Text(
-                          "Полная замена",
+                          'Полная замена',
                           style: TextStyle(
                               color: Theme.of(context)
                                   .colorScheme
                                   .inverseSurface
                                   .withOpacity(0.7),
                               fontSize: 18,
-                              fontFamily: 'Ubuntu'),
+                              fontFamily: 'Ubuntu',),
                         )
-                      : const SizedBox()
+                      : const SizedBox(),
                 ],
               ),
               Column(
@@ -337,19 +332,18 @@ class ZamenaViewGroup extends StatelessWidget {
                           date: date,
                           course: course.id,
                           teacher: teacher.id,
-                          cabinet: cabinet.id),
+                          cabinet: cabinet.id,),
                       swaped: null,
-                      needZamenaAlert: false,
                       type: SearchType.group,
                       refresh: () {},
                       saturdayTime: false,
                       obedTime: false,
-                      short: true);
+                      short: true,);
                 }).toList(),
-              )
+              ),
             ],
           );
-        }).toList());
+        }).toList(),);
   }
 }
 
@@ -372,7 +366,6 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
           color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         ),
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             ToggleWeekButton(
@@ -387,7 +380,6 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
             Flexible(
               fit: FlexFit.tight,
               child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Column(
@@ -395,13 +387,13 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                     children: [
                       Text(
                         getDayName(
-                            ref.watch(zamenaProvider).currentDate.weekday),
+                            ref.watch(zamenaProvider).currentDate.weekday,),
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Ubuntu',
                             fontSize: 16,
                             color:
-                                Theme.of(context).colorScheme.inverseSurface),
+                                Theme.of(context).colorScheme.inverseSurface,),
                       ),
                       Text(
                         ref.watch(zamenaProvider).currentDate.formatyyyymmdd(),
@@ -412,14 +404,13 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                             color: Theme.of(context)
                                 .colorScheme
                                 .inverseSurface
-                                .withOpacity(0.5)),
+                                .withOpacity(0.5),),
                       ),
                     ],
                   ),
                   AnimatedSize(
                     curve: Curves.easeOutCubic,
                     duration: const Duration(milliseconds: 150),
-                    alignment: Alignment.center,
                     child: ref
                                 .watch(zamenaProvider)
                                 .currentDate
@@ -430,16 +421,16 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                             decoration: BoxDecoration(
                                 color: Theme.of(context).colorScheme.primary,
                                 borderRadius: const BorderRadius.all(
-                                    Radius.circular(20))),
+                                    Radius.circular(20),),),
                             child: Padding(
                               padding: const EdgeInsets.all(6.0),
                               child: Text(
-                                "Сегодня",
+                                'Сегодня',
                                 style: TextStyle(
                                     color: Theme.of(context).canvasColor,
                                     fontSize: 14,
                                     fontFamily: 'Ubuntu',
-                                    fontWeight: FontWeight.bold),
+                                    fontWeight: FontWeight.bold,),
                               ),
                             ),
                           )
@@ -455,6 +446,6 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
               },
             ),
           ],
-        ));
+        ),);
   }
 }

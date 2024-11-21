@@ -20,14 +20,14 @@ class ZamenaViewChooser extends ConsumerWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Группы",style: TextStyle(
+            child: Text('Группы',style: TextStyle(
               fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group ? FontWeight.bold : FontWeight.w400,
               fontFamily: 'Ubuntu',
               fontSize: 16,
               color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.group
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)
-              )
+                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6),
+              ),
             ),
           ),
         ),
@@ -38,14 +38,14 @@ class ZamenaViewChooser extends ConsumerWidget {
           },
           child: Padding(
             padding: const EdgeInsets.all(8.0),
-            child: Text("Преподы",style: TextStyle(
+            child: Text('Преподы',style: TextStyle(
               fontWeight: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher ? FontWeight.bold : FontWeight.w400,
               fontFamily: 'Ubuntu',
               fontSize: 16,
               color: ref.watch(zamenaProvider).zamenaView == ZamenaViewType.teacher
                 ? Theme.of(context).colorScheme.primary
-                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)
-              )
+                : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6),
+              ),
             ),
           ),
         ),

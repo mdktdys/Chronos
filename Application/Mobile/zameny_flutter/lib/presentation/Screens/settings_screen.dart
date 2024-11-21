@@ -5,11 +5,12 @@ import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvi
 import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zameny_flutter/configs/text_styles.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/settings_screen/settings_logo_block.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
-import '../Widgets/settings_screen/settings_header.dart';
+import 'package:zameny_flutter/presentation/Widgets/settings_screen/settings_header.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -19,24 +20,6 @@ class SettingsScreen extends StatefulWidget {
 }
 
 class _SettingsScreenState extends State<SettingsScreen> {
-  // final int _sliding = 0;
-
-  // @override
-  // bool get wantKeepAlive => true;
-
-  // @override
-  // void initState() {
-  //   _sliding = context.read<ThemeProvider>().getCurrentIndex();
-  //   super.initState();
-  // }
-
-  // void onSwitch(int index) {
-  //   setState(() {
-  //     _sliding = index;
-  //     context.read<ThemeProvider>().toggleTheme();
-  //     setChoosedTheme(index);
-  //   });
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -55,58 +38,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     const SettingsHeader(),
                     Column(
                       children: [
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 10),
                         const SettingsLogoBlock(),
-                        const SizedBox(
-                          height: 10,
-                        ),
-                        // Column(
-                        //   children: [
-                        //     Container(
-                        //       alignment: Alignment.centerLeft,
-                        //       child: Text(
-                        //         "Оформление",
-                        //         style: TextStyle(
-                        //             fontWeight: FontWeight.bold,
-                        //             fontFamily: 'Ubuntu',
-                        //             fontSize: 20,
-                        //             color: Theme.of(context).primaryColorLight),
-                        //       ),
-                        //     ),
-                        //     const SizedBox(
-                        //       height: 5,
-                        //     ),
-                        //     Container(
-                        //       alignment: Alignment.centerLeft,
-                        //       child: Text(
-                        //         "Тема:",
-                        //         style: TextStyle(
-                        //             fontFamily: 'Ubuntu',
-                        //             fontSize: 18,
-                        //             color: Theme.of(context).primaryColorLight),
-                        //       ),
-                        //     ),
-                        //     // SettingsSwitchThemeBlock(
-                        //     //     sliding: _sliding, onSwitch: onSwitch),
-                        //   ],
-                        // ),
-                        const SizedBox(
-                          height: 10,
-                        ),
+                        const SizedBox(height: 20),
                         Column(
                           children: [
                             Container(
                               alignment: Alignment.centerLeft,
                               child: Text(
-                                "Контакты",
+                                'Контакты',
                                 style: TextStyle(
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Ubuntu',
                                     fontSize: 20,
                                     color:
-                                        Theme.of(context).colorScheme.primary),
+                                        Theme.of(context).colorScheme.primary,),
                               ),
                             ),
                             Column(
@@ -119,8 +65,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
                                       await launchUrl(
-                                          Uri.parse("https://www.uksivt.ru/"),
-                                          mode: LaunchMode.externalApplication);
+                                          Uri.parse('https://www.uksivt.ru/'),
+                                          mode: LaunchMode.externalApplication,);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -129,7 +75,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               .onSurface
                                               .withOpacity(0.1),
                                           borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
+                                              Radius.circular(20),),),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Row(
@@ -142,7 +88,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Сайтик колледжа",
+                                                    'Сайтик колледжа',
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -154,29 +100,29 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                     height: 5,
                                                   ),
                                                   Text(
-                                                    "В представлении не нуждается",
+                                                    'В представлении не нуждается',
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontFamily: 'Ubuntu',
                                                     ),
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
+                                                        horizontal: 8.0,),
                                                 child: Container(
                                                     width: 48,
                                                     height: 48,
                                                     alignment: Alignment.center,
                                                     child: SvgPicture.asset(
-                                                      "assets/icon/vuesax_linear_teacher.svg",
+                                                      'assets/icon/vuesax_linear_teacher.svg',
                                                       color: Theme.of(context)
                                                           .colorScheme
                                                           .inverseSurface,
-                                                    )))
+                                                    ),),),
                                           ],
                                         ),
                                       ),
@@ -191,8 +137,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                     borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
                                       await launchUrl(
-                                          Uri.parse("https://t.me/mdktdys"),
-                                          mode: LaunchMode.externalApplication);
+                                          Uri.parse('https://t.me/mdktdys'),
+                                          mode: LaunchMode.externalApplication,);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -201,20 +147,20 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               .onSurface
                                               .withOpacity(0.1),
                                           borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
+                                              Radius.circular(20),),),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Row(
                                           mainAxisAlignment:
                                               MainAxisAlignment.spaceBetween,
                                           children: [
-                                            const Expanded(
+                                            Expanded(
                                               child: Column(
                                                 crossAxisAlignment:
                                                     CrossAxisAlignment.start,
                                                 children: [
-                                                  Text(
-                                                    "Есть идеи или предложения?",
+                                                  const Text(
+                                                    'Есть идеи или предложения?',
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -222,33 +168,26 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                       fontFamily: 'Ubuntu',
                                                     ),
                                                   ),
-                                                  SizedBox(
-                                                    height: 5,
-                                                  ),
+                                                  const SizedBox(height: 5),
                                                   Text(
-                                                    "Отпишите мне в телеграмчике",
-                                                    style: TextStyle(
-                                                      fontSize: 12,
-                                                      fontFamily: 'Ubuntu',
-                                                    ),
-                                                  )
+                                                    'Отпишите мне в телеграмчике',
+                                                    style: Fa.ubuntu12,
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                             Padding(
-                                                padding:
-                                                    const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
+                                                padding: const EdgeInsets.symmetric(horizontal: 8.0),
                                                 child: Container(
                                                     width: 48,
                                                     height: 48,
                                                     alignment: Alignment.center,
                                                     child: SvgPicture.asset(
-                                                      "assets/icon/vuesax_linear_send-2.svg",
+                                                      'assets/icon/vuesax_linear_send-2.svg',
                                                       color: Theme.of(context)
                                                           .colorScheme
                                                           .inverseSurface,
-                                                    )))
+                                                    ),),),
                                           ],
                                         ),
                                       ),
@@ -262,9 +201,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                   child: InkWell(
                                     borderRadius: BorderRadius.circular(20),
                                     onTap: () async {
-                                      await launchUrl(
-                                          Uri.parse("https://t.me/bot_uksivt"),
-                                          mode: LaunchMode.externalApplication);
+                                      await launchUrl(Uri.parse('https://t.me/bot_uksivt'),mode: LaunchMode.externalApplication,);
                                     },
                                     child: Container(
                                       decoration: BoxDecoration(
@@ -273,7 +210,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                               .onSurface
                                               .withOpacity(0.1),
                                           borderRadius: const BorderRadius.all(
-                                              Radius.circular(20))),
+                                              Radius.circular(20),),),
                                       child: Padding(
                                         padding: const EdgeInsets.all(10),
                                         child: Row(
@@ -286,7 +223,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                     CrossAxisAlignment.start,
                                                 children: [
                                                   Text(
-                                                    "Актуальные замены!",
+                                                    'Актуальные замены!',
                                                     style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
@@ -298,36 +235,36 @@ class _SettingsScreenState extends State<SettingsScreen> {
                                                     height: 5,
                                                   ),
                                                   Text(
-                                                    "Получайте уведомления о заменах\nв тг канальчике ;)",
+                                                    'Получайте уведомления о заменах\nв тг канальчике ;)',
                                                     maxLines: 2,
                                                     style: TextStyle(
                                                       fontSize: 12,
                                                       fontFamily: 'Ubuntu',
                                                     ),
-                                                  )
+                                                  ),
                                                 ],
                                               ),
                                             ),
                                             Padding(
                                                 padding:
                                                     const EdgeInsets.symmetric(
-                                                        horizontal: 8.0),
+                                                        horizontal: 8.0,),
                                                 child: Container(
                                                     width: 48,
                                                     height: 48,
                                                     alignment: Alignment.center,
                                                     child: SvgPicture.asset(
-                                                      "assets/icon/vuesax_linear_message-programming.svg",
+                                                      'assets/icon/vuesax_linear_message-programming.svg',
                                                       color: Theme.of(context)
                                                           .colorScheme
                                                           .inverseSurface,
-                                                    )))
+                                                    ),),),
                                           ],
                                         ),
                                       ),
                                     ),
                                   ),
-                                )
+                                ),
                               ],
                             ),
                             const SizedBox(
@@ -336,18 +273,18 @@ class _SettingsScreenState extends State<SettingsScreen> {
                             const ThemeSwitchBlock(),
                             const SizedBox(height: 5),
                             const DevTools(),
-                            const SizedBox(height: 120)
+                            const SizedBox(height: 120),
                           ],
                         ),
                         // const SettingsVersionBlock()
                       ],
-                    )
+                    ),
                   ],
                 ),
               ),
             ),
           ),
-        ));
+        ),);
   }
 }
 
@@ -355,8 +292,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
 class BaseBlank extends StatelessWidget {
   final Widget child;
 
-  const BaseBlank({super.key, 
-    required this.child
+  const BaseBlank({required this.child, super.key,
   });
 
   @override
@@ -367,12 +303,12 @@ class BaseBlank extends StatelessWidget {
               .colorScheme
               .onSurface
               .withOpacity(0.1),
-          borderRadius: const BorderRadius.all(Radius.circular(20))
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
       child: Padding(
         padding: const EdgeInsets.all(10),
         child: child,
-      )
+      ),
     );
   }
 }
@@ -382,19 +318,19 @@ class DevTools extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    MainProvider provider =  context.watch<MainProvider>();
+    final MainProvider provider =  context.watch<MainProvider>();
     return Column(
       children: [
         Align(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Прочее",
+            'Прочее',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Ubuntu',
                 fontSize: 20,
                 color:
-                    Theme.of(context).colorScheme.primary),
+                    Theme.of(context).colorScheme.primary,),
           ),
         ),
         const SizedBox(height: 5),
@@ -402,7 +338,7 @@ class DevTools extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("Партиклы",style: TextStyle(
+              const Text('Партиклы',style: TextStyle(
                                                       fontWeight:
                                                           FontWeight.bold,
                                                       fontSize: 14,
@@ -414,7 +350,7 @@ class DevTools extends ConsumerWidget {
                   child: Switch(
                       value: provider.falling,
                       onChanged: (value) =>
-                          provider.switchFalling()),
+                          provider.switchFalling(),),
                 ),
               ),
             ],
@@ -425,24 +361,23 @@ class DevTools extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text("DEV",style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                      fontFamily: 'Ubuntu',
-                                                    ),),
+              const Text('DEV',style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 14,
+                fontFamily: 'Ubuntu',
+              ),),
               SizedBox(
                 height: 38,
                 child: FittedBox(
                   child: Switch(
                       value: provider.isDev,
                       onChanged: (value) =>
-                          provider.switchDev()),
+                          provider.switchDev(),),
                 ),
               ),
             ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -459,21 +394,19 @@ class ThemeSwitchBlock extends ConsumerStatefulWidget {
 class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
   @override
   Widget build(BuildContext context) {
-    bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark
-        ? true
-        : false;
+    final bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return Column(
       children: [
         Container(
           alignment: Alignment.centerLeft,
           child: Text(
-            "Тема",
+            'Тема',
             style: TextStyle(
                 fontWeight: FontWeight.bold,
                 fontFamily: 'Ubuntu',
                 fontSize: 20,
                 color:
-                    Theme.of(context).colorScheme.primary),
+                    Theme.of(context).colorScheme.primary,),
           ),
         ),
         const SizedBox(height: 5),
@@ -482,7 +415,7 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-              borderRadius: const BorderRadius.all(Radius.circular(20))),
+              borderRadius: const BorderRadius.all(Radius.circular(20)),),
           child: SegmentedButtonTheme(
             data: Theme.of(context).segmentedButtonTheme,
             child: SegmentedButton(
@@ -492,22 +425,20 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
                 segments: const [
                   ButtonSegment(value: 1, icon: Icon(Icons.dark_mode)),
                   ButtonSegment(value: 2, icon: Icon(Icons.light_mode)),
-                  ButtonSegment(value: 3, icon: Icon(Icons.phone_android))
+                  ButtonSegment(value: 3, icon: Icon(Icons.phone_android)),
                 ],
                 selected: {
-                  ref.watch(lightThemeProvider).themeModeIndex
-                }),
+                  ref.watch(lightThemeProvider).themeModeIndex,
+                },),
           ),
         ),
-        const SizedBox(
-          height: 8,
-        ),
+        const SizedBox(height: 8),
         Container(
             height: 80,
             padding: const EdgeInsets.all(10),
             decoration: BoxDecoration(
                 color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
-                borderRadius: const BorderRadius.all(Radius.circular(20))),
+                borderRadius: const BorderRadius.all(Radius.circular(20)),),
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -518,14 +449,14 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
                         ref: ref,
                         scheme: theme.$2,
                         flexScheme: theme.$1,
-                        isDark: isDark),
-                        const SizedBox(width: 5)
+                        isDark: isDark,),
+                        const SizedBox(width: 5),
                   ],
                 );
-              }).toList()),
-            )
-          )
-        ]
+              }).toList(),),
+            ),
+          ),
+        ],
       );
   }
 }
@@ -536,11 +467,7 @@ class ThemeTile extends StatelessWidget {
   final bool isDark;
 
   const ThemeTile(
-      {super.key,
-      required this.ref,
-      required this.scheme,
-      required this.flexScheme,
-      required this.isDark});
+      {required this.ref, required this.scheme, required this.flexScheme, required this.isDark, super.key,});
 
   final WidgetRef ref;
 
@@ -556,7 +483,7 @@ class ThemeTile extends StatelessWidget {
         duration: const Duration(milliseconds: 100),
         decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(14),
-          border: isCurrent ? Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 4) :  null )
+          border: isCurrent ? Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 4) :  null, )
         ,
         child: ClipRRect(
           borderRadius: BorderRadius.circular( isCurrent ? 10 : 6),
@@ -574,8 +501,8 @@ class ThemeTile extends StatelessWidget {
                       child: Container(
                         color: theme.tertiary,
                       ),
-                    )
-                  ]),
+                    ),
+                  ],),
                 ),
                 Expanded(
                   child: Row(children: [
@@ -588,9 +515,9 @@ class ThemeTile extends StatelessWidget {
                       child: Container(
                         color: theme.secondary,
                       ),
-                    )
-                  ]),
-                )
+                    ),
+                  ],),
+                ),
               ],
             ),
           ),
