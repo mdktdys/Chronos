@@ -8,23 +8,34 @@ final mapProvider = ChangeNotifierProvider<MapProviderNotifier>((ref) {
 });
 
 class MapProviderNotifier extends ChangeNotifier {
-  List<(String,String)> floors = [
+  List<Floor> floors = [
     // ('url','name'),
-    ('https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/uksivt.glb?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzL3Vrc2l2dC5nbGIiLCJpYXQiOjE3MzIyMTA4MzgsImV4cCI6MTc2Mzc0NjgzOH0.vKG_JvauBJUJLuMz19mqhhIBxzipi_Nhkn-2Ddy5Aj8&t=2024-11-21T17%3A40%3A34.644Z','1'),
-    ('https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/uksivt.glb?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzL3Vrc2l2dC5nbGIiLCJpYXQiOjE3MzIyMTA4MzgsImV4cCI6MTc2Mzc0NjgzOH0.vKG_JvauBJUJLuMz19mqhhIBxzipi_Nhkn-2Ddy5Aj8&t=2024-11-21T17%3A40%3A34.644Z','2'),
-    ('https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/uksivt.glb?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzL3Vrc2l2dC5nbGIiLCJpYXQiOjE3MzIyMTA4MzgsImV4cCI6MTc2Mzc0NjgzOH0.vKG_JvauBJUJLuMz19mqhhIBxzipi_Nhkn-2Ddy5Aj8&t=2024-11-21T17%3A40%3A34.644Z','3'),
+    const Floor(
+      url:'https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/uksivt.glb?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzL3Vrc2l2dC5nbGIiLCJpYXQiOjE3MzIyMTA4MzgsImV4cCI6MTc2Mzc0NjgzOH0.vKG_JvauBJUJLuMz19mqhhIBxzipi_Nhkn-2Ddy5Aj8&t=2024-11-21T17%3A40%3A34.644Z',
+      name: '1',
+    ),
     // ('url','name'),
   ];
-  late (String, String) selectedFloor; 
+  late Floor selectedFloor; 
 
-  MapProviderNotifier(){
+  MapProviderNotifier(){ 
     selectedFloor = floors.first;
   }
 
 
-  void onFloorClicked((String,String) floor) {
+  void onFloorClicked(Floor floor) {
     log('message');
     selectedFloor = floor;
     notifyListeners();
   }
+}
+
+class Floor {
+  final String url;
+  final String name;
+
+  const Floor({
+    required this.url,
+    required this.name,
+  });
 }
