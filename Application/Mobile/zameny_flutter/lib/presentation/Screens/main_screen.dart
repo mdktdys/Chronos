@@ -24,12 +24,15 @@ class MainScreen extends StatelessWidget {
               Center(
                 child: PageView(
                   onPageChanged: (value) => provider.pageChanged(value),
+                  physics: provider.pageViewScrollEnabled
+                    ? null
+                    : const NeverScrollableScrollPhysics(),
                   controller: provider.pageController,
                   children: const [
                     TimeTableWrapper(),
                     ScheduleWrapper(),
                     ZamenaScreen(),
-                    MapScreen(),
+                    // MapScreen(),
                     SettingsScreen(),
                   ],
                 ),
@@ -51,56 +54,55 @@ class BottomBar extends StatelessWidget {
   Widget build(BuildContext context) {
     final MainProvider provider = context.watch<MainProvider>();
     return Align(
-        alignment: Alignment.bottomCenter,
-        child: ClipRect(
-          child: SizedBox(
-            height: 90,
-            child: BackdropFilter(
-              filter: ImageFilter.blur(
-                sigmaX: 5,
-                sigmaY: 5,
-              ),
-              child: Column(
-                children: [
-                  Container(
-                    height: 60,
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border(
-                          bottom: BorderSide(
-                            color: Theme.of(context).colorScheme.primary,
-                          ),
-                          top: BorderSide(
-                              color: Theme.of(context).colorScheme.primary,),),
+      alignment: Alignment.bottomCenter,
+      child: ClipRect(
+        child: SizedBox(
+          height: 90,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(
+              sigmaX: 5,
+              sigmaY: 5,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  height: 60,
+                  decoration: BoxDecoration(
+                    color: Colors.transparent,
+                    borderRadius: BorderRadius.circular(20),
+                    border: Border(
+                      bottom: BorderSide(color: Theme.of(context).colorScheme.primary),
+                      top: BorderSide(color: Theme.of(context).colorScheme.primary),
                     ),
-                    child: Row(
-                        mainAxisAlignment:
-                            MainAxisAlignment.spaceAround,
-                        children: List.generate(model.length, (index) {
-                          return Expanded(
-                            child: BottomNavigationItem(
-                              activeicon: model[index].activeicon,
-                              enabled: model[index].enabled,
-                              index: index,
-                              onTap: (index) {
-                                provider.setPage(index);
-                              },
-                              icon: model[index].icon,
-                              text: model[index].title,
-                            ),
-                          );
-                        }),),
                   ),
-                  const SizedBox(
-                    height: 10,
+                  child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceAround,
+                      children: List.generate(model.length, (index) {
+                        return Expanded(
+                          child: BottomNavigationItem(
+                            activeicon: model[index].activeicon,
+                            enabled: model[index].enabled,
+                            index: index,
+                            onTap: (index) {
+                              provider.setPage(index);
+                            },
+                            icon: model[index].icon,
+                            text: model[index].title,
+                          ),
+                        );
+                      }
+                    ),
                   ),
-                ],
-              ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+              ],
             ),
           ),
         ),
-      );
+      ),
+    );
   }
 }
 
@@ -134,11 +136,11 @@ List<BottomBarModel> model = [
       icon: 'assets/icon/zamena.svg',
       title: 'Замены',
       enabled: true,),
-  BottomBarModel(
-      activeicon: 'assets/icon/vuesax_linear_location.svg',
-      icon: 'assets/icon/vuesax_linear_location.svg',
-      title: 'Карта',
-      enabled: true,),
+  // BottomBarModel(
+  //     activeicon: 'assets/icon/vuesax_linear_location.svg',
+  //     icon: 'assets/icon/vuesax_linear_location.svg',
+  //     title: 'Карта',
+  //     enabled: true,),
   BottomBarModel(
       activeicon: 'assets/icon/setting-2.svg',
       icon: 'assets/icon/vuesax_linear_setting-2.svg',

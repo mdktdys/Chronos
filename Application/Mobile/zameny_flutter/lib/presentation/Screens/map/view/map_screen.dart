@@ -44,7 +44,7 @@ class MapScreen extends ConsumerWidget {
                       child: Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
-                          floor.$2,
+                          floor.name,
                           style: Fa.ubuntu14.copyWith(
                             fontWeight: FontWeight.bold,
                             fontSize: 20,
@@ -64,7 +64,7 @@ class MapScreen extends ConsumerWidget {
 }
 
 class MapBody extends ConsumerWidget {
-  final (String,String) url;
+  final Floor url;
   
   const MapBody({
     required this.url,
@@ -74,7 +74,7 @@ class MapBody extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return O3D.network(
-      src:url.$1,
+      src:url.url,
     );
   }
 }
