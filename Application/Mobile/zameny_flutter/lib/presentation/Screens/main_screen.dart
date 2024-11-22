@@ -2,7 +2,6 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
-import 'package:zameny_flutter/presentation/Screens/map/view/map_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/exams_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigation_item.dart';

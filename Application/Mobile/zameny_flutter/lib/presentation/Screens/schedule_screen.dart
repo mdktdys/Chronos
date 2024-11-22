@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
@@ -21,6 +19,7 @@ import 'package:zameny_flutter/presentation/Widgets/schedule_screen/search_resul
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_teacher_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/top_banner.dart';
 
 MyGlobals myGlobals = MyGlobals();
 
@@ -72,136 +71,89 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    // ThemeProvider themeProvider = context.watch<ThemeProvider>();
     return Scaffold(
-        backgroundColor: Theme.of(context).colorScheme.surface,
-        key: myGlobals.scaffoldKey,
-        body: SingleChildScrollView(
-            controller: scrollController,
-            physics: const BouncingScrollPhysics(),
-            child: Align(
-              alignment: Alignment.topCenter,
-              child: ConstrainedBox(
-                constraints:
-                    BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width),
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  child: Column(children: [
-                    const Banner(),
-                    const SizedBox(height: 10),
-                    const ScheduleHeader(),
-                    const SizedBox(height: 10),
-                    const ScheduleTurboSearch(),
-                    const SizedBox(height: 10),
-                    const DateHeader(),
-                    const CurrentLessonTimer(),
-                    const SizedBox(height: 10),
-                    BlocBuilder<ScheduleBloc, ScheduleState>(
-                        builder: (context, state) {
-                      return AnimatedSwitcher(
-                          reverseDuration: const Duration(milliseconds: 300),
-                          duration: const Duration(milliseconds: 300),
-                          child: Builder(
-                            key: ValueKey<ScheduleState>(state),
-                            builder: (context) {
-                              if (state is ScheduleLoaded) {
-                                return Column(children: [
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      key: myGlobals.scaffoldKey,
+      body: SingleChildScrollView(
+          controller: scrollController,
+          physics: const BouncingScrollPhysics(),
+          child: Align(
+            alignment: Alignment.topCenter,
+            child: ConstrainedBox(
+              constraints:
+                  BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width),
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Column(children: [
+                  const TopBanner(),
+                  const SizedBox(height: 10),
+                  const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  const ScheduleTurboSearch(),
+                  const SizedBox(height: 10),
+                  const DateHeader(),
+                  const CurrentLessonTimer(),
+                  const SizedBox(height: 10),
+                  BlocBuilder<ScheduleBloc, ScheduleState>(
+                      builder: (context, state) {
+                    return AnimatedSwitcher(
+                        reverseDuration: const Duration(milliseconds: 300),
+                        duration: const Duration(milliseconds: 300),
+                        child: Builder(
+                          key: ValueKey<ScheduleState>(state),
+                          builder: (BuildContext context) {
+                            if (state is ScheduleLoaded) {
+                              return Column(
+                                children: [
                                   const SearchResultHeader(),
                                   LessonList(
                                     scrollController: scrollController,
-                                    refresh: refresh,
                                     zamenas: state.zamenas,
                                     lessons: state.lessons,
+                                    refresh: refresh,
                                   ),
-                                ],);
-                              } else if (state is ScheduleFailedLoading) {
-                                return FailedLoadWidget(
-                                  error: state.error,
-                                );
-                              } else if (state is ScheduleLoading) {
-                                return const LoadingWidget();
-                              } else if (state is ScheduleInitial) {
-                                return SizedBox(
-                                  height: 500,
-                                  child: Center(
-                                    child: Text(
-                                      'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
-                                      textAlign: TextAlign.center,
-                                      style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .inverseSurface,
-                                        fontFamily: 'Ubuntu',
-                                        fontSize: 24,
-                                        fontWeight: FontWeight.bold,
-                                      ),
+                                ],
+                              );
+                            } else if (state is ScheduleFailedLoading) {
+                              return FailedLoadWidget(
+                                error: state.error,
+                              );
+                            } else if (state is ScheduleLoading) {
+                              return const LoadingWidget();
+                            } else if (state is ScheduleInitial) {
+                              return SizedBox(
+                                height: 500,
+                                child: Center(
+                                  child: Text(
+                                    'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(
+                                      color: Theme.of(context).colorScheme.inverseSurface,
+                                      fontFamily: 'Ubuntu',
+                                      fontSize: 24,
+                                      fontWeight: FontWeight.bold,
                                     ),
                                   ),
-                                );
-                              } else {
-                                return const SizedBox();
-                              }
-                            },
-                          ),);
-                    },),
-                    const SizedBox(
-                      height: 100,
-                    ),
-                  ],),
-                ),
+                                ),
+                              );
+                            } else {
+                              return const SizedBox();
+                            }
+                          },
+                        ),);
+                  },),
+                  const SizedBox(
+                    height: 100,
+                  ),
+                ],),
               ),
-            ),),);
+            ),
+          ),
+        ),
+      );
   }
 }
 
-class Banner extends StatelessWidget {
-  const Banner({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-        color: Colors.transparent,
-        height: 30,
-        child: Center(
-            child: GestureDetector(
-                onTap: () {
-                  try {
-                    launchUrl(Uri.parse(
-                        'tg://resolve?domain=bot_uksivt',),);
-                  } catch (e) {
-                    launchUrl(
-                        Uri.parse('https://t.me/bot_uksivt'),);
-                  }
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    const Text(
-                      'Новое расписание и замены тут ',
-                      style: TextStyle(
-                          fontFamily: 'Ubuntu',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,),
-                    ),
-                    Text(
-                      '❄️',
-                      style: GoogleFonts.notoEmoji(
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,),
-                    ),
-                    const Text(
-                      ' *тык*',
-                      style: TextStyle(
-                          fontFamily: 'Ubuntu',
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500,),
-                    ),
-                  ],
-                ),),),);
-  }
-}
 
 class ShimmerContainer extends StatelessWidget {
   const ShimmerContainer({

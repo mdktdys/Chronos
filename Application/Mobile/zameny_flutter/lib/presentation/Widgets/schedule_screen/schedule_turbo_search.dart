@@ -1,11 +1,22 @@
 import 'dart:async';
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
+
+List<SearchItem> filterItems(List<dynamic> data) {
+  final items = data[0] as List<SearchItem>;
+  final query = data[1] as String;
+
+  return items
+      .where((element) =>
+          element.getFiltername().toLowerCase().contains(query.toLowerCase()),)
+      .toList();
+}
 
 class ScheduleTurboSearch extends StatefulWidget {
   const ScheduleTurboSearch({
@@ -38,28 +49,29 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
           onSubmitted: (value) {
             FocusScope.of(context).unfocus();
           },
-          onChanged: (value) {
-            if (value.isEmpty) {
-              setState(() {
-                filteredItems.clear();
-              });
-            } else {
-              if (_debounceTimer?.isActive ?? false) {
-                _debounceTimer!.cancel();
-              }
+       onChanged: (value) {
+  if (value.isEmpty) {
+    setState(() {
+      filteredItems.clear();
+    });
+  } else {
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
+    }
 
-              _debounceTimer = Timer(const Duration(milliseconds: 150), () {
-                setState(() {
-                  filteredItems = providerSearch.searchItems
-                      .where((element) => element
-                          .getFiltername()
-                          .toLowerCase()
-                          .contains(value.toLowerCase().trim()),)
-                      .toList();
-                });
-              });
-            }
-          },
+    _debounceTimer = Timer(const Duration(milliseconds: 150), () async {
+      final searchItems = providerSearch.searchItems;
+      final query = value.trim();
+
+      // Выполняем фильтрацию в изоляте
+      final filtered = await compute(filterItems, [searchItems, query]);
+
+      setState(() {
+        filteredItems = filtered;
+      });
+    });
+  }
+},
           style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
           placeholder: 'Я ищу...',
         ),
