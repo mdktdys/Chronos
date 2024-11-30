@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:in_app_update/in_app_update.dart';
 import 'package:talker_flutter/talker_flutter.dart';
@@ -37,7 +38,7 @@ class Updater extends ChangeNotifier {
     }
   }
 
-  void showSnack(String text) {
+  void showSnack(final String text) {
     if (_scaffoldKey.currentContext != null) {
       ScaffoldMessenger.of(_scaffoldKey.currentContext!)
           .showSnackBar(SnackBar(content: Text(text)));

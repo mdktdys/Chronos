@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
 
 class ZamenaViewChooser extends ConsumerWidget {
@@ -9,7 +10,7 @@ class ZamenaViewChooser extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [

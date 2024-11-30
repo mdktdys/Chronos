@@ -1,26 +1,28 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:get_it/get_it.dart';
-import 'package:zameny_flutter/domain/Services/Data.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
+
+import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
+import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 
-class CurrentTimingTimer extends StatefulWidget {
-  final bool obed;
-  const CurrentTimingTimer({required this.obed, super.key});
+class CurrentTimingTimer extends ConsumerStatefulWidget {
+  const CurrentTimingTimer({super.key});
 
   @override
-  State<CurrentTimingTimer> createState() => _CurrentTimingTimerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CurrentTimingTimerState();
 }
 
-class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
+class _CurrentTimingTimerState extends ConsumerState<CurrentTimingTimer> {
   late Timer ticker;
 
   @override
   void initState() {
     super.initState();
-    ticker = Timer.periodic(const Duration(seconds: 1), (timer) {
+    ticker = Timer.periodic(const Duration(seconds: 1), (final timer) {
       tick();
     });
   }
@@ -35,7 +37,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
     super.dispose();
   }
 
-  String getElapsedTime(bool obed) {
+  String getElapsedTime(final bool obed) {
     final LessonTimings timing = getLessonTiming(obed)!;
     final bool isSaturday = DateTime.now().weekday == 6;
     final Duration left = isSaturday
@@ -54,14 +56,14 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
     return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
   }
 
-  LessonTimings? getLessonTiming(bool obed) {
+  LessonTimings? getLessonTiming(final bool obed) {
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
     if (isSaturday) {
       final LessonTimings? timing = GetIt.I
           .get<Data>()
           .timings
-          .where((element) =>
+          .where((final element) =>
               element.start.isBefore(current) &&
               element.saturdayEnd.isAfter(current),)
           .firstOrNull;
@@ -71,7 +73,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
         final LessonTimings? timing = GetIt.I
             .get<Data>()
             .timings
-            .where((element) =>
+            .where((final element) =>
                 element.obedStart.isBefore(current) &&
                 element.obedEnd.isAfter(current),)
             .firstOrNull;
@@ -80,7 +82,7 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
         final LessonTimings? timing = GetIt.I
             .get<Data>()
             .timings
-            .where((element) =>
+            .where((final element) =>
                 element.start.isBefore(current) && element.end.isAfter(current),)
             .firstOrNull;
         return timing;
@@ -89,15 +91,16 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
   }
 
   @override
-  Widget build(BuildContext context) {
-    final LessonTimings? timing = getLessonTiming(widget.obed);
+  Widget build(final BuildContext context) {
+    final provider = ref.watch(timeTableProvider);
+    final LessonTimings? timing = getLessonTiming(provider.obed);
     final DateTime current = DateTime.now();
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
       child: timing == null || current.weekday == 7
           ? const SizedBox()
-          : Builder(builder: (context) {
+          : Builder(builder: (final context) {
               return SizedBox(
                 width: double.infinity,
                 child: Padding(
@@ -116,10 +119,10 @@ class _CurrentTimingTimerState extends State<CurrentTimingTimer> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Осталось: ${getElapsedTime(widget.obed)}',
+                              Text('Осталось: ${getElapsedTime(provider.obed)}',
                                   textAlign: TextAlign.start,
                                   style: TextStyle(
-                                      color: widget.obed && timing.number > 3
+                                      color: provider.obed && timing.number > 3
                                           ? Colors.green
                                           : Theme.of(context)
                                               .primaryColorLight

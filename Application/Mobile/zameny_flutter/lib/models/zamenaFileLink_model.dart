@@ -1,4 +1,5 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first, file_names
+
 import 'dart:convert';
 
 class ZamenaFileLink {
@@ -22,7 +23,7 @@ class ZamenaFileLink {
     };
   }
 
-  factory ZamenaFileLink.fromMap(Map<String, dynamic> map) {
+  factory ZamenaFileLink.fromMap(final Map<String, dynamic> map) {
     return ZamenaFileLink(
       id: map['id'] as int,
       link: map['link'] as String,
@@ -33,11 +34,13 @@ class ZamenaFileLink {
 
   String toJson() => json.encode(toMap());
 
-  factory ZamenaFileLink.fromJson(String source) => ZamenaFileLink.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory ZamenaFileLink.fromJson(final String source) => ZamenaFileLink.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  bool operator ==(covariant ZamenaFileLink other) {
-    if (identical(this, other)) return true;
+  bool operator ==(covariant final ZamenaFileLink other) {
+    if (identical(this, other)) {
+      return true;
+    }
   
     return 
       other.id == id &&

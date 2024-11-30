@@ -1,11 +1,12 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:zameny_flutter/domain/Services/Data.dart';
-import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 
 class DayScheduleHeader extends StatelessWidget {
   final bool? fullSwap;
@@ -18,7 +19,7 @@ class DayScheduleHeader extends StatelessWidget {
   final bool isToday;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final int searchDay = startDate.add(Duration(days: day - 1)).day;
     final int searchMonth = startDate.add(Duration(days: day - 1)).month;
     final int searchYear = startDate.add(Duration(days: day - 1)).year;
@@ -26,7 +27,7 @@ class DayScheduleHeader extends StatelessWidget {
         .get<Data>()
         .zamenaFileLinks
         .where(
-          (element) =>
+          (final element) =>
               element.date.year == searchYear &&
               element.date.month == searchMonth &&
               element.date.day == searchDay,
@@ -79,7 +80,7 @@ class DayScheduleHeader extends StatelessWidget {
                     showModalBottomSheet(
                         backgroundColor: Colors.transparent,
                         context: context,
-                        builder: (context) {
+                        builder: (final context) {
                           return Container(
                             //margin: EdgeInsets.only(bottom: 60),
                             padding: const EdgeInsets.all(20),
@@ -95,10 +96,10 @@ class DayScheduleHeader extends StatelessWidget {
                                       Radius.circular(20),),),
                               child: ListView.separated(
                                 // shrinkWrap: true,
-                                separatorBuilder: (context, index) =>
+                                separatorBuilder: (final context, final index) =>
                                     const Divider(),
                                 itemCount: links.length,
-                                itemBuilder: (context, index) {
+                                itemBuilder: (final context, final index) {
                                   return GestureDetector(
                                     onTap: () => launchUrl(
                                         Uri.parse(links.toList()[index].link),),

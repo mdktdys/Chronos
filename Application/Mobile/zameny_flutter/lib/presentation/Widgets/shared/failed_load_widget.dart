@@ -1,6 +1,7 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 
 class FailedLoadWidget extends StatelessWidget {
@@ -9,7 +10,7 @@ class FailedLoadWidget extends StatelessWidget {
       {required this.error, super.key,});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ScheduleProvider provider = context.watch<ScheduleProvider>();
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,

@@ -1,20 +1,22 @@
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 
-final norificationProvider = ChangeNotifierProvider<NotificationManager>((ref) {
+final norificationProvider = ChangeNotifierProvider<NotificationManager>((final ref) {
   return NotificationManager();
 });
 
 class NotificationManager extends ChangeNotifier {
   String? fcmToken;
 
-  Future<void> subscribe(SearchType type, int id, String token) async {
+  Future<void> subscribe(final SearchType type, final int id, final String token) async {
     await Future.delayed(Duration.zero);
     return;
   }
@@ -62,7 +64,7 @@ class FirebaseApi {
     } 
   }
 
-  Future<void> handleMessage(RemoteMessage? message) async {
+  Future<void> handleMessage(final RemoteMessage? message) async {
     GetIt.I.get<Talker>().debug(message);
     await Future.delayed(Duration.zero);
     if (message == null){

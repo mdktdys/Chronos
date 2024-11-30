@@ -2,12 +2,13 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((ref) async {
+final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((final ref) async {
   final res = await GetIt.I.get<SupabaseClient>().from('checks').select().order('id').limit(1);
   return DateTime.parse(res[0]['updated_at']);
 });
@@ -28,7 +29,7 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
     super.dispose();
   }
 
-  void _startTimer(DateTime time) {
+  void _startTimer(final DateTime time) {
     _timer?.cancel(); // Отменяем текущий таймер, если он существует
     Duration duration = const Duration(seconds: 10) - DateTime.now().difference(time);
     if (duration.isNegative) {
@@ -42,16 +43,16 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final provider = ref.watch(zamenaTimerProvider);
     log(provider.toString());
 
     return provider.when(
-      data: (data) {
+      data: (final data) {
         _startTimer(data);
         return CheckZamenaTimeDisplay(time: data,refreshing: provider.isRefreshing);
       },
-      error: (e, o) {
+      error: (final e, final o) {
         return const Text('Ошибка');
       },
       loading: () {
@@ -68,7 +69,7 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
   const CheckZamenaTimeDisplay({required this.time, required this.refreshing, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -108,7 +109,7 @@ class ScheduleHeader extends ConsumerStatefulWidget {
 
 class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Stack(
       children: [
         SizedBox(
@@ -141,7 +142,7 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                       barrierColor: Colors.black.withOpacity(0.3),
                       backgroundColor: Theme.of(context).colorScheme.surface,
                       context: context,
-                      builder: (context) => SizedBox(
+                      builder: (final context) => SizedBox(
                             height: 100,
                             child: Padding(
                               padding: const EdgeInsets.all(8),
@@ -154,7 +155,7 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                                     ),
                                     onTap: () => Navigator.of(context).push(
                                         MaterialPageRoute(
-                                            builder: (context) => TalkerScreen(
+                                            builder: (final context) => TalkerScreen(
                                                 talker:
                                                     GetIt.I.get<Talker>(),),),),
                                   ),

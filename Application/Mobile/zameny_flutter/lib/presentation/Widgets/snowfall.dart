@@ -1,7 +1,8 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:flutterfall/flutterfall.dart';
 import 'package:provider/provider.dart';
+
 import 'package:zameny_flutter/configs/images.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 
@@ -23,9 +24,12 @@ class SnowFall extends StatelessWidget {
 
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final List<String>? images = _defineFallImages();
-    return images == null || (!context.watch<MainProvider>().falling)
+    return (
+      images == null
+      || (!context.watch<MainProvider>().falling)
+    )
     ? const SizedBox()
     : const IgnorePointer(
       child: RepaintBoundary(
@@ -39,7 +43,7 @@ class SnowFall extends StatelessWidget {
 }
 
 extension DateTimeExtensions on DateTime {
-  bool betweenIgnoreYear(DateTime start, DateTime end) {
+  bool betweenIgnoreYear(final DateTime start, final DateTime end) {
     // Convert to a uniform year (0) for comparison
     final DateTime thisDate = DateTime(0, month, day);
     final DateTime startDate = DateTime(0, start.month, start.day);

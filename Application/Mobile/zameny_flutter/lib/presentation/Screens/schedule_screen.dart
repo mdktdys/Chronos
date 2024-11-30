@@ -1,24 +1,28 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
+
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
-import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
+import 'package:zameny_flutter/domain/Services/Data.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_teacher_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_turbo_search.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/search_result_header.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/search_result_header.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_teacher_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/top_banner.dart';
 
 MyGlobals myGlobals = MyGlobals();
@@ -32,13 +36,13 @@ class ScheduleWrapper extends StatelessWidget {
   const ScheduleWrapper({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (context) => SearchProvider(context)),
-        ChangeNotifierProvider(create: (context) => ScheduleProvider(context)),
+        ChangeNotifierProvider(create: (final context) => SearchProvider()),
+        ChangeNotifierProvider(create: (final context) => ScheduleProvider()),
       ],
-      builder: (context, child) {
+      builder: (final context, final child) {
         context.read<ScheduleBloc>().add(LoadInitial(context: context));
         return const ScheduleScreen();
       },
@@ -46,30 +50,36 @@ class ScheduleWrapper extends StatelessWidget {
   }
 }
 
-class ScheduleScreen extends StatefulWidget {
+class ScheduleScreen extends ConsumerStatefulWidget {
   const ScheduleScreen({super.key});
 
   @override
-  State<ScheduleScreen> createState() => _ScheduleScreenState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ScheduleScreenState();
 }
 
-class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAliveClientMixin {
+class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
   late final ScrollController scrollController;
 
-  @override
+    @override
   void initState() {
     super.initState();
     scrollController = ScrollController();
+
+    scrollController.addListener((){
+      ref.read(mainProvider).updateScrollDirection(scrollController.position.userScrollDirection);
+    });
   }
 
-  void refresh(int teacher, BuildContext context) {
+  
+  void refresh(final int teacher, final BuildContext context) {
     setState(() {});
   }
 
+
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     super.build(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
@@ -95,13 +105,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
                   const CurrentLessonTimer(),
                   const SizedBox(height: 10),
                   BlocBuilder<ScheduleBloc, ScheduleState>(
-                      builder: (context, state) {
+                      builder: (final context, final state) {
                     return AnimatedSwitcher(
                         reverseDuration: const Duration(milliseconds: 300),
                         duration: const Duration(milliseconds: 300),
                         child: Builder(
                           key: ValueKey<ScheduleState>(state),
-                          builder: (BuildContext context) {
+                          builder: (final BuildContext context) {
                             if (state is ScheduleLoaded) {
                               return Column(
                                 children: [
@@ -154,14 +164,13 @@ class _ScheduleScreenState extends State<ScheduleScreen> with AutomaticKeepAlive
   }
 }
 
-
 class ShimmerContainer extends StatelessWidget {
   const ShimmerContainer({
     super.key,
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Shimmer.fromColors(
         baseColor: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
         highlightColor:
@@ -191,7 +200,7 @@ class LessonList extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ScheduleProvider provider = context.watch<ScheduleProvider>();
     final currentDay = DateTime.now().weekday;
     final startDate = provider.navigationDate
@@ -223,11 +232,11 @@ class ScheduleList extends StatelessWidget {
       {required this.context, required this.refresh, required this.weekLessons, required this.zamenas, required this.startDate, required this.currentDay, required this.todayWeek, required this.currentWeek, super.key,});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ScheduleProvider provider = context.watch<ScheduleProvider>();
     final SearchType searchType = provider.searchType;
     final isDesktop = Adaptive.isDesktop(context);
-    final List<Widget> days = List.generate(6, (iter) {
+    final List<Widget> days = List.generate(6, (final iter) {
       return ScheduleListWidget(
         iter: iter,
         weekLessons: weekLessons,
@@ -244,7 +253,7 @@ class ScheduleList extends StatelessWidget {
         ? Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: days
-                .map((e) => Expanded(
+                .map((final e) => Expanded(
                       child: e,
                     ),)
                 .toList(),
@@ -269,21 +278,21 @@ class ScheduleListWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final day = iter + 1;
     List<Lesson> lessons = [];
     final Data data = GetIt.I.get<Data>();
     try {
       lessons =
-          weekLessons.where((lesson) => lesson.date.weekday == day).toList();
-      lessons.sort((a, b) => a.number > b.number ? 1 : -1);
+          weekLessons.where((final lesson) => lesson.date.weekday == day).toList();
+      lessons.sort((final a, final b) => a.number > b.number ? 1 : -1);
     } catch (e) {
       return const SizedBox();
     }
 
     final List<Zamena> dayZamenas =
-        zamenas.where((element) => element.date.weekday == day).toList();
-    dayZamenas.sort((a, b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+        zamenas.where((final element) => element.date.weekday == day).toList();
+    dayZamenas.sort((final a, final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 
     //if ((dayZamenas.length + lessons.length) > 0) {
     if (searchType == SearchType.group || searchType == SearchType.cabinet) {

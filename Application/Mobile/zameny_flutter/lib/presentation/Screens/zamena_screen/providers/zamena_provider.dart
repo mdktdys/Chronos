@@ -1,17 +1,18 @@
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/domain/Services/Api.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zameny_flutter/domain/Services/Api.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 enum ZamenaViewType {
   teacher,
   group
 }
 
-final zamenaProvider = ChangeNotifierProvider<ZamenaProvider>((ref) {
+final zamenaProvider = ChangeNotifierProvider<ZamenaProvider>((final ref) {
   return ZamenaProvider(ref: ref);
 });
 
@@ -23,7 +24,7 @@ class ZamenaProvider extends ChangeNotifier{
   DateTime currentDate = DateTime.now();
   ZamenaViewType zamenaView = ZamenaViewType.teacher;
 
-  void toggleWeek(int days, BuildContext context) {
+  void toggleWeek(final int days, final BuildContext context) {
     currentDate = currentDate.add(Duration(days: days));
     if(currentDate.weekday == 7){
       currentDate = currentDate.add(Duration(days: days));
@@ -31,7 +32,7 @@ class ZamenaProvider extends ChangeNotifier{
     notifyListeners();
   }
 
-  void changeView(ZamenaViewType view){
+  void changeView(final ZamenaViewType view){
     zamenaView = view;
     notifyListeners();
   }
@@ -44,7 +45,7 @@ extension DateTimeExtension on DateTime{
 }
 
 
-final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((ref) async {
+final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((final ref) async {
   final currentDate = ref.watch(zamenaProvider).currentDate;
   try {
     final result = await Future.wait([

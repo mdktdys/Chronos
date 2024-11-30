@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
@@ -18,7 +17,7 @@ class Department {
     };
   }
 
-  factory Department.fromMap(Map<String, dynamic> map) {
+  factory Department.fromMap(final Map<String, dynamic> map) {
     return Department(
       id: map['id'] as int,
       name: map['name'] as String,
@@ -27,7 +26,7 @@ class Department {
 
   String toJson() => json.encode(toMap());
 
-  factory Department.fromJson(String source) =>
+  factory Department.fromJson(final String source) =>
       Department.fromMap(json.decode(source) as Map<String, dynamic>);
 
   IconData getIcon() {

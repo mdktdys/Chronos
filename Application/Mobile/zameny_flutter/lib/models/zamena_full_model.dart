@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 class ZamenaFull {
@@ -16,7 +15,7 @@ class ZamenaFull {
     };
   }
 
-  factory ZamenaFull.fromMap(Map<String, dynamic> map) {
+  factory ZamenaFull.fromMap(final Map<String, dynamic> map) {
     return ZamenaFull(
       id: map['id'] as int,
       group: map['group'] as int,
@@ -26,11 +25,11 @@ class ZamenaFull {
 
   String toJson() => json.encode(toMap());
 
-  factory ZamenaFull.fromJson(String source) =>
+  factory ZamenaFull.fromJson(final String source) =>
       ZamenaFull.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  bool operator ==(covariant ZamenaFull other) {
+  bool operator ==(covariant final ZamenaFull other) {
     if (identical(this, other)) return true;
 
     return other.id == id && other.group == group && other.date == date;

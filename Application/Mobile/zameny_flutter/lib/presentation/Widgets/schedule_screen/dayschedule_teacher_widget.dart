@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:get_it/get_it.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
+import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
+import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_header.dart';
-import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-import 'package:zameny_flutter/domain/Services/tools.dart';
-import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/models/models.dart';
 
 class DayScheduleWidgetTeacher extends StatefulWidget {
   final DateTime startDate;
@@ -40,7 +42,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+    WidgetsBinding.instance.addPostFrameCallback((final timestamp) {
       if (widget.day == widget.currentDay &&
           widget.currentWeek == widget.todayWeek &&
           !Adaptive.isDesktop(context)) {
@@ -51,7 +53,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek
         ? true
@@ -66,7 +68,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     final Set<ZamenaFull> fullzamenas = GetIt.I
         .get<Data>()
         .zamenasFull
-        .where((element) =>
+        .where((final element) =>
             element.date.day == todayDay &&
             element.date.month == todayMonth &&
             element.date.year == todayYear,)
@@ -112,7 +114,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                       height: 38,
                       child: FittedBox(
                         child: Switch(
-                            value: obed, onChanged: (value) => toggleObed(),),
+                            value: obed, onChanged: (final value) => toggleObed(),),
                       ),
                     ),
                     const SizedBox(
@@ -166,12 +168,12 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
     );
   }
 
-  List<Widget> newMethod(int teacherID, Set<ZamenaFull> fullzamenas,
-      int todayDay, int todayMonth, int todayYear,) {
+  List<Widget> newMethod(final int teacherID, final Set<ZamenaFull> fullzamenas,
+      final int todayDay, final int todayMonth, final int todayYear,) {
     final Data data = GetIt.I.get<Data>();
 
     final Holiday? holiday = data.holidays
-        .where((element) =>
+        .where((final element) =>
             element.date == DateTime(todayYear, todayMonth, todayDay),)
         .firstOrNull;
     if (holiday != null) {
@@ -200,7 +202,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         ),
       ];
     }
-    return widget.data.timings.map((para) {
+    return widget.data.timings.map((final para) {
       for (final Zamena zam in widget.dayZamenas) {
         GetIt.I.get<Talker>().debug(
             'Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}',);
@@ -208,11 +210,11 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
       GetIt.I.get<Talker>().debug('Смотрю на пару - ${para.number}');
       //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
       if (widget.dayZamenas
-          .any((element) => element.lessonTimingsID == para.number)) {
+          .any((final element) => element.lessonTimingsID == para.number)) {
         GetIt.I.get<Talker>().debug('Есть замена в эту пару');
         //если есть любая замена в этот день, неважно дети или препод
         final Zamena zamena = widget.dayZamenas
-            .where((element) => element.lessonTimingsID == para.number)
+            .where((final element) => element.lessonTimingsID == para.number)
             .first;
         GetIt.I.get<Talker>().debug(
             'Замена ${getCourseById(zamena.courseID)!.name} ${getGroupById(zamena.groupID)!.name}',);
@@ -222,9 +224,9 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
               'Не тот же препод ${getTeacherById(zamena.teacherID).name}',);
           //пытаюсь поставить дефолтную пару препода
           //проверяю не состоит ли эта пара в полной замене
-          if (widget.lessons.any((element) => element.number == para.number)) {
+          if (widget.lessons.any((final element) => element.number == para.number)) {
             final Lesson lesson = widget.lessons
-                .where((element) => element.number == para.number)
+                .where((final element) => element.number == para.number)
                 .first;
 
             final course = getCourseById(lesson.course) ??
@@ -237,7 +239,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             //проверяю не состоит ли группа дефолтного расписания в полной замене
 
             final bool hasFullZamena = fullzamenas
-                .where((element) =>
+                .where((final element) =>
                     element.group == lesson.group &&
                     element.date.day == todayDay &&
                     element.date.month == todayMonth &&
@@ -245,12 +247,12 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 .isNotEmpty;
 
             final bool hasOtherZamena = widget.dayZamenas
-                .where((element) =>
+                .where((final element) =>
                     element.groupID == lesson.group &&
                     element.lessonTimingsID == para.number,)
                 .isNotEmpty;
 
-            final bool hasLiquidation = data.liquidations.any((element) =>
+            final bool hasLiquidation = data.liquidations.any((final element) =>
                 element.date == DateTime(todayYear, todayMonth, todayDay) &&
                 element.group == lesson.group,);
 
@@ -274,12 +276,12 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         else {
           //пара которая меняется
           final Lesson? swapedPara = widget.lessons
-              .where((element) => element.number == para.number)
+              .where((final element) => element.number == para.number)
               .firstOrNull;
           //замена этой пары
 
           final Zamena zamena = widget.dayZamenas
-              .where((element) =>
+              .where((final element) =>
                   element.lessonTimingsID == para.number &&
                   element.teacherID == teacherID,)
               .first;
@@ -314,9 +316,9 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
         //   GetIt.I.get<Talker>().good(element.number);
         //   GetIt.I.get<Talker>().good(para.number);
         // });
-        if (widget.lessons.any((element) => element.number == para.number)) {
+        if (widget.lessons.any((final element) => element.number == para.number)) {
           final List<Lesson> lessons = widget.lessons
-              .where((element) => element.number == para.number)
+              .where((final element) => element.number == para.number)
               .toList();
           GetIt.I.get<Talker>().warning(lessons.length.toString());
 
@@ -330,7 +332,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
             final cabinet = getCabinetById(lesson.cabinet);
             final color = getCourseColor(course.color);
 
-            final bool hasLiquidation = data.liquidations.any((element) =>
+            final bool hasLiquidation = data.liquidations.any((final element) =>
                 element.date == DateTime(todayYear, todayMonth, todayDay) &&
                 element.group == lesson.group,);
 
@@ -358,7 +360,7 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
 
 //проверяю не состоит ли группа дефолтного расписания в полной замене
             if (fullzamenas
-                .where((element) =>
+                .where((final element) =>
                     element.group == lesson.group &&
                     element.date.day == todayDay &&
                     element.date.month == todayMonth &&

@@ -1,4 +1,5 @@
 import 'dart:convert';
+
 import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_turbo_search.dart';
 
@@ -17,7 +18,7 @@ class Group extends SearchItem {
     };
   }
 
-  factory Group.fromMap(Map<String, dynamic> map) {
+  factory Group.fromMap(final Map<String, dynamic> map) {
     return Group(
       id: map['id'] as int,
       name: map['name'] as String,
@@ -27,6 +28,6 @@ class Group extends SearchItem {
 
   String toJson() => json.encode(toMap());
 
-  factory Group.fromJson(String source) =>
+  factory Group.fromJson(final String source) =>
       Group.fromMap(json.decode(source) as Map<String, dynamic>);
 }

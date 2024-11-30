@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 class ToggleWeekButton extends StatelessWidget {
@@ -7,7 +8,7 @@ class ToggleWeekButton extends StatelessWidget {
   const ToggleWeekButton({required this.next, required this.onTap, super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Bounceable(
       onTap: () {
         onTap.call(next ? 1 : -1, context);

@@ -1,14 +1,15 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
+
 import 'package:zameny_flutter/domain/Services/Data.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 abstract class Api {
   static Future<List<Lesson>> loadWeekSchedule(
-      {required int groupID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final int groupID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -30,9 +31,9 @@ abstract class Api {
   }
 
   static Future<List<Lesson>> loadWeekTeacherSchedule(
-      {required int teacherID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final int teacherID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -51,9 +52,9 @@ abstract class Api {
   }
 
   static Future<List<Lesson>> loadWeekCabinetSchedule(
-      {required int cabinetID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final int cabinetID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -110,7 +111,7 @@ abstract class Api {
     }
   }
 
-  static Future<void> loadHolidays(DateTime start, DateTime end) async {
+  static Future<void> loadHolidays(final DateTime start, final DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -127,7 +128,7 @@ abstract class Api {
   }
 
   static Future<void> loadLiquidation(
-      List<int> groupsID, DateTime start, DateTime end,) async {
+      final List<int> groupsID, final DateTime start, final DateTime end,) async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -153,18 +154,18 @@ abstract class Api {
       final LessonTimings timing = LessonTimings.fromMap(element);
       dat.timings.add(timing);
     }
-    dat.timings.sort(((a, b) => a.number - b.number));
+    dat.timings.sort(((final a, final b) => a.number - b.number));
   }
 
   static Future<void> loadZamenasFull(
-      List<int> groupsID, DateTime start, DateTime end,) async {
+      final List<int> groupsID, final DateTime start, final DateTime end,) async {
     final dat = GetIt.I.get<Data>();
 
-    //тестова проверка на уже существующие
-    if (dat.zamenasFull.any((element) =>
-        element.date.isBefore(end) && element.date.isAfter(start),)) {
-      return;
-    }
+    // //тестова проверка на уже существующие
+    // if (dat.zamenasFull.any((element) =>
+    //     element.date.isBefore(end) && element.date.isAfter(start),)) {
+    //   return;
+    // }
 
     final client = GetIt.I.get<SupabaseClient>();
     final List<dynamic> data = await client
@@ -180,7 +181,7 @@ abstract class Api {
   }
 
   static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate(
-      {required DateTime date,}) async {
+      {required final DateTime date,}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -197,11 +198,11 @@ abstract class Api {
   }
 
   static Future<void> loadZamenaFileLinks(
-      {required DateTime start, required DateTime end,}) async {
+      {required final DateTime start, required final DateTime end,}) async {
     final dat = GetIt.I.get<Data>();
 
     //тестова проверка на уже существующие
-    if (dat.zamenaFileLinks.any((element) =>
+    if (dat.zamenaFileLinks.any((final element) =>
         element.date.isBefore(end) && element.date.isAfter(start),)) {
       return;
     }
@@ -240,7 +241,7 @@ abstract class Api {
   //   }
   // }
 
-  static Future<List<ZamenaFull>> getFullZamenasByDate(DateTime date) async {
+  static Future<List<ZamenaFull>> getFullZamenasByDate(final DateTime date) async {
     final client = GetIt.I.get<SupabaseClient>();
     final List<dynamic> data =
         await client.from('ZamenasFull').select().eq('date', date);
@@ -252,7 +253,7 @@ abstract class Api {
     return zamenaBuffer;
   }
 
-  static Future<List<Zamena>> getZamenasByDate({required DateTime date}) async {
+  static Future<List<Zamena>> getZamenasByDate({required final DateTime date}) async {
     final client = GetIt.I.get<SupabaseClient>();
     final List<dynamic> data = await client
         .from('Zamenas')
@@ -268,9 +269,9 @@ abstract class Api {
   }
 
   static Future<List<Zamena>> loadZamenas(
-      {required List<int> groupsID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final List<int> groupsID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     if (groupsID.isEmpty == true) {
       return [];
     }
@@ -293,9 +294,9 @@ abstract class Api {
   }
 
   static Future<List<Zamena>> loadTeacherZamenas(
-      {required int teacherID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final int teacherID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
     GetIt.I.get<Data>();
     final List<dynamic> data = await client
@@ -318,9 +319,9 @@ abstract class Api {
   }
 
   static Future<List<Zamena>> loadCabinetZamenas(
-      {required int cabinetID,
-      required DateTime start,
-      required DateTime end,}) async {
+      {required final int cabinetID,
+      required final DateTime start,
+      required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
     GetIt.I.get<Data>();
     final List<dynamic> data = await client

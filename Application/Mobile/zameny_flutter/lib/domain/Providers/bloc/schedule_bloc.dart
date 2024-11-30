@@ -1,16 +1,18 @@
+import 'package:flutter/material.dart';
+
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:get_it/get_it.dart';
 import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:zameny_flutter/domain/Services/Api.dart';
+
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
+import 'package:zameny_flutter/domain/Services/Api.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 
 @immutable
 sealed class ScheduleEvent {}
@@ -21,11 +23,12 @@ final class FetchData extends ScheduleEvent {
   final DateTime dateStart;
   final DateTime dateEnd;
 
-  FetchData(
-      {required this.groupID,
-      required this.dateStart,
-      required this.dateEnd,
-      required this.context,});
+  FetchData({
+    required this.groupID,
+    required this.dateStart,
+    required this.dateEnd,
+    required this.context,
+  });
 }
 
 final class LoadWeek extends ScheduleEvent {
@@ -33,8 +36,11 @@ final class LoadWeek extends ScheduleEvent {
   final DateTime dateStart;
   final DateTime dateEnd;
 
-  LoadWeek(
-      {required this.groupID, required this.dateStart, required this.dateEnd,});
+  LoadWeek({
+    required this.groupID,
+    required this.dateStart,
+    required this.dateEnd
+  });
 }
 
 final class LoadTeacherWeek extends ScheduleEvent {
@@ -53,8 +59,11 @@ final class LoadGroupWeek extends ScheduleEvent {
   final DateTime dateStart;
   final DateTime dateEnd;
 
-  LoadGroupWeek(
-      {required this.groupID, required this.dateStart, required this.dateEnd,});
+  LoadGroupWeek({
+    required this.groupID,
+    required this.dateStart,
+    required this.dateEnd,
+  });
 }
 
 final class LoadCabinetWeek extends ScheduleEvent {
@@ -62,10 +71,11 @@ final class LoadCabinetWeek extends ScheduleEvent {
   final DateTime dateStart;
   final DateTime dateEnd;
 
-  LoadCabinetWeek(
-      {required this.cabinetID,
-      required this.dateStart,
-      required this.dateEnd,});
+  LoadCabinetWeek({
+    required this.cabinetID,
+    required this.dateStart,
+    required this.dateEnd,
+  });
 }
 
 final class LoadInitial extends ScheduleEvent {
@@ -104,7 +114,7 @@ final class ScheduleLoading extends ScheduleState {
 class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ScheduleBloc() : super(ScheduleLoading()) {
     on<LoadCabinetWeek>(
-      (event, emit) async {
+      (final event, final emit) async {
         emit(ScheduleLoading());
         try {
           late List<Lesson> lessons;
@@ -115,12 +125,12 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                 start: event.dateStart,
                 end: event.dateEnd,
                 cabinetID: event.cabinetID,
-              ).then((value) => lessons = value),
+              ).then((final value) => lessons = value),
               Api.loadCabinetZamenas(
                 cabinetID: event.cabinetID,
                 start: event.dateStart,
                 end: event.dateEnd,
-              ).then((value) => zamenas = value),
+              ).then((final value) => zamenas = value),
               Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
           ]);
           emit(ScheduleLoaded(
@@ -134,7 +144,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       transformer: restartable(),
     );
     on<LoadTeacherWeek>(
-      (event, emit) async {
+      (final event, final emit) async {
         emit(ScheduleLoading());
         try {
           late List<Lesson> lessons;
@@ -145,21 +155,21 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                     start: event.dateStart,
                     end: event.dateEnd,
                     teacherID: event.teacherID,)
-                .then((value) {
+                .then((final value) {
               final Teacher teacher = GetIt.I
                   .get<Data>()
                   .teachers
-                  .where((element) => element.id == event.teacherID)
+                  .where((final element) => element.id == event.teacherID)
                   .first;
               teacher.lessons = value;
               lessons = value;
-              groupsID = List<int>.from(lessons.map((e) => e.group));
+              groupsID = List<int>.from(lessons.map((final e) => e.group));
             }),
             Api.loadTeacherZamenas(
                     teacherID: event.teacherID,
                     start: event.dateStart,
                     end: event.dateEnd,)
-                .then((value) => zamenas = value),
+                .then((final value) => zamenas = value),
             Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
             Api.loadHolidays(event.dateStart, event.dateEnd),
           ]);
@@ -171,7 +181,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                     groupsID: groupsID,
                     start: event.dateStart,
                     end: event.dateEnd,)
-                .then((value) => zamenas.addAll(value)),
+                .then((final value) => zamenas.addAll(value)),
           ]);
 
           emit(ScheduleLoaded(
@@ -184,7 +194,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       },
       transformer: restartable(),
     );
-    on<LoadInitial>((event, emit) async {
+    on<LoadInitial>((final event, final emit) async {
       final ScheduleProvider searchProvider =
           Provider.of<ScheduleProvider>(event.context, listen: false);
       emit(ScheduleLoading());
@@ -248,7 +258,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       }
     });
     on<LoadGroupWeek>(
-      (event, emit) async {
+      (final event, final emit) async {
         emit(ScheduleLoading());
 
         try {
@@ -268,13 +278,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
             Api.loadLiquidation([event.groupID], event.dateStart, event.dateEnd),
           ]);
 
-          // Извлекаем результаты
-          final List<Lesson> lessons = results[2] as List<Lesson>;
-          final List<Zamena> zamenas = results[3] as List<Zamena>;
-
           emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
+            lessons: results[2] as List<Lesson>,
+            zamenas: results[3] as List<Zamena>,
           ),);
         } catch (e) {
           // Обработка ошибок

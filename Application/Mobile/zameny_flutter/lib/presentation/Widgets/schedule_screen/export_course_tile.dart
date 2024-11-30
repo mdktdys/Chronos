@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/svg.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
+
+import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/course_model.dart';
 import 'package:zameny_flutter/models/lesson_model.dart';
-import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
-import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 class ExportCourseTile extends StatelessWidget {
   final SearchType type;
@@ -16,7 +18,7 @@ class ExportCourseTile extends StatelessWidget {
       {required this.type, required this.course, required this.e, required this.obedTime, required this.saturdayTime, super.key,});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
         width: 500,
@@ -164,7 +166,7 @@ class ExportCourseTileEmpty extends StatelessWidget {
   const ExportCourseTileEmpty({super.key});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         margin: const EdgeInsets.symmetric(vertical: 5),
         width: 500,

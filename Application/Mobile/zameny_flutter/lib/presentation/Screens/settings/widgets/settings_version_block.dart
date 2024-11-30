@@ -6,7 +6,7 @@ class SettingsVersionBlock extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       alignment: Alignment.topLeft,
       padding: const EdgeInsets.symmetric(horizontal: 5),

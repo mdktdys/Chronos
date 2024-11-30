@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+
+import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/sharing/sharing.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
-import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
 import 'package:zameny_flutter/secrets.dart';
-
-import 'package:zameny_flutter/domain/Providers/sharing/sharing.dart';
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -25,7 +26,7 @@ class ScheduleProvider extends ChangeNotifier {
   int currentWeek = 1;
   int todayWeek = 1;
 
-  ScheduleProvider(BuildContext context) {
+  ScheduleProvider() {
     groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
     teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
     cabinetIDSeek = GetIt.I.get<Data>().seekCabinet ?? -1;
@@ -43,13 +44,13 @@ class ScheduleProvider extends ChangeNotifier {
     currentWeek = navigationDate.weekday == 7 ? currentWeek + 1 : currentWeek;
   }
 
-  int getWeekNumber(DateTime date) {
+  int getWeekNumber(final DateTime date) {
     return ((date.difference(septemberFirst).inDays + septemberFirst.weekday) ~/
             7) +
         1;
   }
 
-  Future<void> exportSchedulePNG(BuildContext context, WidgetRef ref) async {
+  Future<void> exportSchedulePNG(final BuildContext context, final WidgetRef ref) async {
     List<Lesson> lessons = [];
     String searchName = '';
     switch (searchType) {
@@ -61,7 +62,7 @@ class ScheduleProvider extends ChangeNotifier {
         {
           final Teacher teacher = getTeacherById(teacherIDSeek);
           lessons = teacher.lessons;
-          lessons.sort((a, b) => a.number > b.number ? 1 : -1);
+          lessons.sort((final a, final b) => a.number > b.number ? 1 : -1);
 
           searchName = teacher.name;
         }
@@ -77,17 +78,17 @@ class ScheduleProvider extends ChangeNotifier {
         }
     }
     final mondayLessons =
-        lessons.where((element) => element.date.weekday == 1).toList();
+        lessons.where((final element) => element.date.weekday == 1).toList();
     final tuesdayLessons =
-        lessons.where((element) => element.date.weekday == 2).toList();
+        lessons.where((final element) => element.date.weekday == 2).toList();
     final wednesdayLessons =
-        lessons.where((element) => element.date.weekday == 3).toList();
+        lessons.where((final element) => element.date.weekday == 3).toList();
     final thursdayLessons =
-        lessons.where((element) => element.date.weekday == 4).toList();
+        lessons.where((final element) => element.date.weekday == 4).toList();
     final fridayLessons =
-        lessons.where((element) => element.date.weekday == 5).toList();
+        lessons.where((final element) => element.date.weekday == 5).toList();
     final saturdayLessons =
-        lessons.where((element) => element.date.weekday == 6).toList();
+        lessons.where((final element) => element.date.weekday == 6).toList();
 
     final ScreenshotController controller = ScreenshotController();
     final savedFile = await controller.captureFromWidget(
@@ -133,7 +134,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: mondayLessons.isNotEmpty
-                                        ? mondayLessons.map((e) {
+                                        ? mondayLessons.map((final e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
                                             final Course course =
@@ -163,7 +164,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: thursdayLessons.isNotEmpty
-                                        ? thursdayLessons.map((e) {
+                                        ? thursdayLessons.map((final e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
                                             final Course course =
@@ -195,7 +196,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: tuesdayLessons.isNotEmpty
-                                        ? tuesdayLessons.map((e) {
+                                        ? tuesdayLessons.map((final e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
                                             final Course course =
@@ -225,7 +226,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: fridayLessons.isNotEmpty
-                                        ? fridayLessons.map((e) {
+                                        ? fridayLessons.map((final e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
                                             final Course course =
@@ -257,7 +258,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: wednesdayLessons.isNotEmpty
-                                        ? wednesdayLessons.map((e) {
+                                        ? wednesdayLessons.map((final e) {
                                             const bool saturdayTime = false;
                                             const bool obedTime = false;
                                             final Course course =
@@ -287,7 +288,7 @@ class ScheduleProvider extends ChangeNotifier {
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
                                     children: saturdayLessons.isNotEmpty
-                                        ? saturdayLessons.map((e) {
+                                        ? saturdayLessons.map((final e) {
                                             const bool saturdayTime = true;
                                             const bool obedTime = false;
                                             final Course course =
@@ -315,7 +316,7 @@ class ScheduleProvider extends ChangeNotifier {
     ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
   }
 
-  void toggleWeek(int days, BuildContext context) {
+  void toggleWeek(final int days, final BuildContext context) {
     currentWeek += days;
     if (currentWeek < 1) {
       currentWeek = 1;
@@ -325,19 +326,19 @@ class ScheduleProvider extends ChangeNotifier {
     dateSwitched(context);
   }
 
-  DateTime getStartOfWeek(DateTime week) {
+  DateTime getStartOfWeek(final DateTime week) {
     final DateTime monday = week.subtract(Duration(days: week.weekday - 1));
     return DateTime(monday.year, monday.month, monday.day);
   }
 
-  DateTime getEndOfWeek(DateTime week) {
+  DateTime getEndOfWeek(final DateTime week) {
     final DateTime sunday = week
         .subtract(Duration(days: week.weekday - 1))
         .add(const Duration(days: 6));
     return DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
   }
 
-  void groupSelected(int groupID, BuildContext context) {
+  void groupSelected(final int groupID, final BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
     GetIt.I.get<SharedPreferences>().setString('SearchType', 'Group');
@@ -348,7 +349,7 @@ class ScheduleProvider extends ChangeNotifier {
     loadWeekSchedule(context);
   }
 
-  void loadWeekSchedule(BuildContext context) async {
+  Future<void> loadWeekSchedule(final BuildContext context) async {
     final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
@@ -363,7 +364,7 @@ class ScheduleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void teacherSelected(int teacherID, BuildContext context) {
+  void teacherSelected(final int teacherID, final BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
     GetIt.I.get<SharedPreferences>().setString('SearchType', 'Teacher');
@@ -374,7 +375,7 @@ class ScheduleProvider extends ChangeNotifier {
     loadWeekTeahcerSchedule(context);
   }
 
-  void cabinetSelected(int cabinetID, BuildContext context) {
+  void cabinetSelected(final int cabinetID, final BuildContext context) {
     final data = GetIt.I.get<Data>();
     GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
     GetIt.I.get<SharedPreferences>().setString('SearchType', 'Cabinet');
@@ -385,7 +386,7 @@ class ScheduleProvider extends ChangeNotifier {
     loadCabinetWeekSchedule(context);
   }
 
-  void loadCabinetWeekSchedule(BuildContext context) async {
+  Future<void> loadCabinetWeekSchedule(final BuildContext context) async {
     final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
@@ -402,7 +403,7 @@ class ScheduleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void loadWeekTeahcerSchedule(BuildContext context) async {
+  Future<void> loadWeekTeahcerSchedule(final BuildContext context) async {
     final DateTime monday =
         navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
@@ -419,7 +420,7 @@ class ScheduleProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void dateSwitched(context) async {
+  Future<void> dateSwitched(final context) async {
     final Data dat = GetIt.I.get<Data>();
     if (dat.latestSearch == SearchType.teacher) {
       teacherSelected(dat.teacherGroup!, context);

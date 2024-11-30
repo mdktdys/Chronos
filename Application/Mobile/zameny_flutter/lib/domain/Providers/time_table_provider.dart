@@ -1,5 +1,11 @@
 import 'package:flutter/foundation.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+final timeTableProvider = ChangeNotifierProvider<TimeTableProvider>((final ref) {
+  return TimeTableProvider();
+});
+
 class TimeTableProvider extends ChangeNotifier {
   bool obed = false;
   bool saturday = false;
@@ -13,28 +19,4 @@ class TimeTableProvider extends ChangeNotifier {
     saturday = !saturday;
     notifyListeners();
   }
-
-  // double getHeight() {
-  //   Talker talker = GetIt.I.get<Talker>();
-
-  //   DateTime now = DateTime.now();
-
-  //   int startOfDay =
-  //       DateTime(now.year, now.month, now.day, 7, 50).millisecondsSinceEpoch;
-  //   int endOfDay =
-  //       DateTime(now.year, now.month, now.day, 19, 50).millisecondsSinceEpoch;
-  //   int totalDuration = endOfDay - startOfDay;
-
-  //   int currentTime = now.millisecondsSinceEpoch;
-
-  //   int progress = currentTime - startOfDay;
-
-  //   talker.debug(startOfDay);
-  //   talker.debug(endOfDay);
-  //   talker.debug(progress);
-  //   talker.debug(totalDuration);
-  //   talker.debug(progress / totalDuration);
-
-  //   return clampDouble(progress / totalDuration, 0, 1.0);
-  // }
 }

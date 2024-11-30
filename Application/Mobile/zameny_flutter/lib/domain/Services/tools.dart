@@ -1,11 +1,12 @@
 import 'dart:math';
 import 'dart:ui';
+
 import 'package:get_it/get_it.dart';
+
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
 
-
-DateTime formatTimeToDateTime(String time) {
+DateTime formatTimeToDateTime(final String time) {
   //sample 11:05:20
   final String hours = time.split(':')[0];
   final String minuts = time.split(':')[1];
@@ -14,46 +15,46 @@ DateTime formatTimeToDateTime(String time) {
       int.parse(minuts),);
 }
 
-String getTimeFromDateTime(DateTime date) {
+String getTimeFromDateTime(final DateTime date) {
   final String hours = date.hour < 9 ? '0${date.hour}' : '${date.hour}';
   final String minutes = date.minute < 9 ? '0${date.minute}' : '${date.minute}';
   return '$hours:$minutes';
 }
 
-Department getDepartmentById(int departmentID) {
+Department getDepartmentById(final int departmentID) {
   final dat = GetIt.I.get<Data>();
-  return dat.departments.where((element) => element.id == departmentID).first;
+  return dat.departments.where((final element) => element.id == departmentID).first;
 }
 
-LessonTimings getLessonTimings(int lesson) {
+LessonTimings getLessonTimings(final int lesson) {
   final dat = GetIt.I.get<Data>();
-  return dat.timings.where((timimng) => timimng.number == lesson).first;
+  return dat.timings.where((final timimng) => timimng.number == lesson).first;
 }
 
-Cabinet getCabinetById(int cabinetID) {
+Cabinet getCabinetById(final int cabinetID) {
   final dat = GetIt.I.get<Data>();
-  return dat.cabinets.where((cabinet) => cabinet.id == cabinetID).first;
+  return dat.cabinets.where((final cabinet) => cabinet.id == cabinetID).first;
 }
 
-Teacher getTeacherById(int teacherID) {
+Teacher getTeacherById(final int teacherID) {
   final dat = GetIt.I.get<Data>();
-  return dat.teachers.where((teacher) => teacher.id == teacherID).first;
+  return dat.teachers.where((final teacher) => teacher.id == teacherID).first;
 }
 
-Group? getGroupById(int groupID) {
+Group? getGroupById(final int groupID) {
   final dat = GetIt.I.get<Data>();
-  return dat.groups.where((group) => group.id == groupID).firstOrNull;
+  return dat.groups.where((final group) => group.id == groupID).firstOrNull;
 }
 
-Course? getCourseById(int courseID) {
+Course? getCourseById(final int courseID) {
   final dat = GetIt.I.get<Data>();
   return dat.courses
-      .where((course) => course.id == courseID)
+      .where((final course) => course.id == courseID)
       .toList()
       .firstOrNull;
 }
 
-DateTime getFirstDayOfWeek(int year, int week) {
+DateTime getFirstDayOfWeek(final int year, final int week) {
   final DateTime januaryFirst = DateTime(year);
   final int firstMondayOffset = (DateTime.monday - januaryFirst.weekday + 7) % 7;
   final DateTime firstMonday = januaryFirst.add(Duration(days: firstMondayOffset));
@@ -61,7 +62,7 @@ DateTime getFirstDayOfWeek(int year, int week) {
   return firstMonday.add(Duration(days: daysToAdd));
 }
 
-String getMonthName(int monthNumber) {
+String getMonthName(final int monthNumber) {
   final List<String> months = [
     'Январь',
     'Февраль',
@@ -84,7 +85,7 @@ String getMonthName(int monthNumber) {
   }
 }
 
-String getDayName(int day) {
+String getDayName(final int day) {
   switch (day) {
     case 1:
       return 'Понедельник';
@@ -105,7 +106,7 @@ String getDayName(int day) {
   }
 }
 
-Color getCourseColor(String color) {
+Color getCourseColor(final String color) {
   return Color.fromARGB(
       int.parse(color.split(',')[0]),
       int.parse(color.split(',')[1]),
@@ -113,7 +114,7 @@ Color getCourseColor(String color) {
       int.parse(color.split(',')[3]),);
 }
 
- Color getColorForText(String text) {
+ Color getColorForText(final String text) {
     final hash = text.hashCode;
     final random = Random(hash);
 

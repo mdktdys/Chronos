@@ -16,7 +16,7 @@ class Course {
     };
   }
 
-  factory Course.fromMap(Map<String, dynamic> map) {
+  factory Course.fromMap(final Map<String, dynamic> map) {
     return Course(
       id: map['id'] as int,
       //костылище
@@ -28,14 +28,14 @@ class Course {
 
   String toJson() => json.encode(toMap());
 
-  factory Course.fromJson(String source) =>
+  factory Course.fromJson(final String source) =>
       Course.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Course copyWith({
-    int? id,
-    String? name,
-    String? color,
-    String? fullname,
+    final int? id,
+    final String? name,
+    final String? color,
+    final String? fullname,
   }) {
     return Course(
       id: id ?? this.id,
