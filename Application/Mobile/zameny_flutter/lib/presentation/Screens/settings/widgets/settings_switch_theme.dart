@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/svg.dart';
 
 class SettingsSwitchThemeBlock extends StatelessWidget {
@@ -10,7 +11,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
   final Function onSwitch;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return SizedBox(
         width: double.infinity,
         child: CupertinoSlidingSegmentedControl(
@@ -55,7 +56,7 @@ class SettingsSwitchThemeBlock extends StatelessWidget {
                 ),
               ),
             },
-            onValueChanged: (index) {
+            onValueChanged: (final index) {
               onSwitch(index);
             },),);
   }

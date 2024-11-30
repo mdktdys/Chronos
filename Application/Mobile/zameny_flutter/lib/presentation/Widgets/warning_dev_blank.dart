@@ -6,7 +6,7 @@ class WarningDevBlank extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(10),

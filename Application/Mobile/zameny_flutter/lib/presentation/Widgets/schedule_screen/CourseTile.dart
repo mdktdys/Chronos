@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
+
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
-import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
 
 enum SearchType { teacher, group, cabinet }
 
@@ -42,7 +44,7 @@ class MixedCourseTile extends StatefulWidget {
 
 class _MixedCourseTileState extends State<MixedCourseTile> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         margin: const EdgeInsets.only(top: 10, bottom: 10),
         decoration: BoxDecoration(
@@ -60,7 +62,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
         child: Column(
           children: [
             widget.tilesData.length > 1
-                ? Builder(builder: (context) {
+                ? Builder(builder: (final context) {
                     final data = widget.tilesData.first;
                     return Padding(
                       padding: const EdgeInsets.all(8.0),
@@ -147,7 +149,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                   },)
                 : const SizedBox(),
             Column(
-                children: List.generate(widget.tilesData.length, (index) {
+                children: List.generate(widget.tilesData.length, (final index) {
               final TileData data = widget.tilesData[index];
               final bool isLast = widget.tilesData.length - 1 == index;
               return InkWell(
@@ -415,7 +417,7 @@ class CourseTile extends StatelessWidget {
   final Course course;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bool isEmpty =
         course.name.toLowerCase() == 'нет' || course.name.trim() == '';
     return Container(
@@ -451,7 +453,7 @@ class CourseTile extends StatelessWidget {
                 barrierColor: Colors.black.withOpacity(0.1),
                 context: myGlobals.scaffoldKey.currentContext!,
                 useSafeArea: true,
-                builder: (BuildContext context) {
+                builder: (final BuildContext context) {
                   return Padding(
                     padding: const EdgeInsets.all(20.0),
                     child: Container(

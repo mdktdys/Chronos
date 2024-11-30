@@ -1,5 +1,5 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -9,7 +9,7 @@ class TopBanner extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       color: Colors.transparent,
       height: 30,

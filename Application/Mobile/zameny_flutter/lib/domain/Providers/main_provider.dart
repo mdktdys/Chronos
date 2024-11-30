@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+
 import 'package:zameny_flutter/secrets.dart';
 
 class MainProvider extends ChangeNotifier {
@@ -8,20 +9,16 @@ class MainProvider extends ChangeNotifier {
   bool falling = true;
 
   int currentPage = 1;
-  // bool get pageViewScrollEnabled => currentPage != 3;
-  bool get pageViewScrollEnabled => true;
+  bool get pageViewScrollEnabled => currentPage != 3;
+  // bool get pageViewScrollEnabled => true;
 
-  void setPage(int index) {
+  void setPage(final int index) {
     currentPage = index;
-    pageController.animateToPage(
-      index,
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeOutQuint,
-    );
+    pageController.jumpToPage(index);
     notifyListeners();
   }
 
-  void pageChanged(int value) {
+  void pageChanged(final int value) {
     currentPage = value;
     notifyListeners();
   }

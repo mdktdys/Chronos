@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 class SearchBannerMessageWidget extends StatelessWidget {
@@ -7,7 +6,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(bottom: 20),
       decoration: BoxDecoration(

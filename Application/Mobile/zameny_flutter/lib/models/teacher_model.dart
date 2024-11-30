@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:zameny_flutter/models/lesson_model.dart';
@@ -20,7 +19,7 @@ class Teacher extends SearchItem {
     };
   }
 
-  factory Teacher.fromMap(Map<String, dynamic> map) {
+  factory Teacher.fromMap(final Map<String, dynamic> map) {
     return Teacher(
       id: map['id'] as int,
       name: map['name'] as String,
@@ -29,6 +28,5 @@ class Teacher extends SearchItem {
 
   String toJson() => json.encode(toMap());
 
-  factory Teacher.fromJson(String source) =>
-      Teacher.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Teacher.fromJson(final String source) => Teacher.fromMap(json.decode(source) as Map<String, dynamic>);
 }

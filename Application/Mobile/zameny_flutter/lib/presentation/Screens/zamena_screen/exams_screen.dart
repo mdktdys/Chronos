@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zameny_flutter/models/models.dart';
+
 import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/widget/zamena_view_chooser.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
-import 'package:zameny_flutter/presentation/Widgets/warning_dev_blank.dart';
 
 class ZamenaScreen extends ConsumerStatefulWidget {
   const ZamenaScreen({super.key});
@@ -21,14 +23,25 @@ class ZamenaScreen extends ConsumerStatefulWidget {
 class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepAliveClientMixin {
   @override
   bool get wantKeepAlive => true;
+  late final ScrollController controller;
 
   @override
-  Widget build(BuildContext context) {
+  void initState() {
+    controller = ScrollController();
+    controller.addListener((){
+      ref.read(mainProvider).updateScrollDirection(controller.position.userScrollDirection);
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(final BuildContext context) {
     super.build(context);
     return Scaffold(
       backgroundColor: Theme.of(context).colorScheme.surface,
       body: SingleChildScrollView(
         padding: const EdgeInsets.symmetric(horizontal: 20.0),
+        controller: controller,
         physics: const BouncingScrollPhysics(),
         child: Column(
           mainAxisSize: MainAxisSize.min,
@@ -77,13 +90,13 @@ class ZamenaView extends ConsumerStatefulWidget {
 
 class _ZamenaViewState extends ConsumerState<ZamenaView> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return AnimatedSwitcher(
       duration: const Duration(milliseconds: 300),
       switchInCurve: Curves.easeIn,
       switchOutCurve: Curves.easeOut,
       child: ref.watch(zamenasListProvider).when(
-        data: (data) {
+        data: (final data) {
           if (data.$1.isEmpty) {
             return const Center(
               key: ValueKey('noData'),
@@ -105,7 +118,7 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
             );
         }
         },
-        error: (error, trace) {
+        error: (final error, final trace) {
           return Center(
             key: const ValueKey('error'),
             child: FailedLoadWidget(error: error.toString()),
@@ -123,8 +136,8 @@ class ZamenaFileBlock extends ConsumerWidget {
   const ZamenaFileBlock({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    return ref.watch(zamenasListProvider).when(data: (data) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return ref.watch(zamenasListProvider).when(data: (final data) {
       if(data.$3.isEmpty) {
         return const SizedBox();
       }
@@ -145,7 +158,7 @@ class ZamenaFileBlock extends ConsumerWidget {
                 ),
               ),
               Column(
-                  children: data.$3.map((link) {
+                  children: data.$3.map((final link) {
                 return Row(
                   children: [
                     Expanded(
@@ -200,7 +213,7 @@ class ZamenaFileBlock extends ConsumerWidget {
               }).toList(),),
             ],
           ),);
-    }, error: (error, obj) {
+    }, error: (final error, final obj) {
       return const SizedBox();
     }, loading: () {
       return const SizedBox();
@@ -214,15 +227,15 @@ class ZamenaViewTeacher extends StatelessWidget {
   const ZamenaViewTeacher({required this.zamenas, required this.fullZamenas, super.key});
 
   @override
-  Widget build(BuildContext context) {
-    final Set<int> teachersList = zamenas.map((zamena) => zamena.teacherID).toSet();
+  Widget build(final BuildContext context) {
+    final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
     final date = DateTime.now();
     return Column(
         mainAxisSize: MainAxisSize.min,
-        children: teachersList.map((teacherId) {
+        children: teachersList.map((final teacherId) {
           final groupZamenas =
-              zamenas.where((zamena) => zamena.teacherID == teacherId).toList();
-              groupZamenas.sort((a,b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+              zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
+              groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
           final teacher = getTeacherById(teacherId);
           if(teacher.name.replaceAll(' ', '') == ''){
             return const SizedBox();
@@ -243,7 +256,7 @@ class ZamenaViewTeacher extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
-                children: groupZamenas.map((zamena) {
+                children: groupZamenas.map((final zamena) {
                   final course = getCourseById(zamena.courseID)!;
                   final cabinet = getCabinetById(zamena.cabinetID);
                   final group = getGroupById(zamena.groupID);
@@ -279,16 +292,16 @@ class ZamenaViewGroup extends StatelessWidget {
       {required this.zamenas, required this.fullZamenas, super.key,});
 
   @override
-  Widget build(BuildContext context) {
-    final Set<int> groupsList = zamenas.map((zamena) => zamena.groupID).toSet();
+  Widget build(final BuildContext context) {
+    final Set<int> groupsList = zamenas.map((final zamena) => zamena.groupID).toSet();
     final date = DateTime.now();
     return Column(
         mainAxisSize: MainAxisSize.min,
-        children: groupsList.map((group) {
+        children: groupsList.map((final group) {
           final groupZamenas =
-              zamenas.where((zamena) => zamena.groupID == group);
+              zamenas.where((final zamena) => zamena.groupID == group);
           final isFullZamena =
-              fullZamenas.any((fullzamena) => fullzamena.group == group);
+              fullZamenas.any((final fullzamena) => fullzamena.group == group);
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -317,7 +330,7 @@ class ZamenaViewGroup extends StatelessWidget {
               ),
               Column(
                 mainAxisSize: MainAxisSize.min,
-                children: groupZamenas.map((zamena) {
+                children: groupZamenas.map((final zamena) {
                   final course = getCourseById(zamena.courseID)!;
                   final teacher = getTeacherById(zamena.teacherID);
                   final cabinet = getCabinetById(zamena.cabinetID);
@@ -357,7 +370,7 @@ class ZamenaDateNavigation extends ConsumerStatefulWidget {
 
 class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
         width: double.infinity,
         padding: const EdgeInsets.all(10),
@@ -370,7 +383,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
           children: [
             ToggleWeekButton(
               next: false,
-              onTap: (way, context) {
+              onTap: (final way, final context) {
                 ref.read(zamenaProvider).toggleWeek(way, context);
               },
             ),
@@ -441,7 +454,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
             ),
             ToggleWeekButton(
               next: true,
-              onTap: (way, context) {
+              onTap: (final way, final context) {
                 ref.read(zamenaProvider).toggleWeek(way, context);
               },
             ),

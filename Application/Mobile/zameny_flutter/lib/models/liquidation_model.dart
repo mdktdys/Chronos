@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 class Liquidation {
@@ -19,7 +18,7 @@ class Liquidation {
     };
   }
 
-  factory Liquidation.fromMap(Map<String, dynamic> map) {
+  factory Liquidation.fromMap(final Map<String, dynamic> map) {
     return Liquidation(
       id: map['id'] as int,
       group: map['group'] as int,
@@ -29,5 +28,5 @@ class Liquidation {
 
   String toJson() => json.encode(toMap());
 
-  factory Liquidation.fromJson(String source) => Liquidation.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Liquidation.fromJson(final String source) => Liquidation.fromMap(json.decode(source) as Map<String, dynamic>);
 }

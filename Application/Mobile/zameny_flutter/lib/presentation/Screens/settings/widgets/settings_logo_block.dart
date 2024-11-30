@@ -6,7 +6,7 @@ class SettingsLogoBlock extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(

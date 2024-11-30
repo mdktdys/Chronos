@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 class Holiday {
@@ -19,7 +18,7 @@ class Holiday {
     };
   }
 
-  factory Holiday.fromMap(Map<String, dynamic> map) {
+  factory Holiday.fromMap(final Map<String, dynamic> map) {
     return Holiday(
       id: map['id'] as int,
       name: map['name'] as String,
@@ -29,6 +28,6 @@ class Holiday {
 
   String toJson() => json.encode(toMap());
 
-  factory Holiday.fromJson(String source) =>
+  factory Holiday.fromJson(final String source) =>
       Holiday.fromMap(json.decode(source) as Map<String, dynamic>);
 }

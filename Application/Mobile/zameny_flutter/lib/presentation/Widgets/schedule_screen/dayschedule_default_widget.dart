@@ -1,14 +1,16 @@
 import 'package:flutter/material.dart';
+
 import 'package:get_it/get_it.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
+
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
+import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
-import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_header.dart';
-import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-import 'package:zameny_flutter/models/models.dart';
 
 class DayScheduleWidget extends StatefulWidget {
   final DateTime startDate;
@@ -31,7 +33,7 @@ class DayScheduleWidget extends StatefulWidget {
 class _DayScheduleWidgetState extends State<DayScheduleWidget> {
   bool obed = false;
 
-  toggleObed() {
+  void toggleObed() {
     obed = !obed;
     setState(() {});
   }
@@ -39,7 +41,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+    WidgetsBinding.instance.addPostFrameCallback((final timestamp) {
       if (widget.day == widget.currentDay &&
           widget.currentWeek == widget.todayWeek && !Adaptive.isDesktop(context)) {
         Scrollable.ensureVisible(context,
@@ -49,7 +51,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final bool isToday = (widget.day == widget.currentDay &&
             widget.todayWeek == widget.currentWeek
         ? true
@@ -66,7 +68,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
         fullSwap = GetIt.I
             .get<Data>()
             .zamenasFull
-            .where((element) =>
+            .where((final element) =>
                 (element.group == widget.lessons[0].group) &&
                 (element.date.day == searchDay) &&
                 (element.date.month == searchMonth) &&
@@ -83,7 +85,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
         courseTiles.add(i);
       }
     }
-    final bool needObedSwitch = courseTiles.any((element) =>
+    final bool needObedSwitch = courseTiles.any((final element) =>
         element.lesson.number == 4 ||
         element.lesson.number == 5 ||
         element.lesson.number == 6 ||
@@ -116,7 +118,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
                           child: FittedBox(
                             child: Switch(
                                 value: obed,
-                                onChanged: (value) => toggleObed(),),
+                                onChanged: (final value) => toggleObed(),),
                           ),
                         ),
                         const SizedBox(
@@ -168,12 +170,12 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
     );
   }
 
-  List<Widget> newMethod(bool fullSwap, SearchType type, int todayYear,
-      int todayMonth, int todayDay, int group,) {
+  List<Widget> newMethod(final bool fullSwap, final SearchType type, final int todayYear,
+      final int todayMonth, final int todayDay, final int group,) {
     final Data data = GetIt.I.get<Data>();
 
     final Holiday? holiday = data.holidays
-        .where((element) =>
+        .where((final element) =>
             element.date == DateTime(todayYear, todayMonth, todayDay),)
         .firstOrNull;
     if (holiday != null) {
@@ -203,7 +205,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
       ];
     }
     final Liquidation? liquidation = data.liquidations
-        .where((element) =>
+        .where((final element) =>
             DateTime(todayYear, todayMonth, todayDay) == element.date &&
             element.group == group,)
         .firstOrNull;
@@ -234,7 +236,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
         ),
       ];
     }
-    return widget.data.timings.map((para) {
+    return widget.data.timings.map((final para) {
       if (fullSwap) {
         // Lesson? removedPara = lessons
         //     .where((element) => element.number == para.number)
@@ -243,7 +245,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
         //   return const SizedBox();
         // }
         final Zamena? zamena = widget.dayZamenas
-            .where((element) => element.lessonTimingsID == para.number)
+            .where((final element) => element.lessonTimingsID == para.number)
             .firstOrNull;
         if (zamena != null) {
           final course = getCourseById(zamena.courseID) ??
@@ -269,12 +271,12 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
         return const SizedBox();
       } else {
         if (widget.dayZamenas
-            .any((element) => element.lessonTimingsID == para.number)) {
+            .any((final element) => element.lessonTimingsID == para.number)) {
           final Lesson? swapedPara = widget.lessons
-              .where((element) => element.number == para.number)
+              .where((final element) => element.number == para.number)
               .firstOrNull;
           final Zamena zamena = widget.dayZamenas
-              .where((element) => element.lessonTimingsID == para.number)
+              .where((final element) => element.lessonTimingsID == para.number)
               .first;
           final course = getCourseById(zamena.courseID) ??
               Course(id: -1, name: 'err2', color: '100,0,0,0');
@@ -298,9 +300,9 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
             swaped: swapedPara,
           );
         } else {
-          if (widget.lessons.any((element) => element.number == para.number)) {
+          if (widget.lessons.any((final element) => element.number == para.number)) {
             final Lesson lesson = widget.lessons
-                .where((element) => element.number == para.number)
+                .where((final element) => element.number == para.number)
                 .first;
             final course = getCourseById(lesson.course) ??
                 Course(id: -1, name: 'err3', color: '50,0,0,1');

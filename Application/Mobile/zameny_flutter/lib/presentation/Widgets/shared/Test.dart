@@ -12,8 +12,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
   });
 
   @override
-  Widget build(
-      BuildContext context, double shrinkOffset, bool overlapsContent,) {
+  Widget build(final BuildContext context, final double shrinkOffset, final bool overlapsContent) {
     double paddingValue = 20.0; // начальное значение отступа
 
     // Изменяем отступ в зависимости от shrinkOffset
@@ -54,7 +53,7 @@ class CustomSliverPersistentHeader extends SliverPersistentHeaderDelegate {
   double get maxExtent => maxHeight;
 
   @override
-  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+  bool shouldRebuild(covariant final SliverPersistentHeaderDelegate oldDelegate) {
     return true;
     // return maxHeight != oldDelegate.maxExtent ||
     //     minHeight != oldDelegate.minExtent;

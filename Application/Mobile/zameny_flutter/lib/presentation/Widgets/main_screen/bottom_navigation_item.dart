@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
+
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 
 class BottomNavigationItem extends StatelessWidget {
@@ -15,7 +17,7 @@ class BottomNavigationItem extends StatelessWidget {
       {required this.index, required this.onTap, required this.icon, required this.text, required this.activeicon, required this.enabled, super.key,});
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final MainProvider provider = context.watch<MainProvider>();
     return Material(
       color: Colors.transparent,

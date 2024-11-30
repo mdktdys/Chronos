@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:zameny_flutter/domain/Services/tools.dart';
@@ -36,16 +35,16 @@ class LessonTimings {
   String toJson() => json.encode(toMap());
 
   @override
-  bool operator ==(covariant LessonTimings other) {
+  bool operator ==(covariant final LessonTimings other) {
     if (identical(this, other)){
       return true;
     }
 
     return other.number == number &&
-        other.start == start &&
-        other.end == end &&
-        other.saturdayStart == saturdayStart &&
-        other.saturdayEnd == saturdayEnd;
+      other.start == start &&
+      other.end == end &&
+      other.saturdayStart == saturdayStart &&
+      other.saturdayEnd == saturdayEnd;
   }
 
   @override
@@ -57,7 +56,7 @@ class LessonTimings {
         saturdayEnd.hashCode;
   }
 
-  factory LessonTimings.fromMap(Map<String, dynamic> map) {
+  factory LessonTimings.fromMap(final Map<String, dynamic> map) {
     return LessonTimings(
       number: map['number'] as int,
       start: formatTimeToDateTime(map['start'] as String),
@@ -69,6 +68,6 @@ class LessonTimings {
     );
   }
 
-  factory LessonTimings.fromJson(String source) =>
+  factory LessonTimings.fromJson(final String source) =>
       LessonTimings.fromMap(json.decode(source) as Map<String, dynamic>);
 }

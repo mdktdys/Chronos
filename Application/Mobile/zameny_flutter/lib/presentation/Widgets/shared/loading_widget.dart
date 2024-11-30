@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+
 import 'package:shimmer/shimmer.dart';
 
 class LoadingWidget extends StatelessWidget {
@@ -6,7 +7,7 @@ class LoadingWidget extends StatelessWidget {
     super.key,
   });
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Container(
       margin: const EdgeInsets.only(),
       child: Shimmer.fromColors(
@@ -27,7 +28,7 @@ class LoadingWidget extends StatelessWidget {
             Column(
                 mainAxisSize: MainAxisSize.min,
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: List.generate(6, (index) {
+                children: List.generate(6, (final index) {
                   return Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
@@ -48,7 +49,7 @@ class LoadingWidget extends StatelessWidget {
                         mainAxisSize: MainAxisSize.min,
                         children: List.generate(
                             3,
-                            (index) => Container(
+                            (final index) => Container(
                                   margin: const EdgeInsets.only(bottom: 20),
                                   height: 116,
                                   width: double.infinity,

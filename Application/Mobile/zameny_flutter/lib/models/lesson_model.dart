@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 class Lesson {
@@ -32,7 +31,7 @@ class Lesson {
     };
   }
 
-  factory Lesson.fromMap(Map<String, dynamic> map) {
+  factory Lesson.fromMap(final Map<String, dynamic> map) {
     return Lesson(
       id: map['id'] as int,
       number: map['number'] as int,
@@ -46,17 +45,17 @@ class Lesson {
 
   String toJson() => json.encode(toMap());
 
-  factory Lesson.fromJson(String source) =>
+  factory Lesson.fromJson(final String source) =>
       Lesson.fromMap(json.decode(source) as Map<String, dynamic>);
 
   Lesson copyWith({
-    int? id,
-    int? number,
-    int? group,
-    DateTime? date,
-    int? course,
-    int? teacher,
-    int? cabinet,
+    final int? id,
+    final int? number,
+    final int? group,
+    final DateTime? date,
+    final int? course,
+    final int? teacher,
+    final int? cabinet,
   }) {
     return Lesson(
       id: id ?? this.id,

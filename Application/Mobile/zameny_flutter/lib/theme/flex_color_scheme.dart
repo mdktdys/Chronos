@@ -1,9 +1,9 @@
-import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter/material.dart';
+
+import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 
 final List<(FlexScheme scheme,FlexSchemeData color )> themes = [
   (FlexScheme.amber,FlexColor.amber),
@@ -38,7 +38,7 @@ final List<(FlexScheme scheme,FlexSchemeData color )> themes = [
   (FlexScheme.sakura,FlexColor.sakura),
 ];
 
-final lightThemeProvider = ChangeNotifierProvider<ThemeSettings>((ref) {
+final lightThemeProvider = ChangeNotifierProvider<ThemeSettings>((final ref) {
   return ThemeSettings(ref);
 });
 
@@ -71,7 +71,7 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   // Установка режима темы: тёмный - 1, светлый - 2, системный - 3
-  void setThemeMode(int index) {
+  void setThemeMode(final int index) {
     themeModeIndex = index;
     switch (index) {
       case 1:
@@ -90,7 +90,6 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   void _updateTheme() {
-    // Определяем текущий системный режим (светлый или тёмный)
     final brightness = WidgetsBinding.instance.window.platformBrightness;
     final bool isSystemDarkMode = brightness == Brightness.dark;
 
@@ -99,25 +98,24 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
         theme = FlexThemeData.dark(
           useMaterial3: true,
           scheme: scheme,
-        );
+        ).applyCustomTextTheme();
         break;
       case ThemeMode.light:
         theme = FlexThemeData.light(
           useMaterial3: true,
           scheme: scheme,
-        );
+        ).applyCustomTextTheme();
         break;
       case ThemeMode.system:
-        // Устанавливаем тему в зависимости от системного режима
         theme = isSystemDarkMode
             ? FlexThemeData.dark(
                 useMaterial3: true,
                 scheme: scheme,
-              )
+              ).applyCustomTextTheme()
             : FlexThemeData.light(
                 useMaterial3: true,
                 scheme: scheme,
-              );
+              ).applyCustomTextTheme();
         break;
       default:
     }
@@ -125,7 +123,7 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   // Обновление цветовой схемы
-  void setScheme(FlexSchemeData newScheme, FlexScheme flexScheme) {
+  void setScheme(final FlexSchemeData newScheme, final FlexScheme flexScheme) {
     scheme = flexScheme;
     _updateTheme();
     saveSettings();
@@ -149,10 +147,25 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   // Метод для преобразования строки в FlexScheme
-  FlexScheme _getSchemeFromString(String schemeString) {
+  FlexScheme _getSchemeFromString(final String schemeString) {
     return FlexScheme.values.firstWhere(
-      (scheme) => scheme.toString() == schemeString,
+      (final scheme) => scheme.toString() == schemeString,
       orElse: () => FlexScheme.material,
+    );
+  }
+}
+
+extension TextThemeTools on ThemeData{
+  ThemeData applyCustomTextTheme() {
+    return copyWith(
+        textTheme: textTheme.copyWith(
+          displayMedium: TextStyle(
+            color: colorScheme.primary,
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Ubuntu',
+        ),
+      )
     );
   }
 }

@@ -1,9 +1,10 @@
-
 import 'package:flutter/material.dart';
+
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:zameny_flutter/domain/Providers/bloc/export_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
@@ -22,7 +23,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
   ExportBloc exportBloc = ExportBloc();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     final ScheduleProvider provider = context.watch<ScheduleProvider>();
     //bool enabled = provider.searchType == SearchType.group ? true : false;
     return Stack(
@@ -43,25 +44,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                     fontFamily: 'Ubuntu',
                     fontSize: 24,
                     fontWeight: FontWeight.bold,),),
-            // enabled && IS_DEV
-            //     ? Container(
-            //         margin: const EdgeInsets.fromLTRB(10, 10, 10, 0),
-            //         padding: const EdgeInsets.all(8),
-            //         decoration: BoxDecoration(
-            //           borderRadius: BorderRadius.circular(20),
-            //           border: Border.all(
-            //               color: Theme.of(context)
-            //                   .colorScheme
-            //                   .onSurface
-            //                   .withOpacity(0.1)),
-            //         ),
-            //         child: Row(
-            //           children: [
-
-            //           ],
-            //         ),
-            //       )
-            //     : const SizedBox()
           ],
         ),
         provider.searchType != SearchType.cabinet
@@ -81,12 +63,12 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                             Column(mainAxisSize: MainAxisSize.min, children: [
                           BlocBuilder<ExportBloc, ExportState>(
                               bloc: exportBloc,
-                              builder: (context, state) {
+                              builder: (final context, final state) {
                                 return AnimatedSwitcher(
                                   duration: const Duration(milliseconds: 150),
                                   child: Builder(
                                       key: ValueKey<String>(state.toString()),
-                                      builder: (context) {
+                                      builder: (final context) {
                                         if (state is ExportFailed) {
                                           return SizedBox(
                                             height: 30,
@@ -200,7 +182,7 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
   }
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return Barrier(
       visible: widget.visible,
       onClose: widget.onClose,
@@ -237,7 +219,7 @@ class Barrier extends StatelessWidget {
   final bool visible;
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(final BuildContext context) {
     return PortalTarget(
       visible: visible,
       closeDuration: kThemeAnimationDuration,

@@ -1,16 +1,23 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
+
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:o3d/o3d.dart';
+
 import 'package:zameny_flutter/configs/text_styles.dart';
+import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/map/providers/map_provider.dart';
 
 class MapScreen extends ConsumerWidget {
   const MapScreen({super.key});
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final provider = ref.watch(mapProvider); 
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(mapProvider);
+    WidgetsBinding.instance.addPostFrameCallback((final _){
+        ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);
+    });
     return Scaffold(
       body: Stack(
         children: [
@@ -35,7 +42,7 @@ class MapScreen extends ConsumerWidget {
               clipBehavior: Clip.hardEdge,
               child: Column(
                 mainAxisSize: MainAxisSize.min,
-                children: provider.floors.map((floor) {
+                children: provider.floors.map((final floor) {
                   return InkWell(
                     onTap: () => provider.onFloorClicked(floor),
                     borderRadius: BorderRadius.circular(20),
@@ -72,8 +79,9 @@ class MapBody extends ConsumerWidget {
   });
 
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     return O3D.network(
+      debugLogging: true,
       src:url.url,
     );
   }

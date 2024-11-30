@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 class Zamena {
@@ -8,16 +7,17 @@ class Zamena {
   int courseID;
   int lessonTimingsID;
   int cabinetID;
-
   DateTime date;
-  Zamena(
-      {required this.id,
-      required this.groupID,
-      required this.teacherID,
-      required this.courseID,
-      required this.lessonTimingsID,
-      required this.date,
-      required this.cabinetID});
+
+  Zamena({
+    required this.id,
+    required this.groupID,
+    required this.teacherID,
+    required this.courseID,
+    required this.lessonTimingsID,
+    required this.date,
+    required this.cabinetID,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -30,7 +30,7 @@ class Zamena {
     };
   }
 
-  factory Zamena.fromMap(Map<String, dynamic> map) {
+  factory Zamena.fromMap(final Map<String, dynamic> map) {
     return Zamena(
       id: map['id'] as int,
       groupID: map['group'] as int,
@@ -44,6 +44,5 @@ class Zamena {
 
   String toJson() => json.encode(toMap());
 
-  factory Zamena.fromJson(String source) =>
-      Zamena.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Zamena.fromJson(final String source) => Zamena.fromMap(json.decode(source) as Map<String, dynamic>);
 }

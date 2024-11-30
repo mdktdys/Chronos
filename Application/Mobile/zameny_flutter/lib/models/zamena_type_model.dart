@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_turbo_search.dart';
@@ -25,7 +24,7 @@ class ZamenasType {
     };
   }
 
-  factory ZamenasType.fromMap(Map<String, dynamic> map) {
+  factory ZamenasType.fromMap(final Map<String, dynamic> map) {
     return ZamenasType(
       id: map['id'] as int,
       group: map['group'] as int,
@@ -36,7 +35,7 @@ class ZamenasType {
 
   String toJson() => json.encode(toMap());
 
-  factory ZamenasType.fromJson(String source) =>
+  factory ZamenasType.fromJson(final String source) =>
       ZamenasType.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
@@ -56,7 +55,7 @@ class Cabinet extends SearchItem {
     };
   }
 
-  factory Cabinet.fromMap(Map<String, dynamic> map) {
+  factory Cabinet.fromMap(final Map<String, dynamic> map) {
     return Cabinet(
       id: map['id'] as int,
       name: map['name'] as String,
@@ -65,7 +64,7 @@ class Cabinet extends SearchItem {
 
   String toJson() => json.encode(toMap());
 
-  factory Cabinet.fromJson(String source) =>
+  factory Cabinet.fromJson(final String source) =>
       Cabinet.fromMap(json.decode(source) as Map<String, dynamic>);
 }
 
