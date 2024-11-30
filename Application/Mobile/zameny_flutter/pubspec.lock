@@ -374,6 +374,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.5.1"
+  flutter_rustore_update:
+    dependency: "direct main"
+    description:
+      name: flutter_rustore_update
+      sha256: "7f6170554b0a112cc8af5c820c4b421ac640bc0e0ec2d0aa52c5939619921aec"
+      url: "https://pub.dev"
+    source: hosted
+    version: "7.0.0"
   flutter_shaders:
     dependency: transitive
     description:

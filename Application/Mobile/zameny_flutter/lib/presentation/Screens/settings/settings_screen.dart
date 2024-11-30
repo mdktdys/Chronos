@@ -217,17 +217,12 @@ class BaseBlank extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(10),
       decoration: BoxDecoration(
-          color: Theme.of(context)
-              .colorScheme
-              .onSurface
-              .withOpacity(0.1),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
       ),
-      child: Padding(
-        padding: const EdgeInsets.all(10),
-        child: child,
-      ),
+      child: child
     );
   }
 }
@@ -257,12 +252,14 @@ class DevTools extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('Партиклы',style: TextStyle(
-                                                      fontWeight:
-                                                          FontWeight.bold,
-                                                      fontSize: 14,
-                                                      fontFamily: 'Ubuntu',
-                                                    ),),
+              const Text(
+                'Партиклы',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 14,
+                  fontFamily: 'Ubuntu',
+                ),
+              ),
               SizedBox(
                 height: 38,
                 child: FittedBox(
@@ -289,9 +286,9 @@ class DevTools extends ConsumerWidget {
                 height: 38,
                 child: FittedBox(
                   child: Switch(
-                      value: provider.isDev,
-                      onChanged: (final value) =>
-                          provider.switchDev(),),
+                    value: provider.isDev,
+                    onChanged: (final value) => provider.switchDev(),
+                  ),
                 ),
               ),
             ],
