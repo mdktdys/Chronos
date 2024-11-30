@@ -4,8 +4,8 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
 import 'package:provider/provider.dart';
-
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/domain/Providers/in_app_update/in_app_update_provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/app/views/main_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/snowfall.dart';
@@ -16,7 +16,7 @@ class Application extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    // ref.watch(inAppUpdateProvider).checkForUpdate();
+    ref.watch(inAppUpdateProvider).checkForUpdate();
     final Brightness brightness = ref.watch(lightThemeProvider).theme?.brightness == Brightness.dark 
       ? Brightness.light
       : Brightness.dark;

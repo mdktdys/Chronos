@@ -20,30 +20,25 @@ class MainScreen extends StatelessWidget {
   Widget build(final BuildContext context) {
     final MainProvider provider = context.watch<MainProvider>();
     return Scaffold(
-      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
-        child: Center(
-          child: Stack(
-            children: [
-              Center(
-                child: PageView(
-                  onPageChanged: (final value) => provider.pageChanged(value),
-                  physics: provider.pageViewScrollEnabled
-                    ? null
-                    : const NeverScrollableScrollPhysics(),
-                  controller: provider.pageController,
-                  children: const [
-                    TimeTableWrapper(),
-                    ScheduleWrapper(),
-                    ZamenaScreen(),
-                    MapScreen(),
-                    SettingsScreenWrapper(),
-                  ],
-                ),
-              ),
-              const AnimatedBottomBar(),
-          ],),
-        ),
+        child: Stack(
+          children: [
+            PageView(
+              onPageChanged: (final value) => provider.pageChanged(value),
+              physics: provider.pageViewScrollEnabled
+                ? null
+                : const NeverScrollableScrollPhysics(),
+              controller: provider.pageController,
+              children: const [
+                TimeTableWrapper(),
+                ScheduleWrapper(),
+                ZamenaScreen(),
+                MapScreen(),
+                SettingsScreenWrapper(),
+              ],
+            ),
+            const AnimatedBottomBar(),
+        ],),
       ),
     );
   }
