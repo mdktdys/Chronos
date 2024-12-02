@@ -158,14 +158,151 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
 extension TextThemeTools on ThemeData{
   ThemeData applyCustomTextTheme() {
     return copyWith(
-        textTheme: textTheme.copyWith(
-          displayMedium: TextStyle(
-            color: colorScheme.primary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Ubuntu',
-        ),
-      )
+        extensions: [
+          CustomTextStyles(theme: this)
+        ],
+        // textTheme: CustomTextTheme(theme: this)
+        // textTheme: textTheme.copyWith(
+        //   displayMedium: TextStyle(
+        //     color: colorScheme.primary,
+        //     fontSize: 24,
+        //     fontWeight: FontWeight.bold,
+        //     fontFamily: 'Ubuntu',
+        // ),
     );
+  }
+}
+
+
+// class CustomTextTheme extends TextTheme{
+//   final ThemeData theme;
+
+//   CustomTextTheme({required this.theme});
+
+//   late final TextStyle primary60016 = TextStyle(
+//     color: theme.colorScheme.primary,
+//     fontWeight: FontWeight.bold,
+//     fontSize: 24,
+//   );
+// }
+
+class CustomTextStyles extends ThemeExtension<CustomTextStyles> {
+  // final TextStyle primary60016;
+  // final TextStyle secondaryBold24;
+
+  final ThemeData theme;
+
+  CustomTextStyles({required this.theme});
+
+  @override
+  CustomTextStyles copyWith({
+    final ThemeData? theme_,
+  }) {
+    return CustomTextStyles(
+      theme: theme_??theme
+    );
+  }
+
+  @override
+  CustomTextStyles lerp(final ThemeExtension<CustomTextStyles>? other, final double t) {
+    if (other is! CustomTextStyles) {
+      return this;
+    } 
+    return CustomTextStyles(
+      theme: other.theme
+    );
+  }
+
+  late final TextStyle ubuntuInverseSurfaceBold18 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 18,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuInverseSurfaceBold16 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 16,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuInverseSurfaceBold14 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuInverseSurfaceBold20 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 20,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuInverseSurfaceBold24 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 24,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuPrimaryBold24 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 24,
+    color: theme.colorScheme.primary,
+  );
+
+  late final TextStyle ubuntuInverseSurface40014 = TextStyle(
+    fontWeight: FontWeight.w400,
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+    color: theme.colorScheme.inverseSurface,
+  );
+
+  late final TextStyle ubuntuCanvasColorBold14 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+    color: theme.canvasColor,
+  );
+
+  late final TextStyle ubuntuBold14 = const TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+  );
+
+  late final TextStyle ubuntuWhiteBold24 = const TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 24,
+    color: Colors.white,
+  );
+
+  late final TextStyle ubuntuWhite20 = const TextStyle(
+    fontFamily: 'Ubuntu',
+    fontSize: 20,
+    color: Colors.white,
+  );
+
+  late final TextStyle ubuntuPrimaryBold20 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 20,
+    color: theme.colorScheme.primary,
+  );
+
+  late final TextStyle ubuntu12 = const TextStyle(
+    fontFamily: 'Ubuntu',
+    fontSize: 12,
+  );
+}
+
+extension CustomTextStylesExtension on BuildContext {
+  CustomTextStyles get styles {
+    return Theme.of(this).extension<CustomTextStyles>()!;
   }
 }

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-
+import 'package:zameny_flutter/app.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
@@ -12,6 +12,7 @@ import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.d
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class ZamenaScreen extends ConsumerStatefulWidget {
   const ZamenaScreen({super.key});
@@ -399,14 +400,8 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        getDayName(
-                            ref.watch(zamenaProvider).currentDate.weekday,),
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 16,
-                            color:
-                                Theme.of(context).colorScheme.inverseSurface,),
+                        getDayName(ref.watch(zamenaProvider).currentDate.weekday),
+                        style: context.styles.ubuntuInverseSurfaceBold16,
                       ),
                       Text(
                         ref.watch(zamenaProvider).currentDate.formatyyyymmdd(),
@@ -424,30 +419,24 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                   AnimatedSize(
                     curve: Curves.easeOutCubic,
                     duration: const Duration(milliseconds: 150),
-                    child: ref
-                                .watch(zamenaProvider)
-                                .currentDate
-                                .formatyyyymmdd() ==
-                            DateTime.now().formatyyyymmdd()
-                        ? Container(
-                            margin: const EdgeInsets.only(left: 5),
-                            decoration: BoxDecoration(
-                                color: Theme.of(context).colorScheme.primary,
-                                borderRadius: const BorderRadius.all(
-                                    Radius.circular(20),),),
-                            child: Padding(
-                              padding: const EdgeInsets.all(6.0),
-                              child: Text(
-                                'Сегодня',
-                                style: TextStyle(
-                                    color: Theme.of(context).canvasColor,
-                                    fontSize: 14,
-                                    fontFamily: 'Ubuntu',
-                                    fontWeight: FontWeight.bold,),
-                              ),
+                    child: ref.watch(zamenaProvider).currentDate.formatyyyymmdd() == DateTime.now().formatyyyymmdd()
+                      ? Container(
+                          margin: const EdgeInsets.only(left: 5),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).colorScheme.primary,
+                              borderRadius: const BorderRadius.all(
+                              Radius.circular(20),
                             ),
-                          )
-                        : Container(),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
+                              'Сегодня',
+                              style: context.styles.ubuntuCanvasColorBold14,
+                            ),
+                          ),
+                        )
+                      : const SizedBox.shrink(),
                   ),
                 ],
               ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 class SettingsLogoBlock extends StatelessWidget {
   const SettingsLogoBlock({
     super.key,
@@ -34,24 +36,22 @@ class SettingsLogoBlock extends StatelessWidget {
                   Text(
                     'Chronos',
                     textAlign: TextAlign.start,
-                    style: TextStyle(
-                        color: Theme.of(context).colorScheme.inverseSurface,
-                        fontSize: 20,
-                        fontWeight: FontWeight.bold,),
+                    style: context.styles.ubuntuInverseSurfaceBold20,
                   ),
-                  Text('Будьте терпеливы, я все еще пилю ❤️',
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,),),
+                  Text(
+                    'Будьте терпеливы, я все еще пилю ❤️',
+                    style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface))
                 ],
               ),
             ),
             FittedBox(
-                fit: BoxFit.scaleDown,
-                child: Image.asset(
-                  'assets/icon/whale_1f40b.png',
-                  width: 60,
-                  height: 60,
-                ),),
+              fit: BoxFit.scaleDown,
+              child: Image.asset(
+                'assets/icon/whale_1f40b.png',
+                width: 60,
+                height: 60,
+              ),
+            ),
           ],
         ),
       ),

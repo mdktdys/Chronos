@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
@@ -14,15 +12,15 @@ class RiverPodMainProvider extends ChangeNotifier {
   RiverPodMainProvider(this.ref);
 
   bool bottomBarShow = true;
-  ScrollDirection latestDiraction = ScrollDirection.idle;
+  ScrollDirection latestDirection = ScrollDirection.idle;
 
   void updateScrollDirection(final ScrollDirection direction) {
-    log(direction.toString());
-    if (latestDiraction != direction) {
-      latestDiraction = direction; 
-      bottomBarShow = direction == ScrollDirection.forward;
-      log('update send');
-      notifyListeners();
+    if (latestDirection == direction) {
+      return;
     }
+  
+    latestDirection = direction; 
+    bottomBarShow = direction == ScrollDirection.forward;
+    notifyListeners();
   }
 }

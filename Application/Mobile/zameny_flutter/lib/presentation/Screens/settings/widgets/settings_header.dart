@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 class SettingsHeader extends StatelessWidget {
   const SettingsHeader({
     super.key,
@@ -12,12 +14,7 @@ class SettingsHeader extends StatelessWidget {
       children: [
         Text(
           'Настроечки',
-          style: TextStyle(
-            color: Theme.of(context).colorScheme.primary,
-            fontSize: 24,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Ubuntu',
-          ),
+          style: context.styles.ubuntuPrimaryBold24
         ),
       ],
     );

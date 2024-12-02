@@ -4,7 +4,6 @@ import 'package:get_it/get_it.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
@@ -23,8 +22,19 @@ class DayScheduleWidgetTeacher extends StatefulWidget {
   final int day;
   final List<Zamena> dayZamenas;
   final List<Lesson> lessons;
-  const DayScheduleWidgetTeacher(
-      {required this.startDate, required this.currentDay, required this.currentWeek, required this.todayWeek, required this.data, required this.refresh, required this.day, required this.dayZamenas, required this.lessons, super.key,});
+
+  const DayScheduleWidgetTeacher({
+    required this.startDate,
+    required this.currentDay,
+    required this.currentWeek,
+    required this.todayWeek,
+    required this.data,
+    required this.refresh,
+    required this.day,
+    required this.dayZamenas,
+    required this.lessons,
+    super.key,
+  });
 
   @override
   State<DayScheduleWidgetTeacher> createState() =>
@@ -34,7 +44,7 @@ class DayScheduleWidgetTeacher extends StatefulWidget {
 class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
   bool obed = false;
 
-  toggleObed() {
+  void toggleObed() {
     obed = !obed;
     setState(() {});
   }
@@ -203,25 +213,15 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
       ];
     }
     return widget.data.timings.map((final para) {
-      for (final Zamena zam in widget.dayZamenas) {
-        GetIt.I.get<Talker>().debug(
-            'Замены в этот день - ${getCourseById(zam.courseID)!.name} ${getGroupById(zam.groupID)!.name}',);
-      }
-      GetIt.I.get<Talker>().debug('Смотрю на пару - ${para.number}');
       //проверяю есть ли замена затрагивающих этого препода либо группы в которых он ведет по дефолту
       if (widget.dayZamenas
           .any((final element) => element.lessonTimingsID == para.number)) {
-        GetIt.I.get<Talker>().debug('Есть замена в эту пару');
         //если есть любая замена в этот день, неважно дети или препод
         final Zamena zamena = widget.dayZamenas
             .where((final element) => element.lessonTimingsID == para.number)
             .first;
-        GetIt.I.get<Talker>().debug(
-            'Замена ${getCourseById(zamena.courseID)!.name} ${getGroupById(zamena.groupID)!.name}',);
         //если это замена детей и она не  меняет на моего препода
         if (zamena.teacherID != teacherID) {
-          GetIt.I.get<Talker>().debug(
-              'Не тот же препод ${getTeacherById(zamena.teacherID).name}',);
           //пытаюсь поставить дефолтную пару препода
           //проверяю не состоит ли эта пара в полной замене
           if (widget.lessons.any((final element) => element.number == para.number)) {
@@ -231,10 +231,6 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
 
             final course = getCourseById(lesson.course) ??
                 Course(id: -1, name: 'err3', color: '50,0,0,1');
-
-            GetIt.I
-                .get<Talker>()
-                .debug('Есть в дефолтном расписании ${course.name}');
 
             //проверяю не состоит ли группа дефолтного расписания в полной замене
 
@@ -257,8 +253,6 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
                 element.group == lesson.group,);
 
             if (!hasFullZamena && !hasOtherZamena && !hasLiquidation) {
-              GetIt.I.get<Talker>().debug(
-                  'Ставлю ${course.name} нет полной замены нет другой замены нет в ликвидцаиях',);
               return CourseTile(
                 short: false,
                 type: SearchType.teacher,
@@ -320,7 +314,6 @@ class _DayScheduleWidgetTeacherState extends State<DayScheduleWidgetTeacher> {
           final List<Lesson> lessons = widget.lessons
               .where((final element) => element.number == para.number)
               .toList();
-          GetIt.I.get<Talker>().warning(lessons.length.toString());
 
           final List<TileData> tiles = [];
 
