@@ -37,21 +37,24 @@ class TimeTableScreen extends ConsumerWidget {
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),
-        child: ConstrainedBox(
-          constraints: const BoxConstraints(maxWidth: 1200),
-          child: const Padding(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            child: Column(
-              children: [
-                SizedBox(height: 10),
-                TimeTableHeader(),
-                SizedBox(height: 10),
-                CurrentTimingTimer(),
-                TimeOptions(),
-                SizedBox(height: 10),
-                TimeTable(),
-                SizedBox(height: 100),
-              ],
+        child: Align(
+          alignment: Alignment.topCenter,
+          child: ConstrainedBox(
+            constraints: const BoxConstraints(maxWidth: 1200),
+            child: const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: Column(
+                children: [
+                  SizedBox(height: 10),
+                  TimeTableHeader(),
+                  SizedBox(height: 10),
+                  CurrentTimingTimer(),
+                  TimeOptions(),
+                  SizedBox(height: 10),
+                  TimeTable(),
+                  SizedBox(height: 100),
+                ],
+              ),
             ),
           ),
         ),
