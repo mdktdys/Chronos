@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 class TimeTableHeader extends StatelessWidget {
   const TimeTableHeader({super.key});
 
@@ -11,7 +13,7 @@ class TimeTableHeader extends StatelessWidget {
         Text(
           'Звонки',
           textAlign: TextAlign.center,
-          style: Theme.of(context).textTheme.displayMedium,
+          style: context.styles.ubuntuPrimaryBold24,
         ),
       ],
     );

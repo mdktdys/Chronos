@@ -6,10 +6,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:provider/provider.dart';
 import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
-import 'package:zameny_flutter/presentation/Screens/map/view/map_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/settings_screen.dart';
-import 'package:zameny_flutter/presentation/Screens/timetable_screen.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/exams_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/main_screen/bottom_navigation_item.dart';
 
@@ -33,7 +32,7 @@ class MainScreen extends StatelessWidget {
                 TimeTableWrapper(),
                 ScheduleWrapper(),
                 ZamenaScreen(),
-                MapScreen(),
+                // MapScreen(),
                 SettingsScreenWrapper(),
               ],
             ),
@@ -152,11 +151,11 @@ List<BottomBarModel> model = [
       icon: 'assets/icon/zamena.svg',
       title: 'Замены',
       enabled: true,),
-  BottomBarModel(
-      activeicon: 'assets/icon/vuesax_linear_location.svg',
-      icon: 'assets/icon/vuesax_linear_location.svg',
-      title: 'Карта',
-      enabled: true,),
+  // BottomBarModel(
+  //     activeicon: 'assets/icon/vuesax_linear_location.svg',
+  //     icon: 'assets/icon/vuesax_linear_location.svg',
+  //     title: 'Карта',
+  //     enabled: true,),
   BottomBarModel(
       activeicon: 'assets/icon/setting-2.svg',
       icon: 'assets/icon/vuesax_linear_setting-2.svg',

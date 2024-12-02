@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/sharing/sharing.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
@@ -14,6 +13,7 @@ import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
 import 'package:zameny_flutter/secrets.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
@@ -106,11 +106,7 @@ class ScheduleProvider extends ChangeNotifier {
                 children: [
                   Text(
                     'Расписание $searchName',
-                    style: const TextStyle(
-                        fontFamily: 'Ubuntu',
-                        color: Colors.white,
-                        fontWeight: FontWeight.bold,
-                        fontSize: 24,),
+                    style: context.styles.ubuntuWhiteBold24
                   ),
                   const SizedBox(
                     height: 5,
@@ -126,10 +122,7 @@ class ScheduleProvider extends ChangeNotifier {
                               children: [
                                 Text(
                                   'Понедельник ${navigationDate.day}.${navigationDate.month}',
-                                  style: const TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -154,12 +147,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Четверг',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -186,12 +176,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Вторник',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -216,12 +203,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Пятница',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -248,12 +232,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Среда',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,
@@ -278,12 +259,9 @@ class ScheduleProvider extends ChangeNotifier {
                           Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                const Text(
+                                Text(
                                   'Суббота',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.white,
-                                      fontSize: 20,),
+                                  style: context.styles.ubuntuWhite20,
                                 ),
                                 Column(
                                     mainAxisSize: MainAxisSize.min,

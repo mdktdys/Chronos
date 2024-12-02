@@ -32,12 +32,7 @@ class SettingsCategory extends StatelessWidget {
       children: [
         Text(
           category,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Ubuntu',
-            fontSize: 20,
-            color: Theme.of(context).colorScheme.primary
-          ),
+          style: context.styles.ubuntuPrimaryBold20,
         ),
         const SizedBox(height: 10),
         ...tiles
@@ -82,22 +77,14 @@ class SettingsCategoryTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: const TextStyle(
-                        fontWeight:
-                            FontWeight.bold,
-                        fontSize: 14,
-                        fontFamily: 'Ubuntu',
-                      ),
+                      style: context.styles.ubuntuBold14,
                     ),
                     const SizedBox(
                       height: 5,
                     ),
                     Text(
                       description,
-                      style: const TextStyle(
-                        fontSize: 12,
-                        fontFamily: 'Ubuntu',
-                      ),
+                      style: context.styles.ubuntu12,
                     ),
                   ],
                 ),
@@ -239,12 +226,7 @@ class DevTools extends ConsumerWidget {
           alignment: Alignment.centerLeft,
           child: Text(
             'Прочее',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Ubuntu',
-                fontSize: 20,
-                color:
-                    Theme.of(context).colorScheme.primary,),
+            style: context.styles.ubuntuPrimaryBold20,
           ),
         ),
         const SizedBox(height: 5),
@@ -252,21 +234,17 @@ class DevTools extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
+              Text(
                 'Партиклы',
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontSize: 14,
-                  fontFamily: 'Ubuntu',
-                ),
+                style: context.styles.ubuntuBold14,
               ),
               SizedBox(
                 height: 38,
                 child: FittedBox(
                   child: Switch(
                       value: provider.falling,
-                      onChanged: (final value) =>
-                          provider.switchFalling(),),
+                      onChanged: (final value) => provider.switchFalling(),
+                    ),
                 ),
               ),
             ],
@@ -277,11 +255,10 @@ class DevTools extends ConsumerWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text('DEV',style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 14,
-                fontFamily: 'Ubuntu',
-              ),),
+              Text(
+                'DEV',
+                style: context.styles.ubuntuBold14,
+              ),
               SizedBox(
                 height: 38,
                 child: FittedBox(
@@ -317,12 +294,7 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
           alignment: Alignment.centerLeft,
           child: Text(
             'Тема',
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Ubuntu',
-                fontSize: 20,
-                color:
-                    Theme.of(context).colorScheme.primary,),
+            style: context.styles.ubuntuPrimaryBold20,
           ),
         ),
         const SizedBox(height: 5),
