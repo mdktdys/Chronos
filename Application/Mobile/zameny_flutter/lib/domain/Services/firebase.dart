@@ -1,4 +1,7 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 
 final norificationProvider = ChangeNotifierProvider<NotificationManager>((final ref) {
@@ -24,15 +26,15 @@ class NotificationManager extends ChangeNotifier {
   NotificationManager() {
     fcmToken = GetIt.I.get<SharedPreferences>().getString('FCM');
 
-    if (fcmToken != null) {
-      FirebaseApi().initPushNotifications();
-    }
+    // if (fcmToken != null) {
+    //   FirebaseApi().initPushNotifications(context);
+    // }
 
     notifyListeners();
   }
 
-  Future<void> enableNotifications() async {
-    fcmToken = await FirebaseApi().initNotifications();
+  Future<void> enableNotifications(final BuildContext context) async {
+    fcmToken = await FirebaseApi().initNotifications(context);
     notifyListeners();
   }
 }
@@ -40,7 +42,7 @@ class NotificationManager extends ChangeNotifier {
 class FirebaseApi {
   late final _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<String?> initNotifications() async {
+  Future<String?> initNotifications(final BuildContext context) async {
     await _firebaseMessaging.requestPermission(provisional: kIsWeb ? false : true);
     final fCMToken = await _firebaseMessaging.getToken(
         vapidKey:
@@ -55,7 +57,7 @@ class FirebaseApi {
           {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1},);
       GetIt.I.get<Talker>().info('Subscribed to global channel');
 
-      initPushNotifications();
+      initPushNotifications(context);
 
       return fCMToken;
     } catch (e) {
@@ -64,22 +66,28 @@ class FirebaseApi {
     } 
   }
 
-  Future<void> handleMessage(final RemoteMessage? message) async {
+  Future<void> handleMessage(final RemoteMessage? message, final BuildContext context) async {
+    log("message");
+    
     GetIt.I.get<Talker>().debug(message);
     await Future.delayed(Duration.zero);
     if (message == null){
       return;
     }
 
+    await showDialog(context: context, builder: (final context) {
+      return Text(message.data.toString());
+    }, );
+
     GetIt.I.get<Talker>().debug(message.data.toString());
   }
 
-  Future initPushNotifications() async {
+  Future initPushNotifications(final BuildContext context) async {
     if (!kIsWeb) {
       await FirebaseMessaging.instance.subscribeToTopic('main');
-      FirebaseMessaging.onBackgroundMessage(handleMessage);
-      FirebaseMessaging.instance.getInitialMessage().then(handleMessage);
-      FirebaseMessaging.onMessageOpenedApp.listen(handleMessage);
+      FirebaseMessaging.onBackgroundMessage((final message) => handleMessage(message,context));
+      FirebaseMessaging.instance.getInitialMessage().then((final message) => handleMessage(message,context));
+      FirebaseMessaging.onMessageOpenedApp.listen((final message) => handleMessage(message,context));
     } else {}
   }
 }

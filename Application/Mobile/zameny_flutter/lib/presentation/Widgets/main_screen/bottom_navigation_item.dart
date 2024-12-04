@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:zameny_flutter/domain/Providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 
-class BottomNavigationItem extends StatelessWidget {
+class BottomNavigationItem extends ConsumerWidget {
   final int index;
   final Function onTap;
   final String icon;
@@ -23,8 +23,8 @@ class BottomNavigationItem extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
-    final MainProvider provider = context.watch<MainProvider>();
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(mainProvider);
     return Material(
       color: Colors.transparent,
       child: InkWell(

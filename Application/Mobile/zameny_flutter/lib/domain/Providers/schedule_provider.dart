@@ -15,13 +15,16 @@ import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_cours
 import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
+final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final ref) {
+  return ScheduleProvider();
+});
+
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;
   int teacherIDSeek = -1;
   int cabinetIDSeek = -1;
   SearchType searchType = SearchType.group;
-  DateTime navigationDate =
-      DateTime.now();
+  DateTime navigationDate = DateTime.now(); 
   DateTime septemberFirst = DateTime(2024, 9, 2); // 1 сентября
   int currentWeek = 1;
   int todayWeek = 1;
@@ -32,22 +35,17 @@ class ScheduleProvider extends ChangeNotifier {
     cabinetIDSeek = GetIt.I.get<Data>().seekCabinet ?? -1;
     searchType = GetIt.I.get<Data>().latestSearch;
 
-    currentWeek = ((navigationDate.difference(septemberFirst).inDays +
-                septemberFirst.weekday) ~/
-            7) +
-        1;
+    currentWeek = ((navigationDate.difference(septemberFirst).inDays + septemberFirst.weekday) ~/ 7) + 1;
     todayWeek = currentWeek;
 
     navigationDate = navigationDate.weekday == 7
-        ? navigationDate.add(const Duration(days: 7))
-        : navigationDate;
+      ? navigationDate.add(const Duration(days: 7))
+      : navigationDate;
     currentWeek = navigationDate.weekday == 7 ? currentWeek + 1 : currentWeek;
   }
 
   int getWeekNumber(final DateTime date) {
-    return ((date.difference(septemberFirst).inDays + septemberFirst.weekday) ~/
-            7) +
-        1;
+    return ((date.difference(septemberFirst).inDays + septemberFirst.weekday) ~/ 7) + 1;
   }
 
   Future<void> exportSchedulePNG(final BuildContext context, final WidgetRef ref) async {
@@ -409,10 +407,6 @@ class ScheduleProvider extends ChangeNotifier {
     if (dat.latestSearch == SearchType.group) {
       groupSelected(dat.seekGroup!, context);
     }
-    notifyListeners();
-  }
-
-  void notify() {
     notifyListeners();
   }
 

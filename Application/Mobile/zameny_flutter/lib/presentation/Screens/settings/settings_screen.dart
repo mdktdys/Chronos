@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zameny_flutter/domain/Providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/widgets/settings_header.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/widgets/settings_logo_block.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/widgets/settings_version_block.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class SettingsCategory extends StatelessWidget {
@@ -79,9 +76,7 @@ class SettingsCategoryTile extends StatelessWidget {
                       title,
                       style: context.styles.ubuntuBold14,
                     ),
-                    const SizedBox(
-                      height: 5,
-                    ),
+                    const SizedBox(height: 5),
                     Text(
                       description,
                       style: context.styles.ubuntu12,
@@ -114,17 +109,9 @@ class SettingsScreenWrapper extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((final _){
-      ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);
-    });
-    return const SettingsScreen().animate(
-      effects: [
-        const FadeEffect(
-          duration: Duration(milliseconds: 100),
-          end: 1.0,
-          begin: 0.0
-        ),
-      ]
+    return const ScreenAppearBuilder(
+      showNavbar: true,
+      child: SettingsScreen(),
     );
   }
 }
@@ -219,7 +206,7 @@ class DevTools extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final MainProvider provider =  context.watch<MainProvider>();
+    final provider = ref.watch(mainProvider);
     return Column(
       children: [
         Align(

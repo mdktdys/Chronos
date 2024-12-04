@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 class WarningDevBlank extends StatelessWidget {
-  const WarningDevBlank({
-    super.key,
-  });
+  const WarningDevBlank({super.key,});
 
   @override
   Widget build(final BuildContext context) {
@@ -18,19 +18,14 @@ class WarningDevBlank extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text('⚠️ Фича в деве',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  fontFamily: 'Ubuntu',
-                  fontSize: 16,
-                  color: Theme.of(context).colorScheme.inverseSurface,),),
-          const SizedBox(
-            height: 5,
+          Text(
+            '⚠️ Фича в деве',
+            style: context.styles.ubuntuInverseSurfaceBold16,
           ),
-          const Text(
+          const SizedBox(height: 5),
+          Text(
             'Данные могут быть некорректны, для уверенности свертесь с файлом замен',
-            style: TextStyle(
-                fontFamily: 'Ubuntu', fontWeight: FontWeight.w400,),
+            style: context.styles.ubuntu400,
           ),
         ],
       ),

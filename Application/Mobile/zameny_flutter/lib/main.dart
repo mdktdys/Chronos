@@ -1,9 +1,10 @@
+
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_portal/flutter_portal.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart' hide Provider;
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
@@ -30,7 +31,7 @@ void main() async {
   // context.callMethod('rremoveSplashFromWeb');
   FlutterNativeSplash.remove();
 
-  //await FirebaseApi().initNotifications();
+  // await FirebaseApi().initNotifications();
 
   final Talker talker = TalkerFlutter.init();
   GetIt.I.registerSingleton<Talker>(talker);
@@ -40,7 +41,7 @@ void main() async {
 
   final Data data = Data.fromShared();
   GetIt.I.registerSingleton<Data>(data); 
-  
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
   runApp(

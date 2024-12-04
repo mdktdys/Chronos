@@ -67,4 +67,3 @@ class Cabinet extends SearchItem {
   factory Cabinet.fromJson(final String source) =>
       Cabinet.fromMap(json.decode(source) as Map<String, dynamic>);
 }
-

@@ -1,8 +1,8 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class TimeOptions extends ConsumerWidget {
   const TimeOptions({super.key});
@@ -20,16 +20,14 @@ class TimeOptions extends ConsumerWidget {
               height: 38,
               child: FittedBox(
                 child: Switch(
-                    value: provider.saturday,
-                    onChanged: (final value) => provider.toggleSaturday(),),
+                  value: provider.saturday,
+                  onChanged: (final value) => provider.toggleSaturday(),),
               ),
             ),
-            const SizedBox(
-              width: 8,
-            ),
-            const Text(
+            const SizedBox(width: 8),
+            Text(
               'Суббота',
-              style: TextStyle(fontFamily: 'Ubuntu'),
+              style: context.styles.ubuntu,
             ),
           ],
         ),
@@ -38,28 +36,26 @@ class TimeOptions extends ConsumerWidget {
           switchOutCurve: Easing.legacy,
           switchInCurve: Easing.legacy,
           child: provider.saturday
-              ? const SizedBox()
-              : Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    const Text(
-                      'Без обеда',
-                      style: TextStyle(fontFamily: 'Ubuntu',),
-                    ),
-                    const SizedBox(
-                      width: 8,
-                    ),
-                    SizedBox(
-                      height: 38,
-                      child: FittedBox(
-                        child: Switch(
-                            value: provider.obed,
-                            onChanged: (final value) =>
-                                provider.toggleObed(),),
+            ? const SizedBox()
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Без обеда',
+                    style: context.styles.ubuntu,
+                  ),
+                  const SizedBox(width: 8),
+                  SizedBox(
+                    height: 38,
+                    child: FittedBox(
+                      child: Switch(
+                        value: provider.obed,
+                        onChanged: (final value) => provider.toggleObed(),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
+          ),
         ),
       ],
     );

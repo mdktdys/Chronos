@@ -3,7 +3,7 @@ import 'dart:typed_data';
 import 'package:share_plus/share_plus.dart';
 import 'package:uuid/uuid.dart';
 
-share({required final String text, required final List<Uint8List> files}) async {
+Future<void> share({required final String text, required final List<Uint8List> files}) async {
   final result = await Share.shareXFiles(
       files
           .map((final e) => XFile.fromData(e, name: '$text ${UuidValue.fromByteList(e)}',mimeType: 'image/png'))

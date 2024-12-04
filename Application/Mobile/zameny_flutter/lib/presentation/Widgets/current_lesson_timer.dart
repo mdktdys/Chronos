@@ -4,6 +4,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
@@ -14,18 +15,17 @@ import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
-class CurrentLessonTimer extends StatefulWidget {
-  const CurrentLessonTimer({
-    super.key,
-  });
+class CurrentLessonTimer extends ConsumerStatefulWidget {
+  const CurrentLessonTimer({super.key});
 
   @override
-  State<CurrentLessonTimer> createState() => _CurrentLessonTimerState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _CurrentLessonTimerState();
 }
 
-class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
-  late Timer ticker;
+class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
+late Timer ticker;
   bool obed = false;
 
   @override
@@ -102,7 +102,8 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
   Widget build(final BuildContext context) {
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final ScheduleProvider provider = ref.watch(scheduleProvider);
+
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
@@ -118,13 +119,11 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                   child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Text('Сейчас идет ${timing.number} пара',
-                            textAlign: TextAlign.start,
-                            style: TextStyle(
-                                color: Theme.of(context).primaryColorLight,
-                                fontSize: 24,
-                                fontWeight: FontWeight.bold,
-                                fontFamily: 'Ubuntu',),),
+                        Text(
+                          'Сейчас идет ${timing.number} пара',
+                          textAlign: TextAlign.start,
+                          style: context.styles.ubuntuPrimaryBold24,
+                        ),
                         const SizedBox(height: 5),
                         AnimatedSize(
                           alignment: Alignment.topCenter,
@@ -210,49 +209,42 @@ class _CurrentLessonTimerState extends State<CurrentLessonTimer> {
                         Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              Text('Осталось: ${getElapsedTime(obed)}',
-                                  textAlign: TextAlign.start,
-                                  style: TextStyle(
-                                      color: obed
-                                          ? Colors.green
-                                          : Theme.of(context)
-                                              .primaryColorLight
-                                              .withOpacity(0.7),
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Ubuntu',),),
+                              Text(
+                                'Осталось: ${getElapsedTime(obed)}',
+                                textAlign: TextAlign.start,
+                                style: context.styles.ubuntuBold18.copyWith(
+                                  color: obed
+                                    ? Colors.green
+                                    : Theme.of(context).primaryColorLight.withOpacity(0.7)
+                                ),
+                              ),
                               needObedSwitch && !isSaturday
-                                  ? Row(
-                                      children: [
-                                        SizedBox(
-                                          height: 38,
-                                          child: FittedBox(
-                                            child: Switch(
-                                                value: obed,
-                                                onChanged: (final value) =>
-                                                    toggleObed(),),
-                                          ),
+                                ? Row(
+                                    children: [
+                                      SizedBox(
+                                        height: 38,
+                                        child: FittedBox(
+                                          child: Switch(
+                                            value: obed,
+                                            onChanged: (final bool value) => toggleObed()),
                                         ),
-                                        const SizedBox(
-                                          width: 8,
-                                        ),
-                                        Text(
-                                          'Без обеда',
-                                          style: TextStyle(
-                                              fontFamily: 'Ubuntu',
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withOpacity(0.6),),
-                                        ),
-                                      ],
-                                    )
-                                  : const SizedBox(),
-                            ],),
-                      ],),
+                                      ),
+                                      const SizedBox(width: 8),
+                                      Text(
+                                        'Без обеда',
+                                        style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),
+                                      ),
+                                    ],
+                                  )
+                                : const SizedBox.shrink(),
+                            ],
+                          ),
+                      ],
+                    ),
                 ),
               );
-            },),
+            },
+          ),
     );
   }
 }

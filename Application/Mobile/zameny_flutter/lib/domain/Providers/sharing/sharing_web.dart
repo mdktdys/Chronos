@@ -4,7 +4,7 @@ import 'dart:typed_data';
 
 import 'package:web/web.dart';
 
-share({required final String text, required final List<Uint8List> files}) async {
+Future<void> share({required final String text, required final List<Uint8List> files}) async {
   try {
     files.asMap().forEach((final index, final bytes) {
       final String base64Image = base64Encode(bytes);

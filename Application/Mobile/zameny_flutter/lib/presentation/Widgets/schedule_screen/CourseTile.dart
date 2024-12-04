@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-import 'package:provider/provider.dart';
-
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Screens/schedule_screen.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 enum SearchType { teacher, group, cabinet }
 
@@ -21,14 +21,15 @@ class TileData {
   final String? swapedFromTitle;
   final bool? liqidated;
 
-  TileData(
-      {required this.title,
-      required this.number,
-      required this.subTitle,
-      required this.location,
-      required this.color,
-      required this.zamenaAlert, this.swapedFromTitle,
-      this.liqidated,});
+  TileData({
+    required this.title,
+    required this.number,
+    required this.subTitle,
+    required this.location,
+    required this.color,
+    required this.zamenaAlert, this.swapedFromTitle,
+    this.liqidated
+  });
 }
 
 class MixedCourseTile extends StatefulWidget {
@@ -62,92 +63,83 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
         child: Column(
           children: [
             widget.tilesData.length > 1
-                ? Builder(builder: (final context) {
-                    final data = widget.tilesData.first;
-                    return Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Row(
-                        children: [
-                          Container(
-                            width: 45,
-                            decoration: BoxDecoration(
-                                shape: BoxShape.circle, color: getColorForText(data.title),),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                data.number.toString(),
-                                textAlign: TextAlign.center,
-                                style: const TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.white,
-                                    fontSize: 14,),
-                              ),
+              ? Builder(builder: (final context) {
+                  final data = widget.tilesData.first;
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Row(
+                      children: [
+                        Container(
+                          width: 45,
+                          decoration: BoxDecoration(
+                              shape: BoxShape.circle, color: getColorForText(data.title),),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Text(
+                              data.number.toString(),
+                              textAlign: TextAlign.center,
+                              style: context.styles.ubuntuWhiteBold14,
                             ),
                           ),
-                          const SizedBox(
-                            width: 10,
-                          ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                  widget.saturdayTime
+                        ),
+                        const SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              widget.saturdayTime
+                                  ? getTimeFromDateTime(
+                                      getLessonTimings(data.number)
+                                          .saturdayStart,)
+                                  : widget.obedTime
                                       ? getTimeFromDateTime(
                                           getLessonTimings(data.number)
-                                              .saturdayStart,)
-                                      : widget.obedTime
-                                          ? getTimeFromDateTime(
-                                              getLessonTimings(data.number)
-                                                  .obedStart,)
-                                          : getTimeFromDateTime(
-                                              getLessonTimings(data.number)
-                                                  .start,),
-                                  style: TextStyle(
-                                      fontSize: 22,
-                                      color: widget.obedTime
-                                          ? (data.number > 3
-                                              ? Colors.green
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface)
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold,),),
-                              Text(
-                                  widget.saturdayTime
-                                      ? getTimeFromDateTime(
+                                              .obedStart,)
+                                      : getTimeFromDateTime(
                                           getLessonTimings(data.number)
-                                              .saturdayEnd,)
-                                      : widget.obedTime
-                                          ? getTimeFromDateTime(
-                                              getLessonTimings(data.number)
-                                                  .obedEnd,)
-                                          : getTimeFromDateTime(
-                                              getLessonTimings(data.number)
-                                                  .end,),
-                                  style: TextStyle(
-                                      color: widget.obedTime
-                                          ? (data.number > 3
-                                              ? Colors.green.withAlpha(200)
-                                              : Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withAlpha(200))
-                                          : Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface
-                                              .withAlpha(200),
-                                      fontSize: 18,
-                                      fontFamily: 'Ubuntu',),),
-                            ],
-                          ),
-                        ],
-                      ),
-                    );
-                  },)
-                : const SizedBox(),
+                                              .start,),
+                              style: context.styles.ubuntuBold22.copyWith(
+                                  color: widget.obedTime
+                                      ? (data.number > 3
+                                        ? Colors.green
+                                        : Theme.of(context).colorScheme.inverseSurface)
+                                      : Theme.of(context).colorScheme.inverseSurface,
+                                  ),
+                                ),
+                            Text(
+                                widget.saturdayTime
+                                    ? getTimeFromDateTime(
+                                        getLessonTimings(data.number)
+                                            .saturdayEnd,)
+                                    : widget.obedTime
+                                        ? getTimeFromDateTime(
+                                            getLessonTimings(data.number)
+                                                .obedEnd,)
+                                        : getTimeFromDateTime(
+                                            getLessonTimings(data.number)
+                                                .end,),
+                                style: context.styles.ubuntu18.copyWith(
+                                    color: widget.obedTime
+                                        ? (data.number > 3
+                                            ? Colors.green.withAlpha(200)
+                                            : Theme.of(context)
+                                                .colorScheme
+                                                .inverseSurface
+                                                .withAlpha(200))
+                                        : Theme.of(context)
+                                            .colorScheme
+                                            .inverseSurface
+                                            .withAlpha(200),
+                                      ),),
+                          ],
+                        ),
+                      ],
+                    ),
+                  );
+                },)
+              : const SizedBox.shrink(),
             Column(
                 children: List.generate(widget.tilesData.length, (final index) {
               final TileData data = widget.tilesData[index];
@@ -206,10 +198,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                         child: Text(
                                           data.number.toString(),
                                           textAlign: TextAlign.center,
-                                          style: const TextStyle(
-                                              fontWeight: FontWeight.bold,
-                                              color: Colors.white,
-                                              fontSize: 14,),
+                                          style: context.styles.ubuntuWhiteBold14,
                                         ),
                                       ),
                                     ),
@@ -227,19 +216,14 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                     getLessonTimings(
                                                             data.number,)
                                                         .start,),
-                                        style: TextStyle(
-                                            fontSize: 16,
-                                            color: widget.obedTime
-                                                ? (data.number > 3
-                                                    ? Colors.green
-                                                    : Theme.of(context)
-                                                        .colorScheme
-                                                        .inverseSurface)
-                                                : Theme.of(context)
-                                                    .colorScheme
-                                                    .inverseSurface,
-                                            fontFamily: 'Ubuntu',
-                                            fontWeight: FontWeight.bold,),),
+                                        style: context.styles.ubuntuInverseSurfaceBold16.copyWith(
+                                          color: widget.obedTime
+                                            ? (data.number > 3
+                                                ? Colors.green
+                                                : Theme.of(context).colorScheme.inverseSurface)
+                                            : Theme.of(context).colorScheme.inverseSurface
+                                            ),
+                                          ),
                                     Text(
                                         widget.saturdayTime
                                             ? getTimeFromDateTime(
@@ -254,7 +238,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                     getLessonTimings(
                                                             data.number,)
                                                         .end,),
-                                        style: TextStyle(
+                                        style: context.styles.ubuntu.copyWith(
                                             color: widget.obedTime
                                                 ? (data.number > 3
                                                     ? Colors.green
@@ -266,40 +250,33 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                                 : Theme.of(context)
                                                     .colorScheme
                                                     .inverseSurface
-                                                    .withAlpha(200),
-                                            fontFamily: 'Ubuntu',),),
+                                                    .withAlpha(200)),),
                                   ],
                                 )
-                              : const SizedBox(),
-                          const SizedBox(
-                            width: 10,
-                          ),
+                              : const SizedBox.shrink(),
+                          const SizedBox(width: 10),
                           Flexible(
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(data.title,
-                                    overflow: TextOverflow.fade,
-                                    style: TextStyle(
-                                        color: Theme.of(context)
-                                            .colorScheme
-                                            .inverseSurface
-                                            .withOpacity(data.liqidated == true
-                                                ? 0.3
-                                                : 1.0,),
-                                        fontFamily: 'Ubuntu',
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,),),
+                                Text(
+                                  data.title,
+                                  overflow: TextOverflow.fade,
+                                  style: context.styles.ubuntuPrimaryBold20.copyWith(
+                                    color: Theme.of(context).colorScheme.inverseSurface.withOpacity(data.liqidated == true
+                                      ? 0.3
+                                      : 1.0
+                                    ),
+                                  ),
+                                ),
                                 Text(
                                   data.subTitle,
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface
-                                          .withOpacity(data.liqidated == true
-                                              ? 0.3
-                                              : 1.0,),
-                                      fontFamily: 'Ubuntu',),
+                                  style: context.styles.ubuntu.copyWith(
+                                    color: Theme.of(context).colorScheme.inverseSurface.withOpacity(data.liqidated == true
+                                      ? 0.3
+                                      : 1.0,
+                                    ),
+                                  ),
                                 ),
                                 Row(
                                   children: [
@@ -319,36 +296,28 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                         : const SizedBox(),
                                     Text(
                                       data.location,
-                                      style: TextStyle(
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .inverseSurface
-                                              .withOpacity(
-                                                  data.liqidated == true
-                                                      ? 0.3
-                                                      : 1.0,),
-                                          fontFamily: 'Ubuntu',),
+                                      style: context.styles.ubuntu.copyWith(
+                                        color: Theme.of(context).colorScheme.inverseSurface.withOpacity(
+                                          data.liqidated == true
+                                            ? 0.3
+                                            : 1.0,
+                                        ),
+                                      ),
                                     ),
                                   ],
                                 ),
-                                (data.swapedFromTitle != null &&
-                                        data.swapedFromTitle != '')
-                                    ? Padding(
-                                        padding:
-                                            const EdgeInsets.only(top: 8.0),
-                                        child: Text(
-                                          'Замена с: ${data.swapedFromTitle}',
-                                          style: TextStyle(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withOpacity(0.3),
-                                              fontFamily: 'Ubuntu',
-                                              fontWeight: FontWeight.bold,
-                                              fontSize: 12,),
-                                        ),
+                                (data.swapedFromTitle != null && data.swapedFromTitle != '')
+                                  ? Padding(
+                                      padding:
+                                          const EdgeInsets.only(top: 8.0),
+                                      child: Text(
+                                        'Замена с: ${data.swapedFromTitle}',
+                                        style: context.styles.ubuntuBold12.copyWith(
+                                          color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3),
                                       )
-                                    : const SizedBox(),
+                                      ),
+                                    )
+                                  : const SizedBox.shrink (),
                               ],
                             ),
                           ),
@@ -360,22 +329,18 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                         ? Container(
                             alignment: Alignment.topRight,
                             padding: const EdgeInsets.all(8),
-                            child: const Row(
+                            child: Row(
                               mainAxisAlignment: MainAxisAlignment.end,
                               children: [
                                 Text(
                                   'Замена',
-                                  style: TextStyle(
-                                      fontFamily: 'Ubuntu',
-                                      color: Colors.red,
-                                      shadows: [
-                                        Shadow(color: Colors.red, blurRadius: 4),
-                                      ],),
+                                  style: context.styles.ubuntu.copyWith(
+                                    shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
+                                    color: Colors.red,
+                                  ),
                                 ),
-                                SizedBox(
-                                  width: 5,
-                                ),
-                                Icon(
+                                const SizedBox(width: 5),
+                                const Icon(
                                   Icons.warning_amber_rounded,
                                   color: Colors.red,
                                   shadows: [
@@ -394,7 +359,7 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
   }
 }
 
-class CourseTile extends StatelessWidget {
+class CourseTile extends ConsumerWidget {
   final Lesson lesson;
   final Lesson? swaped;
   final SearchType type;
@@ -417,7 +382,7 @@ class CourseTile extends StatelessWidget {
   final Course course;
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final bool isEmpty =
         course.name.toLowerCase() == 'нет' || course.name.trim() == '';
     return Container(
@@ -472,22 +437,16 @@ class CourseTile extends StatelessWidget {
                           children: [
                             GestureDetector(
                               onTap: () {
-                                Navigator.of(
-                                        myGlobals.scaffoldKey.currentContext!,)
-                                    .pop();
-                                myGlobals.scaffoldKey.currentContext!
-                                    .read<ScheduleProvider>()
-                                    .groupSelected(
-                                      lesson.group,
-                                      myGlobals.scaffoldKey.currentContext!,
-                                    );
+                                Navigator.of(myGlobals.scaffoldKey.currentContext!).pop();
+                                ref.read(scheduleProvider).groupSelected(lesson.group, myGlobals.scaffoldKey.currentContext!);
                               },
                               child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  child: Text(
-                                      'Показать расписание для группы\n${getGroupById(lesson.group)!.name}',
-                                      style: const TextStyle(
-                                          fontFamily: 'Ubuntu',),),),
+                                padding: const EdgeInsets.all(8),
+                                child: Text(
+                                  'Показать расписание для группы\n${getGroupById(lesson.group)!.name}',
+                                  style: context.styles.ubuntu
+                                ),
+                              ),
                             ),
                           ],
                         ),
@@ -532,10 +491,7 @@ class CourseTile extends StatelessWidget {
                           child: Text(
                             lesson.number.toString(),
                             textAlign: TextAlign.center,
-                            style: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                color: Colors.white,
-                                fontSize: 14,),
+                            style: context.styles.ubuntuWhiteBold14,
                           ),
                         ),
                       ),
@@ -548,20 +504,17 @@ class CourseTile extends StatelessWidget {
                                       getLessonTimings(lesson.number).obedStart,)
                                   : getTimeFromDateTime(
                                       getLessonTimings(lesson.number).start,),
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: obedTime
-                                  ? (lesson.number > 3
-                                      ? Colors.green
-                                      : Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface)
-                                  : Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,
-                              fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.bold,),),
-                      Text(
+                          style: context.styles.ubuntuBold16.copyWith(
+                            color: obedTime
+                              ? (lesson.number > 3
+                                  ? Colors.green
+                                  : Theme.of(context).colorScheme.inverseSurface)
+                              : Theme.of(context)
+                                  .colorScheme
+                                  .inverseSurface
+                                )
+                              ),
+                        Text(
                           saturdayTime
                               ? getTimeFromDateTime(
                                   getLessonTimings(lesson.number).saturdayEnd,)
@@ -570,7 +523,7 @@ class CourseTile extends StatelessWidget {
                                       getLessonTimings(lesson.number).obedEnd,)
                                   : getTimeFromDateTime(
                                       getLessonTimings(lesson.number).end,),
-                          style: TextStyle(
+                          style: context.styles.ubuntu.copyWith(
                               color: obedTime
                                   ? (lesson.number > 3
                                       ? Colors.green.withAlpha(200)
@@ -581,8 +534,7 @@ class CourseTile extends StatelessWidget {
                                   : Theme.of(context)
                                       .colorScheme
                                       .inverseSurface
-                                      .withAlpha(200),
-                              fontFamily: 'Ubuntu',),),
+                                      .withAlpha(200),),),
                     ],
                   ),
                   const SizedBox(
@@ -593,18 +545,10 @@ class CourseTile extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                            (getCourseById(lesson.course) ??
-                                    Course(
-                                        id: -1, name: 'err', color: '0,0,0,0',))
-                                .name,
-                            overflow: TextOverflow.fade,
-                            style: TextStyle(
-                                color: Theme.of(context)
-                                    .colorScheme
-                                    .inverseSurface,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,),),
+                          (getCourseById(lesson.course) ?? Course(id: -1, name: 'err', color: '0,0,0,0',)).name,
+                          overflow: TextOverflow.fade,
+                          style: context.styles.ubuntuPrimaryBold20.copyWith(color: Theme.of(context).colorScheme.inverseSurface),
+                        ),
                         Text(
                           type == SearchType.teacher
                               ? getGroupById(lesson.group)!.name
@@ -613,10 +557,7 @@ class CourseTile extends StatelessWidget {
                                   : type == SearchType.cabinet
                                       ? ''
                                       : '',
-                          style: TextStyle(
-                              color:
-                                  Theme.of(context).colorScheme.inverseSurface,
-                              fontFamily: 'Ubuntu',),
+                          style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface,),
                         ),
                         Row(
                           children: [
@@ -639,30 +580,19 @@ class CourseTile extends StatelessWidget {
                                       : type == SearchType.cabinet
                                           ? getGroupById(lesson.group)!.name
                                           : '',
-                              style: TextStyle(
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,
-                                  fontFamily: 'Ubuntu',),
+                              style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface,),
                             ),
                           ],
                         ),
                         swaped != null
-                            ? Padding(
-                                padding: const EdgeInsets.only(top: 8.0),
-                                child: Text(
-                                  'Замена с: ${getCourseById(swaped!.course)!.name}',
-                                  style: TextStyle(
-                                      color: Theme.of(context)
-                                          .colorScheme
-                                          .inverseSurface
-                                          .withOpacity(0.3),
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: 12,),
-                                ),
-                              )
-                            : const SizedBox(),
+                          ? Padding(
+                              padding: const EdgeInsets.only(top: 8.0),
+                              child: Text(
+                                'Замена с: ${getCourseById(swaped!.course)!.name}',
+                                style: context.styles.ubuntuBold12.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.3)),
+                              ),
+                            )
+                          : const SizedBox.shrink(),
                       ],
                     ),
                   ),
@@ -674,25 +604,23 @@ class CourseTile extends StatelessWidget {
               top: 0,
               right: 0,
               child: (swaped != null || needZamenaAlert)
-                  ? const Padding(
-                      padding: EdgeInsets.all(8),
+                  ? Padding(
+                      padding: const EdgeInsets.all(8),
                       child: Align(
                         alignment: Alignment.topRight,
                         child: Row(
                           children: [
                             Text(
                               'Замена',
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  color: Colors.red,
-                                  shadows: [
-                                    Shadow(color: Colors.red, blurRadius: 4),
-                                  ],),
+                              style: context.styles.ubuntu.copyWith(
+                                color: Colors.red,
+                                shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
+                              ),
                             ),
-                            SizedBox(
+                            const SizedBox(
                               width: 5,
                             ),
-                            Icon(
+                            const Icon(
                               Icons.warning_amber_rounded,
                               color: Colors.red,
                               shadows: [

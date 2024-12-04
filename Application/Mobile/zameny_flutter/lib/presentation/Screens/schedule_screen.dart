@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart' hide ChangeNotifierProvider;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/domain/Providers/search_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_default_widget.dart';
@@ -32,20 +31,13 @@ class MyGlobals {
   GlobalKey get scaffoldKey => mainKey;
 }
 
-class ScheduleWrapper extends StatelessWidget {
+class ScheduleWrapper extends ConsumerWidget {
   const ScheduleWrapper({super.key});
 
   @override
-  Widget build(final BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(create: (final context) => SearchProvider()),
-        ChangeNotifierProvider(create: (final context) => ScheduleProvider()),
-      ],
-      builder: (final context, final child) {
-        context.read<ScheduleBloc>().add(LoadInitial(context: context));
-        return const ScheduleScreen();
-      },
+  Widget build(final BuildContext context, final WidgetRef ref) {
+      context.read<ScheduleBloc>().add(LoadInitial(context: context,ref: ref));
+      return const ScreenAppearBuilder(child: ScheduleScreen()
     );
   }
 }
@@ -100,49 +92,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const DateHeader(),
                 const CurrentLessonTimer(),
                 const SizedBox(height: 10),
-                BlocBuilder<ScheduleBloc, ScheduleState>(
-                    builder: (final context, final state) {
-                  return AnimatedSwitcher(
-                      reverseDuration: const Duration(milliseconds: 300),
-                      duration: const Duration(milliseconds: 300),
-                      child: Builder(
-                        key: ValueKey<ScheduleState>(state),
-                        builder: (final BuildContext context) {
-                          if (state is ScheduleLoaded) {
-                            return Column(
-                              children: [
-                                const SearchResultHeader(),
-                                LessonList(
-                                  scrollController: scrollController,
-                                  zamenas: state.zamenas,
-                                  lessons: state.lessons,
-                                  refresh: refresh,
-                                ),
-                              ],
-                            );
-                          } else if (state is ScheduleFailedLoading) {
-                            return FailedLoadWidget(
-                              error: state.error,
-                            );
-                          } else if (state is ScheduleLoading) {
-                            return const LoadingWidget();
-                          } else if (state is ScheduleInitial) {
-                            return SizedBox(
-                              height: 500,
-                              child: Center(
-                                child: Text(
-                                  'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
-                                  textAlign: TextAlign.center,
-                                  style: context.styles.ubuntuInverseSurfaceBold24,
-                                ),
-                              ),
-                            );
-                          } else {
-                            return const SizedBox();
-                          }
-                        },
-                      ),);
-                },),
+                LessonView(
+                  scrollController: scrollController,
+                  refresh: (){},
+                ),
                 const SizedBox(
                   height: 100,
                 ),
@@ -151,6 +104,64 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
           ),
         ),
       );
+  }
+}
+
+class LessonView extends StatelessWidget {
+  final ScrollController scrollController;
+  final Function refresh;
+
+  const LessonView({
+    required this.scrollController,
+    required this.refresh,
+    super.key,
+  });
+
+  @override
+  Widget build(final BuildContext context) {
+    return BlocBuilder<ScheduleBloc, ScheduleState>(
+      builder: (final context, final state) {
+      return AnimatedSwitcher(
+        reverseDuration: const Duration(milliseconds: 300),
+        duration: const Duration(milliseconds: 300),
+        child: Builder(
+          key: ValueKey<ScheduleState>(state),
+          builder: (final BuildContext context) {
+            if (state is ScheduleLoaded) {
+              return Column(
+                children: [
+                  const SearchResultHeader(),
+                  LessonList(
+                    scrollController: scrollController,
+                    zamenas: state.zamenas,
+                    lessons: state.lessons,
+                    refresh: refresh,
+                  ),
+                ],
+              );
+            } else if (state is ScheduleFailedLoading) {
+              return FailedLoadWidget(
+                error: state.error,
+              );
+            } else if (state is ScheduleLoading) {
+              return const LoadingWidget();
+            } else if (state is ScheduleInitial) {
+              return SizedBox(
+                height: 500,
+                child: Center(
+                  child: Text(
+                    'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
+                    textAlign: TextAlign.center,
+                    style: context.styles.ubuntuInverseSurfaceBold24,
+                  ),
+                ),
+              );
+            } else {
+              return const SizedBox();
+            }
+          },
+        ),);
+    },);
   }
 }
 
@@ -175,7 +186,7 @@ class ShimmerContainer extends StatelessWidget {
   }
 }
 
-class LessonList extends StatelessWidget {
+class LessonList extends ConsumerWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
   final Function refresh;
@@ -190,11 +201,10 @@ class LessonList extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(scheduleProvider);
     final currentDay = DateTime.now().weekday;
-    final startDate = provider.navigationDate
-        .subtract(Duration(days: provider.navigationDate.weekday - 1));
+    final startDate = provider.navigationDate.subtract(Duration(days: provider.navigationDate.weekday - 1));
 
     return ScheduleList(
       context: context,
@@ -209,7 +219,7 @@ class LessonList extends StatelessWidget {
   }
 }
 
-class ScheduleList extends StatelessWidget {
+class ScheduleList extends ConsumerWidget {
   final BuildContext context;
   final Function refresh;
   final List<Lesson> weekLessons;
@@ -222,8 +232,8 @@ class ScheduleList extends StatelessWidget {
       {required this.context, required this.refresh, required this.weekLessons, required this.zamenas, required this.startDate, required this.currentDay, required this.todayWeek, required this.currentWeek, super.key,});
 
   @override
-  Widget build(final BuildContext context) {
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final ScheduleProvider provider = ref.watch(scheduleProvider);
     final SearchType searchType = provider.searchType;
     final isDesktop = Adaptive.isDesktop(context);
     final List<Widget> days = List.generate(6, (final iter) {

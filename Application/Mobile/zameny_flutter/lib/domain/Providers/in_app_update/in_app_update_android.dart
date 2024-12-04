@@ -14,7 +14,7 @@ class Updater extends ChangeNotifier {
     RustoreUpdateClient.info().then((final UpdateInfo info) {
       GetIt.I.get<Talker>().info(info);
 
-      final listener = RustoreUpdateClient.listener((final value) {
+      RustoreUpdateClient.listener((final value) {
          GetIt.I.get<Talker>().info("listener installStatus ${value.installStatus}");
          GetIt.I.get<Talker>().info("listener bytesDownloaded ${value.bytesDownloaded}");
          GetIt.I.get<Talker>().info("listener totalBytesToDownload ${value.totalBytesToDownload}");

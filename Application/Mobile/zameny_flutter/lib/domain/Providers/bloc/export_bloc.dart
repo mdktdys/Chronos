@@ -2,8 +2,6 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
-import 'package:provider/provider.dart' as pr;
-
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 
 class ExportBloc extends Bloc<ExportEvent, ExportState> {
@@ -11,8 +9,7 @@ class ExportBloc extends Bloc<ExportEvent, ExportState> {
     on<ExportStart>((final event, final emit) async {
       try {
         emit(ExportLoading());
-        await pr.Provider.of<ScheduleProvider>(event.context,listen: false)
-            .exportSchedulePNG(event.context, event.ref);
+        await event.ref.read(scheduleProvider).exportSchedulePNG(event.context, event.ref);
         emit(ExportReady());
       } catch (error) {
         emit(ExportFailed(reason: error.toString()));

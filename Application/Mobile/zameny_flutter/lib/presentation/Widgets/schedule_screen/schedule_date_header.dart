@@ -1,21 +1,40 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart' as river;
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 import 'package:talker_flutter/talker_flutter.dart';
-
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
-class DateHeader extends StatelessWidget {
-  const DateHeader({super.key});
+class BaseContainer extends StatelessWidget {
+  final Widget child;
+
+  const BaseContainer({
+    required this.child,
+    super.key
+  });
 
   @override
   Widget build(final BuildContext context) {
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: Theme.of(context).colorScheme.onSurface.withOpacity(0.1),
+      ),
+      child: child,
+    );
+  }
+}
+
+class DateHeader extends ConsumerWidget {
+  const DateHeader({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(scheduleProvider);
     return Container(
         width: double.infinity,
         decoration: BoxDecoration(
@@ -125,11 +144,7 @@ class DateHeaderDatePicker extends StatelessWidget {
                 'Осенний семестр 2024/2025',
                 maxLines: 2,
                 textAlign: TextAlign.center,
-                style: TextStyle(
-                    fontWeight: FontWeight.bold,
-                    fontFamily: 'Ubuntu',
-                    fontSize: 16,
-                    color: Theme.of(ctx).colorScheme.inverseSurface,),
+                style: ctx.styles.ubuntuInverseSurfaceBold16,
               ),
               const SizedBox(height: 5),
               SizedBox(
@@ -139,37 +154,27 @@ class DateHeaderDatePicker extends StatelessWidget {
                   children: [
                     Text(
                       'Неделя ${provider.currentWeek}',
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Ubuntu',
-                          fontSize: 16,
-                          color: Theme.of(ctx).colorScheme.inverseSurface,),
+                      style: ctx.styles.ubuntuInverseSurfaceBold16,
                     ),
-                    const SizedBox(
-                      width: 5,
-                    ),
+                    const SizedBox(width: 5),
                     AnimatedSize(
                       curve: Curves.easeOutCubic,
                       duration: const Duration(milliseconds: 150),
                       child: provider.todayWeek == provider.currentWeek
-                          ? Container(
-                              decoration: BoxDecoration(
-                                  color: Theme.of(ctx).colorScheme.primary,
-                                  borderRadius: const BorderRadius.all(
-                                      Radius.circular(20),),),
-                              child: Padding(
-                                padding: const EdgeInsets.all(6.0),
-                                child: Text(
-                                  'Текущий',
-                                  style: TextStyle(
-                                      color: Theme.of(ctx).canvasColor,
-                                      fontSize: 14,
-                                      fontFamily: 'Ubuntu',
-                                      fontWeight: FontWeight.bold,),
-                                ),
-                              ),
-                            )
-                          : Container(),
+                        ? Container(
+                          decoration: BoxDecoration(
+                            color: Theme.of(ctx).colorScheme.primary,
+                            borderRadius: const BorderRadius.all(Radius.circular(20))
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(6.0),
+                            child: Text(
+                              'Текущий',
+                              style: ctx.styles.ubuntuCanvasColorBold14,
+                            ),
+                          ),
+                          )
+                        : const SizedBox.shrink(),
                     ),
                   ],
                 ),
@@ -182,12 +187,12 @@ class DateHeaderDatePicker extends StatelessWidget {
   }
 }
 
-class MonthCell extends river.ConsumerWidget {
+class MonthCell extends ConsumerWidget {
   const MonthCell({required this.details, super.key});
   final sf.DateRangePickerCellDetails details;
 
   @override
-  Widget build(final BuildContext context, final river.WidgetRef ref) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final bool chillday = details.date.weekday == 7 ||
         GetIt.I
             .get<Data>()
@@ -217,10 +222,9 @@ class MonthCell extends river.ConsumerWidget {
             ? Container(
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(8),
-                    border: Border.all(
-                        color: Theme.of(context).colorScheme.primary,),),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary,),),
               )
-            : const SizedBox(),
+            : const SizedBox.shrink(),
       ],
     );
   }

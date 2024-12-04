@@ -9,15 +9,22 @@ import 'package:zameny_flutter/presentation/Screens/timetable/widgets/timetable.
 import 'package:zameny_flutter/presentation/Widgets/timetable_screen/current_timing_timer.dart';
 import 'package:zameny_flutter/presentation/Widgets/timetable_screen/time_table_header.dart';
 
-class TimeTableWrapper extends ConsumerWidget {
-  const TimeTableWrapper({super.key});
+class ScreenAppearBuilder extends ConsumerWidget {
+  final bool showNavbar;
+  final Widget child;
+  
+  const ScreenAppearBuilder({
+    required this.child,
+    this.showNavbar = false,
+    super.key,
+  });
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    WidgetsBinding.instance.addPostFrameCallback((final _){
-      ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);
-    });
-    return const TimeTableScreen().animate(
+    if(showNavbar) {
+      WidgetsBinding.instance.addPostFrameCallback((final _){ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);});
+    }
+    return child.animate(
       effects: [
         const FadeEffect(
           duration: Duration(milliseconds: 100),
@@ -29,11 +36,23 @@ class TimeTableWrapper extends ConsumerWidget {
   }
 }
 
-class TimeTableScreen extends ConsumerWidget {
+class TimeTableScreenWrapper extends StatelessWidget {
+  const TimeTableScreenWrapper({super.key});
+
+  @override
+  Widget build(final BuildContext context) {
+    return const ScreenAppearBuilder(
+      showNavbar: true,
+      child: TimeTableScreen(),
+    );
+  }
+}
+
+class TimeTableScreen extends StatelessWidget {
   const TimeTableScreen({super.key});
 
   @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
+  Widget build(final BuildContext context) {
     return Scaffold(
       body: SingleChildScrollView(
         physics: const BouncingScrollPhysics(),

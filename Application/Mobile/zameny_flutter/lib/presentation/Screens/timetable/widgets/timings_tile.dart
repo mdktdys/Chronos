@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/domain/Providers/time_table_provider.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class TimingTile extends ConsumerWidget {
   final LessonTimings timing;
@@ -31,46 +32,40 @@ class TimingTile extends ConsumerWidget {
               width: 45,
               decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .primary,
-                      width: 2,),),
+                  border: Border.all(color: Theme.of(context).colorScheme.primary,
+                  width: 2,
+                ),
+              ),
               child: Center(
                 child: Text(
                   timing.number.toString(),
-                  style: const TextStyle(
-                      fontFamily: 'Ubuntu',
-                      // color: Colors.white,
-                      fontSize: 20,),
+                  style: context.styles.ubuntu20,
                 ),
               ),
             ),
             const SizedBox(width: 20),
             AnimatedSwitcher(
-              duration:
-                  const Duration(milliseconds: 150),
+              duration: const Duration(milliseconds: 150),
               switchInCurve: Easing.legacy,
               child: Text(
                   key: ValueKey(provider.saturday ? UniqueKey() :getTimeFromDateTime(provider.obed ? timing.obedStart : timing.start)),
                   '${getTimeFromDateTime( provider.saturday ? timing.saturdayStart : provider.obed ? timing.obedStart : timing.start)}-${getTimeFromDateTime(provider.saturday ? timing.saturdayEnd :provider.obed ? timing.obedEnd : timing.end)}',
-                  style: TextStyle(
-                      fontFamily: 'Ubuntu',
-                      color: provider.saturday ? null : provider.obed
-                          ? getTimeFromDateTime(provider
-                                          .obed
-                                      ? timing.obedStart
-                                      : timing.start,) !=
-                                  getTimeFromDateTime(
-                                      !provider.obed
-                                          ? timing
-                                              .obedStart
-                                          : timing
-                                              .start,)
-                              ? Colors.green
-                              : null
-                          : null,
-                      fontSize: 20,),),
+                  style: context.styles.ubuntu20.copyWith(color: provider.saturday
+                    ? null
+                    : provider.obed
+                      ? getTimeFromDateTime(provider.obed
+                        ? timing.obedStart
+                        : timing.start
+                      ) !=
+                        getTimeFromDateTime(!provider.obed
+                          ? timing.obedStart
+                          : timing.start,
+                        )
+                          ? Colors.green
+                          : null
+                      : null,
+                ),
+              ),
             ),
           ],
         ),

@@ -5,11 +5,11 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animated_list_plus/animated_list_plus.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 List<SearchItem> filterItems(final List<dynamic> data) {
   final items = data[0] as List<SearchItem>;
@@ -18,17 +18,15 @@ List<SearchItem> filterItems(final List<dynamic> data) {
   return items.where((final element) => element.getFiltername().toLowerCase().contains(query.toLowerCase())).toList();
 }
 
-class ScheduleTurboSearch extends StatefulWidget {
-  const ScheduleTurboSearch({
-    super.key,
-  });
+class ScheduleTurboSearch extends ConsumerStatefulWidget {
+  const ScheduleTurboSearch({super.key});
 
   @override
-  State<ScheduleTurboSearch> createState() => _ScheduleTurboSearchState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ScheduleTurboSearchState();
 }
 
-class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
-  late final SearchController searchController;
+class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
+late final SearchController searchController;
   List<SearchItem> filteredItems = [];
   Timer? _debounceTimer;
 
@@ -39,7 +37,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
   }
 
   void _onTextChanged(final String value) {
-    final SearchProvider providerSearch = context.read<SearchProvider>();
+    final providerSearch = ref.read(searchProvider);
     if (value.isEmpty) {
       setState(() {
         filteredItems.clear();
@@ -65,7 +63,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
 
   @override
   Widget build(final BuildContext context) {
-    final ScheduleProvider providerSchedule = context.watch<ScheduleProvider>();
+    final providerSchedule = ref.watch(scheduleProvider);
     return Column(
       mainAxisSize: MainAxisSize.min,
       children: [
@@ -73,7 +71,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
           controller: searchController,
           onSubmitted: (final _) => FocusScope.of(context).unfocus(),
           onChanged: (final value) => _onTextChanged(value),
-          style: TextStyle(color: Theme.of(context).colorScheme.inverseSurface),
+          style: context.styles.ubuntuInverseSurface,
           placeholder: 'Я ищу...',
         ),
         AnimatedSize(
@@ -127,10 +125,7 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
                     },
                     title: Text(
                       item.getFiltername(),
-                      style: TextStyle(
-                        fontFamily: 'Ubuntu',
-                        color: Theme.of(context).colorScheme.onSurface.withOpacity(1.0),
-                      ),
+                      style: context.styles.ubuntuOnSurface,
                     ),
                   ),
                 ),
@@ -142,7 +137,6 @@ class _ScheduleTurboSearchState extends State<ScheduleTurboSearch> {
     );
   }
 }
-
 abstract class SearchItem {
   int s = 0;
   String getFiltername() {
