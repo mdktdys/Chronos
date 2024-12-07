@@ -2,17 +2,30 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
-import 'package:zameny_flutter/app.dart';
+
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
+
+class ZamenaScreenWrapper extends StatelessWidget {
+  const ZamenaScreenWrapper({super.key});
+
+  @override
+  Widget build(final BuildContext context) {
+    return const ScreenAppearBuilder(
+      child: ZamenaScreen()
+    );
+  }
+}
 
 class ZamenaScreen extends ConsumerStatefulWidget {
   const ZamenaScreen({super.key});
@@ -53,11 +66,7 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
               children: [
                 Text(
                   'Замены',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColorLight,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu',),
+                  style: context.styles.ubuntuPrimaryBold24,
                 ),
               ],
             ),
@@ -159,7 +168,7 @@ class ZamenaFileBlock extends ConsumerWidget {
                 ),
               ),
               Column(
-                  children: data.$3.map((final link) {
+                children: data.$3.map((final ZamenaFileLink link) {
                 return Row(
                   children: [
                     Expanded(
@@ -170,40 +179,20 @@ class ZamenaFileBlock extends ConsumerWidget {
                           children: [
                             Text(
                               'Ссылка:',
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 12,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,),
+                              style: context.styles.ubuntuInverseSurface12,
                             ),
-                            Text(link.link,
-                                style: TextStyle(
-                                    fontFamily: 'Ubuntu',
-                                    fontSize: 10,
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface
-                                        .withOpacity(0.6),),),
-                                        const SizedBox(height: 5,),
+                            Text(
+                              link.link,
+                              style: context.styles.ubuntuInverseSurface10.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6))
+                            ),
+                            const SizedBox(height: 5),
                             Text(
                               'Время добавления в систему:',
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 12,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface,),
+                              style: context.styles.ubuntuInverseSurface12,
                             ),
                             Text(
                               '${link.created}',
-                              style: TextStyle(
-                                  fontFamily: 'Ubuntu',
-                                  fontSize: 10,
-                                  color: Theme.of(context)
-                                      .colorScheme
-                                      .inverseSurface
-                                      .withOpacity(0.6),),
+                              style: context.styles.ubuntuInverseSurface10.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6))
                             ),
                           ],
                         ),
@@ -248,11 +237,10 @@ class ZamenaViewTeacher extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(teacher.name,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,
-                          fontSize: 20,
-                          fontFamily: 'Ubuntu',),),
+                  Text(
+                    teacher.name,
+                    style: context.styles.ubuntuInverseSurface20,
+                  )
                 ],
               ),
               Column(
@@ -298,11 +286,10 @@ class ZamenaViewGroup extends StatelessWidget {
     final date = DateTime.now();
     return Column(
         mainAxisSize: MainAxisSize.min,
-        children: groupsList.map((final group) {
-          final groupZamenas =
-              zamenas.where((final zamena) => zamena.groupID == group);
-          final isFullZamena =
-              fullZamenas.any((final fullzamena) => fullzamena.group == group);
+        children: groupsList.map((final int group) {
+          final groupZamenas = zamenas.where((final Zamena zamena) => zamena.groupID == group);
+          final isFullZamena = fullZamenas.any((final fullzamena) => fullzamena.group == group);
+
           return Column(
             mainAxisSize: MainAxisSize.min,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -310,23 +297,16 @@ class ZamenaViewGroup extends StatelessWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(getGroupById(group)!.name,
-                      style: TextStyle(
-                          color: Theme.of(context).colorScheme.inverseSurface,
-                          fontSize: 20,
-                          fontFamily: 'Ubuntu',),),
+                  Text(
+                    getGroupById(group)!.name,
+                    style: context.styles.ubuntuInverseSurface20
+                  ),
                   isFullZamena
-                      ? Text(
-                          'Полная замена',
-                          style: TextStyle(
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withOpacity(0.7),
-                              fontSize: 18,
-                              fontFamily: 'Ubuntu',),
-                        )
-                      : const SizedBox(),
+                    ? Text(
+                        'Полная замена',
+                        style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7))
+                      )
+                    : const SizedBox.shrink(),
                 ],
               ),
               Column(
@@ -340,13 +320,14 @@ class ZamenaViewGroup extends StatelessWidget {
                     clickabe: false,
                       course: course,
                       lesson: Lesson(
-                          id: course.id,
-                          number: zamena.lessonTimingsID,
-                          group: group,
-                          date: date,
-                          course: course.id,
-                          teacher: teacher.id,
-                          cabinet: cabinet.id,),
+                        id: course.id,
+                        number: zamena.lessonTimingsID,
+                        group: group,
+                        date: date,
+                        course: course.id,
+                        teacher: teacher.id,
+                        cabinet: cabinet.id,
+                      ),
                       swaped: null,
                       type: SearchType.group,
                       refresh: () {},
@@ -405,14 +386,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                       ),
                       Text(
                         ref.watch(zamenaProvider).currentDate.formatyyyymmdd(),
-                        style: TextStyle(
-                            fontWeight: FontWeight.w400,
-                            fontFamily: 'Ubuntu',
-                            fontSize: 12,
-                            color: Theme.of(context)
-                                .colorScheme
-                                .inverseSurface
-                                .withOpacity(0.5),),
+                        style: context.styles.ubuntu40012.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.5))
                       ),
                     ],
                   ),

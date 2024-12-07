@@ -1,18 +1,19 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-import 'package:provider/provider.dart';
 
 import 'package:zameny_flutter/domain/Providers/adaptive.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/dayschedule_header.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
-class DayScheduleWidget extends StatefulWidget {
+class DayScheduleWidget extends ConsumerStatefulWidget {
   final DateTime startDate;
   final int currentDay;
   final int currentWeek;
@@ -23,15 +24,25 @@ class DayScheduleWidget extends StatefulWidget {
   final List<Zamena> dayZamenas;
   final List<Lesson> lessons;
 
-  const DayScheduleWidget(
-      {required this.day, required this.refresh, required this.dayZamenas, required this.lessons, required this.startDate, required this.currentDay, required this.currentWeek, required this.todayWeek, required this.data, super.key,});
+  const DayScheduleWidget({
+    required this.day,
+    required this.refresh,
+    required this.dayZamenas,
+    required this.lessons,
+    required this.startDate,
+    required this.currentDay,
+    required this.currentWeek,
+    required this.todayWeek,
+    required this.data,
+    super.key,
+  });
 
   @override
-  State<DayScheduleWidget> createState() => _DayScheduleWidgetState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _DayScheduleWidgetState();
 }
 
-class _DayScheduleWidgetState extends State<DayScheduleWidget> {
-  bool obed = false;
+class _DayScheduleWidgetState extends ConsumerState<DayScheduleWidget> {
+bool obed = false;
 
   void toggleObed() {
     obed = !obed;
@@ -56,8 +67,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
             widget.todayWeek == widget.currentWeek
         ? true
         : false);
-    //ScheduleProvider provider = context.watch<ScheduleProvider>();
-    final SearchType type = context.watch<ScheduleProvider>().searchType;
+    final SearchType type = ref.watch(scheduleProvider).searchType;
     bool fullSwap = false;
     final int searchDay = widget.startDate.add(Duration(days: widget.day - 1)).day;
     final int searchMonth =
@@ -126,12 +136,7 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
                         ),
                         Text(
                           'Без обеда',
-                          style: TextStyle(
-                              fontFamily: 'Ubuntu',
-                              color: Theme.of(context)
-                                  .colorScheme
-                                  .inverseSurface
-                                  .withOpacity(0.6),),
+                          style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.6)),
                         ),
                       ],
                     )
@@ -139,32 +144,30 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
             ],
           ),
           courseTiles.isNotEmpty
-              ? Column(children: courseTiles)
-              : Container(
-                  height: 110,
-                  margin: const EdgeInsets.only(top: 20, bottom: 10),
-                  width: double.infinity,
-                  decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: Colors.transparent,
-                      border: DashedBorder.all(
-                          dashLength: 10,
-                          color: Theme.of(context)
-                              .colorScheme
-                              .primary
-                              .withOpacity(0.6),),),
-                  child: Padding(
-                      padding: const EdgeInsets.all(20),
-                      child: Center(
-                          child: Text(
+            ? Column(children: courseTiles)
+            : Container(
+                height: 110,
+                margin: const EdgeInsets.only(top: 20, bottom: 10),
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: Colors.transparent,
+                    border: DashedBorder.all(
+                        dashLength: 10,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.6),),),
+                child: Padding(
+                    padding: const EdgeInsets.all(20),
+                    child: Center(
+                      child: Text(
                         'Нет пар',
-                        style: TextStyle(
-                            fontFamily: 'Ubuntu',
-                            fontSize: 20,
-                            color:
-                                Theme.of(context).colorScheme.inversePrimary,),
-                      ),),),
+                        style: context.styles.ubuntuInversePrimary20,
+                    ),
+                  ),
                 ),
+              ),
         ],
       ),
     );
@@ -194,13 +197,11 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
           child: Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
-                  child: Text(
-                holiday.name,
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.inversePrimary,),
-              ),),),
+                child: Text(
+                  holiday.name,
+                  style: context.styles.ubuntuInversePrimary20
+  ),
+  )),
         ),
       ];
     }
@@ -217,21 +218,19 @@ class _DayScheduleWidgetState extends State<DayScheduleWidget> {
           margin: const EdgeInsets.only(top: 20, bottom: 10),
           width: double.infinity,
           decoration: BoxDecoration(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              color: Colors.transparent,
-              border: DashedBorder.all(
-                  dashLength: 10,
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.6),),),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+            color: Colors.transparent,
+            border: DashedBorder.all(
+              dashLength: 10,
+              color:Theme.of(context).colorScheme.primary.withOpacity(0.6),
+            ),
+          ),
           child: Padding(
               padding: const EdgeInsets.all(20),
               child: Center(
                   child: Text(
                 'Ликвидация задолженностей',
-                style: TextStyle(
-                    fontFamily: 'Ubuntu',
-                    fontSize: 20,
-                    color: Theme.of(context).colorScheme.inversePrimary,),
+                style: context.styles.ubuntuInversePrimary20,
               ),),),
         ),
       ];

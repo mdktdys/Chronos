@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class TopBanner extends StatelessWidget {
   const TopBanner({
@@ -25,13 +26,9 @@ class TopBanner extends StatelessWidget {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Text(
+              Text(
                 'Новое расписание и замены тут ',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: context.styles.ubuntuWhite500,
               ),
               Text(
                 '❄️',
@@ -40,13 +37,9 @@ class TopBanner extends StatelessWidget {
                   fontWeight: FontWeight.w500,
                 ),
               ),
-              const Text(
+              Text(
                 ' *тык*',
-                style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
+                style: context.styles.ubuntuWhite500,
               ),
             ],
           ),

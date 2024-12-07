@@ -1,17 +1,16 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
-
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 
-class FailedLoadWidget extends StatelessWidget {
+class FailedLoadWidget extends ConsumerWidget {
   final String error;
   const FailedLoadWidget(
       {required this.error, super.key,});
 
   @override
-  Widget build(final BuildContext context) {
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(scheduleProvider);
     return Column(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [

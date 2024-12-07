@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class DayScheduleHeader extends StatelessWidget {
   final bool? fullSwap;
@@ -43,36 +45,21 @@ class DayScheduleHeader extends StatelessWidget {
               children: [
                 Text(
                   getDayName(day),
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.inverseSurface,
-                      fontSize: 24,
-                      fontFamily: 'Ubuntu',),
+                  style: context.styles.ubuntuInverseSurface24,
                 ),
                 Text(
                   '${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}',
-                  style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inverseSurface
-                          .withOpacity(0.7),
-                      fontSize: 18,
-                      fontFamily: 'Ubuntu',),
+                  style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7))
                 ),
               ],
             ),
           ),
           fullSwap == true
-              ? Text(
-                  'Полная замена',
-                  style: TextStyle(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .inverseSurface
-                          .withOpacity(0.7),
-                      fontSize: 18,
-                      fontFamily: 'Ubuntu',),
-                )
-              : const SizedBox(),
+            ? Text(
+                'Полная замена',
+                style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withOpacity(0.7))
+              )
+            : const SizedBox.shrink(),
           links.isNotEmpty
               ? IconButton(
                   onPressed: () {
@@ -164,7 +151,7 @@ class DayScheduleHeader extends StatelessWidget {
                               : Alignment.center,
                           child: SvgPicture.asset(
                             'assets/icon/link-2.svg',
-                            color: Theme.of(context).colorScheme.inverseSurface,
+                            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                           ),
                         ),
                         links.length > 1
@@ -186,13 +173,12 @@ class DayScheduleHeader extends StatelessWidget {
                                   child: Center(
                                     child: FittedBox(
                                       child: Text(
-                                        links.length.toString(),
-                                        style: const TextStyle(
-                                            fontFamily: 'Ubuntu',),
+                                          links.length.toString(),
+                                          style: context.styles.ubuntu
                                       ),
                                     ),
                                   ),
-                                ),
+                                )
                               )
                             : const SizedBox(),
                       ],

@@ -7,43 +7,50 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/domain/Providers/bloc/export_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 
 class SearchResultHeader extends ConsumerStatefulWidget {
-  const SearchResultHeader({
-    super.key,
-  });
+  const SearchResultHeader({super.key});
 
   @override
-  _SearchResultHeaderState createState() => _SearchResultHeaderState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _SearchResultHeaderState();
 }
 
 class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
-  bool opened = false;
+bool opened = false;
   ExportBloc exportBloc = ExportBloc();
 
   @override
   Widget build(final BuildContext context) {
-    final ScheduleProvider provider = context.watch<ScheduleProvider>();
+    final provider = ref.watch(scheduleProvider);
     //bool enabled = provider.searchType == SearchType.group ? true : false;
     return Stack(
       alignment: Alignment.center,
       children: [
+        // Align(
+        //   alignment: Alignment.topLeft,
+        //   child: IconButton(
+        //     onPressed: () {
+        //       // FirebaseApi().initNotifications(context);
+        //       // ref.read(bottomSheetsProvider).openSheet(const NotificationsBottomSheet());
+        //     },
+        //     icon: const Icon(Icons.notification_add)
+        //   ),
+        // ),
         Column(
           children: [
-            Text(provider.getSearchTypeNamed(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.inverseSurface,
-                    fontFamily: 'Ubuntu',
-                    fontSize: 18,),),
-            Text(provider.searchDiscribtion(),
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                    color: Theme.of(context).colorScheme.inverseSurface,
-                    fontFamily: 'Ubuntu',
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,),),
+            Text(
+              provider.getSearchTypeNamed(),
+              textAlign: TextAlign.center,
+              style: context.styles.ubuntuInverseSurface18
+            ),
+            Text(
+              provider.searchDiscribtion(),
+              textAlign: TextAlign.center,
+              style: context.styles.ubuntuInverseSurfaceBold24
+            )
           ],
         ),
         provider.searchType != SearchType.cabinet
@@ -81,9 +88,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                                 ),
                                                 Text(
                                                   state.reason,
-                                                  style: const TextStyle(
-                                                      fontFamily: 'Ubuntu',
-                                                      color: Colors.red,),
+                                                  style: context.styles.ubuntu.copyWith(color: Colors.red),
                                                 ),
                                               ],
                                             ),
@@ -105,30 +110,27 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                                         if (state is ExportReady) {
                                           return GestureDetector(
                                             onTap: () async {
-                                              exportBloc.add(ExportStart(
-                                                  context: context, ref: ref,),);
+                                              exportBloc.add(ExportStart(context: context, ref: ref,),);
                                             },
-                                            child: const SizedBox(
+                                            child: SizedBox(
                                               height: 30,
                                               child: Row(
                                                 mainAxisSize: MainAxisSize.min,
                                                 children: [
-                                                  Icon(Icons.image),
-                                                  SizedBox(
+                                                  const Icon(Icons.image),
+                                                  const SizedBox(
                                                     width: 5,
                                                   ),
                                                   Text(
                                                     'Экспортировать расписание',
-                                                    style: TextStyle(
-                                                        fontFamily: 'Ubuntu',
-                                                        color: Colors.white,),
+                                                    style: context.styles.ubuntuInverseSurface,
                                                   ),
                                                 ],
                                               ),
                                             ),
                                           );
                                         }
-                                        return const SizedBox();
+                                        return const SizedBox.shrink();
                                       },),
                                 );
                               },),
@@ -146,7 +148,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                   ),
                 ),
               )
-            : const SizedBox(),
+            : const SizedBox.shrink(),
       ],
     );
   }
@@ -224,9 +226,9 @@ class Barrier extends StatelessWidget {
       visible: visible,
       closeDuration: kThemeAnimationDuration,
       portalFollower: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onClose,
-          child: const SizedBox(),),
+        behavior: HitTestBehavior.opaque,
+        onTap: onClose,
+        child: const SizedBox(),),
       child: child,
     );
   }

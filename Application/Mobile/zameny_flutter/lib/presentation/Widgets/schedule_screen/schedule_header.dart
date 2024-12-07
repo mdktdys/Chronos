@@ -8,6 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((final ref) async {
   final res = await GetIt.I.get<SupabaseClient>().from('checks').select().order('id').limit(1);
   return DateTime.parse(res[0]['updated_at']);
@@ -121,11 +123,7 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
                 child: Text(
                   'Расписание',
                   textAlign: TextAlign.center,
-                  style: TextStyle(
-                      color: Theme.of(context).colorScheme.primary,
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      fontFamily: 'Ubuntu',),
+                  style: context.styles.ubuntuPrimaryBold24,
                 ),
               ),
             ],
@@ -137,51 +135,36 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
             const Spacer(),
             // const ZamenaCheckTime(),
             IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                      barrierColor: Colors.black.withOpacity(0.3),
-                      backgroundColor: Theme.of(context).colorScheme.surface,
-                      context: context,
-                      builder: (final context) => SizedBox(
-                            height: 100,
-                            child: Padding(
-                              padding: const EdgeInsets.all(8),
-                              child: Column(
-                                children: [
-                                  ListTile(
-                                    title: const Text(
-                                      'Показать логи Talker',
-                                      style: TextStyle(fontFamily: 'Ubuntu'),
-                                    ),
-                                    onTap: () => Navigator.of(context).push(
-                                        MaterialPageRoute(
-                                            builder: (final context) => TalkerScreen(
-                                                talker:
-                                                    GetIt.I.get<Talker>(),),),),
-                                  ),
-                                  // ListTile(
-                                  //     title: Text(
-                                  //       "Тест",
-                                  //       style: TextStyle(
-                                  //           color: Theme.of(context)
-                                  //               .colorScheme
-                                  //               .inversePrimary,
-                                  //           fontFamily: 'Ubuntu'),
-                                  //     ),
-                                  //     onTap: () async {
-                                  //       SupabaseClient supa = GetIt.I.get<SupabaseClient>();
-                                  //       GetIt.I.get<Talker>().debug(await supa.rpc('test4',params: {'groupid' : 2464,'datestart': DateTime(2024,3,11).toIso8601String(), 'dateend':DateTime(2024,3,17).toIso8601String() }));
-                                  //     }),
-                                ],
-                              ),
+              onPressed: () {
+                showModalBottomSheet(
+                  barrierColor: Colors.black.withOpacity(0.3),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  context: context,
+                  builder: (final context) => SizedBox(
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                              'Показать логи Talker',
+                              style: context.styles.ubuntu,
                             ),
-                          ),);
-                },
-                icon: const Icon(
-                  Icons.more_horiz_rounded,
-                  size: 36,
-                  // color: Theme.of(context).primaryColorLight,
-                ),),
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (final context) => TalkerScreen(talker:GetIt.I.get<Talker>()))),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.more_horiz_rounded,
+                size: 36,
+                // color: Theme.of(context).primaryColorLight,
+              ),
+            ),
           ],
         ),
       ],

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/theme/flex_color_scheme.dart';
+
 class SearchBannerMessageWidget extends StatelessWidget {
   const SearchBannerMessageWidget({
     super.key,
@@ -27,10 +29,7 @@ class SearchBannerMessageWidget extends StatelessWidget {
             ),
             Text(
               'Нет замен',
-              style: TextStyle(
-                  fontFamily: 'Ubuntu',
-                  fontSize: 18,
-                  color: Theme.of(context).colorScheme.inverseSurface,),
+              style: context.styles.ubuntuInverseSurface20,
             ),
           ],
         ),

@@ -36,12 +36,7 @@ abstract class Api {
       required final DateTime end,}) async {
     final client = GetIt.I.get<SupabaseClient>();
 
-    final List<dynamic> data = await client
-        .from('Paras')
-        .select('id,group,number,course,teacher,cabinet,date')
-        .eq('teacher', teacherID)
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
+    final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toIso8601String()).gte('date', start.toIso8601String());
 
     final List<Lesson> weekLessons = [];
     for (final element in data) {

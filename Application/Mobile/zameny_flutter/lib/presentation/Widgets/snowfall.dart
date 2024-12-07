@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterfall/flutterfall.dart';
-import 'package:provider/provider.dart';
-
 import 'package:zameny_flutter/configs/images.dart';
-import 'package:zameny_flutter/domain/Providers/main_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 
-class SnowFall extends StatelessWidget {
+class SnowFall extends ConsumerWidget {
   const SnowFall({
     super.key,
   });
@@ -24,11 +23,11 @@ class SnowFall extends StatelessWidget {
 
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final List<String>? images = _defineFallImages();
     return (
       images == null
-      || (!context.watch<MainProvider>().falling)
+      || (!ref.watch(mainProvider).falling)
     )
     ? const SizedBox()
     : const IgnorePointer(

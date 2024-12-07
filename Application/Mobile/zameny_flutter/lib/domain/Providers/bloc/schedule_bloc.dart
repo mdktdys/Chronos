@@ -3,16 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:bloc_concurrency/bloc_concurrency.dart';
 import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:provider/provider.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
-import 'package:zameny_flutter/domain/Services/Api.dart';
+import 'package:zameny_flutter/domain/Services/api.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 
 @immutable
 sealed class ScheduleEvent {}
@@ -80,14 +79,15 @@ final class LoadCabinetWeek extends ScheduleEvent {
 
 final class LoadInitial extends ScheduleEvent {
   final BuildContext context;
-  LoadInitial({required this.context});
+  final WidgetRef ref;
+  LoadInitial({required this.context, required this.ref});
 }
 
 sealed class ScheduleState extends Equatable {}
 
-class ScheduleLoaded extends ScheduleState {
-  List<Lesson> lessons = [];
-  List<Zamena> zamenas = [];
+final class ScheduleLoaded extends ScheduleState {
+  final List<Lesson> lessons;
+  final List<Zamena> zamenas;
   ScheduleLoaded({required this.lessons, required this.zamenas});
 
   @override
@@ -195,8 +195,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       transformer: restartable(),
     );
     on<LoadInitial>((final event, final emit) async {
-      final ScheduleProvider searchProvider =
-          Provider.of<ScheduleProvider>(event.context, listen: false);
+      final scheduleProvider_ = event.ref.read(scheduleProvider);
       emit(ScheduleLoading());
       try {
         GetIt.I.get<Talker>().debug('fetch data');
@@ -209,35 +208,34 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
           Api.loadCabinets(),
         ]);
         if (event.context.mounted) {
-          Provider.of<SearchProvider>(event.context, listen: false)
-              .updateSearchItems();
+          event.ref.read(searchProvider).updateSearchItems();
         }
 
-        if (searchProvider.groupIDSeek == -1 &&
-            searchProvider.searchType == SearchType.group) {
+        if (scheduleProvider_.groupIDSeek == -1 &&
+            scheduleProvider_.searchType == SearchType.group) {
           emit(ScheduleInitial());
           return;
         }
 
-        if (searchProvider.searchType == SearchType.group) {
+        if (scheduleProvider_.searchType == SearchType.group) {
           if (event.context.mounted) {
-            searchProvider.groupSelected(
-                searchProvider.groupIDSeek, event.context,);
+            scheduleProvider_.groupSelected(
+                scheduleProvider_.groupIDSeek, event.context,);
           }
-        } else if (searchProvider.searchType == SearchType.cabinet) {
+        } else if (scheduleProvider_.searchType == SearchType.cabinet) {
           if (event.context.mounted) {
-            searchProvider.cabinetSelected(
-                searchProvider.cabinetIDSeek, event.context,);
+            scheduleProvider_.cabinetSelected(
+                scheduleProvider_.cabinetIDSeek, event.context,);
           }
-        } else if (searchProvider.searchType == SearchType.teacher) {
+        } else if (scheduleProvider_.searchType == SearchType.teacher) {
           if (event.context.mounted) {
-            searchProvider.teacherSelected(
-                searchProvider.teacherIDSeek, event.context,);
+            scheduleProvider_.teacherSelected(
+                scheduleProvider_.teacherIDSeek, event.context,);
           }
         } else {
-          if (searchProvider.groupIDSeek != -1) {
-            final DateTime monday = searchProvider.navigationDate.subtract(
-                Duration(days: searchProvider.navigationDate.weekday - 1),);
+          if (scheduleProvider_.groupIDSeek != -1) {
+            final DateTime monday = scheduleProvider_.navigationDate.subtract(
+                Duration(days: scheduleProvider_.navigationDate.weekday - 1),);
             final DateTime sunday = monday.add(const Duration(days: 6));
             final DateTime startOfWeek =
                 DateTime(monday.year, monday.month, monday.day);
@@ -245,7 +243,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
                 DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
             if (event.context.mounted) {
               add(LoadGroupWeek(
-                  groupID: searchProvider.groupIDSeek,
+                  groupID: scheduleProvider_.groupIDSeek,
                   dateStart: startOfWeek,
                   dateEnd: endOfWeek,),);
             }
