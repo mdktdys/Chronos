@@ -9,6 +9,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:zameny_flutter/app.dart';
 import 'package:zameny_flutter/configs/firebase_options.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
@@ -22,7 +23,6 @@ void main() async {
     url: API_URL,
     anonKey: API_ANON_KEY,
   );
-
   final SupabaseClient client = supabase.client;
   GetIt.I.registerSingleton<SupabaseClient>(client);
 

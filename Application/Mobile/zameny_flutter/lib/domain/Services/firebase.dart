@@ -7,9 +7,9 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 
 final norificationProvider = ChangeNotifierProvider<NotificationManager>((final ref) {
   return NotificationManager();
@@ -34,36 +34,35 @@ class NotificationManager extends ChangeNotifier {
   }
 
   Future<void> enableNotifications(final BuildContext context) async {
-    fcmToken = await FirebaseApi().initNotifications(context);
+    // fcmToken = await FirebaseApi().initNotifications(context);
     notifyListeners();
   }
 }
 
-class FirebaseApi {
+abstract class FirebaseApi {
   late final _firebaseMessaging = FirebaseMessaging.instance;
 
-  Future<String?> initNotifications(final BuildContext context) async {
+  Future<String?> getToken() async {
     await _firebaseMessaging.requestPermission(provisional: kIsWeb ? false : true);
-    final fCMToken = await _firebaseMessaging.getToken(
-        vapidKey:
-            'BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0',);
+    final String? fCMToken = await _firebaseMessaging.getToken(vapidKey: 'BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0',);
+    return fCMToken;
 
-    GetIt.I.get<Talker>().info('$fCMToken');
+    // GetIt.I.get<Talker>().info('$fCMToken');
 
-    GetIt.I.get<SharedPreferences>().setString('FCM', fCMToken ?? '');
+    // GetIt.I.get<SharedPreferences>().setString('FCM', fCMToken ?? '');
 
-    try {
-      await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert(
-          {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1},);
-      GetIt.I.get<Talker>().info('Subscribed to global channel');
+    // try {
+    //   await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert(
+    //       {'token': fCMToken, 'clientID': kIsWeb ? 1 : 2, 'subType': -1, 'subID': -1},);
+    //   GetIt.I.get<Talker>().info('Subscribed to global channel');
 
-      initPushNotifications(context);
+    //   initPushNotifications(context);
 
-      return fCMToken;
-    } catch (e) {
-      GetIt.I.get<Talker>().critical(e.toString());
-      return fCMToken;
-    } 
+    //   return fCMToken;
+    // } catch (e) {
+    //   GetIt.I.get<Talker>().critical(e.toString());
+    //   return fCMToken;
+    // } 
   }
 
   Future<void> handleMessage(final RemoteMessage? message, final BuildContext context) async {

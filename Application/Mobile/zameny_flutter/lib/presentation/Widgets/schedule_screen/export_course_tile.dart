@@ -6,7 +6,7 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/course_model.dart';
 import 'package:zameny_flutter/models/lesson_model.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 
 class ExportCourseTile extends StatelessWidget {
   final SearchType type;
@@ -132,8 +132,7 @@ class ExportCourseTile extends StatelessWidget {
                         children: [
                           SvgPicture.asset(
                             'assets/icon/vuesax_linear_location.svg',
-                            color: Theme.of(context).colorScheme.inverseSurface,
-                            width: 18,
+                            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                             height: 18,
                           ),
                           Text(

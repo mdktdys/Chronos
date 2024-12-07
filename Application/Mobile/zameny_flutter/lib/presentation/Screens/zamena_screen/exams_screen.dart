@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/failed_load_widget.dart';
 import 'package:zameny_flutter/presentation/Widgets/shared/loading_widget.dart';

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
@@ -150,7 +151,7 @@ class DayScheduleHeader extends StatelessWidget {
                               : Alignment.center,
                           child: SvgPicture.asset(
                             'assets/icon/link-2.svg',
-                            color: Theme.of(context).colorScheme.inverseSurface,
+                            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                           ),
                         ),
                         links.length > 1

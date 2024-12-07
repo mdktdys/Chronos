@@ -4,10 +4,10 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:zameny_flutter/domain/Providers/bloc/export_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
-import 'package:zameny_flutter/domain/Services/firebase.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 
@@ -29,16 +29,16 @@ bool opened = false;
     return Stack(
       alignment: Alignment.center,
       children: [
-        Align(
-          alignment: Alignment.topLeft,
-          child: IconButton(
-            onPressed: () {
-              FirebaseApi().initNotifications(context);
-              // ref.read(bottomSheetsProvider).openSheet(const NotificationsBottomSheet());
-            },
-            icon: const Icon(Icons.notification_add)
-          ),
-        ),
+        // Align(
+        //   alignment: Alignment.topLeft,
+        //   child: IconButton(
+        //     onPressed: () {
+        //       // FirebaseApi().initNotifications(context);
+        //       // ref.read(bottomSheetsProvider).openSheet(const NotificationsBottomSheet());
+        //     },
+        //     icon: const Icon(Icons.notification_add)
+        //   ),
+        // ),
         Column(
           children: [
             Text(
@@ -226,9 +226,9 @@ class Barrier extends StatelessWidget {
       visible: visible,
       closeDuration: kThemeAnimationDuration,
       portalFollower: GestureDetector(
-          behavior: HitTestBehavior.opaque,
-          onTap: onClose,
-          child: const SizedBox(),),
+        behavior: HitTestBehavior.opaque,
+        onTap: onClose,
+        child: const SizedBox(),),
       child: child,
     );
   }

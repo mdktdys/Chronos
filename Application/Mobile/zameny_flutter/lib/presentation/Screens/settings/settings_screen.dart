@@ -5,6 +5,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
+
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/widgets/settings_header.dart';
 import 'package:zameny_flutter/presentation/Screens/settings/widgets/settings_logo_block.dart';
@@ -92,7 +93,7 @@ class SettingsCategoryTile extends StatelessWidget {
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
                     icon,
-                    color: Theme.of(context).colorScheme.inverseSurface,
+                    colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                   ),
                 ),
               ),

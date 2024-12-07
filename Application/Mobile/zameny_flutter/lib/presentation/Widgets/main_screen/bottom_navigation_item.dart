@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
+
 import 'package:zameny_flutter/presentation/Screens/app/providers/main_provider.dart';
 
 class BottomNavigationItem extends ConsumerWidget {
@@ -48,11 +49,14 @@ class BottomNavigationItem extends ConsumerWidget {
                ? activeicon : icon,
               width: 28,
               height: 28,
-              color: enabled
+              colorFilter: ColorFilter.mode(
+                enabled
                   ? provider.currentPage == index
                       ? Theme.of(context).colorScheme.primary
                       : Theme.of(context).colorScheme.inverseSurface.withOpacity(0.4)
                   : Theme.of(context).colorScheme.primary.withOpacity(0.6),
+                BlendMode.srcIn,
+              ),
             ),
           ),
         ),

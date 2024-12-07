@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+
 import 'package:zameny_flutter/domain/Providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
@@ -14,7 +15,7 @@ import 'package:zameny_flutter/models/course_model.dart';
 import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {

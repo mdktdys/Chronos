@@ -10,7 +10,7 @@ import 'package:zameny_flutter/domain/Providers/sharing/sharing.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/presentation/Widgets/schedule_screen/CourseTile.dart';
+import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/export_course_tile.dart';
 import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';

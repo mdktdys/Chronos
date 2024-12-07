@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:zameny_flutter/theme/flex_color_scheme.dart';
 
 final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((final ref) async {
@@ -134,39 +135,36 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
             const Spacer(),
             // const ZamenaCheckTime(),
             IconButton(
-                onPressed: () {
-                  showModalBottomSheet(
-                    barrierColor: Colors.black.withOpacity(0.3),
-                    backgroundColor: Theme.of(context).colorScheme.surface,
-                    context: context,
-                    builder: (final context) => SizedBox(
-                      height: 100,
-                      child: Padding(
-                        padding: const EdgeInsets.all(8),
-                        child: Column(
-                          children: [
-                            ListTile(
-                              title: Text(
-                                'Показать логи Talker',
-                                style: context.styles.ubuntu,
-                              ),
-                              onTap: () => Navigator.of(context).push(
-                                  MaterialPageRoute(
-                                      builder: (final context) => TalkerScreen(
-                                          talker:
-                                              GetIt.I.get<Talker>(),),),),
+              onPressed: () {
+                showModalBottomSheet(
+                  barrierColor: Colors.black.withOpacity(0.3),
+                  backgroundColor: Theme.of(context).colorScheme.surface,
+                  context: context,
+                  builder: (final context) => SizedBox(
+                    height: 100,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8),
+                      child: Column(
+                        children: [
+                          ListTile(
+                            title: Text(
+                              'Показать логи Talker',
+                              style: context.styles.ubuntu,
                             ),
-                          ],
-                        ),
+                            onTap: () => Navigator.of(context).push(MaterialPageRoute(builder: (final context) => TalkerScreen(talker:GetIt.I.get<Talker>()))),
+                          ),
+                        ],
                       ),
                     ),
-                  );
-                },
-                icon: const Icon(
-                  Icons.more_horiz_rounded,
-                  size: 36,
-                  // color: Theme.of(context).primaryColorLight,
-                ),),
+                  ),
+                );
+              },
+              icon: const Icon(
+                Icons.more_horiz_rounded,
+                size: 36,
+                // color: Theme.of(context).primaryColorLight,
+              ),
+            ),
           ],
         ),
       ],

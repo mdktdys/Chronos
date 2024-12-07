@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zameny_flutter/Services/navigation/navigation_provider.dart';
+import 'package:zameny_flutter/presentation/Screens/app/views/main_screen.dart';
 import 'package:zameny_flutter/secrets.dart';
 
 final mainProvider = ChangeNotifierProvider<RiverPodMainProvider>((final ref) {
@@ -30,8 +33,11 @@ class RiverPodMainProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  void pageChanged(final int value) {
+  void pageChanged(final int value, final BuildContext context) {
+    final BottomBarModel page = model.where((final page) => page.index == value).first;
+
     currentPage = value;
+    ref.watch(navigationProvider).setPath(page.path.toString());
     notifyListeners();
   }
 

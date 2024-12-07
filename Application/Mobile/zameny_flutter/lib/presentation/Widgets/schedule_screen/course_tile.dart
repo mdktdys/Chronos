@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
+
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Services/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
@@ -283,13 +284,10 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
                                     data.location != ''
                                         ? SvgPicture.asset(
                                             'assets/icon/vuesax_linear_location.svg',
-                                            color: Theme.of(context)
-                                                .colorScheme
-                                                .inverseSurface
-                                                .withOpacity(
+                                            colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withOpacity(
                                                     data.liqidated == true
                                                         ? 0.3
-                                                        : 1.0,),
+                                                        : 1.0,), BlendMode.srcIn),
                                             width: 18,
                                             height: 18,
                                           )
@@ -565,9 +563,7 @@ class CourseTile extends ConsumerWidget {
                                     type == SearchType.teacher
                                 ? SvgPicture.asset(
                                     'assets/icon/vuesax_linear_location.svg',
-                                    color: Theme.of(context)
-                                        .colorScheme
-                                        .inverseSurface,
+                                    colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                                     width: 18,
                                     height: 18,
                                   )

@@ -1,2 +1,1 @@
-
-removeSplashScreen(){}
+void removeSplashScreen(){}
