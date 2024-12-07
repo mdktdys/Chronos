@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/domain/Services/api.dart';
+import 'package:zameny_flutter/domain/Services/Api.dart';
 import 'package:zameny_flutter/models/models.dart';
 
 enum ZamenaViewType {
