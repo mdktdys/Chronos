@@ -6,9 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+
 import 'package:zameny_flutter/domain/Providers/schedule_provider.dart';
 import 'package:zameny_flutter/domain/Providers/search_provider.dart';
-import 'package:zameny_flutter/domain/Services/api.dart';
+import 'package:zameny_flutter/domain/Services/Api.dart';
 import 'package:zameny_flutter/domain/Services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/presentation/Widgets/schedule_screen/course_tile.dart';
@@ -260,7 +261,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
         emit(ScheduleLoading());
 
         try {
-          // Запускаем все асинхронные операции параллельно
           final results = await Future.wait([
             Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
             Api.loadZamenasFull(
