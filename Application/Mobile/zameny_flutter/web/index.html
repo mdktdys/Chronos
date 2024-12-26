@@ -28,6 +28,74 @@
   <!-- This script adds the flutter initialization JS code -->
   <!-- <script src="metrica.js" defer=""></script> -->
 
+  <!-- version: "3.4"
+
+volumes:
+  my-datavolume:
+
+services:
+  db:
+    image: mysql
+    volumes:
+      - my-datavolume:/var/lib/mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: test
+      MYSQL_DATABASE: test
+    networks:
+      - my-network
+
+  api:
+    build:
+      context: ./SECONDAPI
+      dockerfile: Dockerfile
+    depends_on:
+      - db
+    ports:
+      - "3000:8080"
+    environment:
+      - DBHOST=db
+      - ASPNETCORE_ENVIRONMENT=Development
+    networks:
+      - my-network
+
+networks:
+  my-network:version: "3.4"
+
+  volumes:
+    my-datavolume:
+  
+  services:
+    db:
+      image: mysql
+      volumes:
+        - my-datavolume:/var/lib/mysql
+      ports:
+        - "3307:3306"
+      environment:
+        MYSQL_ROOT_PASSWORD: test
+        MYSQL_DATABASE: test
+      networks:
+        - my-network
+  
+    api:
+      build:
+        context: ./SECONDAPI
+        dockerfile: Dockerfile
+      depends_on:
+        - db
+      ports:
+        - "3000:8080"
+      environment:
+        - DBHOST=db
+        - ASPNETCORE_ENVIRONMENT=Development
+      networks:
+        - my-network
+  
+  networks:
+    my-network: -->
+
   <script src="flutter.js" defer=""></script>
   <!-- Yandex.Metrika counter -->
   <script type="text/javascript">
