@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/domain/Services/tools.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 
 class LessonTimings {
   int number;

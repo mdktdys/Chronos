@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <!-- <base href="./"> -->
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <script defer="" src="index.dart.js" type="application/javascript"></script>
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta name="description" content="🐋 Следите за актуальным расписание колледжа УКСИВТ в удобном месте">
+  <meta name="keywords" content="уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт">
+  <meta name="tittle" content="Замены уксивтика">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="Замены уксивтика">
+  <meta name="yandex-verification" content="447523e06eb8fe0d">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
+  <link rel="icon" type="image/png" href="favicon.png">
+  <title>Замены уксивтика</title>
+  <link rel="manifest" href="manifest.json">
+  <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
+  <script>
+    { { flutter_service_worker_version } }
+  </script>
+  <!-- Сначала загружаем основной Flutter скрипт -->
+  <script src="flutter.js" defer></script>
+  <!-- Затем остальные скрипты -->
+  <script defer src="main.dart.js" type="application/javascript"></script>
+  <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
+  <!-- Инициализация Flutter должна быть после загрузки flutter.js -->
+  <script>
+    window.addEventListener('load', function(ev) {
+      _flutter.loader.loadEntrypoint({
+        entrypointUrl: "main.dart.js",
+        serviceWorkerUrl: "flutter_service_worker.js?v=",
+        serviceWorker: {
+          serviceWorkerVersion: serviceWorkerVersion,
+        },
+        onEntrypointLoaded: async function(engineInitializer) {
+          const appRunner = await engineInitializer.initializeEngine();
+          await appRunner.runApp();
+        }
+      });
+    });
+  </script>
+  <!-- Yandex.Metrika counter -->
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date();
+      for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+      k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(96571562, "init", {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/96571562" style="position:absolute; left:-9999px;" alt="" /></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background-color: #ffffff; /* Светлая тема по умолчанию */
+    }
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212; /* Темная тема */
+      }
+    }
+    .center {
+      position: static;
+      transform: none;
+    }
+    .loading-container {
+      position: static;
+      transform: none;
+      width: 200px;
+      height: 4px;
+      background-color: rgba(128, 128, 128, 0.2);
+      border-radius: 2px;
+      overflow: hidden;
+    }
+    .loading-bar {
+      width: 40%;
+      height: 100%;
+      background-color: #2196F3;
+      border-radius: 2px;
+      animation: loading 1.5s infinite ease-in-out;
+    }
+    @keyframes loading {
+      0% {
+        transform: translateX(-100%);
+      }
+      100% {
+        transform: translateX(350%);
+      }
+    }
+    .loading-text {
+      position: static;
+      transform: none;
+      margin: 20px 0;
+      font-family: 'Roboto', sans-serif;
+      font-weight: 400;
+      font-size: 16px;
+      color: #666666;
+      opacity: 0;
+      transition: opacity 0.5s ease-in-out;
+      text-align: center;
+    }
+    @media (prefers-color-scheme: dark) {
+      .loading-text {
+        color: #ffffff;
+      }
+    }
+    .container {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      z-index: 1000;
+    }
+    @media (prefers-color-scheme: dark) {
+      .container {
+        background-color: #121212;
+      }
+    }
+    .circle-transition {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%) scale(0);
+      width: 100px;
+      height: 100px;
+      background-color: #000000;
+      border-radius: 50%;
+      z-index: 1001;
+      mix-blend-mode: destination-out;
+      pointer-events: none;
+    }
+
+    .circle-animate {
+      animation: circleGrow 1s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+    }
+
+    @keyframes circleGrow {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+      }
+      100% {
+        transform: translate(-50%, -50%) scale(50);
+      }
+    }
+
+    .fade-out {
+      opacity: 0;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .splash-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: #ffffff;
+      z-index: 999;
+      isolation: isolate;
+    }
+    @media (prefers-color-scheme: dark) {
+      .splash-overlay {
+        background-color: #121212;
+      }
+    }
+  </style>
+</head>
+</head>
+
+<body>
+  <script>
+    window.scroll(0, window.document.body.scrollHeight);
+  </script>
+  <!-- Service Worker регистрация -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', async function () {
+        const registrations = await navigator.serviceWorker.getRegistrations();
+        for (const registration of registrations) {
+          await registration.unregister();
+        }
+        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      });
+    }
+  </script>
+  <!-- <div class="splash-overlay"></div>
+  <div class="container">
+    <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt="" style="display: block; max-width: 100%; max-height: 100%;">
+    <div id="loadingText" class="loading-text">Загрузка...</div>
+    <div class="loading-container">
+      <div class="loading-bar"></div>
+    </div>
+  </div> -->
+  <!-- <div class="circle-transition"></div> -->
+
+  <script>
+    const loadingTexts = [
+      "Парсим замены...",
+      "Получаю данные с учебной части [Невозможно]",
+      "Ищу 001 кабинет...",
+      "Ищу информацию о 12 паре...",
+      "КТО РАСПИСАНИЕ СОСТАВЛЯЛ",
+    ];
+    
+    let currentIndex = 0;
+    const textElement = document.getElementById('loadingText');
+    
+    function changeText() {
+      textElement.style.opacity = '0';
+      
+      setTimeout(() => {
+        textElement.textContent = loadingTexts[currentIndex];
+        textElement.style.opacity = '1';
+        currentIndex = (currentIndex + 1) % loadingTexts.length;
+      }, 500);
+    }
+    
+    // Показываем первый текст сразу
+    textElement.textContent = loadingTexts[0];
+    textElement.style.opacity = '1';
+    
+    // Меняем текст каждые 2.5 секунды
+    setInterval(changeText, 2000);
+
+    function removeSplashScreen() {
+      const circle = document.querySelector('.circle-transition');
+      const container = document.querySelector('.container');
+      
+      // Запускаем анимацию круга
+      circle.classList.add('circle-animate');
+      
+      // Плавно скрываем контейнер со сплешем
+      setTimeout(() => {
+        container.classList.add('fade-out');
+      }, 200);
+      
+      // Удаляем элементы после завершения анимации
+      setTimeout(() => {
+        container.remove();
+        circle.remove();
+      }, 1000);
+    }
+  </script>
+</body>
+</html>
