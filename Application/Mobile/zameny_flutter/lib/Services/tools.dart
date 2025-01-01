@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
 
-import 'package:zameny_flutter/domain/Services/Data.dart';
+import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/models/course_model.dart';
 import 'package:zameny_flutter/models/department_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';

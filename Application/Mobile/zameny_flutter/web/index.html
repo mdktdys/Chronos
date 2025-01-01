@@ -1,103 +1,25 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-  <!-- <base href="./"> -->
-  <base href="/">
+<!DOCTYPE html><html><head>
+  <base href="$FLUTTER_BASE_HREF">
 
   <meta charset="UTF-8">
-  <script defer="" src="index.dart.js" type="application/javascript"></script>
-  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
-  <meta name="description" content="🐋 Следите за актуальным расписание колледжа УКСИВТ в удобном месте">
-  <meta name="keywords"
-    content="уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт">
-  <meta name="tittle" content="Замены уксивтика">
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black">
-  <meta name="apple-mobile-web-app-title" content="Замены уксивтика">
-  <meta name="yandex-verification" content="447523e06eb8fe0d">
-  <link rel="apple-touch-icon" href="icons/Icon-192.png">
-  <link rel="icon" type="image/png" href="favicon.png">
-  <title>Замены уксивтика</title>
   <link rel="manifest" href="manifest.json">
-  <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
-  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
-  <script>
-    { { flutter_service_worker_version } }
-  </script>
-  <!-- This script adds the flutter initialization JS code -->
-  <!-- <script src="metrica.js" defer=""></script> -->
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
 
-  <!-- version: "3.4"
+  <title>Замены уксивтика</title>
+  <link rel="icon" type="image/png" href="favicon.png">
+  <meta name="description" content="🐋 Следите за актуальным расписание колледжа УКСИВТ в удобном месте">
+  <meta name="keywords" content="уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт, замены уксивт">
+  <meta name="tittle" content="Замены уксивтика">
 
-volumes:
-  my-datavolume:
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="zameny_flutter">
+  <link rel="apple-touch-icon" href="icons/Icon-192.png">
 
-services:
-  db:
-    image: mysql
-    volumes:
-      - my-datavolume:/var/lib/mysql
-    ports:
-      - "3307:3306"
-    environment:
-      MYSQL_ROOT_PASSWORD: test
-      MYSQL_DATABASE: test
-    networks:
-      - my-network
-
-  api:
-    build:
-      context: ./SECONDAPI
-      dockerfile: Dockerfile
-    depends_on:
-      - db
-    ports:
-      - "3000:8080"
-    environment:
-      - DBHOST=db
-      - ASPNETCORE_ENVIRONMENT=Development
-    networks:
-      - my-network
-
-networks:
-  my-network:version: "3.4"
-
-  volumes:
-    my-datavolume:
-  
-  services:
-    db:
-      image: mysql
-      volumes:
-        - my-datavolume:/var/lib/mysql
-      ports:
-        - "3307:3306"
-      environment:
-        MYSQL_ROOT_PASSWORD: test
-        MYSQL_DATABASE: test
-      networks:
-        - my-network
-  
-    api:
-      build:
-        context: ./SECONDAPI
-        dockerfile: Dockerfile
-      depends_on:
-        - db
-      ports:
-        - "3000:8080"
-      environment:
-        - DBHOST=db
-        - ASPNETCORE_ENVIRONMENT=Development
-      networks:
-        - my-network
-  
-  networks:
-    my-network: -->
-
-  <script src="flutter.js" defer=""></script>
   <!-- Yandex.Metrika counter -->
+  <meta name="yandex-verification" content="447523e06eb8fe0d">
   <script type="text/javascript">
     (function (m, e, t, r, i, k, a) {
       m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
@@ -120,77 +42,11 @@ networks:
   </noscript>
   <!-- /Yandex.Metrika counter -->
 
-
-  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
-
-
+  <!-- <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script> -->
+  
   <style id="splash-screen-style">
-    #splash,
-    #splash-branding {
-      opacity: 1;
-      transition: opacity 1s ease;
-      text-align: center;
-      font-size: 20px;
-      display: block;
-      /* Ensure they are visible initially */
-    }
-
-    /* @keyframes move {
-      100% {
-        transform: translate3d(0, 0, 1px) rotate(360deg);
-      }
-    } */
-
-    .background {
-      width: 100%;
-      height: 100%;
-      background: #121525;
-      overflow: hidden;
-    }
-
-    .background span {
-      width: 59vmin;
-      height: 59vmin;
-      border-radius: 50vmin;
-      backface-visibility: hidden;
-      position: absolute;
-      display: block;
-      transform: translate(-50%,-50%);
-    }
-
-    @keyframes move {
-      0% {
-        transform: translate(0, 0) rotate(0deg);
-      }
-
-      100% {
-        transform: translate(0, 0) rotate(360deg);
-      }
-    }
-
-    .background span:nth-child(1) {
-      transform-origin: 2px 2px;
-      margin: auto;
-      color: #45873c;
-      animation-duration: 7s;
-      margin: 50% 50%;
-      animation-delay: -17s;
-      animation: move 14s linear infinite;
-
-      box-shadow: -100vmin 0 12.667975834837419vmin currentColor;
-    }
-
-    .background span:nth-child(2) {
-      transform-origin: 2px px;
-      margin: auto;
-      color: #3c5f87;
-      animation-duration: 7s;
-      margin: 50% 50%;
-      animation-delay: -17s;
-      animation: move 14s linear infinite reverse ;
-      box-shadow: -100vmin 0 12.667975834837419vmin currentColor;
-    }
-
+    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
+    
     html {
       height: 100%
     }
@@ -198,25 +54,8 @@ networks:
     body {
       margin: 0;
       min-height: 100%;
-      background-color: #121525;
+      background-color: #121212;
       background-size: 100% 100%;
-      overflow: hidden;
-      height: 10000vh !important;
-      position: static !important;
-      overscroll-behavior: none;  
-    }
-
-    flutter-view {
-      position: fixed !important;
-      max-width: 100vw !important;
-      max-height: 100vh !important;
-    }
-
-    /* Safari-specific CSS */
-    @supports (-webkit-touch-callout: inherit) {
-      body {
-        height: 1vh !important;
-      }
     }
 
     .center {
@@ -229,22 +68,19 @@ networks:
     }
 
     .contain {
-      display: block;
-      width: 100%;
-      height: 100%;
+      display:block;
+      width:100%; height:100%;
       object-fit: contain;
     }
 
     .stretch {
-      display: block;
-      width: 100%;
-      height: 100%;
+      display:block;
+      width:100%; height:100%;
     }
 
     .cover {
-      display: block;
-      width: 100%;
-      height: 100%;
+      display:block;
+      width:100%; height:100%;
       object-fit: cover;
     }
 
@@ -268,160 +104,116 @@ networks:
       right: 0;
     }
 
-    .fade-in {
+    .splash-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
       opacity: 1;
-      animation: fadeIn 1s ease-in-out forwards;
+      transition: opacity 0.5s ease;
     }
 
-    /* Keyframes for the fadeIn animation */
-    @keyframes fadeIn {
-      0% {
-        opacity: 1;
-      }
-
-      60% {
-        opacity: 1;
-      }
-
-      100% {
-        opacity: 0;
-      }
+    .splash-content.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
-    .fade-inn {
+    .loading-indicator {
+      width: 200px;
+      height: 4px;
+      background-color: #1e1e1e;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-indicator::after {
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 50%;
+      height: 100%;
+      background-color: #3498db;
+      animation: loading 1s linear infinite;
+      border-radius: 2px;
+    }
+
+    .loading-text {
+      color: #ffffff;
+      font-family: 'Roboto', sans-serif;
+      font-size: 16px;
+      min-width: 200px;
+      text-align: center;
+      transition: opacity 0.5s ease;
       opacity: 1;
-      animation: fadeInn 1s ease-in-out forwards;
     }
 
-    /* Keyframes for the fadeIn animation */
-    @keyframes fadeInn {
-      0% {
-        opacity: 0;
-      }
+    .loading-text.fade {
+      opacity: 0;
+    }
 
-      60% {
-        opacity: 0;
-      }
-
-      100% {
-        opacity: 1;
-      }
+    @keyframes loading {
+      0% { left: -50%; }
+      100% { left: 100%; }
     }
   </style>
-  <!-- <script id="splash-screen-script">
-    function rrremoveSplashFromWeb() {
-      const splash = document.getElementById("splash");
-      const splashBranding = document.getElementById("splash-branding");
-
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      const splash = document.querySelector('.splash-content');
       if (splash) {
-        splash.classList.add("fade-out");
-        splash.style.opacity = '0';
+        splash.classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById("splash")?.remove();
+          document.getElementById("splash-branding")?.remove();
+          splash.remove();
+          document.body.style.background = "transparent";
+        }, 500);
       }
-      if (splashBranding) {
-        splashBranding.style.opacity = '0';
+    }
+
+    const loadingTexts = [
+      "Загрузка...",
+      "Ищу 12 пару...",
+      "Подготовка данных...",
+      "Ищу 001 кабинет...",
+      "Не питон, а пайтон!",
+    ];
+
+    let currentIndex = 0;
+    
+    function changeLoadingText() {
+      const loadingText = document.querySelector('.loading-text');
+      if (loadingText) {
+        loadingText.classList.add('fade');
+        
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % loadingTexts.length;
+          loadingText.textContent = loadingTexts[currentIndex];
+          loadingText.classList.remove('fade');
+        }, 500);
       }
+    }
 
-      setTimeout(() => {
-        if (splash) {
-          splash.style.display = 'none';
-        }
-        if (splashBranding) {
-          splashBranding.style.display = 'none';
-        }
-        document.body.style.background = "transparent";
-      }, 1000); // 1000 milliseconds = 1 second
-    } ment.body.style.background = "transparent";
-  </script> -->
-  <script type="application/javascript" src="/assets/packages/flutter_inappwebview_web/assets/web/web_support.js" defer></script>
-    <!-- ... -->
+    setInterval(changeLoadingText, 2000);
+  </script>
 </head>
-</head>
-
 <body>
+  <div class="splash-content">
+    <picture id="splash">
+        <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+        <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+        <img aria-hidden="true" src="splash/img/light-1x.png" alt="">
+    </picture>
+    <div class="loading-indicator"></div>
+    <div class="loading-text">Загрузка...</div>
+  </div>
+  
   <script>
     window.scroll(0, window.document.body.scrollHeight);
   </script>
-  <script defer="" src="main.dart.js" type="application/javascript"></script>
-
-  <script>
-    if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async function () {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-
-        for (const registration of registrations) {
-          await registration.unregister();
-        }
-
-        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
-      });
-    }
-
-    window.addEventListener('load', function (ev) {
-
-      // Download main.dart.js
-      _flutter.loader.loadEntrypoint({
-        entrypointUrl: "/main.dart.js",
-        serviceWorkerUrl: "/flutter_service_worker.js?v=",
-        serviceWorker: {
-          serviceWorkerVersion: serviceWorkerVersion,
-        },
-        onEntrypointLoaded: async function (engineInitializer) {
-
-          // Update the progress bar to 66% after the engine is loaded
-
-          // Initialize the Flutter engine.
-          const appRunner = await engineInitializer.initializeEngine();
-
-          // Set progress to 100% before adding a delay.
-
-          // Add a delay before running the app to create a smooth crossfade effect.
-
-          // Hide the progress bar by reducing its opacity.
-          // This will create the fade out effect by animating the opacity.
-          // Run the Flutter app.
-
-          await appRunner.runApp();
-
-          // Add a fade-in effect to the Flutter view element.
-        }
-      });
-
-    });
-  </script>
-  <script>
-    function addDelay() {
-      return new Promise((resolve) => setTimeout(resolve, 1000));
-    }
-  </script>
-  <script>
-    async function a() {
-      document.getElementById("splashscreen").classList.add("fade-in");
-      document.querySelector("flutter-view").classList.add("fade-inn");
-
-      await addDelay();
-
-      document.getElementById("splashscreen").remove();
-    }; 
-  </script>
-  
-  <div id="splashscreen" style="z-index: 1; position: relative; height: 100%;">
-    <picture id="splash"
-      style="pointer-events: none; touch-action: none; user-select: none; position: absolute; top: 0; left: 0; width: 100%; height: 100%; display: flex; justify-content: center; align-items: center;">
-      <div class="background">
-        <span></span>
-        <span></span>
-      </div>
-      <source
-        srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x"
-        media="(prefers-color-scheme: light)">
-      <source
-        srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x"
-        media="(prefers-color-scheme: dark)">
-      <img class="center" aria-hidden="true" src="splash/img/light-1x.png" alt=""
-        style="display: block; max-width: 100%; max-height: 100%;">
-    </picture>
-  </div>
-
-</body>
-
-</html>
+  <script src="flutter_bootstrap.js" async=""></script>
+</body></html>

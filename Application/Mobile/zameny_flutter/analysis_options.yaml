@@ -12,6 +12,7 @@
 analyzer:
   errors:
     cast_nullable_to_non_nullable: ignore
+    avoid_renaming_method_parameters: ignore
   # errors:
     # require_trailing_commas: ignore
   # errors:
