@@ -10,10 +10,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
+import 'package:zameny_flutter/services/Data.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();

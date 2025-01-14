@@ -1,15 +1,16 @@
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 
 abstract class Api {
-  static Future<List<Lesson>> loadWeekSchedule(
-      {required final int groupID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Lesson>> loadWeekSchedule({
+    required final int groupID,
+    required final DateTime start,
+    required final DateTime end,
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -30,10 +31,11 @@ abstract class Api {
     return weekLessons;
   }
 
-  static Future<List<Lesson>> loadWeekTeacherSchedule(
-      {required final int teacherID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Lesson>> loadWeekTeacherSchedule({
+    required final int teacherID,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toIso8601String()).gte('date', start.toIso8601String());
@@ -46,10 +48,11 @@ abstract class Api {
     return weekLessons;
   }
 
-  static Future<List<Lesson>> loadWeekCabinetSchedule(
-      {required final int cabinetID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Lesson>> loadWeekCabinetSchedule({
+    required final int cabinetID,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -67,44 +70,44 @@ abstract class Api {
     return weekLessons;
   }
 
-  static Future<void> loadGroups() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+  // static Future<void> loadGroups() async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
 
-    final List<dynamic> data = await client.from('Groups').select();
+  //   final List<dynamic> data = await client.from('Groups').select();
 
-    dat.groups = [];
-    for (final element in data) {
-      final Group groupName = Group.fromMap(element);
-      dat.groups.add(groupName);
-    }
-  }
+  //   dat.groups = [];
+  //   for (final element in data) {
+  //     final Group groupName = Group.fromMap(element);
+  //     dat.groups.add(groupName);
+  //   }
+  // }
 
-  static Future<void> loadTeachers() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
-    List<dynamic> data = List.empty();
+  // static Future<void> loadTeachers() async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
+  //   List<dynamic> data = List.empty();
 
-    data = await client.from('Teachers').select();
+  //   data = await client.from('Teachers').select();
 
-    dat.teachers = [];
-    for (final element in data) {
-      final Teacher teacher = Teacher.fromMap(element);
-      dat.teachers.add(teacher);
-    }
-  }
+  //   dat.teachers = [];
+  //   for (final element in data) {
+  //     final Teacher teacher = Teacher.fromMap(element);
+  //     dat.teachers.add(teacher);
+  //   }
+  // }
 
-  static Future<void> loadCabinets() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
-    final List<dynamic> data = await client.from('Cabinets').select();
+  // static Future<void> loadCabinets() async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
+  //   final List<dynamic> data = await client.from('Cabinets').select();
 
-    dat.cabinets = [];
-    for (final element in data) {
-      final Cabinet cab = Cabinet.fromMap(element);
-      dat.cabinets.add(cab);
-    }
-  }
+  //   dat.cabinets = [];
+  //   for (final element in data) {
+  //     final Cabinet cab = Cabinet.fromMap(element);
+  //     dat.cabinets.add(cab);
+  //   }
+  // }
 
   static Future<void> loadHolidays(final DateTime start, final DateTime end) async {
     final client = GetIt.I.get<SupabaseClient>();
@@ -139,7 +142,7 @@ abstract class Api {
     }
   }
 
-  static Future<void> loadTimings() async {
+  static Future<List<LessonTimings>> loadTimings() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
 
@@ -150,6 +153,7 @@ abstract class Api {
       dat.timings.add(timing);
     }
     dat.timings.sort(((final a, final b) => a.number - b.number));
+    return dat.timings;
   }
 
   static Future<void> loadZamenasFull(
@@ -175,8 +179,9 @@ abstract class Api {
     }
   }
 
-  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate(
-      {required final DateTime date,}) async {
+  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate({
+    required final DateTime date,
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> data = await client
@@ -192,15 +197,17 @@ abstract class Api {
     return res;
   }
 
-  static Future<void> loadZamenaFileLinks(
-      {required final DateTime start, required final DateTime end,}) async {
+  static Future<void> loadZamenaFileLinks({
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     final dat = GetIt.I.get<Data>();
 
     //тестова проверка на уже существующие
-    if (dat.zamenaFileLinks.any((final element) =>
-        element.date.isBefore(end) && element.date.isAfter(start),)) {
-      return;
-    }
+    // if (dat.zamenaFileLinks.any((final element) =>
+    //     element.date.isBefore(end) && element.date.isAfter(start),)) {
+    //   return;
+    // }
 
     final client = GetIt.I.get<SupabaseClient>();
 
@@ -248,7 +255,9 @@ abstract class Api {
     return zamenaBuffer;
   }
 
-  static Future<List<Zamena>> getZamenasByDate({required final DateTime date}) async {
+  static Future<List<Zamena>> getZamenasByDate({
+    required final DateTime date
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
     final List<dynamic> data = await client
         .from('Zamenas')
@@ -263,10 +272,11 @@ abstract class Api {
     return zamenaBuffer;
   }
 
-  static Future<List<Zamena>> loadZamenas(
-      {required final List<int> groupsID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Zamena>> loadZamenas({
+    required final List<int> groupsID,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     if (groupsID.isEmpty == true) {
       return [];
     }
@@ -288,10 +298,11 @@ abstract class Api {
     return zamenaBuffer;
   }
 
-  static Future<List<Zamena>> loadTeacherZamenas(
-      {required final int teacherID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Zamena>> loadTeacherZamenas({
+    required final int teacherID,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
     GetIt.I.get<Data>();
     final List<dynamic> data = await client
@@ -313,10 +324,11 @@ abstract class Api {
     return zamenaBuffer;
   }
 
-  static Future<List<Zamena>> loadCabinetZamenas(
-      {required final int cabinetID,
-      required final DateTime start,
-      required final DateTime end,}) async {
+  static Future<List<Zamena>> loadCabinetZamenas({
+    required final int cabinetID,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
     final client = GetIt.I.get<SupabaseClient>();
     GetIt.I.get<Data>();
     final List<dynamic> data = await client
@@ -361,29 +373,29 @@ abstract class Api {
   //   }
   // }
 
-  static Future<void> loadCourses() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+  // static Future<void> loadCourses() async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
 
-    final List<dynamic> data = await client.from('Courses').select();
+  //   final List<dynamic> data = await client.from('Courses').select();
 
-    dat.courses = [];
-    for (final element in data) {
-      final Course course = Course.fromMap(element);
-      dat.courses.add(course);
-    }
-  }
+  //   dat.courses = [];
+  //   for (final element in data) {
+  //     final Course course = Course.fromMap(element);
+  //     dat.courses.add(course);
+  //   }
+  // }
 
-  static Future<void> loadDepartments() async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final dat = GetIt.I.get<Data>();
+  // static Future<void> loadDepartments() async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final dat = GetIt.I.get<Data>();
 
-    final List<dynamic> data = await client.from('Departments').select();
+  //   final List<dynamic> data = await client.from('Departments').select();
 
-    dat.departments = [];
-    for (final element in data) {
-      final Department department = Department.fromMap(element);
-      dat.departments.add(department);
-    }
-  }
+  //   dat.departments = [];
+  //   for (final element in data) {
+  //     final Department department = Department.fromMap(element);
+  //     dat.departments.add(department);
+  //   }
+  // }
 }

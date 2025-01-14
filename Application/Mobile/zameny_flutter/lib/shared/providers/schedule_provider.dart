@@ -6,15 +6,16 @@ import 'package:get_it/get_it.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
-import 'package:zameny_flutter/Services/sharing/sharing.dart';
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/export_course_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/services/sharing/sharing.dart';
+import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 
 final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final ref) {
   return ScheduleProvider();
@@ -282,6 +283,18 @@ class ScheduleProvider extends ChangeNotifier {
 
     final String name = 'Расписание $searchName';
     ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
+  }
+
+  void searchItemSelected(final SearchItem item, final BuildContext context) {
+    if (item is Group) {
+      groupSelected(item.id, context);
+    } 
+    if (item is Cabinet) {
+      cabinetSelected(item.id, context);
+    }
+    if (item is Teacher) {
+      teacherSelected(item.id, context);
+    }
   }
 
   void toggleWeek(final int days, final BuildContext context) {

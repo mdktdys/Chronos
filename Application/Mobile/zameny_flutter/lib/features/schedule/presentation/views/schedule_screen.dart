@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
 
-import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
@@ -17,6 +16,7 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_t
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
 import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
@@ -69,20 +69,18 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
     setState(() {});
   }
 
-
   @override
   Widget build(final BuildContext context) {
     super.build(context);
     return Scaffold(
       key: myGlobals.scaffoldKey,
-      body: SingleChildScrollView(
+      body: CustomScrollView(
           controller: scrollController,
           physics: const BouncingScrollPhysics(),
-          child: ConstrainedBox(
-            constraints: BoxConstraints(maxWidth: MediaQuery.sizeOf(context).width),
-            child: Padding(
+          slivers: [
+            SliverPadding(
               padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              child: Column(children: [
+              sliver: SliverToBoxAdapter(child: Column(children: [
                 const TopBanner(),
                 const SizedBox(height: 10),
                 const ScheduleHeader(),
@@ -91,15 +89,14 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const SizedBox(height: 10),
                 const DateHeader(),
                 const CurrentLessonTimer(),
-                const SizedBox(height: 10),
                 LessonView(
-                  scrollController: scrollController,
-                  refresh: (){},
-                ),
+                    scrollController: scrollController,
+                    refresh: (){},
+                  ),
                 const SizedBox(height: 100),
-              ],),
+              ],)),
             ),
-          ),
+          ]
         ),
       );
   }

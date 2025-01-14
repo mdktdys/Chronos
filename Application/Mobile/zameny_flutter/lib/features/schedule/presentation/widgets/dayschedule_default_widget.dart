@@ -6,7 +6,7 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';

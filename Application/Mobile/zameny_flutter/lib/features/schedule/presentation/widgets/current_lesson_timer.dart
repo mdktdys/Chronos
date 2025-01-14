@@ -9,7 +9,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/models/course_model.dart';
 import 'package:zameny_flutter/models/lesson_model.dart';

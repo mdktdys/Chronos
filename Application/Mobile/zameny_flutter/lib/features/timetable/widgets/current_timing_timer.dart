@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/shared/providers/timer_provider.dart';
-import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 class CurrentTimingTimer extends ConsumerWidget {

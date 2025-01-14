@@ -3,9 +3,10 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/Services/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/secrets.dart';
+import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 
 final mainProvider = ChangeNotifierProvider<RiverPodMainProvider>((final ref) {
   return RiverPodMainProvider(ref);
@@ -38,7 +39,7 @@ class RiverPodMainProvider extends ChangeNotifier {
 
     currentPage = value;
     ref.watch(navigationProvider).setPath(page.path.toString());
-    notifyListeners();
+    notifyListeners();  
   }
 
   void switchFalling() {

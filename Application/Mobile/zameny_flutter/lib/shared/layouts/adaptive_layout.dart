@@ -8,8 +8,10 @@ class AdaptiveLayout extends ConsumerWidget {
   final Widget desktop;
 
   const AdaptiveLayout({
-    required this.mobile, required this.desktop, super.key,
+    required this.desktop,
+    required this.mobile,
     this.tablet,
+    super.key,
   });
 
   @override

@@ -23,7 +23,7 @@ List<BottomBarModel> model = [
       activeicon: 'assets/icon/boldnotification.svg',
       icon: 'assets/icon/notification.svg',
       title: 'Звонки',
-      path: 'timings',
+      path: 'timetable',
       enabled: true,),
   BottomBarModel(
     index: 1,

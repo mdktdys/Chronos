@@ -1,22 +1,15 @@
 import 'dart:async';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-
-List<SearchItem> filterItems(final List<dynamic> data) {
-  final items = data[0] as List<SearchItem>;
-  final query = data[1] as String;
-
-  return items.where((final element) => element.getFiltername().toLowerCase().contains(query.toLowerCase())).toList();
-}
 
 class ScheduleTurboSearch extends ConsumerStatefulWidget {
   const ScheduleTurboSearch({super.key});
@@ -27,7 +20,6 @@ class ScheduleTurboSearch extends ConsumerStatefulWidget {
 
 class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
 late final SearchController searchController;
-  List<SearchItem> filteredItems = [];
   Timer? _debounceTimer;
 
   @override
@@ -37,28 +29,13 @@ late final SearchController searchController;
   }
 
   void _onTextChanged(final String value) {
-    final providerSearch = ref.read(searchProvider);
-    if (value.isEmpty) {
-      setState(() {
-        filteredItems.clear();
-      });
-    } else {
-      if (_debounceTimer?.isActive ?? false) {
-        _debounceTimer!.cancel();
-      }
-
-      _debounceTimer = Timer(const Duration(milliseconds: 150), () async {
-        final searchItems = providerSearch.searchItems;
-        final query = value.trim();
-
-        // Выполняем фильтрацию в изоляте
-        final filtered = await compute(filterItems, [searchItems, query]);
-
-        setState(() {
-          filteredItems = filtered;
-        });
-      });
+    if (_debounceTimer?.isActive ?? false) {
+      _debounceTimer!.cancel();
     }
+
+    _debounceTimer = Timer(const Duration(milliseconds: 150), () {
+      ref.read(filterSearchQueryProvider.notifier).state = value;
+    });
   }
 
   @override
@@ -68,10 +45,10 @@ late final SearchController searchController;
       mainAxisSize: MainAxisSize.min,
       children: [
         CupertinoSearchTextField(
-          controller: searchController,
           onSubmitted: (final _) => FocusScope.of(context).unfocus(),
-          onChanged: (final value) => _onTextChanged(value),
           style: context.styles.ubuntuInverseSurface,
+          controller: searchController,
+          onChanged: _onTextChanged,
           placeholder: 'Я ищу...',
         ),
         AnimatedSize(
@@ -82,50 +59,38 @@ late final SearchController searchController;
             spawnIsolate: true,
             physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
-            items: filteredItems,
+            items: ref.watch(filteredSearchItemsProvider).valueOrNull ?? [],
             areItemsTheSame: (final a, final b) => a.s == b.s,
             insertDuration: const Duration(milliseconds: 300),
             removeDuration: const Duration(milliseconds: 300),
-            // removeItemBuilder: (context, animation, oldItem) {
-            //   return FadeTransition(
-            //       opacity: animation,
-            //       child: ListTile(
-            //         key: UniqueKey(),
-            //         title: Text(
-            //           oldItem.getFiltername(),
-            //           style: TextStyle(
-            //               fontFamily: 'Ubuntu',
-            //               color: Theme.of(context).colorScheme.onSurface),
-            //         ),
-            //       ));
-            // },
             itemBuilder: (final context, final animation, final item, final index) {
               return SizeTransition(
                 sizeFactor: animation,
                 axisAlignment: -1,
-                child: SizedBox(
-                  height: 50,
-                  child: ListTile(
-                    key: UniqueKey(),
-                    onTap: () {
-                      setState(() {
-                        searchController.text = '';
-                        FocusScope.of(context).unfocus();
-                        filteredItems.clear();
-                      });
-                      if (item is Group) {
-                        providerSchedule.groupSelected(item.id, context);
-                      } 
-                      if (item is Cabinet) {
-                        providerSchedule.cabinetSelected(item.id, context);
-                      }
-                      if (item is Teacher) {
-                        providerSchedule.teacherSelected(item.id, context);
-                      }
-                    },
-                    title: Text(
-                      item.getFiltername(),
-                      style: context.styles.ubuntuOnSurface,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 2.0),
+                  child: Material(
+                    clipBehavior: Clip.hardEdge,
+                    borderRadius: BorderRadius.circular(16),
+                    child: InkWell(
+                      key: UniqueKey(),
+                      onTap: () {
+                        ref.read(filterSearchQueryProvider.notifier).state = '';
+                        
+                        setState(() {
+                          searchController.text = '';
+                          FocusScope.of(context).unfocus();
+                        });
+                        providerSchedule.searchItemSelected(item, context);
+                      },
+                      child: Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          item.getFiltername(),
+                          style: context.styles.ubuntuInverseSurface18,
+                        ),
+                      ),
                     ),
                   ),
                 ),

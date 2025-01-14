@@ -4,7 +4,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';

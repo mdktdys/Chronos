@@ -5,14 +5,12 @@ import 'package:equatable/equatable.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/providers/search_provider.dart';
-import 'package:zameny_flutter/Services/Api.dart';
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/services/Api.dart';
+import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 @immutable
 sealed class ScheduleEvent {}
@@ -48,10 +46,11 @@ final class LoadTeacherWeek extends ScheduleEvent {
   final DateTime dateStart;
   final DateTime dateEnd;
 
-  LoadTeacherWeek(
-      {required this.teacherID,
-      required this.dateStart,
-      required this.dateEnd,});
+  LoadTeacherWeek({
+    required this.teacherID,
+    required this.dateStart,
+    required this.dateEnd,
+  });
 }
 
 final class LoadGroupWeek extends ScheduleEvent {
@@ -199,18 +198,18 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       final scheduleProvider_ = event.ref.read(scheduleProvider);
       emit(ScheduleLoading());
       try {
-        GetIt.I.get<Talker>().debug('fetch data');
-        await Future.wait([
-          Api.loadTimings(),
-          Api.loadDepartments(),
-          Api.loadCourses(),
-          Api.loadGroups(),
-          Api.loadTeachers(),
-          Api.loadCabinets(),
-        ]);
-        if (event.context.mounted) {
-          event.ref.read(searchProvider).updateSearchItems();
-        }
+        // // GetIt.I.get<Talker>().debug('fetch data');
+        // // await Future.wait([
+        // //   Api.loadTimings(),
+        // //   Api.loadDepartments(),
+        // //   Api.loadCourses(),
+        // //   Api.loadGroups(),
+        // //   Api.loadTeachers(),
+        // //   Api.loadCabinets(),
+        // // ]);
+        // if (event.context.mounted) {
+        //   event.ref.read(searchProvider).updateSearchItems();
+        // }
 
         if (scheduleProvider_.groupIDSeek == -1 &&
             scheduleProvider_.searchType == SearchType.group) {

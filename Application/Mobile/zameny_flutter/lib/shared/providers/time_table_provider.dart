@@ -2,6 +2,13 @@ import 'package:flutter/foundation.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/services/Api.dart';
+
+final timingProvider = FutureProvider<List<LessonTimings>>((final ref) async {
+  return await Api.loadTimings();
+});
+
 final timeTableProvider = ChangeNotifierProvider<TimeTableProvider>((final ref) {
   return TimeTableProvider();
 });

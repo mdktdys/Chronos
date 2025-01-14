@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
-import 'package:zameny_flutter/Services/Data.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 
 class TimeNotifier extends StateNotifier<String> {
