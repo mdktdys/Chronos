@@ -42,6 +42,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:zameny_flutter/Services/Api.dart';
 import 'package:zameny_flutter/models/models.dart';
 
 final groupsProvider = FutureProvider<List<Group>>((final Ref ref) async {
@@ -57,6 +58,10 @@ final cabinetsProvider = FutureProvider<List<Cabinet>>((final Ref ref) async {
 final teachersProvider = FutureProvider<List<Teacher>>((final Ref ref) async {
   final response = await GetIt.I.get<SupabaseClient>().from('Teachers').select();
   return response.map((final group) => Teacher.fromMap(group)).toList();
+});
+
+final timingsProvider = FutureProvider<List<LessonTimings>>((final Ref ref) async {
+  return await Api.loadTimings();
 });
 
 final groupProvider = StateProvider.family<Group?,int>((final Ref ref, final int id) {
