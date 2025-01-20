@@ -25,7 +25,7 @@ class MobileView extends ConsumerWidget {
           controller: provider.pageController,
           children: const [
             TimeTableScreenWrapper(),
-            ScheduleWrapper(),
+            ScheduleScreen(),
             ZamenaScreenWrapper(),
             // MapScreen(),
             SettingsScreenWrapper(),

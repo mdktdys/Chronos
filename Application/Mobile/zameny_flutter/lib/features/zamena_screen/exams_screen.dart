@@ -3,17 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/shared/providers/main_provider.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/features/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/shared/providers/main_provider.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
 import 'package:zameny_flutter/shared/widgets/loading_widget.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 
 class ZamenaScreenWrapper extends StatelessWidget {
@@ -262,7 +262,6 @@ class ZamenaViewTeacher extends StatelessWidget {
                           cabinet: cabinet.id,),
                       swaped: null,
                       type: SearchType.teacher,
-                      refresh: () {},
                       saturdayTime: false,
                       obedTime: false,
                       short: true,);
@@ -330,7 +329,6 @@ class ZamenaViewGroup extends StatelessWidget {
                       ),
                       swaped: null,
                       type: SearchType.group,
-                      refresh: () {},
                       saturdayTime: false,
                       obedTime: false,
                       short: true,);

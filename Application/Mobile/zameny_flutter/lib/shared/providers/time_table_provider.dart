@@ -6,7 +6,7 @@ import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/services/Api.dart';
 
 final timingProvider = FutureProvider<List<LessonTimings>>((final ref) async {
-  return await Api.loadTimings();
+  return await Api.getTimings();
 });
 
 final timeTableProvider = ChangeNotifierProvider<TimeTableProvider>((final ref) {

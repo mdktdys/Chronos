@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
@@ -14,7 +13,6 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_d
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
-import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
@@ -30,16 +28,6 @@ MyGlobals myGlobals = MyGlobals();
 class MyGlobals {
   GlobalKey mainKey = GlobalKey<ScaffoldState>();
   GlobalKey get scaffoldKey => mainKey;
-}
-
-class ScheduleWrapper extends ConsumerWidget {
-  const ScheduleWrapper({super.key});
-
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-      context.read<ScheduleBloc>().add(LoadInitial(context: context,ref: ref));
-      return const ScreenAppearBuilder(child: ScheduleScreen());
-  }
 }
 
 class ScheduleScreen extends ConsumerStatefulWidget {
@@ -72,91 +60,105 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
   @override
   Widget build(final BuildContext context) {
     super.build(context);
+
+    if (ref.watch(searchItemProvider) == null) {
+      return Container(
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          spacing: 20,
+          children: [
+            Expanded(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Text(
+                  'Расписание',
+                  textAlign: TextAlign.center,
+                  style: context.styles.ubuntuPrimaryBold24,
+                ),
+              ),
+            ),
+            const Expanded(
+              child: SingleChildScrollView(
+                child: ScheduleTurboSearch(),
+              ),
+            ),
+          ],
+        ),
+      );
+    }
+
     return Scaffold(
       key: myGlobals.scaffoldKey,
       body: CustomScrollView(
-          controller: scrollController,
-          physics: const BouncingScrollPhysics(),
-          slivers: [
-            SliverPadding(
-              padding: const EdgeInsets.symmetric(horizontal: 20.0),
-              sliver: SliverToBoxAdapter(child: Column(children: [
-                const TopBanner(),
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                const ScheduleTurboSearch(),
-                const SizedBox(height: 10),
-                const DateHeader(),
-                const CurrentLessonTimer(),
-                LessonView(
-                    scrollController: scrollController,
-                    refresh: (){},
-                  ),
-                const SizedBox(height: 100),
-              ],)),
+        controller: scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: const [
+          SliverPadding(
+            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            sliver: SliverToBoxAdapter(
+              child: Column(
+                children: [
+                  TopBanner(),
+                  SizedBox(height: 10),
+                  ScheduleHeader(),
+                  SizedBox(height: 10),
+                  ScheduleTurboSearch(),
+                  SizedBox(height: 10),
+                  DateHeader(),
+                  CurrentLessonTimer(),
+                  // LessonView(scrollController: scrollController),
+                  ScheduleView(),
+                  SizedBox(height: 100),
+                ],
+              ),
             ),
-          ]
-        ),
-      );
+          ),
+        ]
+      ),
+    );
   }
 }
 
-class LessonView extends StatelessWidget {
+class ScheduleView extends StatelessWidget {
+  const ScheduleView({super.key});
+
+  @override
+  Widget build(final BuildContext context) {
+    return const Placeholder();
+  }
+}
+
+class LessonView extends ConsumerWidget {
   final ScrollController scrollController;
-  final Function refresh;
 
   const LessonView({
     required this.scrollController,
-    required this.refresh,
     super.key,
   });
 
   @override
-  Widget build(final BuildContext context) {
-    return BlocBuilder<ScheduleBloc, ScheduleState>(
-      builder: (final context, final state) {
-      return AnimatedSwitcher(
-        reverseDuration: const Duration(milliseconds: 300),
-        duration: const Duration(milliseconds: 300),
-        child: Builder(
-          key: ValueKey<ScheduleState>(state),
-          builder: (final BuildContext context) {
-            if (state is ScheduleLoaded) {
-              return Column(
-                children: [
-                  const SearchResultHeader(),
-                  LessonList(
-                    scrollController: scrollController,
-                    zamenas: state.zamenas,
-                    lessons: state.lessons,
-                    refresh: refresh,
-                  ),
-                ],
-              );
-            } else if (state is ScheduleFailedLoading) {
-              return FailedLoadWidget(
-                error: state.error,
-              );
-            } else if (state is ScheduleLoading) {
-              return const LoadingWidget();
-            } else if (state is ScheduleInitial) {
-              return SizedBox(
-                height: 500,
-                child: Center(
-                  child: Text(
-                    'Тыкни на поиск!\nвыбери группу, преподавателя или кабинет',
-                    textAlign: TextAlign.center,
-                    style: context.styles.ubuntuInverseSurfaceBold24,
-                  ),
-                ),
-              );
-            } else {
-              return const SizedBox.shrink();
-            }
-          },
-        ),);
-    },);
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final scheduleState = ref.watch(riverpodScheduleProvider);
+
+    if (scheduleState.isLoading) {
+      return const LoadingWidget();
+    }
+
+    if (scheduleState.error != null) {
+      return FailedLoadWidget(error: scheduleState.error!);
+    }
+
+    return Column(
+      children: [
+        const SearchResultHeader(),
+        LessonList(
+          scrollController: scrollController,
+          zamenas: scheduleState.zamenas,
+          lessons: scheduleState.lessons,
+        ),
+      ],
+    );
   }
 }
 
@@ -185,11 +187,9 @@ class ShimmerContainer extends StatelessWidget {
 class LessonList extends ConsumerWidget {
   final List<Lesson> lessons;
   final List<Zamena> zamenas;
-  final Function refresh;
   final ScrollController scrollController;
 
   const LessonList({
-    required this.refresh,
     required this.zamenas,
     required this.lessons,
     required this.scrollController,
@@ -204,7 +204,6 @@ class LessonList extends ConsumerWidget {
 
     return ScheduleList(
       context: context,
-      refresh: refresh,
       weekLessons: lessons,
       zamenas: zamenas,
       startDate: startDate,
@@ -217,7 +216,6 @@ class LessonList extends ConsumerWidget {
 
 class ScheduleList extends ConsumerWidget {
   final BuildContext context;
-  final Function refresh;
   final List<Lesson> weekLessons;
   final List<Zamena> zamenas;
   final DateTime startDate;
@@ -227,7 +225,6 @@ class ScheduleList extends ConsumerWidget {
   
   const ScheduleList({
     required this.context,
-    required this.refresh,
     required this.weekLessons,
     required this.zamenas,
     required this.startDate,
@@ -247,7 +244,6 @@ class ScheduleList extends ConsumerWidget {
         weekLessons: weekLessons,
         zamenas: zamenas,
         searchType: searchType,
-        refresh: refresh,
         startDate: startDate,
         currentDay: currentDay,
         todayWeek: todayWeek,
@@ -268,7 +264,6 @@ class ScheduleListWidget extends StatelessWidget {
   final List<Lesson> weekLessons;
   final List<Zamena> zamenas;
   final SearchType searchType;
-  final Function refresh;
   final DateTime startDate;
   final int currentDay;
   final int todayWeek;
@@ -279,7 +274,6 @@ class ScheduleListWidget extends StatelessWidget {
     required this.weekLessons, 
     required this.zamenas, 
     required this.searchType, 
-    required this.refresh, 
     required this.startDate, 
     required this.currentDay, 
     required this.todayWeek, 
@@ -310,7 +304,6 @@ class ScheduleListWidget extends StatelessWidget {
     ) {
       return DayScheduleWidget(
         key: ValueKey(day),
-        refresh: refresh,
         day: day,
         dayZamenas: dayZamenas,
         lessons: lessons,
@@ -325,7 +318,6 @@ class ScheduleListWidget extends StatelessWidget {
     ) {
       return DayScheduleWidgetTeacher(
         key: ValueKey(day),
-        refresh: refresh,
         day: day,
         dayZamenas: dayZamenas,
         lessons: lessons,

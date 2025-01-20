@@ -61,7 +61,7 @@ final teachersProvider = FutureProvider<List<Teacher>>((final Ref ref) async {
 });
 
 final timingsProvider = FutureProvider<List<LessonTimings>>((final Ref ref) async {
-  return await Api.loadTimings();
+  return (await Api.loadTimings());
 });
 
 final groupProvider = StateProvider.family<Group?,int>((final Ref ref, final int id) {

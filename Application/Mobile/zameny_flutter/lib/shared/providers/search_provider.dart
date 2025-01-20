@@ -1,5 +1,3 @@
-import 'package:flutter/foundation.dart';
-
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
@@ -26,8 +24,8 @@ final filteredSearchItemsProvider = FutureProvider<List<SearchItem>>((final ref)
   }
 
   final searchItems = ref.watch(searchItemsProvider).valueOrNull ?? [];
-  final res = await compute(filterItems, [searchItems, query]);
-  // final res = searchItems.where((final element) => element.getFiltername().toLowerCase().contains(query.toLowerCase())).toList();
+  // final res = await compute(filterItems, [searchItems, query]);
+  final res = searchItems.where((final element) => element.getFiltername().toLowerCase().contains(query.toLowerCase())).toList();
   return res;
 });
 

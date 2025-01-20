@@ -3,14 +3,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
-import 'package:zameny_flutter/shared/providers/adaptive.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/models.dart';
+
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_header.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/shared/providers/adaptive.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleWidgetTeacher extends ConsumerStatefulWidget {
   final DateTime startDate;
@@ -18,7 +19,6 @@ class DayScheduleWidgetTeacher extends ConsumerStatefulWidget {
   final int currentWeek;
   final int todayWeek;
   final Data data;
-  final Function refresh;
   final int day;
   final List<Zamena> dayZamenas;
   final List<Lesson> lessons;
@@ -29,7 +29,6 @@ class DayScheduleWidgetTeacher extends ConsumerStatefulWidget {
     required this.currentWeek,
     required this.todayWeek,
     required this.data,
-    required this.refresh,
     required this.day,
     required this.dayZamenas,
     required this.lessons,
@@ -253,7 +252,6 @@ bool obed = false;
                 obedTime: obed,
                 lesson: lesson,
                 swaped: null,
-                refresh: widget.refresh,
                 saturdayTime: widget.day == 6,
               );
             }
@@ -279,7 +277,6 @@ bool obed = false;
             type: SearchType.teacher,
             course: course,
             obedTime: obed,
-            refresh: widget.refresh,
             saturdayTime: widget.day == 6,
             needZamenaAlert: true,
             lesson: Lesson(

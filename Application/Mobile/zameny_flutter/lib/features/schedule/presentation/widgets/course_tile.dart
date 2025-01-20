@@ -4,11 +4,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/views/schedule_screen.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/features/schedule/presentation/views/schedule_screen.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 enum SearchType { teacher, group, cabinet }
 
@@ -360,7 +360,6 @@ class _MixedCourseTileState extends State<MixedCourseTile> {
 class CourseTile extends ConsumerWidget {
   final bool needZamenaAlert;
   final bool saturdayTime;
-  final Function refresh;
   final SearchType type;
   final Lesson? swaped;
   final Lesson lesson;
@@ -374,7 +373,6 @@ class CourseTile extends ConsumerWidget {
   const CourseTile({
     required this.saturdayTime,
     required this.obedTime,
-    required this.refresh,
     required this.course,
     required this.lesson,
     required this.swaped,

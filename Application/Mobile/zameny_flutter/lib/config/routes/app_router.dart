@@ -12,7 +12,7 @@ final GoRouter router = GoRouter(
       },
       routes: [
         GoRoute(
-          path: '/timings',
+          path: '/timetable',
           builder: (final context, final state) {
             return const ApplicationBase(page: 0);
           },

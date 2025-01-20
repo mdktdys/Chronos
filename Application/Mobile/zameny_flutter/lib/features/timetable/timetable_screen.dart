@@ -3,11 +3,12 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/features/timetable/widgets/time_options.dart';
-import 'package:zameny_flutter/features/timetable/widgets/timetable.dart';
+
 import 'package:zameny_flutter/features/timetable/widgets/current_timing_timer.dart';
+import 'package:zameny_flutter/features/timetable/widgets/time_options.dart';
 import 'package:zameny_flutter/features/timetable/widgets/time_table_header.dart';
+import 'package:zameny_flutter/features/timetable/widgets/timetable.dart';
+import 'package:zameny_flutter/shared/providers/main_provider.dart';
 
 class ScreenAppearBuilder extends ConsumerWidget {
   final bool showNavbar;

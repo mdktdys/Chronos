@@ -142,6 +142,23 @@ abstract class Api {
     }
   }
 
+  static Future<List<Liquidation>> getLiquidation(
+    final List<int> groupsID,
+    final DateTime start,
+    final DateTime end,
+  ) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> data = await client
+        .from('Liquidation')
+        .select()
+        .inFilter('group', groupsID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    return data.map((final json) => Liquidation.fromMap(json)).toList();
+  }
+
   static Future<List<LessonTimings>> loadTimings() async {
     final client = GetIt.I.get<SupabaseClient>();
     final dat = GetIt.I.get<Data>();
@@ -154,6 +171,12 @@ abstract class Api {
     }
     dat.timings.sort(((final a, final b) => a.number - b.number));
     return dat.timings;
+  }
+
+  static Future<List<LessonTimings>> getTimings() async {
+    final List<LessonTimings> timings = (await GetIt.I.get<SupabaseClient>().from('timings').select()).map((final json) => LessonTimings.fromMap(json)).toList();
+    timings.sort(((final a, final b) => a.number - b.number));
+    return timings;
   }
 
   static Future<void> loadZamenasFull(
@@ -177,6 +200,20 @@ abstract class Api {
       final ZamenaFull zamena = ZamenaFull.fromMap(element);
       dat.zamenasFull.add(zamena);
     }
+  }
+
+  static Future<List<ZamenaFull>> getZamenasFull(
+    final List<int> groupsID, final DateTime start, final DateTime end,) async {
+
+    final client = GetIt.I.get<SupabaseClient>();
+    final List<dynamic> data = await client
+        .from('ZamenasFull')
+        .select()
+        .inFilter('group', groupsID)
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    return data.map((final json) => ZamenaFull.fromMap(json)).toList();
   }
 
   static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate({
@@ -221,6 +258,21 @@ abstract class Api {
       final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
       dat.zamenaFileLinks.add(zamenaLink);
     }
+  }
+
+  static Future<List<ZamenaFileLink>> getZamenaFileLinks({
+    required final DateTime start,
+    required final DateTime end
+  }) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> data = await client
+        .from('ZamenaFileLinks')
+        .select('id,link,date,created_at')
+        .lte('date', end.toIso8601String())
+        .gte('date', start.toIso8601String());
+
+    return data.map((final json) => ZamenaFileLink.fromMap(json)).toList();
   }
 
   // Future<void> loadZamenasTypes(
@@ -296,6 +348,14 @@ abstract class Api {
       zamenaBuffer.add(zamena);
     }
     return zamenaBuffer;
+  }
+
+  static Future<List<Zamena>> getLoadGroupZamenas({
+    required final List<int> groupsId,
+    required final DateTime start,
+    required final DateTime end
+  }) async {
+    return [];
   }
 
   static Future<List<Zamena>> loadTeacherZamenas({

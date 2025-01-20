@@ -7,8 +7,6 @@ import 'package:animated_list_plus/animated_list_plus.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
@@ -115,6 +113,19 @@ abstract class SearchItem {
     }
     if (this is Teacher) {
       return (this as Teacher).name;
+    }
+    return '';
+  }
+
+  String get typeName {
+    if (this is Group) {
+      return 'Группа';
+    }
+    if (this is Cabinet) {
+      return 'Кабинет';
+    }
+    if (this is Teacher) {
+      return 'Преподаватель';
     }
     return '';
   }

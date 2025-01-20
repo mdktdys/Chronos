@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart' as bl;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/export_course_tile.dart';
@@ -17,8 +17,20 @@ import 'package:zameny_flutter/services/sharing/sharing.dart';
 import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
-final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final ref) {
-  return ScheduleProvider();
+final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final Ref ref) {
+  return ScheduleProvider(ref: ref);
+});
+
+final searchItemProvider = StateProvider<SearchItem?>((final Ref ref) {
+  return null;
+});
+
+final navigationDateProvider = StateProvider<DateTime>((final Ref ref) {
+  final DateTime date = DateTime.now();
+  if (date.weekday == 7) {
+    date.add(const Duration(days: 1));
+  }
+  return date;
 });
 
 class ScheduleProvider extends ChangeNotifier {
@@ -31,7 +43,9 @@ class ScheduleProvider extends ChangeNotifier {
   int currentWeek = 1;
   int todayWeek = 1;
 
-  ScheduleProvider() {
+  Ref ref;
+
+  ScheduleProvider({required this. ref}) {
     groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
     teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
     cabinetIDSeek = GetIt.I.get<Data>().seekCabinet ?? -1;
@@ -49,252 +63,254 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   int getWeekNumber(final DateTime date) {
-    return ((date.difference(septemberFirst).inDays + septemberFirst.weekday) ~/ 7) + 1;
+    return ((date.difference(Constants.septemberFirst).inDays + Constants.septemberFirst.weekday) ~/ 7) + 1;
   }
 
-  Future<void> exportSchedulePNG(final BuildContext context, final WidgetRef ref) async {
-    List<Lesson> lessons = [];
-    String searchName = '';
-    switch (searchType) {
-      case SearchType.cabinet:
-        {
-          return;
-        }
-      case SearchType.teacher:
-        {
-          final Teacher teacher = getTeacherById(teacherIDSeek);
-          lessons = teacher.lessons;
-          lessons.sort((final a, final b) => a.number > b.number ? 1 : -1);
+  // Future<void> exportSchedulePNG(final BuildContext context, final WidgetRef ref) async {
+  //   List<Lesson> lessons = [];
+  //   String searchName = '';
+  //   switch (searchType) {
+  //     case SearchType.cabinet:
+  //       {
+  //         return;
+  //       }
+  //     case SearchType.teacher:
+  //       {
+  //         final Teacher teacher = getTeacherById(teacherIDSeek);
+  //         lessons = teacher.lessons;
+  //         lessons.sort((final a, final b) => a.number > b.number ? 1 : -1);
 
-          searchName = teacher.name;
-        }
-      case SearchType.group:
-        {
-          final Group group = getGroupById(groupIDSeek)!;
-          lessons = group.lessons;
-          searchName = group.name;
-        }
-    }
+  //         searchName = teacher.name;
+  //       }
+  //     case SearchType.group:
+  //       {
+  //         final Group group = getGroupById(groupIDSeek)!;
+  //         lessons = group.lessons;
+  //         searchName = group.name;
+  //       }
+  //   }
 
-    final mondayLessons = lessons.where((final element) => element.date.weekday == 1).toList();
-    final tuesdayLessons = lessons.where((final element) => element.date.weekday == 2).toList();
-    final wednesdayLessons = lessons.where((final element) => element.date.weekday == 3).toList();
-    final thursdayLessons = lessons.where((final element) => element.date.weekday == 4).toList();
-    final fridayLessons = lessons.where((final element) => element.date.weekday == 5).toList();
-    final saturdayLessons = lessons.where((final element) => element.date.weekday == 6).toList();
+  //   final mondayLessons = lessons.where((final element) => element.date.weekday == 1).toList();
+  //   final tuesdayLessons = lessons.where((final element) => element.date.weekday == 2).toList();
+  //   final wednesdayLessons = lessons.where((final element) => element.date.weekday == 3).toList();
+  //   final thursdayLessons = lessons.where((final element) => element.date.weekday == 4).toList();
+  //   final fridayLessons = lessons.where((final element) => element.date.weekday == 5).toList();
+  //   final saturdayLessons = lessons.where((final element) => element.date.weekday == 6).toList();
 
-    final ScreenshotController controller = ScreenshotController();
-    final savedFile = await controller.captureFromWidget(
-        pixelRatio: 4,
-        context: context,
-        Container(
-          color: Theme.of(context).colorScheme.surface,
-          padding: const EdgeInsets.all(16),
-          child: SizedBox(
-            width: 600,
-            child: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Text(
-                    'Расписание $searchName',
-                    style: context.styles.ubuntuWhiteBold24
-                  ),
-                  const SizedBox(height: 5),
-                  Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Понедельник ${navigationDate.day}.${navigationDate.month}',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: mondayLessons.isNotEmpty
-                                        ? mondayLessons.map((final e) {
-                                            const bool saturdayTime = false;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Четверг',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: thursdayLessons.isNotEmpty
-                                        ? thursdayLessons.map((final e) {
-                                            const bool saturdayTime = false;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Вторник',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: tuesdayLessons.isNotEmpty
-                                        ? tuesdayLessons.map((final e) {
-                                            const bool saturdayTime = false;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Пятница',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: fridayLessons.isNotEmpty
-                                        ? fridayLessons.map((final e) {
-                                            const bool saturdayTime = false;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                        ],
-                      ),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Среда',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: wednesdayLessons.isNotEmpty
-                                        ? wednesdayLessons.map((final e) {
-                                            const bool saturdayTime = false;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                          const SizedBox(
-                            width: 20,
-                          ),
-                          Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Суббота',
-                                  style: context.styles.ubuntuWhite20,
-                                ),
-                                Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: saturdayLessons.isNotEmpty
-                                        ? saturdayLessons.map((final e) {
-                                            const bool saturdayTime = true;
-                                            const bool obedTime = false;
-                                            final Course course =
-                                                getCourseById(e.course)!;
-                                            return ExportCourseTile(
-                                                type: searchType,
-                                                course: course,
-                                                e: e,
-                                                obedTime: obedTime,
-                                                saturdayTime: saturdayTime,);
-                                          }).toList()
-                                        : [const ExportCourseTileEmpty()],),
-                              ],),
-                        ],
-                      ),
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          ),
-        ),);
+  //   final ScreenshotController controller = ScreenshotController();
+  //   final savedFile = await controller.captureFromWidget(
+  //       pixelRatio: 4,
+  //       context: context,
+  //       Container(
+  //         color: Theme.of(context).colorScheme.surface,
+  //         padding: const EdgeInsets.all(16),
+  //         child: SizedBox(
+  //           width: 600,
+  //           child: FittedBox(
+  //             fit: BoxFit.scaleDown,
+  //             child: Column(
+  //               mainAxisSize: MainAxisSize.min,
+  //               children: [
+  //                 Text(
+  //                   'Расписание $searchName',
+  //                   style: context.styles.ubuntuWhiteBold24
+  //                 ),
+  //                 const SizedBox(height: 5),
+  //                 Column(
+  //                   mainAxisSize: MainAxisSize.min,
+  //                   children: [
+  //                     Row(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Понедельник ${navigationDate.day}.${navigationDate.month}',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: mondayLessons.isNotEmpty
+  //                                       ? mondayLessons.map((final e) {
+  //                                           const bool saturdayTime = false;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                         const SizedBox(
+  //                           width: 20,
+  //                         ),
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Четверг',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: thursdayLessons.isNotEmpty
+  //                                       ? thursdayLessons.map((final e) {
+  //                                           const bool saturdayTime = false;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                       ],
+  //                     ),
+  //                     Row(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Вторник',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: tuesdayLessons.isNotEmpty
+  //                                       ? tuesdayLessons.map((final e) {
+  //                                           const bool saturdayTime = false;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                         const SizedBox(
+  //                           width: 20,
+  //                         ),
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Пятница',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: fridayLessons.isNotEmpty
+  //                                       ? fridayLessons.map((final e) {
+  //                                           const bool saturdayTime = false;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                       ],
+  //                     ),
+  //                     Row(
+  //                       crossAxisAlignment: CrossAxisAlignment.start,
+  //                       children: [
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Среда',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: wednesdayLessons.isNotEmpty
+  //                                       ? wednesdayLessons.map((final e) {
+  //                                           const bool saturdayTime = false;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                         const SizedBox(
+  //                           width: 20,
+  //                         ),
+  //                         Column(
+  //                             crossAxisAlignment: CrossAxisAlignment.start,
+  //                             children: [
+  //                               Text(
+  //                                 'Суббота',
+  //                                 style: context.styles.ubuntuWhite20,
+  //                               ),
+  //                               Column(
+  //                                   mainAxisSize: MainAxisSize.min,
+  //                                   children: saturdayLessons.isNotEmpty
+  //                                       ? saturdayLessons.map((final e) {
+  //                                           const bool saturdayTime = true;
+  //                                           const bool obedTime = false;
+  //                                           final Course course =
+  //                                               getCourseById(e.course)!;
+  //                                           return ExportCourseTile(
+  //                                               type: searchType,
+  //                                               course: course,
+  //                                               e: e,
+  //                                               obedTime: obedTime,
+  //                                               saturdayTime: saturdayTime,);
+  //                                         }).toList()
+  //                                       : [const ExportCourseTileEmpty()],),
+  //                             ],),
+  //                       ],
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ],
+  //             ),
+  //           ),
+  //         ),
+  //       ),);
 
-    final String name = 'Расписание $searchName';
-    ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
-  }
+  //   final String name = 'Расписание $searchName';
+  //   ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
+  // }
 
   void searchItemSelected(final SearchItem item, final BuildContext context) {
-    if (item is Group) {
-      groupSelected(item.id, context);
-    } 
-    if (item is Cabinet) {
-      cabinetSelected(item.id, context);
-    }
-    if (item is Teacher) {
-      teacherSelected(item.id, context);
-    }
+    ref.read(searchItemProvider.notifier).state = item;
+
+    // if (item is Group) {
+    //   groupSelected(item.id, context);
+    // } 
+    // if (item is Cabinet) {
+    //   cabinetSelected(item.id, context);
+    // }
+    // if (item is Teacher) {
+    //   teacherSelected(item.id, context);
+    // }
   }
 
   void toggleWeek(final int days, final BuildContext context) {
@@ -331,17 +347,19 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> loadWeekSchedule(final BuildContext context) async {
-    final DateTime monday =
-        navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
 
     // Устанавливаем время для понедельника и воскресенья
     final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    final DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(LoadGroupWeek(
-        groupID: groupIDSeek, dateStart: startOfWeek, dateEnd: endOfWeek,),);
+    ref.read(riverpodScheduleProvider.notifier).loadGroupWeek(
+      groupID: groupIDSeek,
+      dateStart: startOfWeek,
+      dateEnd: endOfWeek
+    );
+
     notifyListeners();
   }
 
@@ -368,36 +386,33 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> loadCabinetWeekSchedule(final BuildContext context) async {
-    final DateTime monday =
-        navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
 
     final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
     final DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(LoadCabinetWeek(
-          cabinetID: cabinetIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ),);
+    ref.read(riverpodScheduleProvider.notifier).loadCabinetWeek(
+      cabinetID: cabinetIDSeek,
+      dateStart: startOfWeek,
+      dateEnd: endOfWeek
+    );
     notifyListeners();
   }
 
   Future<void> loadWeekTeahcerSchedule(final BuildContext context) async {
-    final DateTime monday =
-        navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
     final DateTime sunday = monday.add(const Duration(days: 6));
 
     final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    final DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    context.read<ScheduleBloc>().add(LoadTeacherWeek(
-          teacherID: teacherIDSeek,
-          dateStart: startOfWeek,
-          dateEnd: endOfWeek,
-        ),);
+    ref.read(riverpodScheduleProvider.notifier).loadTeacherWeek(
+      teacherID: teacherIDSeek,
+      dateStart: startOfWeek,
+      dateEnd: endOfWeek
+    );
     notifyListeners();
   }
 

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -9,7 +8,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/config/routes/app_router.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/main_screen.dart';
-import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/in_app_update/in_app_update_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/widgets/snowfall.dart';
@@ -65,15 +63,12 @@ class ApplicationBase extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     WidgetsBinding.instance.addPostFrameCallback((final _) => ref.read(mainProvider).setPage(page));
 
-    return BlocProvider(
-      create: (final BuildContext context) => ScheduleBloc(),
-      child: const Scaffold(
-        body: Stack(
-          children: [
-            MainScreen(),
-            SnowFall(),
-          ],
-        ),
+    return const Scaffold(
+      body: Stack(
+        children: [
+          MainScreen(),
+          SnowFall(),
+        ],
       ),
     );
   }
