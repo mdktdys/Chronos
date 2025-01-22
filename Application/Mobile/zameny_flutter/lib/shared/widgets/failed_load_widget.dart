@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class FailedLoadWidget extends ConsumerWidget {
@@ -42,9 +43,9 @@ class FailedLoadWidget extends ConsumerWidget {
           height: 10,
         ),
         GestureDetector(
-          onTap: () {
-            provider.loadWeekSchedule.call(context);
-          },
+          // onTap: () {
+          //   provider.loadWeekSchedule.call(context);
+          // },
           child: Container(
             width: 150,
             height: 40,

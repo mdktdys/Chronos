@@ -6,12 +6,88 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
+import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
+import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
+
+class DayScheduleWidgetReworked extends ConsumerWidget {
+  final DaySchedule daySchedule;
+
+  const DayScheduleWidgetReworked({
+    required this.daySchedule,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      spacing: 8,
+      children: [
+        // DayScheduleHeader(
+        //   date: daySchedule.date,
+        //   links: daySchedule.zamenaLinks ?? []
+        // ),
+        ... daySchedule.paras.map((final para) {
+          final Lesson? lesson = para.lesson?.first;
+          final Group? group = ref.watch(groupProvider(2772));
+
+          return CourseTileRework(
+            index: lesson?.number ?? 1,
+            title: group?.name ?? "ничего",
+          );
+        })
+      ],
+    );
+  }
+}
+
+class CourseTileRework extends StatelessWidget {
+  final String title;
+  final int index;
+
+  const CourseTileRework({
+    required this.title,
+    required this.index,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Row(
+        children: [
+          Container(
+            width: 30,
+            decoration: BoxDecoration(
+              shape: BoxShape.circle,
+              color: getColorForText(title),
+            ),
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                index.toString(),
+                textAlign: TextAlign.center,
+                style: context.styles.ubuntuWhiteBold14,
+              ),
+            ),
+          ),
+          Text(title)
+        ],
+      ),
+    );
+  }
+}
+
 
 class DayScheduleWidget extends ConsumerStatefulWidget {
   final DateTime startDate;
@@ -115,11 +191,11 @@ bool obed = false;
         children: [
           Column(
             children: [
-              DayScheduleHeader(
-                  day: widget.day,
-                  startDate: widget.startDate,
-                  isToday: isToday,
-                  fullSwap: fullSwap,),
+              // DayScheduleHeader(
+              //     day: widget.day,
+              //     startDate: widget.startDate,
+              //     isToday: isToday,
+              //     fullSwap: fullSwap,),
               //isToday
               courseTiles.isNotEmpty && needObedSwitch && (widget.day != 6)
                   ? Row(

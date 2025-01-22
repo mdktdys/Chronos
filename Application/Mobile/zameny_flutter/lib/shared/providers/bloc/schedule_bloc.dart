@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -20,18 +22,26 @@ class Paras {
 }
 
 class DaySchedule {
-  final List<Paras> paras;
   final List<ZamenaFileLink>? zamenaLinks;
+  final List<Paras> paras;
+  final DateTime date;
 
   DaySchedule({
+    required this.zamenaLinks,
     required this.paras,
-    required this.zamenaLinks
+    required this.date,
   });
 }
 
 final parasProvider = FutureProvider<List<DaySchedule>>((final Ref ref) async {
-  final DateTime startdate = ref.watch(navigationDateProvider);
-  final DateTime endDate = startdate.add(const Duration(days: 7));
+  DateTime startdate = ref.watch(navigationDateProvider);
+  startdate = startdate.subtract(Duration(days: startdate.weekday - 1));
+  
+  final DateTime endDate = startdate.add(const Duration(days: 6));
+  
+  log(startdate.toString());
+  log(endDate.toString());
+  
   final SearchItem? searchItem = ref.watch(searchItemProvider);
   final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
 
@@ -114,7 +124,7 @@ final parasProvider = FutureProvider<List<DaySchedule>>((final Ref ref) async {
       final groupsLessons = result[2] as List<Zamena>;
 
       List<DaySchedule> schedule = [];
-      for (DateTime date in List.generate(endDate.difference(startdate).inDays + 1, (final int index) => endDate.add(Duration(days: index)))) {
+      for (DateTime date in List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)))) {
         List<Paras> dayParas = [];
 
         final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date == date).toList();
@@ -129,12 +139,17 @@ final parasProvider = FutureProvider<List<DaySchedule>>((final Ref ref) async {
           paras.lesson = teacherLesson;
           paras.zamena = groupLessonZamena;
 
+          // if (paras.lesson!.isEmpty && paras.zamena!.isEmpty) {
+          //   continue;
+          // }
+
           dayParas.add(paras);
         }
 
         final daySchedule = DaySchedule(
-          zamenaLinks: links,
+          zamenaLinks: links.where((final link) => link.date == date).toList(),
           paras: dayParas,
+          date: date,
         );
 
         schedule.add(daySchedule);

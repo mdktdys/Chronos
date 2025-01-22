@@ -4,36 +4,39 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 class DayScheduleHeader extends StatelessWidget {
+  final List<ZamenaFileLink> links;
   final bool? fullSwap;
-  const DayScheduleHeader(
-      {required this.day, required this.startDate, required this.isToday, super.key,
-      this.fullSwap,});
+  final DateTime date;
 
-  final int day;
-  final DateTime startDate;
-  final bool isToday;
+  const DayScheduleHeader({
+    required this.links,
+    required this.date,
+    this.fullSwap,
+    super.key,
+  });
+
 
   @override
   Widget build(final BuildContext context) {
-    final int searchDay = startDate.add(Duration(days: day - 1)).day;
-    final int searchMonth = startDate.add(Duration(days: day - 1)).month;
-    final int searchYear = startDate.add(Duration(days: day - 1)).year;
-    final Set<ZamenaFileLink> links = GetIt.I
-        .get<Data>()
-        .zamenaFileLinks
-        .where(
-          (final element) =>
-              element.date.year == searchYear &&
-              element.date.month == searchMonth &&
-              element.date.day == searchDay,
-        )
-        .toSet();
+    // final int searchDay = startDate.add(Duration(days: day - 1)).day;
+    // final int searchMonth = startDate.add(Duration(days: day - 1)).month;
+    // final int searchYear = startDate.add(Duration(days: day - 1)).year;
+    // final Set<ZamenaFileLink> links = GetIt.I
+    //     .get<Data>()
+    //     .zamenaFileLinks
+    //     .where(
+    //       (final element) =>
+    //           element.date.year == searchYear &&
+    //           element.date.month == searchMonth &&
+    //           element.date.day == searchDay,
+    //     )
+    //     .toSet();
     return Align(
       alignment: Alignment.centerLeft,
       child: Row(
@@ -44,11 +47,11 @@ class DayScheduleHeader extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  getDayName(day),
+                  getDayName(date.weekday),
                   style: context.styles.ubuntuInverseSurface24,
                 ),
                 Text(
-                  '${getMonthName(startDate.add(Duration(days: day - 1)).month)} ${startDate.add(Duration(days: day - 1)).day}',
+                  '${getMonthName(date.month)} ${date.day}',
                   style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.7))
                 ),
               ],
@@ -185,10 +188,8 @@ class DayScheduleHeader extends StatelessWidget {
                     ),
                   ),
                 )
-              : const SizedBox(
-                  width: 5,
-                ),
-          isToday
+              : const SizedBox(width: 5),
+          date == DateTime.now()
               ? Container(
                   decoration:  BoxDecoration(
                       color: Theme.of(context).colorScheme.primary,

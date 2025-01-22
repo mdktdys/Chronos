@@ -93,23 +93,23 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       body: CustomScrollView(
         controller: scrollController,
         physics: const BouncingScrollPhysics(),
-        slivers: const [
+        slivers: [
           SliverPadding(
-            padding: EdgeInsets.symmetric(horizontal: 20.0),
+            padding: const EdgeInsets.symmetric(horizontal: 20.0),
             sliver: SliverToBoxAdapter(
               child: Column(
                 children: [
-                  TopBanner(),
-                  SizedBox(height: 10),
-                  ScheduleHeader(),
-                  SizedBox(height: 10),
-                  ScheduleTurboSearch(),
-                  SizedBox(height: 10),
-                  DateHeader(),
-                  CurrentLessonTimer(),
+                  const TopBanner(),
+                  const SizedBox(height: 10),
+                  const ScheduleHeader(),
+                  const SizedBox(height: 10),
+                  const ScheduleTurboSearch(),
+                  const SizedBox(height: 10),
+                  const DateHeader(),
+                  const CurrentLessonTimer(),
                   // LessonView(scrollController: scrollController),
-                  ScheduleView(),
-                  SizedBox(height: 100),
+                  ScheduleView(scrollController: scrollController),
+                  const SizedBox(height: 100),
                 ],
               ),
             ),
@@ -120,12 +120,50 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
   }
 }
 
-class ScheduleView extends StatelessWidget {
-  const ScheduleView({super.key});
+class ScheduleView extends ConsumerWidget {
+  final ScrollController scrollController;
+
+  const ScheduleView({required this.scrollController, super.key,});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final scheduleProvider = ref.watch(parasProvider);
+
+    return Column(
+      children: [
+        const SearchResultHeader(),
+        scheduleProvider.when(
+          data: (final data) {
+            return ScheduleDaysWidget(days: data);
+          },
+          error: (final e,final o) {
+            return FailedLoadWidget(error: e.toString());
+          },
+          loading: () {
+            return const CircularProgressIndicator();
+          }
+        ),
+        
+      ],
+    );
+  }
+}
+
+class ScheduleDaysWidget extends StatelessWidget {
+  final List<DaySchedule> days;
+
+  const ScheduleDaysWidget({
+    required this.days,
+    super.key,
+  });
 
   @override
   Widget build(final BuildContext context) {
-    return const Placeholder();
+    return Column(
+      children: days.map((final day) {
+        return DayScheduleWidgetReworked(daySchedule: day);
+      }).toList()
+    );
   }
 }
 
@@ -151,7 +189,6 @@ class LessonView extends ConsumerWidget {
 
     return Column(
       children: [
-        const SearchResultHeader(),
         LessonList(
           scrollController: scrollController,
           zamenas: scheduleState.zamenas,

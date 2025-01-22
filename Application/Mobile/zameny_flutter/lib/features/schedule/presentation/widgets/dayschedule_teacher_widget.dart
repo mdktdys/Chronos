@@ -111,8 +111,8 @@ bool obed = false;
           : null,
       child: Column(
         children: [
-          DayScheduleHeader(
-              day: widget.day, startDate: widget.startDate, isToday: isToday,),
+          // DayScheduleHeader(
+          //     day: widget.day, startDate: widget.startDate, isToday: isToday,),
           //isToday
           courseTiles.isNotEmpty && needObedSwitch && (widget.day != 6)
               ? Row(

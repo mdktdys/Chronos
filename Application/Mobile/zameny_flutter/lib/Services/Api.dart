@@ -333,7 +333,6 @@ abstract class Api {
       return [];
     }
     final client = GetIt.I.get<SupabaseClient>();
-    GetIt.I.get<Data>();
     final List<dynamic> data = await client
         .from('Zamenas')
         .select()
@@ -364,7 +363,6 @@ abstract class Api {
     required final DateTime end
   }) async {
     final client = GetIt.I.get<SupabaseClient>();
-    GetIt.I.get<Data>();
     final List<dynamic> data = await client
         .from('Zamenas')
         .select()
