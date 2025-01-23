@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
 
+import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
@@ -14,6 +17,8 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_h
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
 import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
@@ -62,28 +67,62 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
     super.build(context);
 
     if (ref.watch(searchItemProvider) == null) {
-      return Container(
-        padding: const EdgeInsets.all(20),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          spacing: 20,
-          children: [
-            Expanded(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Text(
-                  'Расписание',
-                  textAlign: TextAlign.center,
-                  style: context.styles.ubuntuPrimaryBold24,
+      return Align(
+        child: ConstrainedBox(
+          constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
+          child: Container(
+            padding: const EdgeInsets.all(20),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              spacing: 20,
+              children: [
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text(
+                      'Расписание',
+                      textAlign: TextAlign.center,
+                      style: context.styles.ubuntuPrimaryBold24,
+                    ),
+                  ),
                 ),
-              ),
+                // Row(
+                //   spacing: 20,
+                //   children: [
+                //     Expanded(
+                //       child: BaseContainer(
+                //         padding: const EdgeInsets.all(20),
+                //         child: Column(
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             SvgPicture.asset(Images.teacher),
+                //             const Text('Группы')
+                //           ],
+                //         )
+                //       ),
+                //     ),
+                //     Expanded(
+                //       child: BaseContainer(
+                //         padding: const EdgeInsets.all(20),
+                //         child: Column(
+                //           mainAxisSize: MainAxisSize.min,
+                //           children: [
+                //             SvgPicture.asset(Images.teacher),
+                //             const Text('Преподаватели')
+                //           ],
+                //         )
+                //       ),
+                //     ),
+                //   ]
+                // ),
+                const Expanded(
+                  child: SingleChildScrollView(
+                    child: ScheduleTurboSearch(),
+                  ),
+                ),
+              ],
             ),
-            const Expanded(
-              child: SingleChildScrollView(
-                child: ScheduleTurboSearch(),
-              ),
-            ),
-          ],
+          ),
         ),
       );
     }
@@ -127,7 +166,7 @@ class ScheduleView extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final scheduleProvider = ref.watch(parasProvider);
+    final scheduleProvider = ref.watch(dayScheduleProvider);
 
     return Column(
       children: [
@@ -161,43 +200,43 @@ class ScheduleDaysWidget extends StatelessWidget {
   Widget build(final BuildContext context) {
     return Column(
       children: days.map((final day) {
-        return DayScheduleWidgetReworked(daySchedule: day);
+        return DayScheduleWidget(daySchedule: day);
       }).toList()
     );
   }
 }
 
-class LessonView extends ConsumerWidget {
-  final ScrollController scrollController;
+// class LessonView extends ConsumerWidget {
+//   final ScrollController scrollController;
 
-  const LessonView({
-    required this.scrollController,
-    super.key,
-  });
+//   const LessonView({
+//     required this.scrollController,
+//     super.key,
+//   });
 
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final scheduleState = ref.watch(riverpodScheduleProvider);
+//   @override
+//   Widget build(final BuildContext context, final WidgetRef ref) {
+//     final scheduleState = ref.watch(riverpodScheduleProvider);
 
-    if (scheduleState.isLoading) {
-      return const LoadingWidget();
-    }
+//     if (scheduleState.isLoading) {
+//       return const LoadingWidget();
+//     }
 
-    if (scheduleState.error != null) {
-      return FailedLoadWidget(error: scheduleState.error!);
-    }
+//     if (scheduleState.error != null) {
+//       return FailedLoadWidget(error: scheduleState.error!);
+//     }
 
-    return Column(
-      children: [
-        LessonList(
-          scrollController: scrollController,
-          zamenas: scheduleState.zamenas,
-          lessons: scheduleState.lessons,
-        ),
-      ],
-    );
-  }
-}
+//     return Column(
+//       children: [
+//         LessonList(
+//           scrollController: scrollController,
+//           zamenas: scheduleState.zamenas,
+//           lessons: scheduleState.lessons,
+//         ),
+//       ],
+//     );
+//   }
+// }
 
 class ShimmerContainer extends StatelessWidget {
   const ShimmerContainer({
@@ -334,37 +373,39 @@ class ScheduleListWidget extends StatelessWidget {
     final List<Zamena> dayZamenas = zamenas.where((final element) => element.date.weekday == day).toList();
     dayZamenas.sort((final a, final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 
+    return SizedBox();
+
     //if ((dayZamenas.length + lessons.length) > 0) {
-    if (
-      searchType == SearchType.group
-      || searchType == SearchType.cabinet
-    ) {
-      return DayScheduleWidget(
-        key: ValueKey(day),
-        day: day,
-        dayZamenas: dayZamenas,
-        lessons: lessons,
-        startDate: startDate,
-        data: data,
-        currentDay: currentDay,
-        todayWeek: todayWeek,
-        currentWeek: currentWeek,
-      );
-    } else if (
-      searchType == SearchType.teacher
-    ) {
-      return DayScheduleWidgetTeacher(
-        key: ValueKey(day),
-        day: day,
-        dayZamenas: dayZamenas,
-        lessons: lessons,
-        startDate: startDate,
-        data: data,
-        currentDay: currentDay,
-        todayWeek: todayWeek,
-        currentWeek: currentWeek,
-      );
-    }
-    return const SizedBox.shrink();
+    // if (
+    //   searchType == SearchType.group
+    //   || searchType == SearchType.cabinet
+    // ) {
+    //   return DayScheduleWidget(
+    //     key: ValueKey(day),
+    //     day: day,
+    //     dayZamenas: dayZamenas,
+    //     lessons: lessons,
+    //     startDate: startDate,
+    //     data: data,
+    //     currentDay: currentDay,
+    //     todayWeek: todayWeek,
+    //     currentWeek: currentWeek,
+    //   );
+    // } else if (
+    //   searchType == SearchType.teacher
+    // ) {
+    //   return DayScheduleWidgetTeacher(
+    //     key: ValueKey(day),
+    //     day: day,
+    //     dayZamenas: dayZamenas,
+    //     lessons: lessons,
+    //     startDate: startDate,
+    //     data: data,
+    //     currentDay: currentDay,
+    //     todayWeek: todayWeek,
+    //     currentWeek: currentWeek,
+    //   );
+    // }
+    // return const SizedBox.shrink();
   }
 }

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/constants.dart';
+
 class AdaptiveLayout extends ConsumerWidget {
   final Widget mobile;
   final Widget? tablet;
@@ -18,7 +20,7 @@ class AdaptiveLayout extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     return LayoutBuilder(
       builder: (final context, final constraints) {
-        if (constraints.maxWidth >= 1200) {
+        if (constraints.maxWidth >= Constants.maxWidthDesktop) {
           return desktop;
         } else if (constraints.maxWidth >= 600) {
           return tablet ?? desktop;

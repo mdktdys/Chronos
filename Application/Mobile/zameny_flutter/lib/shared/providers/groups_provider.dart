@@ -43,6 +43,7 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/Services/Api.dart';
+import 'package:zameny_flutter/features/timetable/widgets/timings_tile.dart';
 import 'package:zameny_flutter/models/models.dart';
 
 final groupsProvider = FutureProvider<List<Group>>((final Ref ref) async {
@@ -60,6 +61,11 @@ final teachersProvider = FutureProvider<List<Teacher>>((final Ref ref) async {
   return response.map((final group) => Teacher.fromMap(group)).toList();
 });
 
+final coursesProvider = FutureProvider<List<Course>>((final Ref ref) async {
+  final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>().from('Courses').select();
+    return data.map((final json) => Course.fromMap(json)).toList();
+});
+
 final timingsProvider = FutureProvider<List<LessonTimings>>((final Ref ref) async {
   return (await Api.getTimings());
 });
@@ -74,4 +80,12 @@ final teacherProvider = StateProvider.family<Teacher?,int>((final Ref ref, final
 
 final cabinetProvider = StateProvider.family<Cabinet?,int>((final Ref ref, final int id) {
   return ref.watch(cabinetsProvider).value?.where((final cabinet) => cabinet.id == id).firstOrNull;
+});
+
+final courseProvider = StateProvider.family<Course?,int>((final Ref ref, final int id) {
+  return ref.watch(coursesProvider).value?.where((final cabinet) => cabinet.id == id).firstOrNull;
+});
+
+final timingProvider = StateProvider.family<LessonTimings?,int>((final Ref ref, final int id) {
+  return ref.watch(timingsProvider).value?.where((final cabinet) => cabinet.number == id).firstOrNull;
 });

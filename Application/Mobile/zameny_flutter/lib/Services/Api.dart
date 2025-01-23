@@ -3,32 +3,22 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 
 abstract class Api {
-  static Future<List<Lesson>> loadWeekSchedule({
+  
+  static Future<List<Lesson>> getGroupLessons({
     required final int groupID,
     required final DateTime start,
     required final DateTime end,
   }) async {
-    final client = GetIt.I.get<SupabaseClient>();
+    final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
+      .from('Paras')
+      .select('id,group,number,course,teacher,cabinet,date')
+      .eq('group', groupID)
+      .lte('date', end.toIso8601String())
+      .gte('date', start.toIso8601String());
 
-    final List<dynamic> data = await client
-        .from('Paras')
-        .select('id,group,number,course,teacher,cabinet,date')
-        .eq('group', groupID)
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
-
-    final Group group = getGroupById(groupID)!;
-    group.lessons = [];
-    final List<Lesson> weekLessons = [];
-    for (final element in data) {
-      final Lesson lesson = Lesson.fromMap(element);
-      weekLessons.add(lesson);
-      group.lessons.add(lesson);
-    }
-    return weekLessons;
+    return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
   }
 
   static Future<List<Lesson>> loadWeekTeacherSchedule({
@@ -179,8 +169,9 @@ abstract class Api {
     return timings;
   }
 
+
   static Future<void> loadZamenasFull(
-      final List<int> groupsID, final DateTime start, final DateTime end,) async {
+    final List<int> groupsID, final DateTime start, final DateTime end,) async {
     final dat = GetIt.I.get<Data>();
 
     // //тестова проверка на уже существующие
@@ -431,18 +422,7 @@ abstract class Api {
   //   }
   // }
 
-  // static Future<void> loadCourses() async {
-  //   final client = GetIt.I.get<SupabaseClient>();
-  //   final dat = GetIt.I.get<Data>();
-
-  //   final List<dynamic> data = await client.from('Courses').select();
-
-  //   dat.courses = [];
-  //   for (final element in data) {
-  //     final Course course = Course.fromMap(element);
-  //     dat.courses.add(course);
-  //   }
-  // }
+  
 
   // static Future<void> loadDepartments() async {
   //   final client = GetIt.I.get<SupabaseClient>();

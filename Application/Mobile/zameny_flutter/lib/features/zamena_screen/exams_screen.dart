@@ -223,10 +223,10 @@ class ZamenaViewTeacher extends StatelessWidget {
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: teachersList.map((final teacherId) {
-          final groupZamenas =
-              zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
-              groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+          final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
+          groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
           final teacher = getTeacherById(teacherId);
+
           if(teacher.name.replaceAll(' ', '') == ''){
             return const SizedBox();
           }

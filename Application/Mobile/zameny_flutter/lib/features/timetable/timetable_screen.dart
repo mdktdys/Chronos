@@ -4,6 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/features/timetable/widgets/current_timing_timer.dart';
 import 'package:zameny_flutter/features/timetable/widgets/time_options.dart';
 import 'package:zameny_flutter/features/timetable/widgets/time_table_header.dart';
@@ -60,7 +61,7 @@ class TimeTableScreen extends StatelessWidget {
         child: Align(
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1200),
+            constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
             child: const Padding(
               padding: EdgeInsets.symmetric(horizontal: 20),
               child: Column(

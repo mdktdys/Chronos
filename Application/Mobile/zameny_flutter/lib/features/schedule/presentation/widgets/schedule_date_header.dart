@@ -4,22 +4,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
-import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
+import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class BaseContainer extends StatelessWidget {
+  final EdgeInsets? padding;
   final Widget child;
 
   const BaseContainer({
     required this.child,
+    this.padding,
     super.key
   });
 
   @override
   Widget build(final BuildContext context) {
     return Container(
+      padding: padding,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),

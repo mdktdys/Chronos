@@ -354,11 +354,11 @@ class ScheduleProvider extends ChangeNotifier {
     final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
     final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    ref.read(riverpodScheduleProvider.notifier).loadGroupWeek(
-      groupID: groupIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek
-    );
+    // ref.read(riverpodScheduleProvider.notifier).loadGroupWeek(
+    //   groupID: groupIDSeek,
+    //   dateStart: startOfWeek,
+    //   dateEnd: endOfWeek
+    // );
 
     notifyListeners();
   }
@@ -393,11 +393,11 @@ class ScheduleProvider extends ChangeNotifier {
     final DateTime endOfWeek =
         DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    ref.read(riverpodScheduleProvider.notifier).loadCabinetWeek(
-      cabinetID: cabinetIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek
-    );
+    // ref.read(riverpodScheduleProvider.notifier).loadCabinetWeek(
+    //   cabinetID: cabinetIDSeek,
+    //   dateStart: startOfWeek,
+    //   dateEnd: endOfWeek
+    // );
     notifyListeners();
   }
 
@@ -408,11 +408,11 @@ class ScheduleProvider extends ChangeNotifier {
     final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
     final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
-    ref.read(riverpodScheduleProvider.notifier).loadTeacherWeek(
-      teacherID: teacherIDSeek,
-      dateStart: startOfWeek,
-      dateEnd: endOfWeek
-    );
+    // ref.read(riverpodScheduleProvider.notifier).loadTeacherWeek(
+    //   teacherID: teacherIDSeek,
+    //   dateStart: startOfWeek,
+    //   dateEnd: endOfWeek
+    // );
     notifyListeners();
   }
 
