@@ -23,6 +23,7 @@ class SkeletonizedProvider<T> extends ConsumerWidget {
     final AsyncValue value = ref.watch(provider);
 
     return Skeletonizer(
+      enableSwitchAnimation: true,
       enabled: value.isLoading,
       child: value.when(
         data: (final data_) => data(data_),

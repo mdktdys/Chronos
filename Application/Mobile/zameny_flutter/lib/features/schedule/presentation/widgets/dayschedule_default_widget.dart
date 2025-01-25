@@ -1,20 +1,13 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_header.dart';
-import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
-import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/providers/adaptive.dart';
 import 'package:zameny_flutter/shared/providers/groups_provider.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleWidget extends ConsumerStatefulWidget {
@@ -74,13 +67,22 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
           final Cabinet? cabinet = ref.watch(cabinetProvider(lesson?.cabinet ?? -1));
           final LessonTimings? timings = ref.watch(timingProvider(lesson?.number ?? -1));
 
+          final String? startTime = obed
+            ? timings?.obedStart.hhmm()
+            : timings?.start.hhmm();
+
+          final String? endTime = obed
+            ? timings?.obedEnd.hhmm()
+            : timings?.end.hhmm();
+
           return CourseTileRework(
             cabinetTitle: cabinet?.name ?? '',
             subTitle: teacher?.name ?? '',
             index: lesson?.number ?? -1,
             title: course?.name ?? '',
-            startTime: timings?.start.hhmm().toString(),
-            endTime: timings?.end.hhmm().toString(),
+            startTime: startTime,
+            endTime: endTime,
+            obedTime: obed,
           );
         })
       ],

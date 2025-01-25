@@ -14,4 +14,15 @@ class Paras {
     this.zamenaFull,
     this.number,
   });
+
+  factory Paras.fake() {
+    return Paras(
+      number: 1,
+      lesson: [
+        Lesson.fake(number: 1),
+        Lesson.fake(number: 2),
+        Lesson.fake(number: 3)
+      ]
+    );
+  }
 }

@@ -11,4 +11,16 @@ class DaySchedule {
     required this.paras,
     required this.date,
   });
+  
+  factory DaySchedule.fake(final DateTime date) {
+    return DaySchedule(
+      zamenaLinks: [],
+      paras: [
+        Paras.fake(),
+        Paras.fake(),
+        Paras.fake()
+      ],
+      date: date
+    );
+  }
 }

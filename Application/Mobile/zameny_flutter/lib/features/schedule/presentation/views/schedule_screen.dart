@@ -20,11 +20,12 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/search_res
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
+import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
 import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/adaptive.dart';
 import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart'  hide scheduleProvider;
 import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
 import 'package:zameny_flutter/shared/widgets/loading_widget.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
@@ -138,18 +139,16 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             sliver: SliverToBoxAdapter(
               child: Column(
+                spacing: 10,
                 children: [
                   const TopBanner(),
-                  const SizedBox(height: 10),
                   const ScheduleHeader(),
-                  const SizedBox(height: 10),
                   const ScheduleTurboSearch(),
-                  const SizedBox(height: 10),
                   const DateHeader(),
                   const CurrentLessonTimer(),
                   // LessonView(scrollController: scrollController),
                   ScheduleView(scrollController: scrollController),
-                  const SizedBox(height: 100),
+                  const SizedBox(height: 90),
                 ],
               ),
             ),
@@ -167,35 +166,15 @@ class ScheduleView extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final scheduleProvider = ref.watch(dayScheduleProvider);
-
-    return Column(
-      children: [
-        const SearchResultHeader(),
-        scheduleProvider.when(
-          data: (final data) {
-            return ScheduleDaysWidget(days: data);
-          },
-          error: (final e,final o) {
-            return FailedLoadWidget(error: e.toString());
-          },
-          loading: () {
-            return Skeletonizer(
-              child: Column(
-                spacing: 8,
-                children: List.generate(6, (final index) {
-                  return CourseTileRework(
-                    title: BoneMock.subtitle,
-                    subTitle: BoneMock.words(1),
-                    cabinetTitle: '123',
-                    index: index,
-                  );
-                })
-              ),
-            );
-          }
-        ),
-      ],
+    return SkeletonizedProvider(
+      provider: scheduleProvider,
+      fakeData: ScheduleNotifier.fake,
+      error: (final o, final s) {
+        return const Text('data');
+      },
+      data: (final data) {
+        return ScheduleDaysWidget(days: data);
+      },
     );
   }
 }
@@ -272,80 +251,80 @@ class ShimmerContainer extends StatelessWidget {
   }
 }
 
-class LessonList extends ConsumerWidget {
-  final List<Lesson> lessons;
-  final List<Zamena> zamenas;
-  final ScrollController scrollController;
+// class LessonList extends ConsumerWidget {
+//   final List<Lesson> lessons;
+//   final List<Zamena> zamenas;
+//   final ScrollController scrollController;
 
-  const LessonList({
-    required this.zamenas,
-    required this.lessons,
-    required this.scrollController,
-    super.key,
-  });
+//   const LessonList({
+//     required this.zamenas,
+//     required this.lessons,
+//     required this.scrollController,
+//     super.key,
+//   });
 
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final provider = ref.watch(scheduleProvider);
-    final currentDay = DateTime.now().weekday;
-    final startDate = provider.navigationDate.subtract(Duration(days: provider.navigationDate.weekday - 1));
+//   @override
+//   Widget build(final BuildContext context, final WidgetRef ref) {
+//     final provider = ref.watch(scheduleProvider);
+//     final currentDay = DateTime.now().weekday;
+//     final startDate = provider.navigationDate.subtract(Duration(days: provider.navigationDate.weekday - 1));
 
-    return ScheduleList(
-      context: context,
-      weekLessons: lessons,
-      zamenas: zamenas,
-      startDate: startDate,
-      currentDay: currentDay,
-      todayWeek: provider.todayWeek,
-      currentWeek: provider.currentWeek,
-    );
-  }
-}
+//     return ScheduleList(
+//       context: context,
+//       weekLessons: lessons,
+//       zamenas: zamenas,
+//       startDate: startDate,
+//       currentDay: currentDay,
+//       todayWeek: provider.todayWeek,
+//       currentWeek: provider.currentWeek,
+//     );
+//   }
+// }
 
-class ScheduleList extends ConsumerWidget {
-  final BuildContext context;
-  final List<Lesson> weekLessons;
-  final List<Zamena> zamenas;
-  final DateTime startDate;
-  final int currentDay;
-  final int todayWeek;
-  final int currentWeek;
+// class ScheduleList extends ConsumerWidget {
+//   final BuildContext context;
+//   final List<Lesson> weekLessons;
+//   final List<Zamena> zamenas;
+//   final DateTime startDate;
+//   final int currentDay;
+//   final int todayWeek;
+//   final int currentWeek;
   
-  const ScheduleList({
-    required this.context,
-    required this.weekLessons,
-    required this.zamenas,
-    required this.startDate,
-    required this.currentDay,
-    required this.todayWeek,
-    required this.currentWeek,
-    super.key,
-  });
+//   const ScheduleList({
+//     required this.context,
+//     required this.weekLessons,
+//     required this.zamenas,
+//     required this.startDate,
+//     required this.currentDay,
+//     required this.todayWeek,
+//     required this.currentWeek,
+//     super.key,
+//   });
 
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final ScheduleProvider provider = ref.watch(scheduleProvider);
-    final SearchType searchType = provider.searchType;
-    final List<Widget> days = List.generate(6, (final iter) {
-      return ScheduleListWidget(
-        iter: iter,
-        weekLessons: weekLessons,
-        zamenas: zamenas,
-        searchType: searchType,
-        startDate: startDate,
-        currentDay: currentDay,
-        todayWeek: todayWeek,
-        currentWeek: currentWeek,
-      );
-    });
-    return Adaptive.isDesktop(context)
-      ? Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: days.map((final e) => Expanded(child: e)).toList(),
-        )
-      : Column(children: days);
-  }
-}
+//   @override
+//   Widget build(final BuildContext context, final WidgetRef ref) {
+//     final ScheduleProvider provider = ref.watch(scheduleProvider);
+//     final SearchType searchType = provider.searchType;
+//     final List<Widget> days = List.generate(6, (final iter) {
+//       return ScheduleListWidget(
+//         iter: iter,
+//         weekLessons: weekLessons,
+//         zamenas: zamenas,
+//         searchType: searchType,
+//         startDate: startDate,
+//         currentDay: currentDay,
+//         todayWeek: todayWeek,
+//         currentWeek: currentWeek,
+//       );
+//     });
+//     return Adaptive.isDesktop(context)
+//       ? Row(
+//           crossAxisAlignment: CrossAxisAlignment.start,
+//           children: days.map((final e) => Expanded(child: e)).toList(),
+//         )
+//       : Column(children: days);
+//   }
+// }
 
 class ScheduleListWidget extends StatelessWidget {
   final int iter;
