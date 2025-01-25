@@ -42,9 +42,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:zameny_flutter/Services/Api.dart';
-import 'package:zameny_flutter/features/timetable/widgets/timings_tile.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 final groupsProvider = FutureProvider<List<Group>>((final Ref ref) async {
   final response = await GetIt.I.get<SupabaseClient>().from('Groups').select();
@@ -66,10 +65,6 @@ final coursesProvider = FutureProvider<List<Course>>((final Ref ref) async {
     return data.map((final json) => Course.fromMap(json)).toList();
 });
 
-final timingsProvider = FutureProvider<List<LessonTimings>>((final Ref ref) async {
-  return (await Api.getTimings());
-});
-
 final groupProvider = StateProvider.family<Group?,int>((final Ref ref, final int id) {
   return ref.watch(groupsProvider).value?.where((final group) => group.id == id).firstOrNull;
 });
@@ -89,3 +84,6 @@ final courseProvider = StateProvider.family<Course?,int>((final Ref ref, final i
 final timingProvider = StateProvider.family<LessonTimings?,int>((final Ref ref, final int id) {
   return ref.watch(timingsProvider).value?.where((final cabinet) => cabinet.number == id).firstOrNull;
 });
+
+
+

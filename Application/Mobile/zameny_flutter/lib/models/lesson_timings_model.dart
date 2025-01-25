@@ -10,6 +10,7 @@ class LessonTimings {
   DateTime saturdayEnd;
   DateTime obedStart;
   DateTime obedEnd;
+ 
   LessonTimings({
     required this.number,
     required this.obedStart,
@@ -19,6 +20,19 @@ class LessonTimings {
     required this.saturdayStart,
     required this.saturdayEnd,
   });
+
+  factory LessonTimings.fake() {
+    final date = DateTime.now();
+    return LessonTimings(
+      saturdayStart: date,
+      saturdayEnd: date,
+      obedStart: date,
+      obedEnd: date,
+      start: date,
+      end: date,
+      number: 1,
+    );
+  }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{

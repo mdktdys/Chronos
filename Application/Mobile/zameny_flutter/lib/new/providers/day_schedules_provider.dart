@@ -1,14 +1,13 @@
 import 'dart:developer';
 
-import 'package:equatable/equatable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/services/Api.dart';
-import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/widgets/snowfall.dart';
 
@@ -20,6 +19,8 @@ final dayScheduleProvider = FutureProvider<List<DaySchedule>>((final Ref ref) as
   
   log(startdate.toString());
   log(endDate.toString());
+
+  
   
   final SearchItem? searchItem = ref.watch(searchItemProvider);
   final List<LessonTimings> timings = await ref.watch(timingsProvider.future);

@@ -38,16 +38,6 @@ class ZamenaProvider extends ChangeNotifier{
   }
 }
 
-extension DateTimeExtension on DateTime{
-  String formatyyyymmdd(){
-    return '$year.$month.$day';
-  }
-  String hhmm(){
-    return '$hour:$minute';
-  }
-}
-
-
 final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((final ref) async {
   final currentDate = ref.watch(zamenaProvider).currentDate;
   try {

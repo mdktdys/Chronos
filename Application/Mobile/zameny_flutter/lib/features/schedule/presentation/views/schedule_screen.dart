@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/images.dart';
@@ -179,10 +180,21 @@ class ScheduleView extends ConsumerWidget {
             return FailedLoadWidget(error: e.toString());
           },
           loading: () {
-            return const CircularProgressIndicator();
+            return Skeletonizer(
+              child: Column(
+                spacing: 8,
+                children: List.generate(6, (final index) {
+                  return CourseTileRework(
+                    title: BoneMock.subtitle,
+                    subTitle: BoneMock.words(1),
+                    cabinetTitle: '123',
+                    index: index,
+                  );
+                })
+              ),
+            );
           }
         ),
-        
       ],
     );
   }
@@ -373,7 +385,7 @@ class ScheduleListWidget extends StatelessWidget {
     final List<Zamena> dayZamenas = zamenas.where((final element) => element.date.weekday == day).toList();
     dayZamenas.sort((final a, final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
 
-    return SizedBox();
+    return const SizedBox();
 
     //if ((dayZamenas.length + lessons.length) > 0) {
     // if (

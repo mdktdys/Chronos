@@ -23,14 +23,18 @@ class Data {
   int? teacherGroup = -1;
   int? seekCabinet = -1;
   SearchType latestSearch = SearchType.group;
-  Duration networkOffset = const Duration(milliseconds: 1); 
+  Duration networkOffset = const Duration(milliseconds: 1);
+
+  Data() {
+    seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
+    teacherGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
+    seekCabinet = GetIt.I.get<SharedPreferences>().getInt('SelectedCabinet') ?? -1;
+  }
 
   Data.fromShared() {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
-    teacherGroup =
-        GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
-    seekCabinet =
-        GetIt.I.get<SharedPreferences>().getInt('SelectedCabinet') ?? -1;
+    teacherGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedTeacher') ?? -1;
+    seekCabinet = GetIt.I.get<SharedPreferences>().getInt('SelectedCabinet') ?? -1;
 
     switch (
         GetIt.I.get<SharedPreferences>().getString('SearchType') ?? 'Group') {

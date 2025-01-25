@@ -34,7 +34,7 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
 
-  final Data data = Data.fromShared();
+  final Data data = Data();
   GetIt.I.registerSingleton<Data>(data); 
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
