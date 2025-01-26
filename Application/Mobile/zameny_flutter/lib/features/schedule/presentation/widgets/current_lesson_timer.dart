@@ -7,15 +7,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/models/course_model.dart';
-import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
   const CurrentLessonTimer({super.key});

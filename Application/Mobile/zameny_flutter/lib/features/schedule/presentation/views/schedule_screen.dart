@@ -1,18 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
-import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_teacher_widget.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
@@ -22,12 +18,8 @@ import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/providers/adaptive.dart';
-import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart'  hide scheduleProvider;
-import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
-import 'package:zameny_flutter/shared/widgets/loading_widget.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
 
 MyGlobals myGlobals = MyGlobals();
@@ -137,26 +129,90 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
         slivers: [
           SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            sliver: SliverToBoxAdapter(
-              child: Column(
-                spacing: 10,
-                children: [
-                  const TopBanner(),
-                  const ScheduleHeader(),
-                  const ScheduleTurboSearch(),
-                  const DateHeader(),
-                  const CurrentLessonTimer(),
-                  // LessonView(scrollController: scrollController),
-                  const SearchResultHeader(),
-                  ScheduleView(scrollController: scrollController),
-                  const SizedBox(height: 90),
-                ],
-              ),
+            sliver: SliverList.list(
+              children: [
+                const TopBanner(),
+                const SizedBox(height: 10),
+                const ScheduleHeader(),
+                const SizedBox(height: 10),
+                const ScheduleTurboSearch(),
+                const SizedBox(height: 10),
+                const DateHeader(),
+                const SizedBox(height: 10),
+                // const CurrentLessonTimer(),
+                const SizedBox(height: 10),
+                // LessonView(scrollController: scrollController),
+                const SearchResultHeader(),
+                const SizedBox(height: 10),
+                const ScheduleViewSettingsWidget(),
+                const SizedBox(height: 10),
+                ScheduleView(scrollController: scrollController),
+              ]
             ),
           ),
+          const Test()
         ]
       ),
     );
+  }
+}
+
+class ScheduleViewSettingsWidget extends ConsumerWidget {
+  const ScheduleViewSettingsWidget({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(scheduleSettingsProvider);
+    final notifier = ref.watch(scheduleSettingsProvider.notifier);
+
+    return Row(
+    spacing: 8,
+      children: [
+        SizedBox(
+          height: 38,
+          child: FittedBox(
+            child: Switch(
+              value: provider.isShowZamena,
+              onChanged: (final value) {
+                provider.isShowZamena = !provider.isShowZamena;
+                notifier.notify();
+              },
+          ),
+        )),
+        Text(
+          'С заменами',
+          style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6)),
+        ),
+      ],
+    );
+  }
+}
+
+class Test extends ConsumerWidget {
+  const Test({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final provider = ref.watch(scheduleProvider);
+
+    if (provider.isLoading || !provider.hasValue) {
+      return const SliverToBoxAdapter(child: SizedBox());
+    }
+    
+    if (provider.hasValue) {
+      final empty = provider.value!.every((final element) => element.paras.isEmpty);
+
+      if (empty) {
+        return const SliverFillRemaining(
+        hasScrollBody: false,
+        child: Center(child: Text('No data available')),
+      ); 
+      }
+      else {
+        const SliverToBoxAdapter(child: SizedBox(height: 90,));
+      }
+    }
+    return const SliverToBoxAdapter(child: SizedBox());
   }
 }
 
@@ -174,6 +230,12 @@ class ScheduleView extends ConsumerWidget {
         return const Text('data');
       },
       data: (final data) {
+        final empty = data.every((final element) => element.paras.isEmpty);
+
+       if (empty) {
+          return const SizedBox();
+        }
+
         return ScheduleDaysWidget(days: data);
       },
     );

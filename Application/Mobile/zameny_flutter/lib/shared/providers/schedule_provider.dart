@@ -6,16 +6,23 @@ import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/export_course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/services/sharing/sharing.dart';
-import 'package:zameny_flutter/shared/providers/bloc/schedule_bloc.dart';
 import 'package:zameny_flutter/shared/tools.dart';
+
+final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
+  return ScheduleSettingsNotifier();
+});
+class ScheduleSettingsNotifier extends ChangeNotifier {
+  bool isShowZamena = true;
+
+  void notify() {
+    notifyListeners();
+  }
+}
 
 final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final Ref ref) {
   return ScheduleProvider(ref: ref);
@@ -25,13 +32,26 @@ final searchItemProvider = StateProvider<SearchItem?>((final Ref ref) {
   return null;
 });
 
-final navigationDateProvider = StateProvider<DateTime>((final Ref ref) {
-  final DateTime date = DateTime.now();
-  if (date.weekday == 7) {
-    date.add(const Duration(days: 1));
+final navigationDateProvider = StateNotifierProvider<NavigationDateNotifier, DateTime>(
+  (final ref) => NavigationDateNotifier(),
+);
+
+class NavigationDateNotifier extends StateNotifier<DateTime> {
+  NavigationDateNotifier() : super(_initializeDate());
+
+  void toggleWeek(final int days) {
+    state = state.add(Duration(days: days));
   }
-  return date;
-});
+
+  static DateTime _initializeDate() {
+    final DateTime date = DateTime.now();
+    if (date.weekday == 7) {
+      return date.add(const Duration(days: 1));
+    }
+    return date;
+  }
+}
+
 
 class ScheduleProvider extends ChangeNotifier {
   int groupIDSeek = -1;

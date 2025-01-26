@@ -87,7 +87,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
           final Paras paras = Paras();
 
           paras.lesson = dayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
-          paras.zamena = dayZamenas.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.teacherID == searchItem.id).toList();
+          paras.zamena = dayZamenas.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.groupID == searchItem.id).toList();
 
           if (paras.lesson!.isEmpty && paras.zamena!.isEmpty) {
             continue;
@@ -98,6 +98,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
         }
 
         final daySchedule = DaySchedule(
+            zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
             zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
             paras: dayParas,
             date: date,
@@ -184,6 +185,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
           }
 
           final daySchedule = DaySchedule(
+            zamenaFull: null,
             zamenaLinks: links.where((final link) => link.date == date).toList(),
             paras: dayParas,
             date: date,

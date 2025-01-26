@@ -1,13 +1,19 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
+import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/new/models/paras_model.dart';
 import 'package:zameny_flutter/shared/providers/groups_provider.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleWidget extends ConsumerStatefulWidget {
@@ -29,18 +35,22 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
   @override
   void initState() {
     super.initState();
-    needObedSwitch = widget.daySchedule.paras.any((final para) => para.number! > 3);
+    needObedSwitch = widget.daySchedule.paras.any((final para) => para.number! > 3) && widget.daySchedule.paras.isNotEmpty;
   }
 
   @override
   Widget build(final BuildContext context) {
+    final provider = ref.watch(scheduleSettingsProvider);
+    final item = ref.watch(searchItemProvider);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       spacing: 8,
       children: [
         DayScheduleHeader(
           date: widget.daySchedule.date,
-          links: widget.daySchedule.zamenaLinks ?? []
+          links: widget.daySchedule.zamenaLinks ?? [],
+          fullSwap: (widget.daySchedule.zamenaFull != null && provider.isShowZamena),
         ),
         if (needObedSwitch)
           Row(
@@ -60,29 +70,142 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
               ),
             ],
           ),
-        ... widget.daySchedule.paras.map((final para) {
-          final Lesson? lesson = para.lesson?.firstOrNull;
-          final Course? course = ref.watch(courseProvider(lesson?.course ?? -1));
-          final Teacher? teacher = ref.watch(teacherProvider(lesson?.teacher ?? -1));
-          final Cabinet? cabinet = ref.watch(cabinetProvider(lesson?.cabinet ?? -1));
-          final LessonTimings? timings = ref.watch(timingProvider(lesson?.number ?? -1));
+        Builder(builder: (final BuildContext context) {
+          if (widget.daySchedule.paras.isEmpty) {
+            return Container(
+              height: 110,
+              margin: const EdgeInsets.only(
+                top: 20,
+                bottom: 10,
+              ),
+              width: double.infinity,
+              decoration: BoxDecoration(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                color: Colors.transparent,
+                border: DashedBorder.all(
+                  dashLength: 10,
+                  color:Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                ),
+              ),
+              child: Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: Center(
+                    child: Text(
+                      'Нет пар 🎉',
+                      style: context.styles.ubuntuInversePrimary20,
+                    ),
+                  ),
+              ),
+            );
+          }
 
-          final String? startTime = obed
-            ? timings?.obedStart.hhmm()
-            : timings?.start.hhmm();
+          return Column(
+            children: [
+              ... widget.daySchedule.paras.map((final Paras para) {
+                List<Widget> tiles = [];
+          
+                if (item is Group) {
+          
+                  if (!provider.isShowZamena) {
+                    tiles = para.lesson!.map((final lesson) {
+                    
+                    return CourseTileRework(
+                      index: lesson.number,
+                      lesson: lesson,
+                    );
+                  }).toList();
 
-          final String? endTime = obed
-            ? timings?.obedEnd.hhmm()
-            : timings?.end.hhmm();
+                  } else {
 
-          return CourseTileRework(
-            cabinetTitle: cabinet?.name ?? '',
-            subTitle: teacher?.name ?? '',
-            index: lesson?.number ?? -1,
-            title: course?.name ?? '',
-            startTime: startTime,
-            endTime: endTime,
-            obedTime: obed,
+                    if (widget.daySchedule.zamenaFull != null) {
+                      tiles = para.zamena!.map((final zamena) {
+                    
+                      return CourseTileRework(
+                        index: zamena.lessonTimingsID,
+                        lesson: Lesson(
+                          id: -1,
+                          number: zamena.lessonTimingsID,
+                          group: zamena.groupID,
+                          date: zamena.date,
+                          course: zamena.courseID,
+                          teacher: zamena.teacherID,
+                          cabinet: zamena.cabinetID
+                        ),
+                      );}).toList();
+                    } else {
+                      final Zamena? zamena = para.zamena?.firstOrNull;
+                      final Lesson? lesson = para.lesson?.firstOrNull; 
+
+                      if (zamena == null && lesson != null) {
+                        tiles.add(CourseTileRework(
+                          index: lesson.number,
+                          lesson: lesson,
+                        ));
+                      } else {
+                        tiles.add(CourseTileRework(
+                          index: zamena!.lessonTimingsID,
+                          isZamena: true,
+                          lesson: Lesson(
+                            id: -1,
+                            number: zamena.lessonTimingsID,
+                            group: zamena.groupID,
+                            date: zamena.date,
+                            course: zamena.courseID,
+                            teacher: zamena.teacherID,
+                            cabinet: zamena.cabinetID
+                          ),
+                        ));
+                      }
+                    }
+                    }
+                  }
+                
+                // if (item is Teacher) {
+                //   tiles = para.lesson!.map((final lesson) {
+                //   final Course? course = ref.watch(courseProvider(lesson.course));
+                //   final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
+                //   final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
+                //   final LessonTimings? timings = ref.watch(timingProvider(lesson.number));
+          
+                //   final String? startTime = obed
+                //     ? timings?.obedStart.hhmm()
+                //     : timings?.start.hhmm();
+          
+                //   final String? endTime = obed
+                //     ? timings?.obedEnd.hhmm()
+                //     : timings?.end.hhmm();
+          
+                //   return CourseTileRework(
+                //     index: lesson.number,
+                //     cabinetTitle: cabinet?.name ?? '',
+                //     subTitle: teacher?.name ?? '',
+                //     title: course?.name ?? '',
+                //     startTime: startTime,
+                //     endTime: endTime,
+                //     obedTime: obed,
+                //   );}).toList();
+                // }
+
+                if (tiles.isEmpty) {
+                  return const SizedBox.shrink();
+                }
+          
+                return Padding(
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Container(
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    ),
+                    child: Column(
+                      spacing: 8,
+                      children: tiles
+                    ),
+                  ),
+                );
+              })
+            ],
           );
         })
       ],
@@ -98,107 +221,135 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
 }
 
 
-class CourseTileRework extends StatelessWidget {
-  final String? cabinetTitle;
-  final String? startTime;
-  final String? subTitle;
-  final String? endTime;
-  final bool obedTime;
-  final String title;
+class CourseTileRework extends ConsumerWidget {
+  final Lesson lesson;
+  final bool isZamena;
+  final bool obed;
   final int index;
 
   const CourseTileRework({
-    required this.title,
+    required this.lesson,
     required this.index,
-    this.obedTime = false,
-    this.cabinetTitle,
-    this.startTime,
-    this.subTitle,
-    this.endTime,
+    this.isZamena = false,
+    this.obed = false,
     super.key
   });
 
   @override
-  Widget build(final BuildContext context) {
-    final Color timeColor = obedTime
+  Widget build(final BuildContext context, final WidgetRef ref) {
+
+    final Course? course = ref.watch(courseProvider(lesson.course));
+    final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
+    final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
+    final LessonTimings? timings = ref.watch(timingProvider(lesson.number));
+
+    final String? startTime = obed
+      ? timings?.obedStart.hhmm()
+      : timings?.start.hhmm();
+
+    final String? endTime = obed
+      ? timings?.obedEnd.hhmm()
+      : timings?.end.hhmm();
+
+    final Color timeColor = obed
       ? (index > 3 ? Colors.green : Theme.of(context).colorScheme.inverseSurface)
       : Theme.of(context).colorScheme.inverseSurface;
 
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-      ),
-      padding: const EdgeInsets.all(8),
-      child: IntrinsicHeight(
-        child: Row(
-          spacing: 10,
-          children: [
-            Container(
-              width: 10,
-              decoration: BoxDecoration(
-                borderRadius: const BorderRadius.all(Radius.circular(20)),
-                color: getColorForText(title),
+    return Column(
+      children: [
+        if (isZamena)
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'Замена',
+                style: context.styles.ubuntu.copyWith(
+                  color: Colors.red,
+                  shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
+                ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(vertical: 8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    width: 30,
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: getColorForText(title)
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        index.toString(),
-                        textAlign: TextAlign.center,
-                        style: context.styles.ubuntuWhiteBold14,
+              const SizedBox(width: 5,),
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.red,
+                shadows: [
+                  Shadow(color: Colors.red, blurRadius: 4),
+                ],
+                size: 24,
+              ),
+            ],
+          ),
+        IntrinsicHeight(
+          child: Row(
+            spacing: 10,
+            children: [
+              Skeleton.leaf(
+                child: Container(
+                  width: 10,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(20)),
+                    color: getColorForText((course?.name).toString()),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.symmetric(vertical: 8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Skeleton.leaf(
+                      child: Container(
+                        width: 30,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color: getColorForText((course?.name).toString())
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            index.toString(),
+                            textAlign: TextAlign.center,
+                            style: context.styles.ubuntuWhiteBold14,
+                          ),
+                        ),
                       ),
                     ),
-                  ),
-                  if (startTime != null)
                     Text(
-                      startTime!,
+                      startTime.toString(),
                       style: context.styles.ubuntuBold16.copyWith(color: timeColor),
                     ),
-                  if (endTime != null)
                     Text(
-                      endTime!,
+                      endTime.toString(),
                       style: context.styles.ubuntu.copyWith(color: timeColor)
                     )
-                ],
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: context.styles.ubuntuPrimaryBold20.copyWith(color: Theme.of(context).colorScheme.inverseSurface)
-                  ),
-                  if (subTitle != null)
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
                     Text(
-                      subTitle!,
+                      (course?.name).toString(),
+                      style: context.styles.ubuntuPrimaryBold20.copyWith(color: Theme.of(context).colorScheme.inverseSurface)
+                    ),
+                    Text(
+                      (teacher?.name).toString(),
                       style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface,),
                     ),
-                  if (cabinetTitle != null)
-                    Text(
-                      cabinetTitle!,
-                      style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface,),
-                    ),
-                ],
+                    if (cabinet?.name != null)
+                      Text(
+                        (cabinet?.name).toString(),
+                        style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface,),
+                      ),
+                  ],
+                )
               )
-            )
-          ],
+            ],
+          ),
         ),
-      ),
+      ],
     );
   }
 }

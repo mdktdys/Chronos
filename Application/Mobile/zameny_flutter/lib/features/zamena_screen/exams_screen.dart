@@ -362,12 +362,12 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            ToggleWeekButton(
-              next: false,
-              onTap: (final way, final context) {
-                ref.read(zamenaProvider).toggleWeek(way, context);
-              },
-            ),
+            // ToggleWeekButton(
+            //   next: false,
+            //   onTap: (final way, final context) {
+            //     ref.read(zamenaProvider).toggleWeek(way, context);
+            //   },
+            // ),
             const SizedBox(
               width: 5,
             ),
@@ -414,12 +414,12 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                 ],
               ),
             ),
-            ToggleWeekButton(
-              next: true,
-              onTap: (final way, final context) {
-                ref.read(zamenaProvider).toggleWeek(way, context);
-              },
-            ),
+            // ToggleWeekButton(
+            //   next: true,
+            //   onTap: (final way, final context) {
+            //     ref.read(zamenaProvider).toggleWeek(way, context);
+            //   },
+            // ),
           ],
         ),);
   }
