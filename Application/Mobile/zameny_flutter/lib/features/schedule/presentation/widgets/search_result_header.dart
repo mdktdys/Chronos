@@ -3,8 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/settings/settings_screen.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 
@@ -41,6 +44,16 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             )
           ],
         ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Material(
+            child: InkWell(
+              child: BaseBlank(
+                child: SvgPicture.asset(Images.heart)
+              ),
+            ),
+          ),
+        )
         // provider.searchType != SearchType.cabinet
         //     ? Align(
         //         alignment: Alignment.topRight,

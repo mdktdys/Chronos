@@ -147,6 +147,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                   const DateHeader(),
                   const CurrentLessonTimer(),
                   // LessonView(scrollController: scrollController),
+                  const SearchResultHeader(),
                   ScheduleView(scrollController: scrollController),
                   const SizedBox(height: 90),
                 ],
@@ -190,6 +191,7 @@ class ScheduleDaysWidget extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Column(
+      spacing: 10,
       children: days.map((final day) {
         return DayScheduleWidget(daySchedule: day);
       }).toList()
