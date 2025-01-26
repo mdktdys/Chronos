@@ -142,19 +142,64 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
                           lesson: lesson,
                         ));
                       } else {
-                        tiles.add(CourseTileRework(
-                          index: zamena!.lessonTimingsID,
-                          isZamena: true,
-                          lesson: Lesson(
-                            id: -1,
-                            number: zamena.lessonTimingsID,
-                            group: zamena.groupID,
-                            date: zamena.date,
-                            course: zamena.courseID,
-                            teacher: zamena.teacherID,
-                            cabinet: zamena.cabinetID
-                          ),
+
+                        if (zamena?.courseID == 10843) {
+
+                          if (lesson == null) {
+                            return Container(
+                              height: 110,
+                              margin: const EdgeInsets.only(top: 20, bottom: 10),
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                                  color: Colors.transparent,
+                                  border: DashedBorder.all(
+                                    dashLength: 10,
+                                    color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),),
+                              child: Padding(
+                                padding: const EdgeInsets.all(20),
+                                child: Center(
+                                    child: Text(
+                                  'Пара снята',
+                                  style: context.styles.ubuntu20.copyWith(color: Theme.of(context).colorScheme.inversePrimary,),
+                                  ),
+                                ),
+                              ),
+                            );
+                          }
+                          
+                          tiles.add(
+                            EmptyCourseTileRework(
+                              obed: obed,
+                              index: zamena!.lessonTimingsID,
+                              lesson: Lesson(
+                              id: -1,
+                              number: lesson.number,
+                              group: lesson.group,
+                              date: lesson.date,
+                              course: lesson.course,
+                              teacher: lesson.teacher,
+                              cabinet: lesson.cabinet
+                            ),)
+                          );
+                          
+                        } else {
+                          tiles.add(CourseTileRework(
+                            index: zamena!.lessonTimingsID,
+                            isZamena: true,
+                            lesson: Lesson(
+                              id: -1,
+                              number: zamena.lessonTimingsID,
+                              group: zamena.groupID,
+                              date: zamena.date,
+                              course: zamena.courseID,
+                              teacher: zamena.teacherID,
+                              cabinet: zamena.cabinetID
+                            ),
                         ));
+                        }
+
+                        
                       }
                     }
                     }
@@ -189,21 +234,44 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
                 if (tiles.isEmpty) {
                   return const SizedBox.shrink();
                 }
-          
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    child: Column(
-                      spacing: 8,
-                      children: tiles
-                    ),
-                  ),
+
+                return Column(
+                  children: tiles.map((final tile) {
+
+                    if (tile is CourseTileRework) {
+                      return Padding(
+                        padding: const EdgeInsets.only(top: 8),
+                        child: Container(
+                          padding: const EdgeInsets.all(8),
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                          ),
+                          child: tile
+                        ),
+                      );
+                    }
+
+                    return tile;
+                    
+                  }).toList()
                 );
+                
+          
+                // return Padding(
+                //   padding: const EdgeInsets.only(top: 8),
+                //   child: Container(
+                //     padding: const EdgeInsets.all(8),
+                //     decoration: BoxDecoration(
+                //       borderRadius: BorderRadius.circular(20),
+                //       color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                //     ),
+                //     child: Column(
+                //       spacing: 8,
+                //       children: tiles
+                //     ),
+                //   ),
+                // );
               })
             ],
           );
@@ -220,6 +288,148 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
   }
 }
 
+class EmptyCourseTileRework extends ConsumerWidget {
+  final Lesson lesson;
+  final bool obed;
+  final int index;
+
+  const EmptyCourseTileRework({
+    required this.lesson,
+    required this.index,
+    required this.obed,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final Course? course = ref.watch(courseProvider(lesson.course));
+    final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
+    final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
+    final LessonTimings? timings = ref.watch(timingProvider(lesson.number));
+
+    final String? startTime = obed
+      ? timings?.obedStart.hhmm()
+      : timings?.start.hhmm();
+
+    final String? endTime = obed
+      ? timings?.obedEnd.hhmm()
+      : timings?.end.hhmm();
+
+    final Color timeColor = obed
+      ? (index > 3 ? Colors.green : Theme.of(context).colorScheme.inverseSurface)
+      : Theme.of(context).colorScheme.inverseSurface;
+
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        color: Colors.transparent,
+        border: DashedBorder.all(
+          dashLength: 10,
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+        ),
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              Text(
+                'Замена',
+                style: context.styles.ubuntu.copyWith(
+                  color: Colors.red,
+                  shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
+                ),
+              ),
+              const SizedBox(width: 5,),
+              const Icon(
+                Icons.warning_amber_rounded,
+                color: Colors.red,
+                shadows: [
+                  Shadow(color: Colors.red, blurRadius: 4),
+                ],
+                size: 24,
+              ),
+            ],
+          ),
+          IntrinsicHeight(
+              child: Row(
+                spacing: 10,
+                children: [
+                  Skeleton.leaf(
+                    child: Container(
+                      width: 10,
+                      decoration: BoxDecoration(
+                        borderRadius: const BorderRadius.all(Radius.circular(20)),
+                        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8.0),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Skeleton.leaf(
+                          child: Container(
+                            width: 30,
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Text(
+                                index.toString(),
+                                textAlign: TextAlign.center,
+                                style: context.styles.ubuntuWhiteBold14.copyWith(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
+                              ),
+                            ),
+                          ),
+                        ),
+                        Text(
+                          startTime.toString(),
+                          style: context.styles.ubuntuBold16.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
+                        ),
+                        Text(
+                          endTime.toString(),
+                          style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
+                        )
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          (course?.name).toString(),
+                          style: context.styles.ubuntuPrimaryBold20.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
+                        ),
+                        Text(
+                          (teacher?.name).toString(),
+                          style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                        ),
+                        if (cabinet?.name != null)
+                          Text(
+                            (cabinet?.name).toString(),
+                            style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                          ),
+                      ],
+                    )
+                  )
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+}
+
+                        // style: context.styles.ubuntu20.copyWith(color: Theme.of(context).colorScheme.inversePrimary,),
 
 class CourseTileRework extends ConsumerWidget {
   final Lesson lesson;
