@@ -103,7 +103,17 @@ late final SearchController searchController;
   }
 }
 abstract class SearchItem {
+  int id;
+  int typeId;
   int s = 0;
+
+  SearchItem({
+    required this.id,
+    required this.typeId
+  }) {
+    throw UnimplementedError();
+  }
+ 
   String getFiltername() {
     if (this is Group) {
       return (this as Group).name;

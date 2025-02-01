@@ -132,7 +132,12 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
         error: (final error, final trace) {
           return Center(
             key: const ValueKey('error'),
-            child: FailedLoadWidget(error: error.toString()),
+            child: FailedLoadWidget(
+              error: error.toString(),
+              onClicked: () {
+                ref.invalidate(zamenasListProvider);
+              },
+            ),
           );
         },
         loading: () {

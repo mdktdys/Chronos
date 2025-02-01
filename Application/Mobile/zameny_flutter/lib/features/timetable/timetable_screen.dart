@@ -3,6 +3,7 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:pull_to_refresh_flutter3/pull_to_refresh_flutter3.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/features/timetable/widgets/current_timing_timer.dart';

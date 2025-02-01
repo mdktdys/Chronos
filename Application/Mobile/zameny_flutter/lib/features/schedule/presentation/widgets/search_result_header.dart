@@ -46,7 +46,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
         //   child: Material(
         //     child: InkWell(
         //       onTap: () {
-                
         //       },
         //       child: Container(
         //         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
