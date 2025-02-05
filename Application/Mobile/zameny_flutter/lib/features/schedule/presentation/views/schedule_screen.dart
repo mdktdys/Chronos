@@ -1,13 +1,17 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/map/view/map_screen.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
+import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/new/widgets/test_widget.dart';
@@ -73,6 +77,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                     ),
                   ),
                 ),
+                const FavoriteStripeWidget()
                 // Row(
                 //   spacing: 20,
                 //   children: [
@@ -102,6 +107,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 //     ),
                 //   ]
                 // ),
+                ,
                 const Expanded(
                   child: SingleChildScrollView(
                     child: ScheduleTurboSearch(),
@@ -129,6 +135,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
+                const FavoriteStripeWidget(),
                 const SizedBox(height: 10),
                 const DateHeader(),
                 const SizedBox(height: 10),
@@ -146,6 +153,48 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
           const Test()
         ]
       ),
+    );
+  }
+}
+
+class FavoriteStripeWidget extends ConsumerWidget {
+  const FavoriteStripeWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return AnimatedSize(
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeOut,
+      child: Builder(builder: (final BuildContext context) {
+        final provider = ref.watch(favoriteSearchItemsProvider);
+      
+        if (provider.items.isEmpty) {
+          return const SizedBox.shrink();
+        }
+      
+        return SizedBox(
+          height: 52,
+          child: ListView.builder(
+            scrollDirection: Axis.horizontal,
+            itemCount: provider.items.length,
+            itemBuilder: (final BuildContext context ,final int index) {
+              final SearchItem searchItem = provider.items[index];
+      
+              return BaseContainer(
+                padding: const EdgeInsets.symmetric(
+                  vertical: 4,
+                  horizontal: 8
+                ),
+                child: Center(
+                  child: Text(searchItem.getFiltername()),
+                )
+              );
+            }
+          ),
+        );
+      }),
     );
   }
 }

@@ -282,9 +282,7 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
 
   void _toggleObed() {
     obed = !obed;
-    setState(() {
-      
-    });
+    setState(() {});
   }
 }
 

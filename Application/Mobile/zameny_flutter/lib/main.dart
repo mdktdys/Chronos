@@ -8,6 +8,7 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
 import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
@@ -39,5 +40,8 @@ void main() async {
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const ProviderScope(child: Application()));
+  runApp(ProviderScope(
+    observers: [TalkerRiverpodObserver()],
+    child: const Application()
+  ));
 }

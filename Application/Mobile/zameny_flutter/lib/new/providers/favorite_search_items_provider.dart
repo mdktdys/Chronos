@@ -15,53 +15,52 @@ final favoriteSearchItemsProvider = ChangeNotifierProvider<FavoriteSearchItemsNo
 });
 
 class FavoriteSearchItemsNotifier extends ChangeNotifier {
-    List<SearchItem> items = [];
-    Ref ref;
+  List<SearchItem> items = [];
+  Ref ref;
 
-    FavoriteSearchItemsNotifier({
-      required this.ref
-    }) {
-      final String? json = GetIt.I.get<SharedPreferences>().getString('favorite');
+  FavoriteSearchItemsNotifier({
+    required this.ref
+  }) {
+    final String? json = GetIt.I.get<SharedPreferences>().getString('favorite');
 
-      if (json != null) {
+    if (json != null) {
       final List<dynamic> raw = jsonDecode(json);
       final provider = ref.read(searchItemsProvider).value;
 
       if (provider != null) {
-        items = raw.map((final item) {
-          return provider.firstWhere(
-            (final searchItem) => searchItem.id == item['id'],
-
-
-            // teacher
-            if (item['type'] == 1) {
-              return 
-            }
-
-            orElse: () => SearchItem(id: item['id'], typeId: item['type']), // Создание объекта, если не найден
-          );
+        List<SearchItem?> actual = raw.map((final item) {
+          return provider.firstWhereOrNull((final SearchItem searchItem) => searchItem.id == item['id'] && searchItem.typeId == item['type']);
         }).toList();
+
+        items.addAll(actual.whereType<SearchItem>());
       }
     }
-    }
+  }
 
-    Future<void> add({
-      required final SearchItem searchItem,
-    }) async {
-      items.add(searchItem);
-      final List<Map<String, dynamic>> json = items.map((final SearchItem item) {
-        return {
-          'id': item.id,
-          'type': item.typeId,
-        };
-      }).toList();
+  Future<void> add({
+    required final SearchItem searchItem,
+  }) async {
+    items.add(searchItem);
+    await _save();
+    notifyListeners();
+  }
 
-      await GetIt.I.get<SharedPreferences>().setString('favorite', jsonEncode(json));
-    }
+  Future<void> remove({
+    required final SearchItem searchItem,
+  }) async {
+    items.remove(searchItem);
+    await _save();
+    notifyListeners();
+  }
 
-    void remove({
-      required final SearchItem searchItem,
-    }) {
+  Future<void> _save() async {
+    final List<Map<String, dynamic>> json = items.map((final SearchItem item) {
+      return {
+        'id': item.id,
+        'type': item.typeId,
+      };
+    }).toList();
 
-    }
+    await GetIt.I.get<SharedPreferences>().setString('favorite', jsonEncode(json));
+  }
 }

@@ -23,7 +23,9 @@ class Test extends ConsumerWidget {
       if (empty) {
         return const SliverFillRemaining(
         hasScrollBody: false,
-        child: Center(child: Text('No data available')),
+        child: Center(
+          child: Text('Нет расписания')
+        ),
       ); 
       }
       else {

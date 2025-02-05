@@ -3,8 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 
@@ -24,6 +28,9 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
     // final provider = ref.watch(scheduleProvider);
     //bool enabled = provider.searchType == SearchType.group ? true : false;
     final provider = ref.watch(searchItemProvider);
+
+    final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
+
     return Stack(
       alignment: Alignment.center,
       children: [
@@ -41,20 +48,36 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             )
           ],
         ),
-        // Align(
-        //   alignment: Alignment.topRight,
-        //   child: Material(
-        //     child: InkWell(
-        //       onTap: () {
-        //       },
-        //       child: Container(
-        //         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-        //         padding: const EdgeInsets.all(20),
-        //         child: const Text('subscribe')
-        //       )
-        //     ),
-        //   ),
-        // )
+        Align(
+          alignment: Alignment.topRight,
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                if (provider != null) {
+                  if (isSubscribed) {
+                    ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
+                  } else {
+                    ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
+                  }
+                  setState(() {});
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                ),
+                padding: const EdgeInsets.all(8),
+                child: SvgPicture.asset(
+                  isSubscribed ? Images.heart : Images.heartOutlined,
+                  colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                )
+              )
+            ),
+          ),
+        )
         // provider.searchType != SearchType.cabinet
         //     ? Align(
         //         alignment: Alignment.topRight,

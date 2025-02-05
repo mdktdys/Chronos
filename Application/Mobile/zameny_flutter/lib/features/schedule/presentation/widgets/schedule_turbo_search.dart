@@ -110,9 +110,7 @@ abstract class SearchItem {
   SearchItem({
     required this.id,
     required this.typeId
-  }) {
-    throw UnimplementedError();
-  }
+  });
  
   String getFiltername() {
     if (this is Group) {

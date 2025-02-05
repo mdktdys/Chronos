@@ -10,7 +10,12 @@ import 'package:zameny_flutter/features/map/providers/map_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 
 class MapScreen extends ConsumerWidget {
-  const MapScreen({super.key});
+  final int? counter;
+
+  const MapScreen({
+    this.counter,
+    super.key
+  });
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
