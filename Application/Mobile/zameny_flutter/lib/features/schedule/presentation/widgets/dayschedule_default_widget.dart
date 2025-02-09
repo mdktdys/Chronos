@@ -104,20 +104,22 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
             children: [
               ... widget.daySchedule.paras.map((final Paras para) {
                 List<Widget> tiles = [];
-          
-                if (item is Group) {
-          
-                  if (!provider.isShowZamena) {
-                    tiles = para.lesson!.map((final lesson) {
+
+                if (
+                  (item is Group
+                  || item is Teacher)
+                  && !provider.isShowZamena
+                ) {
+                  tiles = para.lesson!.map((final lesson) {
                     
                     return CourseTileRework(
                       index: lesson.number,
                       lesson: lesson,
                     );
                   }).toList();
-
-                  } else {
-
+                }
+          
+                if (item is Group) {
                     if (widget.daySchedule.zamenaFull != null) {
                       tiles = para.zamena!.map((final zamena) {
                     
@@ -197,40 +199,26 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
                               teacher: zamena.teacherID,
                               cabinet: zamena.cabinetID
                             ),
-                        ));
-                        }
-
-                        
+                          ),
+                        );
                       }
                     }
+                  }
+                }
+
+                if (item is Teacher) {
+
+                  if (para.lesson == null) {
+                    
+                  } else {
+                    for (Lesson para in para.lesson!) {
+                      tiles.add(CourseTileRework(
+                        index: para.number,
+                        lesson: para,
+                      ));
                     }
                   }
-                
-                // if (item is Teacher) {
-                //   tiles = para.lesson!.map((final lesson) {
-                //   final Course? course = ref.watch(courseProvider(lesson.course));
-                //   final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
-                //   final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
-                //   final LessonTimings? timings = ref.watch(timingProvider(lesson.number));
-          
-                //   final String? startTime = obed
-                //     ? timings?.obedStart.hhmm()
-                //     : timings?.start.hhmm();
-          
-                //   final String? endTime = obed
-                //     ? timings?.obedEnd.hhmm()
-                //     : timings?.end.hhmm();
-          
-                //   return CourseTileRework(
-                //     index: lesson.number,
-                //     cabinetTitle: cabinet?.name ?? '',
-                //     subTitle: teacher?.name ?? '',
-                //     title: course?.name ?? '',
-                //     startTime: startTime,
-                //     endTime: endTime,
-                //     obedTime: obed,
-                //   );}).toList();
-                // }
+                }
 
                 if (tiles.isEmpty) {
                   return const SizedBox.shrink();

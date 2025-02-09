@@ -6,7 +6,6 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/features/zamena_screen/widget/zamena_view_chooser.dart';

@@ -107,12 +107,6 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
         schedule.add(daySchedule);
       }
       
-      for (DaySchedule day in schedule) {
-        for (Paras para in day.paras) {
-          log(para.toString());
-        }
-      }
-
       return schedule;
 
       // for (final lesson in lessons) {
@@ -151,7 +145,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
           end: endDate,
         );
 
-        final List<int> groups = List<int>.from(lessons.map((final e) => e.group));
+        final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
         
         final result = await Future.wait([
           Api.getZamenasFull(groups, startdate, endDate),
@@ -165,8 +159,8 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
         for (DateTime date in List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)))) {
           List<Paras> dayParas = [];
 
-          final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date == date).toList();
-          final List<Zamena> dayGroupsLessons = groupsLessons.where((final lesson) => lesson.date == date).toList();
+          final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+          final List<Zamena> dayGroupsLessons = groupsLessons.where((final lesson) => lesson.date.sameDate(date)).toList();
 
           for (LessonTimings timing in timings) {
             final Paras paras = Paras();
@@ -181,12 +175,17 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
             //   continue;
             // }
 
+            paras.number = timing.number;
             dayParas.add(paras);
+          }
+
+          for (var element in dayParas) {
+            log((element.lesson?.firstOrNull?.course).toString());
           }
 
           final daySchedule = DaySchedule(
             zamenaFull: null,
-            zamenaLinks: links.where((final link) => link.date == date).toList(),
+            zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
             paras: dayParas,
             date: date,
           );

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
@@ -14,7 +13,6 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_t
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
@@ -326,7 +324,7 @@ class ScheduleProvider extends ChangeNotifier {
   void searchItemSelected(final SearchItem item, final BuildContext context) {
     ref.read(searchItemProvider.notifier).state = item;
     log('message');
-    context.goNamed('/ф', pathParameters: {
+    context.goNamed('/', pathParameters: {
       'type': item.typeId.toString(),
       'id': item.id.toString()
     });
@@ -376,12 +374,12 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> loadWeekSchedule(final BuildContext context) async {
-    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    final DateTime sunday = monday.add(const Duration(days: 6));
+    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    // final DateTime sunday = monday.add(const Duration(days: 6));
 
     // Устанавливаем время для понедельника и воскресенья
-    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    // final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     // ref.read(riverpodScheduleProvider.notifier).loadGroupWeek(
     //   groupID: groupIDSeek,
@@ -415,12 +413,12 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> loadCabinetWeekSchedule(final BuildContext context) async {
-    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    final DateTime sunday = monday.add(const Duration(days: 6));
+    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    // final DateTime sunday = monday.add(const Duration(days: 6));
 
-    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    final DateTime endOfWeek =
-        DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    // final DateTime endOfWeek =
+    //     DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     // ref.read(riverpodScheduleProvider.notifier).loadCabinetWeek(
     //   cabinetID: cabinetIDSeek,
@@ -431,11 +429,11 @@ class ScheduleProvider extends ChangeNotifier {
   }
 
   Future<void> loadWeekTeahcerSchedule(final BuildContext context) async {
-    final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    final DateTime sunday = monday.add(const Duration(days: 6));
+    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
+    // final DateTime sunday = monday.add(const Duration(days: 6));
 
-    final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
+    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
+    // final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
 
     // ref.read(riverpodScheduleProvider.notifier).loadTeacherWeek(
     //   teacherID: teacherIDSeek,
