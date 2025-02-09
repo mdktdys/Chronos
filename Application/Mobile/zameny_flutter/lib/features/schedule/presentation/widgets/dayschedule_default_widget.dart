@@ -35,7 +35,8 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
   @override
   void initState() {
     super.initState();
-    needObedSwitch = widget.daySchedule.paras.any((final para) => para.number! > 3) && widget.daySchedule.paras.isNotEmpty;
+    log(widget.daySchedule.paras.toString());
+    needObedSwitch = widget.daySchedule.paras.any((final Paras para) => para.number! > 3) && widget.daySchedule.paras.isNotEmpty;
   }
 
   @override

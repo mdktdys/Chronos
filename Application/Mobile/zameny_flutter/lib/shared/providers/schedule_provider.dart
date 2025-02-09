@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:go_router/go_router.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
@@ -11,6 +14,7 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_t
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
@@ -321,6 +325,11 @@ class ScheduleProvider extends ChangeNotifier {
 
   void searchItemSelected(final SearchItem item, final BuildContext context) {
     ref.read(searchItemProvider.notifier).state = item;
+    log('message');
+    context.goNamed('/ф', pathParameters: {
+      'type': item.typeId.toString(),
+      'id': item.id.toString()
+    });
 
     // if (item is Group) {
     //   groupSelected(item.id, context);
