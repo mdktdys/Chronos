@@ -6,7 +6,7 @@ class Paras {
   int? number;
   List<Lesson>? lesson;
   List<Zamena>? zamena;
-  ZamenaFull? zamenaFull;
+  List<ZamenaFull>? zamenaFull;
 
   Paras({
     this.lesson,

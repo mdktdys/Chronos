@@ -58,6 +58,7 @@ dependencies:
   pull_to_refresh_flutter3: ^2.0.2
   # flutter_inappwebview: ^6.0.0
   talker_riverpod_logger: ^4.6.7
+  bounce: ^1.0.2
 
 dev_dependencies:
   flutter_lints: ^4.0.0

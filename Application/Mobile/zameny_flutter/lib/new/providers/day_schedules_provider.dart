@@ -30,172 +30,190 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
 
   @override
   FutureOr<List<DaySchedule>> build() async {
+    final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
+    final SearchItem? searchItem = ref.watch(searchItemProvider);
+
     DateTime startdate = ref.watch(navigationDateProvider);
     startdate = startdate.subtract(Duration(days: startdate.weekday - 1));
-    
     final DateTime endDate = startdate.add(const Duration(days: 6));
-    final SearchItem? searchItem = ref.watch(searchItemProvider);
-    final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
-
+    
     if (searchItem == null) {
       return [];
     }
 
+    if (searchItem is Group) {
+      return _groupSchedule(
+        timings: timings,
+        startdate: startdate,
+        searchItem: searchItem,
+        endDate: endDate,
+      );
+
+    } else if (searchItem is Teacher) {
+      return _teacherSchedule(
+        timings: timings,
+        startdate: startdate,
+        searchItem: searchItem,
+        endDate: endDate,
+      );
+    }
+
+    return [];
+  }
+
+  Future<List<DaySchedule>> _groupSchedule({
+    required final List<LessonTimings> timings,
+    required final DateTime startdate,
+    required final Group searchItem,
+    required final DateTime endDate,
+  }) async {
     List<Lesson> lessons;
     List<Zamena> zamenas;
     List<ZamenaFull> zamenasFull;
-    List<ZamenaFileLink> links = [];
+    List<ZamenaFileLink> links;
 
-    if (searchItem is Group) {
-      final result = await Future.wait([
-        Api.getGroupLessons(
-          groupID: searchItem.id,
-          start: startdate,
-          end: endDate,
-        ),
-        Api.loadZamenas(
-          groupsID: [searchItem.id],
-          start: startdate,
-          end: endDate,
-        ),
-        Api.getZamenaFileLinks(
-          start: startdate,
-          end: endDate
-        ),
-        Api.getZamenasFull(
-          [searchItem.id],
-          startdate,
-          endDate
-        )
-      ]);
+    final result = await Future.wait([
+      Api.getGroupLessons(
+        groupID: searchItem.id,
+        start: startdate,
+        end: endDate,
+      ),
+      Api.loadZamenas(
+        groupsID: [searchItem.id],
+        start: startdate,
+        end: endDate,
+      ),
+      Api.getZamenaFileLinks(
+        start: startdate,
+        end: endDate
+      ),
+      Api.getZamenasFull(
+        [searchItem.id],
+        startdate,
+        endDate
+      )
+    ]);
 
-      lessons = result[0] as List<Lesson>;
-      zamenas = result[1] as List<Zamena>;
-      links = result[2] as List<ZamenaFileLink>;
-      zamenasFull = result[3] as List<ZamenaFull>;
+    lessons = result[0] as List<Lesson>;
+    zamenas = result[1] as List<Zamena>;
+    links = result[2] as List<ZamenaFileLink>;
+    zamenasFull = result[3] as List<ZamenaFull>;
 
-      List<DaySchedule> schedule = [];
-      final List<DateTime> dates = List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)));
-      for (DateTime date in dates) {
-        List<Paras> dayParas = [];
+    List<DaySchedule> schedule = [];
+    final List<DateTime> dates = List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)));
+    for (DateTime date in dates) {
+      List<Paras> dayParas = [];
 
-        final List<Lesson> dayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
-        final List<Zamena> dayZamenas = zamenas.where((final lesson) => lesson.date.sameDate(date)).toList();
+      final List<Lesson> dayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+      final List<Zamena> dayZamenas = zamenas.where((final lesson) => lesson.date.sameDate(date)).toList();
 
 
-        for (LessonTimings timing in timings) {
-          final Paras paras = Paras();
+      for (LessonTimings timing in timings) {
+        final Paras paras = Paras();
 
-          paras.lesson = dayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
-          paras.zamena = dayZamenas.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.groupID == searchItem.id).toList();
+        paras.lesson = dayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
+        paras.zamena = dayZamenas.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.groupID == searchItem.id).toList();
 
-          if (paras.lesson!.isEmpty && paras.zamena!.isEmpty) {
-            continue;
-          }
-
-          paras.number = timing.number;
-          dayParas.add(paras);
+        if (paras.lesson!.isEmpty && paras.zamena!.isEmpty) {
+          continue;
         }
 
-        final daySchedule = DaySchedule(
-            zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
-            zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
-            paras: dayParas,
-            date: date,
-          );
-
-        schedule.add(daySchedule);
+        paras.number = timing.number;
+        dayParas.add(paras);
       }
-      
-      return schedule;
 
-      // for (final lesson in lessons) {
-      //   final Zamena? relatedZamena = zamenaByLessonId[lesson.id];
-
-
-
-      //   final para = Paras(
-      //     lesson: [lesson],
-      //     zamena: relatedZamena,
-      //     zamenaFull: zamenasFull.where((final zamenaFull) => zamenaFull.date == lesson.date && zamenaFull.group == lesson.group).firstOrNull
-      //   );
-      // }
-      //   parasByDate.putIfAbsent(lesson.date, () => []).add(para);
-      // }
-
-      // return parasByDate.entries.map((final entry) {
-      //   final paras = entry.value;
-
-      //   return DaySchedule(
-      //     paras: paras,
-      //     zamenaLinks: links.where((final link) => link.date == entry.key).toList(),
-      //   );
-      // }).toList();
-
-      } else if (searchItem is Teacher) {
-        lessons = (await Api.loadWeekTeacherSchedule(
-          teacherID: searchItem.id,
-          start: startdate,
-          end: endDate,
-        ))..sort((final a, final b) => a.date.compareTo(b.date));
-
-        zamenas = await Api.loadTeacherZamenas(
-          teacherID: searchItem.id,
-          start: startdate,
-          end: endDate,
+      final daySchedule = DaySchedule(
+          zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
+          zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
+          paras: dayParas,
+          date: date,
         );
 
-        final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
-        
-        final result = await Future.wait([
-          Api.getZamenasFull(groups, startdate, endDate),
-          Api.getLiquidation(groups, startdate, endDate),
-          Api.loadZamenas(groupsID: groups, start: startdate, end: endDate)
-        ]);
+      schedule.add(daySchedule);
+    }
+    
+    return schedule;
+  }
 
-        final groupsLessons = result[2] as List<Zamena>;
+  Future<List<DaySchedule>> _teacherSchedule({
+    required final List<LessonTimings> timings,
+    required final DateTime startdate,
+    required final Teacher searchItem,
+    required final DateTime endDate,
+  }) async {
 
-        List<DaySchedule> schedule = [];
-        for (DateTime date in List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)))) {
-          List<Paras> dayParas = [];
+    final List<Lesson> lessons = (await Api.loadWeekTeacherSchedule(
+      teacherID: searchItem.id,
+      start: startdate,
+      end: endDate,
+    ))..sort((final a, final b) => a.date.compareTo(b.date));
 
-          final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
-          final List<Zamena> dayGroupsLessons = groupsLessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+    // final List<Zamena> techerZamenas = await Api.loadTeacherZamenas(
+    //   teacherID: searchItem.id,
+    //   start: startdate,
+    //   end: endDate,
+    // );
 
-          for (LessonTimings timing in timings) {
-            final Paras paras = Paras();
+    final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
+    
+    final result = await Future.wait([
+      Api.getZamenasFull(groups, startdate, endDate),
+      Api.getLiquidation(groups, startdate, endDate),
+      Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
+        Api.getZamenaFileLinks(
+        start: startdate,
+        end: endDate,
+      )
+    ]);
 
-            final List<Lesson> teacherLesson = teacherDayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
-            final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.teacherID == searchItem.id).toList();
+    final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
+    final List<Liquidation> liquidations = result[1] as List<Liquidation>;
+    final List<Zamena> groupsLessons = result[2] as List<Zamena>;
+    final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
 
-            paras.lesson = teacherLesson;
-            paras.zamena = groupLessonZamena;
+    List<DaySchedule> schedule = [];
+    for (DateTime date in List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)))) {
+      List<Paras> dayParas = [];
 
-            // if (paras.lesson!.isEmpty && paras.zamena!.isEmpty) {
-            //   continue;
-            // }
+      final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+      final List<Zamena> dayGroupsLessons = groupsLessons.where((final lesson) => lesson.date.sameDate(date)).toList();
 
-            paras.number = timing.number;
-            dayParas.add(paras);
-          }
+      for (LessonTimings timing in timings) {
+        final Paras paras = Paras();
 
-          for (var element in dayParas) {
-            log((element.lesson?.firstOrNull?.course).toString());
-          }
+        final List<Lesson> teacherLesson = teacherDayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
+        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.teacherID == searchItem.id).toList();
+        final List<ZamenaFull> paraZamenaFull = zamenasFull.where((final zamena) => zamena.date.sameDate(date)).toList();
 
-          final daySchedule = DaySchedule(
-            zamenaFull: null,
-            zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
-            paras: dayParas,
-            date: date,
-          );
+        paras.lesson = teacherLesson;
+        paras.zamena = groupLessonZamena;
+        paras.zamenaFull = paraZamenaFull;
 
-          schedule.add(daySchedule);
+        if (
+          paras.lesson!.isEmpty
+          && paras.zamena!.isEmpty
+        ) {
+          continue;
         }
 
-        return schedule;
+        paras.number = timing.number;
+        dayParas.add(paras);
       }
 
-      return [];
+      for (var element in dayParas) {
+        log((element.lesson?.firstOrNull?.course).toString());
+      }
+
+      final daySchedule = DaySchedule(
+        zamenaFull: null,
+        zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
+        paras: dayParas,
+        date: date,
+      );
+
+      schedule.add(daySchedule);
     }
+
+    return schedule;
+  }
 }

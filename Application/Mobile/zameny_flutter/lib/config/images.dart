@@ -5,4 +5,6 @@ abstract class Images{
   static const String teacher = 'assets/icon/teacher.svg';
   static const String heart = 'assets/icon/heart.svg';
   static const String heartOutlined = 'assets/icon/heart_outlined.svg';
+
+  static const String chevron = 'assets/icon/chevron.svg';
 }
