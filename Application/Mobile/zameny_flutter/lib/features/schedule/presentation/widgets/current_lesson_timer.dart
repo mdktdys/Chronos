@@ -9,7 +9,6 @@ import 'package:get_it/get_it.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
   const CurrentLessonTimer({super.key});
@@ -96,7 +95,6 @@ late Timer ticker;
   Widget build(final BuildContext context) {
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
-    final ScheduleProvider provider = ref.watch(scheduleProvider);
 
     return AnimatedSize(
       duration: const Duration(milliseconds: 150),

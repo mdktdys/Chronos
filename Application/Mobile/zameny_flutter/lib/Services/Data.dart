@@ -13,17 +13,12 @@ class Data {
   List<Cabinet> cabinets = [];
   List<LessonTimings> timings = [];
   List<Department> departments = [];
-  List<Zamena> zamenas = [];
-  List<ZamenasType> zamenaTypes = [];
   Set<ZamenaFileLink> zamenaFileLinks = {};
-  Set<ZamenaFull> zamenasFull = {};
   Set<Holiday> holidays = {};
-  Set<Liquidation> liquidations = {};
   int? seekGroup = -1;
   int? teacherGroup = -1;
   int? seekCabinet = -1;
   SearchType latestSearch = SearchType.group;
-  Duration networkOffset = const Duration(milliseconds: 1);
 
   Data() {
     seekGroup = GetIt.I.get<SharedPreferences>().getInt('SelectedGroup') ?? -1;
@@ -52,8 +47,4 @@ class Data {
         }
     }
   }
-}
-
-void setChoosedTheme(final int index) {
-  GetIt.I.get<SharedPreferences>().setInt('Theme', index);
 }

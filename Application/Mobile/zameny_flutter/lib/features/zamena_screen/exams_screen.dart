@@ -5,11 +5,12 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/features/zamena_screen/widget/zamena_view_chooser.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
@@ -216,13 +217,18 @@ class ZamenaFileBlock extends ConsumerWidget {
   }
 }
 
-class ZamenaViewTeacher extends StatelessWidget {
-  final List<Zamena> zamenas;
+class ZamenaViewTeacher extends ConsumerWidget {
   final List<ZamenaFull> fullZamenas;
-  const ZamenaViewTeacher({required this.zamenas, required this.fullZamenas, super.key});
+  final List<Zamena> zamenas;
+
+  const ZamenaViewTeacher({
+    required this.zamenas,
+    required this.fullZamenas,
+    super.key
+  });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
     final date = DateTime.now();
     return Column(
@@ -230,7 +236,7 @@ class ZamenaViewTeacher extends StatelessWidget {
         children: teachersList.map((final teacherId) {
           final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
           groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
-          final teacher = getTeacherById(teacherId);
+          final teacher = ref.watch(teacherProvider(teacherId))!;
 
           if(teacher.name.replaceAll(' ', '') == ''){
             return const SizedBox();
@@ -251,25 +257,22 @@ class ZamenaViewTeacher extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: groupZamenas.map((final zamena) {
-                  final course = getCourseById(zamena.courseID)!;
-                  final cabinet = getCabinetById(zamena.cabinetID);
-                  final group = getGroupById(zamena.groupID);
-                  return CourseTile(
-                    clickabe: false,
-                      course: course,
-                      lesson: Lesson(
-                          id: course.id,
-                          number: zamena.lessonTimingsID,
-                          group: group!.id,
-                          date: date,
-                          course: course.id,
-                          teacher: teacher.id,
-                          cabinet: cabinet.id,),
-                      swaped: null,
-                      type: SearchType.teacher,
-                      saturdayTime: false,
-                      obedTime: false,
-                      short: true,);
+                  final Course course = ref.watch(courseProvider(zamena.courseID))!;
+                  final Cabinet cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
+                  final Group group = ref.watch(groupProvider(zamena.groupID))!;
+
+                  return CourseTileRework(
+                    index: zamena.lessonTimingsID,
+                    lesson: Lesson(
+                      id: course.id,
+                      number: zamena.lessonTimingsID,
+                      group: group.id,
+                      date: date,
+                      course: course.id,
+                      teacher: teacher.id,
+                      cabinet: cabinet.id,
+                    )
+                  );
                 }).toList(),
               ),
             ],
@@ -278,14 +281,14 @@ class ZamenaViewTeacher extends StatelessWidget {
   }
 }
 
-class ZamenaViewGroup extends StatelessWidget {
+class ZamenaViewGroup extends ConsumerWidget {
   final List<Zamena> zamenas;
   final List<ZamenaFull> fullZamenas;
   const ZamenaViewGroup(
       {required this.zamenas, required this.fullZamenas, super.key,});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> groupsList = zamenas.map((final zamena) => zamena.groupID).toSet();
     final date = DateTime.now();
     return Column(
@@ -302,7 +305,7 @@ class ZamenaViewGroup extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    getGroupById(group)!.name,
+                    ref.watch(groupProvider(group))!.name,
                     style: context.styles.ubuntuInverseSurface20
                   ),
                   isFullZamena
@@ -316,27 +319,21 @@ class ZamenaViewGroup extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: groupZamenas.map((final zamena) {
-                  final course = getCourseById(zamena.courseID)!;
-                  final teacher = getTeacherById(zamena.teacherID);
-                  final cabinet = getCabinetById(zamena.cabinetID);
-                  // return const Text("data");
-                  return CourseTile(
-                    clickabe: false,
-                      course: course,
-                      lesson: Lesson(
-                        id: course.id,
-                        number: zamena.lessonTimingsID,
-                        group: group,
-                        date: date,
-                        course: course.id,
-                        teacher: teacher.id,
-                        cabinet: cabinet.id,
-                      ),
-                      swaped: null,
-                      type: SearchType.group,
-                      saturdayTime: false,
-                      obedTime: false,
-                      short: true,);
+                  final course =  ref.watch(courseProvider(zamena.courseID))!;
+                  final teacher = ref.watch(teacherProvider(zamena.teacherID))!;
+                  final cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
+                  return CourseTileRework(
+                    index: zamena.lessonTimingsID,
+                    lesson: Lesson(
+                      id: course.id,
+                      number: zamena.lessonTimingsID,
+                      group: group,
+                      date: date,
+                      course: course.id,
+                      teacher: teacher.id,
+                      cabinet: cabinet.id,
+                    )
+                  );
                 }).toList(),
               ),
             ],

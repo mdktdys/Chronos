@@ -13,14 +13,6 @@ class TimeTable extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-
-    // return FailedLoadWidget(
-    //   onClicked: () {
-    //     ref.invalidate(timingsProvider);
-    //   },
-    //   error: 'sample',
-    // );
-
     return SkeletonizedProvider<List<LessonTimings>>(
       provider: timingsProvider,
       fakeData: TimingsNotifier.fake,
@@ -34,12 +26,11 @@ class TimeTable extends ConsumerWidget {
       },
       error: (final o, final e) {
         return FailedLoadWidget(
+          error: 'error',
           onClicked: () {
-        ref.invalidate(timingsProvider);
-      },
-          error: 'error'
+            ref.invalidate(timingsProvider);
+          },
         );
-        return const Text('data');
       },
     );
   }

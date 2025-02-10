@@ -3,8 +3,8 @@ import 'dart:ui';
 
 import 'package:get_it/get_it.dart';
 
-import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/services/Data.dart';
 
 DateTime formatTimeToDateTime(final String time) {
   //sample 11:05:20
@@ -31,28 +31,28 @@ LessonTimings getLessonTimings(final int lesson) {
   return dat.timings.where((final timimng) => timimng.number == lesson).first;
 }
 
-Cabinet getCabinetById(final int cabinetID) {
-  final dat = GetIt.I.get<Data>();
-  return dat.cabinets.where((final cabinet) => cabinet.id == cabinetID).first;
-}
+// Cabinet getCabinetById(final int cabinetID) {
+//   final dat = GetIt.I.get<Data>();
+//   return dat.cabinets.where((final cabinet) => cabinet.id == cabinetID).first;
+// }
 
-Teacher getTeacherById(final int teacherID) {
-  final dat = GetIt.I.get<Data>();
-  return dat.teachers.where((final teacher) => teacher.id == teacherID).first;
-}
+// Teacher getTeacherById(final int teacherID) {
+//   final dat = GetIt.I.get<Data>();
+//   return dat.teachers.where((final teacher) => teacher.id == teacherID).first;
+// }
 
-Group? getGroupById(final int groupID) {
-  final dat = GetIt.I.get<Data>();
-  return dat.groups.where((final group) => group.id == groupID).firstOrNull;
-}
+// Group? getGroupById(final int groupID) {
+//   final dat = GetIt.I.get<Data>();
+//   return dat.groups.where((final group) => group.id == groupID).firstOrNull;
+// }
 
-Course? getCourseById(final int courseID) {
-  final dat = GetIt.I.get<Data>();
-  return dat.courses
-      .where((final course) => course.id == courseID)
-      .toList()
-      .firstOrNull;
-}
+// Course? getCourseById(final int courseID) {
+//   final dat = GetIt.I.get<Data>();
+//   return dat.courses
+//       .where((final course) => course.id == courseID)
+//       .toList()
+//       .firstOrNull;
+// }
 
 DateTime getFirstDayOfWeek(final int year, final int week) {
   final DateTime januaryFirst = DateTime(year);

@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,10 +8,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier();
@@ -323,43 +318,10 @@ class ScheduleProvider extends ChangeNotifier {
 
   void searchItemSelected(final SearchItem item, final BuildContext context) {
     ref.read(searchItemProvider.notifier).state = item;
-    log('message');
     context.goNamed('/', pathParameters: {
       'type': item.typeId.toString(),
       'id': item.id.toString()
     });
-
-    // if (item is Group) {
-    //   groupSelected(item.id, context);
-    // } 
-    // if (item is Cabinet) {
-    //   cabinetSelected(item.id, context);
-    // }
-    // if (item is Teacher) {
-    //   teacherSelected(item.id, context);
-    // }
-  }
-
-  void toggleWeek(final int days, final BuildContext context) {
-    currentWeek += days;
-    if (currentWeek < 1) {
-      currentWeek = 1;
-    } else {
-      navigationDate = navigationDate.add(Duration(days: days > 0 ? 7 : -7));
-    }
-    dateSwitched(context);
-  }
-
-  DateTime getStartOfWeek(final DateTime week) {
-    final DateTime monday = week.subtract(Duration(days: week.weekday - 1));
-    return DateTime(monday.year, monday.month, monday.day);
-  }
-
-  DateTime getEndOfWeek(final DateTime week) {
-    final DateTime sunday = week
-        .subtract(Duration(days: week.weekday - 1))
-        .add(const Duration(days: 6));
-    return DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
   }
 
   void groupSelected(final int groupID, final BuildContext context) {
@@ -441,50 +403,5 @@ class ScheduleProvider extends ChangeNotifier {
     //   dateEnd: endOfWeek
     // );
     notifyListeners();
-  }
-
-  Future<void> dateSwitched(final context) async {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == SearchType.teacher) {
-      teacherSelected(dat.teacherGroup!, context);
-    }
-    if (dat.latestSearch == SearchType.cabinet) {
-      cabinetSelected(dat.seekCabinet!, context);
-    }
-    if (dat.latestSearch == SearchType.group) {
-      groupSelected(dat.seekGroup!, context);
-    }
-    notifyListeners();
-  }
-
-  String searchDiscribtion() {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == SearchType.teacher) {
-      final Teacher teacher = getTeacherById(dat.teacherGroup!);
-      return "${teacher.name}${IS_DEV? ' ${teacher.id}' : ''}";
-    }
-    if (dat.latestSearch == SearchType.cabinet) {
-      final Cabinet cabinet = getCabinetById(dat.seekCabinet!);
-      return "${cabinet.name}${IS_DEV? ' ${cabinet.id}' : ''}";
-    }
-    if (dat.latestSearch == SearchType.group) {
-      final Group? group = getGroupById(dat.seekGroup!);
-      return "${group?.name}${IS_DEV? ' ${group?.id}' : ''}";
-    }
-    return 'Not found';
-  }
-
-  String getSearchTypeNamed() {
-    final Data dat = GetIt.I.get<Data>();
-    if (dat.latestSearch == SearchType.teacher) {
-      return 'Преподаватель';
-    }
-    if (dat.latestSearch == SearchType.cabinet) {
-      return 'Кабинет';
-    }
-    if (dat.latestSearch == SearchType.group) {
-      return 'Группа';
-    }
-    return 'Not found';
   }
 }
