@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
@@ -262,6 +263,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
                   final Group group = ref.watch(groupProvider(zamena.groupID))!;
 
                   return CourseTileRework(
+                    searchType: SearchType.teacher,
                     index: zamena.lessonTimingsID,
                     lesson: Lesson(
                       id: course.id,
@@ -323,6 +325,7 @@ class ZamenaViewGroup extends ConsumerWidget {
                   final teacher = ref.watch(teacherProvider(zamena.teacherID))!;
                   final cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
                   return CourseTileRework(
+                    searchType: SearchType.group,
                     index: zamena.lessonTimingsID,
                     lesson: Lesson(
                       id: course.id,

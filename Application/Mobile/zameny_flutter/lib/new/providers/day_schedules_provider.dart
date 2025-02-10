@@ -167,7 +167,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
     ]);
 
     final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
-    final List<Liquidation> liquidations = result[1] as List<Liquidation>;
+    // final List<Liquidation> liquidations = result[1] as List<Liquidation>;
     final List<Zamena> groupsLessons = result[2] as List<Zamena>;
     final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
 

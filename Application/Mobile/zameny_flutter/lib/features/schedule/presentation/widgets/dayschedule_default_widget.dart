@@ -1,8 +1,5 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
-import 'package:bounce/bounce.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -432,10 +429,6 @@ class EmptyCourseTileRework extends ConsumerWidget {
     final String? endTime = obed
       ? timings?.obedEnd.hhmm()
       : timings?.end.hhmm();
-
-    final Color timeColor = obed
-      ? (index > 3 ? Colors.green : Theme.of(context).colorScheme.inverseSurface)
-      : Theme.of(context).colorScheme.inverseSurface;
 
     return Container(
       width: double.infinity,
@@ -1160,3 +1153,4 @@ class SwapedParaWidget extends ConsumerWidget {
           //     ),
           //   ),
           // );
+        
