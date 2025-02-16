@@ -43,6 +43,7 @@ late final SearchController searchController;
     final providerSchedule = ref.watch(scheduleProvider);
     return Column(
       mainAxisSize: MainAxisSize.min,
+      crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CupertinoSearchTextField(
           onSubmitted: (final _) => FocusScope.of(context).unfocus(),
@@ -51,53 +52,79 @@ late final SearchController searchController;
           onChanged: _onTextChanged,
           placeholder: 'Я ищу...',
         ),
-        AnimatedSize(
-          duration: const Duration(milliseconds: 300),
-          alignment: Alignment.topCenter,
-          curve: Easing.legacy,
-          child: ImplicitlyAnimatedList<SearchItem>(
-            spawnIsolate: true,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            items: ref.watch(filteredSearchItemsProvider).valueOrNull ?? [],
-            areItemsTheSame: (final a, final b) => a.s == b.s,
-            insertDuration: const Duration(milliseconds: 300),
-            removeDuration: const Duration(milliseconds: 300),
-            itemBuilder: (final context, final animation, final item, final index) {
-              return SizeTransition(
-                sizeFactor: animation,
-                axisAlignment: -1,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 2.0),
-                  child: Material(
-                    clipBehavior: Clip.hardEdge,
-                    borderRadius: BorderRadius.circular(16),
-                    child: InkWell(
-                      key: UniqueKey(),
-                      onTap: () {
-                        ref.read(filterSearchQueryProvider.notifier).state = '';
-                        
-                        setState(() {
-                          searchController.text = '';
-                          FocusScope.of(context).unfocus();
-                        });
-                        providerSchedule.searchItemSelected(item, context);
-                      },
-                      child: Container(
-                        width: double.infinity,
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                          item.getFiltername(),
-                          style: context.styles.ubuntuInverseSurface18,
-                        ),
-                      ),
+        Builder(
+          builder: (final context) {
+            final items = ref.watch(filteredSearchItemsProvider).valueOrNull ?? [];
+            return AnimatedSwitcher(
+              duration: const Duration(milliseconds: 300),
+              child: Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                key: UniqueKey(),
+                children: items.map((final element) {
+                  return Container(
+                    decoration: BoxDecoration(
+                      color: Colors.red,
+                      borderRadius: BorderRadius.circular(20)
                     ),
-                  ),
-                ),
-              );
-            },
-          ),
-        ),
+                    padding: const EdgeInsets.symmetric(
+                      vertical: 4,
+                      horizontal: 8
+                    ),
+                    child: Text(element.getFiltername())
+                  );
+                }).toList()
+              ),
+            );
+          }
+        )
+        // AnimatedSize(
+        //   duration: const Duration(milliseconds: 300),
+        //   alignment: Alignment.topCenter,
+        //   curve: Easing.legacy,
+        //   child: ImplicitlyAnimatedList<SearchItem>(
+        //     spawnIsolate: true,
+        //     physics: const NeverScrollableScrollPhysics(),
+        //     shrinkWrap: true,
+        //     items: ref.watch(filteredSearchItemsProvider).valueOrNull ?? [],
+        //     areItemsTheSame: (final a, final b) => a.s == b.s,
+        //     insertDuration: const Duration(milliseconds: 300),
+        //     removeDuration: const Duration(milliseconds: 300),
+        //     itemBuilder: (final context, final animation, final item, final index) {
+        //       return SizeTransition(
+        //         sizeFactor: animation,
+        //         axisAlignment: -1,
+        //         child: Padding(
+        //           padding: const EdgeInsets.symmetric(vertical: 2.0),
+        //           child: Material(
+        //             clipBehavior: Clip.hardEdge,
+        //             borderRadius: BorderRadius.circular(16),
+        //             child: InkWell(
+        //               key: UniqueKey(),
+        //               onTap: () {
+        //                 ref.read(filterSearchQueryProvider.notifier).state = '';
+                        
+        //                 setState(() {
+        //                   searchController.text = '';
+        //                   FocusScope.of(context).unfocus();
+        //                 });
+        //                 providerSchedule.searchItemSelected(item, context);
+        //               },
+        //               child: Container(
+        //                 width: double.infinity,
+        //                 padding: const EdgeInsets.all(12),
+        //                 child: Text(
+        //                   item.getFiltername(),
+        //                   style: context.styles.ubuntuInverseSurface18,
+        //                 ),
+        //               ),
+        //             ),
+        //           ),
+        //         ),
+        //       );
+        //     },
+        //   ),
+        // ),
       ],
     );
   }

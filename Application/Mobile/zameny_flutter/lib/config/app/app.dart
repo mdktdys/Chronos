@@ -67,7 +67,7 @@ class ApplicationBase extends ConsumerWidget {
       body: Stack(
         children: [
           MainScreen(),
-          SnowFall(),
+          // SnowFall(),
         ],
       ),
     );

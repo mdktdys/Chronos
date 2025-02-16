@@ -34,8 +34,8 @@ class SnowFall extends ConsumerWidget {
     : const IgnorePointer(
       child: RepaintBoundary(
         child: FlutterFall(
-          totalObjects: 25,
-          particleImage: [Images.snowflake],
+          totalParticles: 25,
+          particleImages: [Images.snowflake],
         ),
       ),
     );
