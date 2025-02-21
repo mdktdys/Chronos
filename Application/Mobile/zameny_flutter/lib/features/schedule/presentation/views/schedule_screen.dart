@@ -14,6 +14,7 @@ import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/new/widgets/test_widget.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart'  hide scheduleProvider;
+import 'package:zameny_flutter/shared/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
 
 MyGlobals myGlobals = MyGlobals();
@@ -107,7 +108,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 ,
                 const Expanded(
                   child: SingleChildScrollView(
-                    child: ScheduleTurboSearch(),
+                    child: ScheduleTurboSearch(
+                      withFavorite: false,
+                    ),
                   ),
                 ),
               ],
@@ -132,7 +135,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
-                const FavoriteStripeWidget(),
                 const SizedBox(height: 10),
                 const DateHeader(),
                 const SizedBox(height: 10),
@@ -172,21 +174,43 @@ class FavoriteStripeWidget extends ConsumerWidget {
         }
       
         return SizedBox(
-          height: 52,
-          child: ListView.builder(
-            scrollDirection: Axis.horizontal,
-            itemCount: provider.items.length,
-            itemBuilder: (final BuildContext context ,final int index) {
-              final SearchItem searchItem = provider.items[index];
-      
-              return BaseContainer(
-                padding: const EdgeInsets.symmetric(
-                  vertical: 4,
-                  horizontal: 8
-                ),
-                child: Center(
-                  child: Text(searchItem.getFiltername()),
-                )
+          height: 34,
+          child: Builder(
+            builder: (final BuildContext context) {
+              final List<SearchItem> items = ref.watch(favoriteSearchItemsProvider).items;
+
+              return Wrap(
+                spacing: 8,
+                runSpacing: 8,
+                children: items.map((final SearchItem item) {
+                  return Material(
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    borderRadius: BorderRadius.circular(20),
+                    child: InkWell(
+                      onTap: () {
+                        ref.read(searchItemProvider.notifier).state = item;
+                        ref.read(filterSearchQueryProvider.notifier).state = '';
+                      },
+                      borderRadius: BorderRadius.circular(20),
+                      child: Container(
+                        padding: const EdgeInsets.symmetric(
+                          vertical: 4,
+                          horizontal: 8
+                        ),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(
+                            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)
+                          )
+                        ),
+                        child: Text(
+                          item.getFiltername(),
+                          style: context.styles.ubuntuInverseSurface40014,
+                        )
+                      ),
+                    ),
+                  );
+                }).toList(),
               );
             }
           ),

@@ -10,7 +10,6 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/main_screen.dart';
 import 'package:zameny_flutter/shared/providers/in_app_update/in_app_update_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/shared/widgets/snowfall.dart';
 
 class Application extends ConsumerWidget {
   const Application({super.key});

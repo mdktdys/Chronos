@@ -171,7 +171,9 @@ class DayScheduleParasWidget extends ConsumerWidget {
           searchType: SearchType.group,
           index: zamena!.lessonTimingsID,
           isZamena: true,
+          swapedLesson: lesson,
           obed: obed,
+          
           lesson: Lesson(
 
             id: -1,
@@ -571,11 +573,11 @@ class SwapedParaTileWidget extends StatelessWidget {
 
 class CourseTileRework extends ConsumerStatefulWidget {
   final SearchType searchType;
+  final Lesson? swapedLesson;
   final Lesson lesson;
   final bool isZamena;
   final bool obed;
   final int index;
-  final Lesson? swapedLesson;
 
   const CourseTileRework({
     required this.searchType,
@@ -747,14 +749,14 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                           ),
                         ],
                       ),
-                      Align(
-                        child: AnimatedRotation(
-                          duration: const Duration(milliseconds: 150),
-                          turns: isExpanded ? 0.5 : 0,
-                          child: SvgPicture.asset(Images.chevron, colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),),
+                      if (widget.swapedLesson != null)
+                        Align(
+                          child: AnimatedRotation(
+                            duration: const Duration(milliseconds: 150),
+                            turns: isExpanded ? 0.5 : 0,
+                            child: SvgPicture.asset(Images.chevron, colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),),
+                          ),
                         ),
-                      ),
-
                     ],
                   ),
                   if (isExpanded && widget.swapedLesson != null)

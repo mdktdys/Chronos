@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -25,7 +26,7 @@ class FavoriteSearchItemsNotifier extends ChangeNotifier {
 
     if (json != null) {
       final List<dynamic> raw = jsonDecode(json);
-      final provider = ref.read(searchItemsProvider).value;
+      final provider = ref.watch(searchItemsProvider).value;
 
       if (provider != null) {
         List<SearchItem?> actual = raw.map((final item) {

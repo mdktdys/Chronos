@@ -258,22 +258,40 @@ class ZamenaViewTeacher extends ConsumerWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: groupZamenas.map((final zamena) {
-                  final Course course = ref.watch(courseProvider(zamena.courseID))!;
-                  final Cabinet cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
-                  final Group group = ref.watch(groupProvider(zamena.groupID))!;
+                  final Course? course = ref.watch(courseProvider(zamena.courseID));
+                  final Cabinet? cabinet = ref.watch(cabinetProvider(zamena.cabinetID));
+                  final Group? group = ref.watch(groupProvider(zamena.groupID));
 
-                  return CourseTileRework(
-                    searchType: SearchType.teacher,
-                    index: zamena.lessonTimingsID,
-                    lesson: Lesson(
-                      id: course.id,
-                      number: zamena.lessonTimingsID,
-                      group: group.id,
-                      date: date,
-                      course: course.id,
-                      teacher: teacher.id,
-                      cabinet: cabinet.id,
-                    )
+                  if (
+                    (course == null)
+                    || (cabinet == null)
+                    || (group == null)
+                  ) {
+                    return const LoadingWidget();
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                      ),
+                      child: CourseTileRework(
+                        searchType: SearchType.teacher,
+                        index: zamena.lessonTimingsID,
+                        lesson: Lesson(
+                          id: course.id,
+                          number: zamena.lessonTimingsID,
+                          group: group.id,
+                          date: date,
+                          course: course.id,
+                          teacher: teacher.id,
+                          cabinet: cabinet.id,
+                        )
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
@@ -286,8 +304,8 @@ class ZamenaViewTeacher extends ConsumerWidget {
 class ZamenaViewGroup extends ConsumerWidget {
   final List<Zamena> zamenas;
   final List<ZamenaFull> fullZamenas;
-  const ZamenaViewGroup(
-      {required this.zamenas, required this.fullZamenas, super.key,});
+
+  const ZamenaViewGroup({required this.zamenas, required this.fullZamenas, super.key,});
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
@@ -324,18 +342,45 @@ class ZamenaViewGroup extends ConsumerWidget {
                   final course =  ref.watch(courseProvider(zamena.courseID))!;
                   final teacher = ref.watch(teacherProvider(zamena.teacherID))!;
                   final cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
-                  return CourseTileRework(
-                    searchType: SearchType.group,
-                    index: zamena.lessonTimingsID,
-                    lesson: Lesson(
-                      id: course.id,
-                      number: zamena.lessonTimingsID,
-                      group: group,
-                      date: date,
-                      course: course.id,
-                      teacher: teacher.id,
-                      cabinet: cabinet.id,
-                    )
+
+                  if (course.id == 10843) {
+                    return EmptyCourseTileRework(
+                      obed: false,
+                      index: zamena.lessonTimingsID,
+                      lesson: Lesson(
+                        id: -1,
+                        number: zamena.lessonTimingsID,
+                        group: zamena.groupID,
+                        date: zamena.date,
+                        course: zamena.courseID,
+                        teacher: zamena.teacherID,
+                        cabinet: zamena.cabinetID
+                      )
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                      ),
+                      child: CourseTileRework(
+                        searchType: SearchType.group,
+                        index: zamena.lessonTimingsID,
+                        lesson: Lesson(
+                          id: course.id,
+                          number: zamena.lessonTimingsID,
+                          group: group,
+                          date: date,
+                          course: course.id,
+                          teacher: teacher.id,
+                          cabinet: cabinet.id,
+                        )
+                      ),
+                    ),
                   );
                 }).toList(),
               ),
