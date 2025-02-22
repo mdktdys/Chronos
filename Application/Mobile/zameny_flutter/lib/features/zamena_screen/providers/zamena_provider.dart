@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:flutter/material.dart';
@@ -24,7 +25,7 @@ class ZamenaProvider extends ChangeNotifier{
   DateTime currentDate = DateTime.now();
   ZamenaViewType zamenaView = ZamenaViewType.teacher;
 
-  void toggleWeek(final int days, final BuildContext context) {
+  void toggleWeek(final int days) {
     currentDate = currentDate.add(Duration(days: days));
     if(currentDate.weekday == 7){
       currentDate = currentDate.add(Duration(days: days));
@@ -38,17 +39,29 @@ class ZamenaProvider extends ChangeNotifier{
   }
 }
 
-final zamenasListProvider = FutureProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((final ref) async {
-  final currentDate = ref.watch(zamenaProvider).currentDate;
-  try {
-    final result = await Future.wait([
-      Api.getZamenasByDate(date: currentDate),
-      Api.getFullZamenasByDate(currentDate),
-      Api.loadZamenaFileLinksByDate(date: currentDate),
-    ]);
-    return (result[0] as List<Zamena>,result[1] as List<ZamenaFull>,result[2] as List<ZamenaFileLink>);
-  } catch (e) {
-    log('Ошибка загрузки замен: $e');
+final zamenasListProvider = AsyncNotifierProvider<ZamenasNotifier, (List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>((){
+  return ZamenasNotifier();
+});
+
+class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)> {
+
+  @override
+  FutureOr<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)> build() async {
+    final currentDate = ref.watch(zamenaProvider).currentDate;
+    try {
+      final result = await Future.wait([
+        Api.getZamenasByDate(date: currentDate),
+        Api.getFullZamenasByDate(currentDate),
+        Api.loadZamenaFileLinksByDate(date: currentDate),
+      ]);
+      return (result[0] as List<Zamena>,result[1] as List<ZamenaFull>,result[2] as List<ZamenaFileLink>);
+    } catch (e) {
+      log('Ошибка загрузки замен: $e');
+      return (List<Zamena>.empty(),List<ZamenaFull>.empty(),List<ZamenaFileLink>.empty());
+    }
+  }
+
+  static (List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>) fake() {
     return (List<Zamena>.empty(),List<ZamenaFull>.empty(),List<ZamenaFileLink>.empty());
   }
-});
+}

@@ -1,14 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:go_router/go_router.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zameny_flutter/config/constants.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
-import 'package:zameny_flutter/services/Data.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier();
@@ -20,10 +15,6 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     notifyListeners();
   }
 }
-
-final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final Ref ref) {
-  return ScheduleProvider(ref: ref);
-});
 
 final searchItemProvider = StateProvider<SearchItem?>((final Ref ref) {
   return null;
@@ -51,37 +42,9 @@ class NavigationDateNotifier extends StateNotifier<DateTime> {
 
 
 class ScheduleProvider extends ChangeNotifier {
-  int groupIDSeek = -1;
-  int teacherIDSeek = -1;
-  int cabinetIDSeek = -1;
-  SearchType searchType = SearchType.group;
-  DateTime navigationDate = DateTime.now(); 
-  DateTime septemberFirst = DateTime(2024, 9, 2); // 1 сентября
-  int currentWeek = 1;
-  int todayWeek = 1;
-
   Ref ref;
 
-  ScheduleProvider({required this. ref}) {
-    groupIDSeek = GetIt.I.get<Data>().seekGroup ?? -1;
-    teacherIDSeek = GetIt.I.get<Data>().teacherGroup ?? -1;
-    cabinetIDSeek = GetIt.I.get<Data>().seekCabinet ?? -1;
-    searchType = GetIt.I.get<Data>().latestSearch;
-
-    currentWeek = ((navigationDate.difference(septemberFirst).inDays + septemberFirst.weekday) ~/ 7) + 1;
-    todayWeek = currentWeek;
-
-    navigationDate = navigationDate.weekday == 7
-      ? navigationDate.add(const Duration(days: 7))
-      : navigationDate;
-    currentWeek = navigationDate.weekday == 7
-      ? currentWeek + 1
-      : currentWeek;
-  }
-
-  int getWeekNumber(final DateTime date) {
-    return ((date.difference(Constants.septemberFirst).inDays + Constants.septemberFirst.weekday) ~/ 7) + 1;
-  }
+  ScheduleProvider({required this. ref});
 
   // Future<void> exportSchedulePNG(final BuildContext context, final WidgetRef ref) async {
   //   List<Lesson> lessons = [];
@@ -324,84 +287,4 @@ class ScheduleProvider extends ChangeNotifier {
     });
   }
 
-  void groupSelected(final int groupID, final BuildContext context) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedGroup', groupID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Group');
-    groupIDSeek = groupID;
-    data.seekGroup = groupID;
-    data.latestSearch = SearchType.group;
-    searchType = SearchType.group;
-    loadWeekSchedule(context);
-  }
-
-  Future<void> loadWeekSchedule(final BuildContext context) async {
-    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    // final DateTime sunday = monday.add(const Duration(days: 6));
-
-    // Устанавливаем время для понедельника и воскресенья
-    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    // final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    // ref.read(riverpodScheduleProvider.notifier).loadGroupWeek(
-    //   groupID: groupIDSeek,
-    //   dateStart: startOfWeek,
-    //   dateEnd: endOfWeek
-    // );
-
-    notifyListeners();
-  }
-
-  void teacherSelected(final int teacherID, final BuildContext context) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedTeacher', teacherID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Teacher');
-    teacherIDSeek = teacherID;
-    data.teacherGroup = teacherID;
-    data.latestSearch = SearchType.teacher;
-    searchType = SearchType.teacher;
-    loadWeekTeahcerSchedule(context);
-  }
-
-  void cabinetSelected(final int cabinetID, final BuildContext context) {
-    final data = GetIt.I.get<Data>();
-    GetIt.I.get<SharedPreferences>().setInt('SelectedCabinet', cabinetID);
-    GetIt.I.get<SharedPreferences>().setString('SearchType', 'Cabinet');
-    cabinetIDSeek = cabinetID;
-    data.seekCabinet = cabinetID;
-    data.latestSearch = SearchType.cabinet;
-    searchType = SearchType.cabinet;
-    loadCabinetWeekSchedule(context);
-  }
-
-  Future<void> loadCabinetWeekSchedule(final BuildContext context) async {
-    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    // final DateTime sunday = monday.add(const Duration(days: 6));
-
-    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    // final DateTime endOfWeek =
-    //     DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    // ref.read(riverpodScheduleProvider.notifier).loadCabinetWeek(
-    //   cabinetID: cabinetIDSeek,
-    //   dateStart: startOfWeek,
-    //   dateEnd: endOfWeek
-    // );
-    notifyListeners();
-  }
-
-  Future<void> loadWeekTeahcerSchedule(final BuildContext context) async {
-    // final DateTime monday = navigationDate.subtract(Duration(days: navigationDate.weekday - 1));
-    // final DateTime sunday = monday.add(const Duration(days: 6));
-
-    // final DateTime startOfWeek = DateTime(monday.year, monday.month, monday.day);
-    // final DateTime endOfWeek = DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-
-    // ref.read(riverpodScheduleProvider.notifier).loadTeacherWeek(
-    //   teacherID: teacherIDSeek,
-    //   dateStart: startOfWeek,
-    //   dateEnd: endOfWeek
-    // );
-    notifyListeners();
-  }
 }
