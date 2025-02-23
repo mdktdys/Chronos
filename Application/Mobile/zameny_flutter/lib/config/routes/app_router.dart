@@ -28,7 +28,6 @@ final GoRouter router = GoRouter(
             final String? typeId = params['type'];
             final String? id = params['id'];
 
-
             return const ApplicationBase(page: 1);
           },
         ),
