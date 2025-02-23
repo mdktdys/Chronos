@@ -100,6 +100,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
                         onTap: () {
                           ref.read(searchItemProvider.notifier).state = element;
                           ref.read(filterSearchQueryProvider.notifier).state = '';
+                          ref.read(scheduleProvider).searchItemSelected(element);
                           searchController.clear();
                         },
                         borderRadius: BorderRadius.circular(20),
@@ -151,7 +152,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
         //                   searchController.text = '';
         //                   FocusScope.of(context).unfocus();
         //                 });
-        //                 providerSchedule.searchItemSelected(item, context);
+        //                 
         //               },
         //               child: Container(
         //                 width: double.infinity,

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier();
@@ -39,6 +40,10 @@ class NavigationDateNotifier extends StateNotifier<DateTime> {
     return date;
   }
 }
+
+final scheduleProvider = ChangeNotifierProvider<ScheduleProvider>((final ref) {
+  return ScheduleProvider(ref: ref);
+});
 
 
 class ScheduleProvider extends ChangeNotifier {
@@ -279,12 +284,10 @@ class ScheduleProvider extends ChangeNotifier {
   //   ref.watch(sharingProvier).shareFile(text: name, files: [savedFile]);
   // }
 
-  void searchItemSelected(final SearchItem item, final BuildContext context) {
-    ref.read(searchItemProvider.notifier).state = item;
-    context.goNamed('/', pathParameters: {
-      'type': item.typeId.toString(),
-      'id': item.id.toString()
+  void searchItemSelected(final SearchItem item) {
+    ref.read(navigationProvider.notifier).setParams({
+      'type': item.typeId,
+      'id': item.id,
     });
   }
-
 }

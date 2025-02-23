@@ -10,7 +10,6 @@ import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
-import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class ScheduleDaysWidget extends StatelessWidget {
@@ -23,20 +22,31 @@ class ScheduleDaysWidget extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return AdaptiveLayout(
-      mobile: () {
-        return Column(
-          spacing: 10,
-          children: [
-            ...days.map((final day) {
-              return DayScheduleWidget(daySchedule: day);
-            }),
-            const SizedBox(height: 100),
-          ]
-        );
-      }(),
-      desktop: Expanded(child: ScheduleViewGrid(days: days)),
+
+    return Column(
+      spacing: 10,
+      children: [
+        ...days.map((final day) {
+          return DayScheduleWidget(daySchedule: day);
+        }),
+        const SizedBox(height: 100),
+      ]
     );
+
+    // return AdaptiveLayout(
+    //   mobile: () {
+    //     return Column(
+    //       spacing: 10,
+    //       children: [
+    //         ...days.map((final day) {
+    //           return DayScheduleWidget(daySchedule: day);
+    //         }),
+    //         const SizedBox(height: 100),
+    //       ]
+    //     );
+    //   }(),
+    //   desktop: Expanded(child: ScheduleViewGrid(days: days)),
+    // );
   }
 }
 

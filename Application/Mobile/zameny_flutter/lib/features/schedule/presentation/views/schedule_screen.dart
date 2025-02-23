@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
@@ -13,9 +12,8 @@ import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart
 import 'package:zameny_flutter/new/widgets/schedule_view.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/new/widgets/test_widget.dart';
-import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart'  hide scheduleProvider;
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
 
@@ -89,72 +87,106 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
 
     return Scaffold(
       key: myGlobals.scaffoldKey,
-      body: AdaptiveLayout(
-        desktop: () {
-          return Padding(
+      body: CustomScrollView(
+        controller: scrollController,
+        physics: const BouncingScrollPhysics(),
+        slivers: [
+          SliverPadding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: Column(
+            sliver: SliverList.list(
               children: [
-                const Row(
-                  children: [
-                    Expanded(child: SearchResultHeader()),
-                    Expanded(child: ScheduleHeader()),
-                    Expanded(child: DateHeader()),
-                  ],
-                ),
+                const TopBanner(),
+                const SizedBox(height: 10),
+                const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
                 const SizedBox(height: 10),
+                const DateHeader(),
                 const SizedBox(height: 10),
-                const CurrentLessonTimer(),
+                // const CurrentLessonTimer(),
                 const SizedBox(height: 10),
                 // LessonView(scrollController: scrollController),
-                
-                // const SizedBox(height: 10),ы
-                // const ScheduleViewSettingsWidget(),
-                // const SizedBox(height: 10),
-                Expanded(child: ScheduleView(scrollController: scrollController)),
-                // const Test()
+                const SearchResultHeader(),
+                const SizedBox(height: 10),
+                const ScheduleViewSettingsWidget(),
+                const SizedBox(height: 10),
+                ScheduleView(scrollController: scrollController),
               ]
             ),
-          );
-        }(),
-        mobile: () {
-          return Scaffold(
-            body: CustomScrollView(
-              controller: scrollController,
-              physics: const BouncingScrollPhysics(),
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                  sliver: SliverList.list(
-                    children: [
-                      const TopBanner(),
-                      const SizedBox(height: 10),
-                      const ScheduleHeader(),
-                      const SizedBox(height: 10),
-                      const ScheduleTurboSearch(),
-                      const SizedBox(height: 10),
-                      const DateHeader(),
-                      const SizedBox(height: 10),
-                      // const CurrentLessonTimer(),
-                      const SizedBox(height: 10),
-                      // LessonView(scrollController: scrollController),
-                      const SearchResultHeader(),
-                      const SizedBox(height: 10),
-                      const ScheduleViewSettingsWidget(),
-                      const SizedBox(height: 10),
-                      ScheduleView(scrollController: scrollController),
-                    ]
-                  ),
-                ),
-                const Test()
-              ]
-            ),
-          );
-        }()
-      ),
+          ),
+          const Test()
+        ]
+      )
     );
+
+    // return Scaffold(
+    //   key: myGlobals.scaffoldKey,
+    //   body: AdaptiveLayout(
+    //     desktop: () {
+    //       return Padding(
+    //         padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    //         child: Column(
+    //           children: [
+    //             const Row(
+    //               children: [
+    //                 Expanded(child: SearchResultHeader()),
+    //                 Expanded(child: ScheduleHeader()),
+    //                 Expanded(child: DateHeader()),
+    //               ],
+    //             ),
+    //             const SizedBox(height: 10),
+    //             const ScheduleTurboSearch(),
+    //             const SizedBox(height: 10),
+    //             const SizedBox(height: 10),
+    //             const CurrentLessonTimer(),
+    //             const SizedBox(height: 10),
+    //             // LessonView(scrollController: scrollController),
+                
+    //             // const SizedBox(height: 10),ы
+    //             // const ScheduleViewSettingsWidget(),
+    //             // const SizedBox(height: 10),
+    //             Expanded(child: ScheduleView(scrollController: scrollController)),
+    //             // const Test()
+    //           ]
+    //         ),
+    //       );
+    //     }(),
+    //     mobile: () {
+    //       return Scaffold(
+    //         body: CustomScrollView(
+    //           controller: scrollController,
+    //           physics: const BouncingScrollPhysics(),
+    //           slivers: [
+    //             SliverPadding(
+    //               padding: const EdgeInsets.symmetric(horizontal: 20.0),
+    //               sliver: SliverList.list(
+    //                 children: [
+    //                   const TopBanner(),
+    //                   const SizedBox(height: 10),
+    //                   const ScheduleHeader(),
+    //                   const SizedBox(height: 10),
+    //                   const ScheduleTurboSearch(),
+    //                   const SizedBox(height: 10),
+    //                   const DateHeader(),
+    //                   const SizedBox(height: 10),
+    //                   // const CurrentLessonTimer(),
+    //                   const SizedBox(height: 10),
+    //                   // LessonView(scrollController: scrollController),
+    //                   const SearchResultHeader(),
+    //                   const SizedBox(height: 10),
+    //                   const ScheduleViewSettingsWidget(),
+    //                   const SizedBox(height: 10),
+    //                   ScheduleView(scrollController: scrollController),
+    //                 ]
+    //               ),
+    //             ),
+    //             const Test()
+    //           ]
+    //         ),
+    //       );
+    //     }()
+    //   ),
+    // );
   }
 }
 
