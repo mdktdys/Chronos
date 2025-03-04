@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
@@ -12,6 +13,7 @@ import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart
 import 'package:zameny_flutter/new/widgets/schedule_view.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/new/widgets/test_widget.dart';
+import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
@@ -87,21 +89,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
 
     return Scaffold(
       key: myGlobals.scaffoldKey,
-<<<<<<< HEAD
       body: AdaptiveLayout(
         desktop: () => () {
           return Padding(
-=======
-      body: CustomScrollView(
-        controller: scrollController,
-        physics: const BouncingScrollPhysics(),
-        slivers: [
-          SliverPadding(
->>>>>>> 9fb9bc35942ea2a685c5f5e2fce85af8b146b524
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            sliver: SliverList.list(
+            child: SliverList.list(
               children: [
-<<<<<<< HEAD
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
@@ -110,18 +103,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const CurrentLessonTimer(),
                 const SearchResultHeader(),
                 const SizedBox(height: 5),
-=======
-                const TopBanner(),
-                const SizedBox(height: 10),
-                const ScheduleHeader(),
-                const SizedBox(height: 10),
-                const ScheduleTurboSearch(),
-                const SizedBox(height: 10),
-                const DateHeader(),
-                const SizedBox(height: 10),
-                // const CurrentLessonTimer(),
-                const SizedBox(height: 10),
->>>>>>> 9fb9bc35942ea2a685c5f5e2fce85af8b146b524
                 // LessonView(scrollController: scrollController),
                 const SearchResultHeader(),
                 const SizedBox(height: 10),
@@ -130,7 +111,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 ScheduleView(scrollController: scrollController),
               ]
             ),
-<<<<<<< HEAD
           );
         }(),
         mobile: () => () {
@@ -168,12 +148,6 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
           );
         }()
       ),
-=======
-          ),
-          const Test()
-        ]
-      )
->>>>>>> 9fb9bc35942ea2a685c5f5e2fce85af8b146b524
     );
 
     // return Scaffold(
