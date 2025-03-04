@@ -14,11 +14,11 @@ class MainScreen extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     ref.read(bottomSheetsProvider).setupContext(context);
     
-    return const Scaffold(
+    return Scaffold(
       body: SafeArea(
         child: AdaptiveLayout(
-          desktop: DesktopView(),
-          mobile: MobileView(),
+          desktop: () => const DesktopView(),
+          mobile: () => const MobileView(),
         )
       ),
     );

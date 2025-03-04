@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
+import 'package:zameny_flutter/new/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleHeader extends StatelessWidget {
@@ -27,19 +28,6 @@ class DayScheduleHeader extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    // final int searchDay = startDate.add(Duration(days: day - 1)).day;
-    // final int searchMonth = startDate.add(Duration(days: day - 1)).month;
-    // final int searchYear = startDate.add(Duration(days: day - 1)).year;
-    // final Set<ZamenaFileLink> links = GetIt.I
-    //     .get<Data>()
-    //     .zamenaFileLinks
-    //     .where(
-    //       (final element) =>
-    //           element.date.year == searchYear &&
-    //           element.date.month == searchMonth &&
-    //           element.date.day == searchDay,
-    //     )
-    //     .toSet();
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
@@ -52,21 +40,27 @@ class DayScheduleHeader extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      getDayName(date.weekday),
+                      date.weekdayName(),
+                      maxLines: 1,
                       style: context.styles.ubuntuInverseSurface24,
                     ),
                     Text(
                       '${getMonthName(date.month)} ${date.day}',
+                      maxLines: 1,
                       style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.7))
                     ),
                   ],
                 ),
               ),
               fullSwap == true
-                ? Text(
-                    'Полная замена',
-                    style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.7))
-                  )
+                ? Expanded(
+                    child: Text(
+                        'Полная замена',
+                        maxLines: 2,
+                        textAlign: TextAlign.right,
+                        style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.7))
+                    ),
+                )
                 : const SizedBox.shrink(),
               links.isNotEmpty
                   ? IconButton(

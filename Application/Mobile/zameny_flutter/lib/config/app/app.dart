@@ -35,7 +35,6 @@ class Application extends ConsumerWidget {
         title: 'Замены уксивтика',
         routerConfig: router,
         builder: (final BuildContext context, final Widget? child) {
-          
           WidgetsBinding.instance.addPostFrameCallback((final _) {
             FlutterNativeSplash.remove();
           });

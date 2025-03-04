@@ -4,11 +4,13 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/services/Data.dart';
+import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/shared/providers/timer_provider.dart';
+
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
   const CurrentLessonTimer({super.key});
@@ -58,34 +60,36 @@ late Timer ticker;
   }
 
   LessonTimings? getLessonTiming(final bool obed) {
+    final provider = ref.watch(timingsProvider);
+    
+    if (!provider.hasValue) {
+      return null;
+    }
+
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
+
+    final List<LessonTimings> timings = provider.value!;
+
     if (isSaturday) {
-      final LessonTimings? timing = GetIt.I
-          .get<Data>()
-          .timings
-          .where((final element) =>
-              element.start.isBefore(current) &&
-              element.saturdayEnd.isAfter(current),)
-          .firstOrNull;
+      final LessonTimings? timing = timings.where((final element) =>
+        element.start.isBefore(current) &&
+        element.saturdayEnd.isAfter(current),)
+        .firstOrNull;
       return timing;
     } else {
       if (obed) {
-        final LessonTimings? timing = GetIt.I
-            .get<Data>()
-            .timings
-            .where((final element) =>
-                element.obedStart.isBefore(current) &&
-                element.obedEnd.isAfter(current),)
-            .firstOrNull;
+        final LessonTimings? timing = timings
+          .where((final element) =>
+          element.obedStart.isBefore(current) &&
+          element.obedEnd.isAfter(current),)
+          .firstOrNull;
         return timing;
       } else {
-        final LessonTimings? timing = GetIt.I
-            .get<Data>()
-            .timings
-            .where((final element) =>
-                element.start.isBefore(current) && element.end.isAfter(current),)
-            .firstOrNull;
+        final LessonTimings? timing = timings
+          .where((final element) =>
+          element.start.isBefore(current) && element.end.isAfter(current),)
+          .firstOrNull;
         return timing;
       }
     }
@@ -95,21 +99,24 @@ late Timer ticker;
   Widget build(final BuildContext context) {
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
+    final bool isSaturday = current.weekday == 6;
+    const bool needObedSwitch = true;
 
-    return AnimatedSize(
-      duration: const Duration(milliseconds: 150),
-      curve: Curves.ease,
-      child: timing == null || current.weekday == 7
-          ? const SizedBox()
-          : Builder(builder: (final context) {
-              final bool needObedSwitch = timing.number > 3 && current.weekday != 6;
-              final bool isSaturday = current.weekday == 6;
-              return SizedBox(
-                width: double.infinity,
-                child: Padding(
-                  padding: const EdgeInsets.all(12.0),
-                  child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+    final DaySchedule schedule = ref.watch(todayDayScheduleProvider).value!.first;
+
+    // schedule.paras.where((paras) => paras.)
+
+    return Column(
+      children: [
+        AnimatedSize(
+          duration: const Duration(milliseconds: 150),
+          curve: Curves.ease,
+          child: timing == null || current.weekday == 7
+              ? const SizedBox()
+              : Builder(builder: (final context) {
+                  
+                  return Column(
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       children: [
                         Text(
                           'Сейчас идет ${timing.number} пара',
@@ -124,7 +131,7 @@ late Timer ticker;
                         //   child: Consumer(
                         //     builder: (final context, final ref, final child) {
                         //       final scheduleState = ref.watch(riverpodScheduleProvider);
-
+                          
                         //       if (scheduleState.isLoading) {
                         //         return const CircularProgressIndicator();
                         //       }
@@ -134,19 +141,19 @@ late Timer ticker;
                         //                 element.date.weekday == current.weekday &&
                         //                 timing.number == element.number)
                         //             .firstOrNull;
-
+                          
                         //         Zamena? zamena = scheduleState.zamenas
                         //             .where((final element) =>
                         //                 element.date.weekday == current.weekday &&
                         //                 timing.number == element.lessonTimingsID)
                         //             .firstOrNull;
-
+                          
                         //         if (zamena != null) {
                         //           if (provider.searchType == SearchType.teacher) {
                         //             zamena = zamena.teacherID == provider.teacherIDSeek ? zamena : null;
                         //           }
                         //         }
-
+                          
                         //         if (zamena == null) {
                         //           if (lesson != null) {
                         //             if (GetIt.I
@@ -170,7 +177,7 @@ late Timer ticker;
                         //             );
                         //           }
                         //         }
-
+                          
                         //         if (zamena != null) {
                         //           return CourseTile(
                         //             short: true,
@@ -200,46 +207,46 @@ late Timer ticker;
                         //     },
                         //   ),
                         // ),
-
-                        Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                'Осталось: ${getElapsedTime(obed)}',
-                                textAlign: TextAlign.start,
-                                style: context.styles.ubuntuBold18.copyWith(
-                                  color: obed
-                                    ? Colors.green
-                                    : Theme.of(context).primaryColorLight.withValues(alpha: 0.7)
-                                ),
-                              ),
-                              needObedSwitch && !isSaturday
-                                ? Row(
-                                    children: [
-                                      SizedBox(
-                                        height: 38,
-                                        child: FittedBox(
-                                          child: Switch(
-                                            value: obed,
-                                            onChanged: (final bool value) => toggleObed()),
-                                        ),
-                                      ),
-                                      const SizedBox(width: 8),
-                                      Text(
-                                        'Без обеда',
-                                        style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6)),
-                                      ),
-                                    ],
-                                  )
-                                : const SizedBox.shrink(),
-                            ],
-                          ),
                       ],
-                    ),
+                    );
+                },
+              ),
+        ),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            timing != null ?
+              Text(
+                'Осталось: ${getElapsedTime(obed)}',
+                textAlign: TextAlign.start,
+                style: context.styles.ubuntuBold18.copyWith(
+                  color: obed
+                    ? Colors.green
+                    : Theme.of(context).primaryColorLight.withValues(alpha: 0.7)
                 ),
-              );
-            },
-          ),
+              ) : const SizedBox(),
+            !isSaturday
+              ? Row(
+                  children: [
+                    SizedBox(
+                      height: 38,
+                      child: FittedBox(
+                        child: Switch(
+                          value: obed,
+                          onChanged: (final bool value) => toggleObed()),
+                      ),
+                    ),
+                    const SizedBox(width: 8),
+                    Text(
+                      'Без обеда',
+                      style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6)),
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink(),
+          ],
+        ),
+      ],
     );
   }
 }

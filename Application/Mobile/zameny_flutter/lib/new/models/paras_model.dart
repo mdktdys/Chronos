@@ -15,9 +15,11 @@ class Paras {
     this.number,
   });
 
-  factory Paras.fake() {
+  factory Paras.fake({
+    required final int number,
+  }) {
     return Paras(
-      number: 1,
+      number: number,
       lesson: [
         Lesson.fake(number: 1),
         Lesson.fake(number: 2),

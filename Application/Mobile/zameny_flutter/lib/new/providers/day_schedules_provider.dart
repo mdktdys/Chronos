@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
@@ -19,17 +20,18 @@ final scheduleProvider = AsyncNotifierProvider<ScheduleNotifier, List<DaySchedul
 
 
 class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
-
   static List<DaySchedule> fake() {
     final DateTime date = DateTime.now();
-    return [
-      DaySchedule.fake(date),
-      DaySchedule.fake(date.add(const Duration(days: 1)))
-    ];
+    final math.Random random = math.Random();
+
+    return List.generate(random.nextInt(4) + 2, (final int index) {
+      return DaySchedule.fake(date.add(Duration(days: index)));
+    });
   }
 
   @override
   FutureOr<List<DaySchedule>> build() async {
+    final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
     final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
     final SearchItem? searchItem = ref.watch(searchItemProvider);
 
@@ -42,7 +44,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
     }
 
     if (searchItem is Group) {
-      return _groupSchedule(
+      return daySchedulesProvider.groupSchedule(
         timings: timings,
         startdate: startdate,
         searchItem: searchItem,
@@ -50,7 +52,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
       );
 
     } else if (searchItem is Teacher) {
-      return _teacherSchedule(
+      return daySchedulesProvider.teacherSchedule(
         timings: timings,
         startdate: startdate,
         searchItem: searchItem,
@@ -60,8 +62,14 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
 
     return [];
   }
+}
 
-  Future<List<DaySchedule>> _groupSchedule({
+final dayScheduleProvider = Provider<DaySchedulesProvider>((final ref) {
+  return DaySchedulesProvider();
+});
+
+class DaySchedulesProvider {
+  Future<List<DaySchedule>> groupSchedule({
     required final List<LessonTimings> timings,
     required final DateTime startdate,
     required final Group searchItem,
@@ -135,7 +143,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
     return schedule;
   }
 
-  Future<List<DaySchedule>> _teacherSchedule({
+  Future<List<DaySchedule>> teacherSchedule({
     required final List<LessonTimings> timings,
     required final DateTime startdate,
     required final Teacher searchItem,
@@ -147,12 +155,6 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
       start: startdate,
       end: endDate,
     ))..sort((final a, final b) => a.date.compareTo(b.date));
-
-    // final List<Zamena> techerZamenas = await Api.loadTeacherZamenas(
-    //   teacherID: searchItem.id,
-    //   start: startdate,
-    //   end: endDate,
-    // );
 
     final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
     

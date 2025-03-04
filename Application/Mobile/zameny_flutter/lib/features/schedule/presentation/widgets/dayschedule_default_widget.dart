@@ -11,9 +11,11 @@ import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_header.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
+import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
@@ -34,12 +36,13 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final item = ref.watch(searchItemProvider);
+    final SearchItem? item = ref.watch(searchItemProvider);
 
     if (daySchedule.paras.isEmpty) {
       return const NoParasWidget();
     }
 
+    final builder = ref.watch(scheduleTilesBuilderProvider);
     return Column(
       children: [
         ... daySchedule.paras.map((final Paras para) {
@@ -47,7 +50,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
           List<Widget> tiles = [];
     
           if (item is Teacher) {
-            tiles = _buildTeacherTiles(
+            tiles = builder.buildTeacherTiles(
               isShowZamena: isShowZamena,
               para: para,
               obed: obed,
@@ -55,7 +58,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
           }
 
           if (item is Group) {
-            tiles = _buildGroupTiles(
+            tiles = builder.buildGroupTiles(
               zamenaFull: daySchedule.zamenaFull,
               isShowZamena: isShowZamena,
               para: para,
@@ -87,241 +90,19 @@ class DayScheduleParasWidget extends ConsumerWidget {
               return tile;
             }).toList()
           );
-
         })
       ],
     );
   }
-
-  List<Widget> _buildGroupTiles({
-    required final ZamenaFull? zamenaFull,
-    required final bool isShowZamena,
-    required final Paras para,
-    required final bool obed,
-  }) {
-    List<Widget> tiles = [];
-
-    if (!isShowZamena) {
-      return para.lesson!.map((final lesson) {
-        return CourseTileRework(
-          searchType: SearchType.group,
-          index: lesson.number,
-          lesson: lesson,
-          obed: obed,
-        );
-      }).toList();
-    }
-
-    if (zamenaFull != null) {
-      return para.zamena!.map((final zamena) {
-        return CourseTileRework(
-          searchType: SearchType.group,
-          index: zamena.lessonTimingsID,
-          obed: obed,
-          lesson: Lesson(
-
-            id: -1,
-            number: zamena.lessonTimingsID,
-            group: zamena.groupID,
-            date: zamena.date,
-            course: zamena.courseID,
-            teacher: zamena.teacherID,
-            cabinet: zamena.cabinetID
-          ),
-        );
-      }).toList();
-    }
-
-    final Zamena? zamena = para.zamena?.firstOrNull;
-    final Lesson? lesson = para.lesson?.firstOrNull; 
-
-    if (zamena == null && lesson != null) {
-      tiles.add(CourseTileRework(
-        searchType: SearchType.group,
-        obed: obed,
-        index: lesson.number,
-        lesson: lesson,
-      ));
-
-    } else {
-
-      if (zamena?.courseID == 10843) {
-
-        if (lesson == null) {
-          return [];
-        }
-        
-        tiles.add(
-          EmptyCourseTileRework(
-            obed: obed,
-            index: zamena!.lessonTimingsID,
-            lesson: Lesson(
-            id: -1,
-            number: lesson.number,
-            group: lesson.group,
-            date: lesson.date,
-            course: lesson.course,
-            teacher: lesson.teacher,
-            cabinet: lesson.cabinet
-          ),)
-        );
-        
-      } else {
-        tiles.add(CourseTileRework(
-          searchType: SearchType.group,
-          index: zamena!.lessonTimingsID,
-          isZamena: true,
-          swapedLesson: lesson,
-          obed: obed,
-          
-          lesson: Lesson(
-
-            id: -1,
-            number: zamena.lessonTimingsID,
-            group: zamena.groupID,
-            date: zamena.date,
-            course: zamena.courseID,
-
-            teacher: zamena.teacherID,
-            cabinet: zamena.cabinetID
-          ),
-        ),
-      );
-      }
-    }
-
-    return tiles;
-  }
-
-  List<Widget> _buildTeacherTiles({
-    required final bool isShowZamena,
-    required final Paras para,
-    required final bool obed,
-  }) {
-
-    List<Widget> tiles = [];
-
-    if (!isShowZamena) {
-      tiles = para.lesson!.map((final lesson) {
-        return CourseTileRework(
-          searchType: SearchType.teacher,
-          index: lesson.number,
-          lesson: lesson,
-        );
-      }).toList();
-
-      return tiles;
-    }
-
-    // Если нет замен, то ставим стандартное расписание, без учета пар с полной заменой
-    if (
-      (para.zamena == null
-      || (para.zamena!.isEmpty))
-      && para.lesson != null
-    ) {
-      for (Lesson para2 in para.lesson!) {
-
-        if (para.zamenaFull != null) { 
-          final bool zamenaFull = para.zamenaFull!.any((final zamena) => zamena.group == para2.group);
-
-          if (zamenaFull) {
-            continue;
-          }
-        }
-
-        tiles.add(CourseTileRework(
-          searchType: SearchType.teacher,
-          index: para2.number,
-          lesson: para2,
-        ));
-
-      }
-    }
-
-    // Если по стандартному расписанию пары нет, то есть замена
-    if (
-      para.lesson == null
-      && para.zamena != null
-      && para.zamena!.isNotEmpty
-    ) {
-      for (Zamena para2 in para.zamena!) {
-        tiles.add(CourseTileRework(
-          searchType: SearchType.teacher,
-          isZamena: true,
-          obed: obed,
-          index: para2.lessonTimingsID,
-          lesson: Lesson(
-            id: -1,
-            number: para2.lessonTimingsID,
-            group: para2.groupID,
-            date: para2.date,
-            course: para2.courseID,
-            teacher: para2.teacherID,
-            cabinet: para2.cabinetID
-          ),
-        ));
-      }
-    }
-
-    // Если есть и стандартное расписание и замена
-    if (
-      para.lesson != null
-      && para.lesson!.isNotEmpty
-      && para.zamena != null
-      && para.zamena!.isNotEmpty
-    ) {
-      for (Zamena para2 in para.zamena!) {
-
-        // Если это замена обычной пары той же группы
-        if (para.lesson!.any((final Lesson lesson) => lesson.group == para2.groupID)) {
-          tiles.add(CourseTileRework(
-            searchType: SearchType.teacher,
-            isZamena: true,
-            obed: obed,
-            index: para2.lessonTimingsID,
-            swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
-            lesson: Lesson(
-              id: -1,
-              number: para2.lessonTimingsID,
-              group: para2.groupID,
-              date: para2.date,
-              course: para2.courseID,
-              teacher: para2.teacherID,
-              cabinet: para2.cabinetID
-            ),
-          ));
-        } else {
-          // Если это просто замена другой группы
-          tiles.add(CourseTileRework( 
-            searchType: SearchType.teacher,
-            isZamena: true,
-            obed: obed,
-            swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.number == para2.lessonTimingsID),
-            index: para2.lessonTimingsID,
-            lesson: Lesson(
-              id: -1,
-              number: para2.lessonTimingsID,
-              group: para2.groupID,
-              date: para2.date,
-              course: para2.courseID,
-              teacher: para2.teacherID,
-              cabinet: para2.cabinetID
-            ),
-          ));
-        }
-      }
-    }
-
-    return tiles;
-  }
 }
 
 class DayScheduleWidget extends ConsumerStatefulWidget {
-
   final DaySchedule daySchedule;
+  final bool isGrid;
 
   const DayScheduleWidget({
     required this.daySchedule,
+    this.isGrid = false,
     super.key
   });
 
@@ -607,6 +388,12 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
   late String title;
   late String subTitle;
 
+  Future<void> _onClicked() async {
+    isExpanded = !isExpanded;
+
+    setState(() {});
+  }
+
   @override
   Widget build(final BuildContext context) {
     course = ref.watch(courseProvider(widget.lesson.course));
@@ -614,7 +401,6 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
     cabinet = ref.watch(cabinetProvider(widget.lesson.cabinet));
     timings = ref.watch(timingProvider(widget.lesson.number));
     group = ref.watch(groupProvider(widget.lesson.group));
-
     
     startTime = widget.obed
       ? timings?.obedStart.hhmm()
@@ -627,7 +413,11 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
 
 
     timeColor = widget.obed
-      ? (widget.index > 3 ? Colors.green : Theme.of(context).colorScheme.inverseSurface)
+      ? (
+          widget.index > 3
+            ? Colors.green
+            : Theme.of(context).colorScheme.inverseSurface
+          )
       : Theme.of(context).colorScheme.inverseSurface;
 
     title = (course?.name).toString();
@@ -638,14 +428,11 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
       subTitle = (group?.name).toString();
     }
 
-
     return Bounceable(
       hitTestBehavior: HitTestBehavior.translucent,
-      onTap: () {
-        setState(() {
-          isExpanded = !isExpanded;
-        });
-      },
+      onTap: (widget.swapedLesson != null)
+        ? _onClicked
+        : null,
       child: Column(
         children: [
           IntrinsicHeight(

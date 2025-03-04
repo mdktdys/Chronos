@@ -1,6 +1,7 @@
+import 'dart:math' as math;
+
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
-
 class DaySchedule {
   final List<ZamenaFileLink>? zamenaLinks;
   final ZamenaFull? zamenaFull;
@@ -15,15 +16,15 @@ class DaySchedule {
   });
   
   factory DaySchedule.fake(final DateTime date) {
+    final math.Random random = math.Random();
+
     return DaySchedule(
       zamenaFull: null,
       zamenaLinks: [],
-      paras: [
-        Paras.fake(),
-        Paras.fake(),
-        Paras.fake()
-      ],
-      date: date
+      date: date,
+      paras: List.generate(random.nextInt(8), (final int index) {
+        return Paras.fake(number: index);
+      }).toList()
     );
   }
 }

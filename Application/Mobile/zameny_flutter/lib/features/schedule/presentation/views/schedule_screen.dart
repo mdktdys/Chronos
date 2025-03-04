@@ -15,7 +15,7 @@ import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/new/widgets/test_widget.dart';
 import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart'  hide scheduleProvider;
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
 
@@ -90,24 +90,19 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
     return Scaffold(
       key: myGlobals.scaffoldKey,
       body: AdaptiveLayout(
-        desktop: () {
+        desktop: () => () {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
             child: Column(
               children: [
-                const Row(
-                  children: [
-                    Expanded(child: SearchResultHeader()),
-                    Expanded(child: ScheduleHeader()),
-                    Expanded(child: DateHeader()),
-                  ],
-                ),
+                const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
-                const SizedBox(height: 10),
+                const DateHeader(),
                 const SizedBox(height: 10),
                 const CurrentLessonTimer(),
-                const SizedBox(height: 10),
+                const SearchResultHeader(),
+                const SizedBox(height: 5),
                 // LessonView(scrollController: scrollController),
                 
                 // const SizedBox(height: 10),ы
@@ -119,7 +114,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
             ),
           );
         }(),
-        mobile: () {
+        mobile: () => () {
           return Scaffold(
             body: CustomScrollView(
               controller: scrollController,

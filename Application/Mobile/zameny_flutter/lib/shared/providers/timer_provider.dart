@@ -1,16 +1,25 @@
 import 'dart:async';
 
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:zameny_flutter/services/Data.dart';
-import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:flutter/material.dart';
 
-class TimeNotifier extends StateNotifier<String> {
-  TimeNotifier() : super('00:00:00') {
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/models/group_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+
+class TimeNotifier extends StateNotifier<String?> {
+  TimeNotifier({required this.ref}) : super('00:00:00') {
     _startTicker();
   }
 
   Timer? _timer;
+  Ref ref;
 
   void _startTicker() {
     _timer = Timer.periodic(const Duration(seconds: 1), (final _) {
@@ -18,11 +27,15 @@ class TimeNotifier extends StateNotifier<String> {
     });
   }
 
-  String _calculateRemainingTime() {
+  String? _calculateRemainingTime() {
     final now = DateTime.now();
-    final timings = GetIt.I.get<Data>().timings;
+    final timings = ref.watch(timingsProvider);
 
-    final LessonTimings? currentTiming = _getCurrentTiming(now, timings);
+    if (!timings.hasValue) {
+      return null;
+    }
+
+    final LessonTimings? currentTiming = _getCurrentTiming(now, timings.value!);
     if (currentTiming == null) {
       return '00:00:00';
     }
@@ -65,6 +78,47 @@ class TimeNotifier extends StateNotifier<String> {
   }
 }
 
-final timeProvider = StateNotifierProvider<TimeNotifier, String>((final ref) {
-  return TimeNotifier();
+final timeProvider = StateNotifierProvider<TimeNotifier, String?>((final ref) {
+  return TimeNotifier(ref: ref);
 });
+
+
+final todayDayScheduleProvider = AsyncNotifierProvider<TodayDayScheduleNotifier, List<DaySchedule>>(() {
+  return TodayDayScheduleNotifier();
+});
+
+
+class TodayDayScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
+  @override
+  FutureOr<List<DaySchedule>> build() async {
+    final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
+    final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
+    final SearchItem? searchItem = ref.watch(searchItemProvider);
+
+    final DateTime startdate = DateTime.now();
+    final DateTime endDate = DateTime.now();
+    
+    if (searchItem == null) {
+      return [];
+    }
+
+    if (searchItem is Group) {
+      return daySchedulesProvider.groupSchedule(
+        searchItem: searchItem,
+        startdate: startdate,
+        timings: timings,
+        endDate: endDate,
+      );
+
+    } else if (searchItem is Teacher) {
+      return daySchedulesProvider.teacherSchedule(
+        searchItem: searchItem,
+        startdate: startdate,
+        timings: timings,
+        endDate: endDate,
+      );
+    }
+
+    return [];
+  }
+}

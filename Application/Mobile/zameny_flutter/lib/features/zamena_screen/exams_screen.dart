@@ -12,10 +12,10 @@ import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/features/zamena_screen/widget/zamena_view_chooser.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
 import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
 
 
@@ -421,7 +421,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        getDayName(ref.watch(zamenaProvider).currentDate.weekday),
+                        ref.watch(zamenaProvider).currentDate.weekdayName(),
                         style: context.styles.ubuntuInverseSurfaceBold16,
                       ),
                       Text(
