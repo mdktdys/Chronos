@@ -36,7 +36,10 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
     focusNode = FocusNode()..addListener(() async {
       await Future.delayed(const Duration(milliseconds: 100));
       isFocused = focusNode.hasFocus;
-      setState(() {});
+
+      if (context.mounted) {
+        setState(() {});
+      }
     });
   }
 

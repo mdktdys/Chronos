@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:go_router/go_router.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier();
 });
 class ScheduleSettingsNotifier extends ChangeNotifier {
+  ScheduleViewModes viewmode = ScheduleViewModes.auto;
   bool isShowZamena = true;
+  bool obed = false;
 
   void notify() {
     notifyListeners();

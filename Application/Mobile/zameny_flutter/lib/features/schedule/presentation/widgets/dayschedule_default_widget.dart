@@ -98,11 +98,9 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
 class DayScheduleWidget extends ConsumerStatefulWidget {
   final DaySchedule daySchedule;
-  final bool isGrid;
 
   const DayScheduleWidget({
     required this.daySchedule,
-    this.isGrid = false,
     super.key
   });
 

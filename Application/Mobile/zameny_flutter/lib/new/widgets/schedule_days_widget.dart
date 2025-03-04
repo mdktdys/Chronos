@@ -8,6 +8,7 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_t
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
@@ -16,7 +17,7 @@ import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
 import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
-class ScheduleDaysWidget extends StatelessWidget {
+class ScheduleDaysWidget extends ConsumerWidget {
   final List<DaySchedule> days;
 
   const ScheduleDaysWidget({
@@ -25,38 +26,55 @@ class ScheduleDaysWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(final BuildContext context) {
-    return AdaptiveLayout(
-      mobile: () => () {
-        return Column(
-          spacing: 10,
-          children: [
-            ...days.map((final day) {
-              return DayScheduleWidget(daySchedule: day);
-            }),
-            const SizedBox(height: 100),
-          ]
-        );
-      }(),
-      desktop: () => Expanded(child: ScheduleViewGrid(days: days)),
-    );
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final ScheduleViewModes viewMode = ref.watch(scheduleSettingsProvider).viewmode;
+    Widget child = const SizedBox.shrink();
 
-    // return AdaptiveLayout(
-    //   mobile: () {
-    //     return Column(
-    //       spacing: 10,
-    //       children: [
-    //         ...days.map((final day) {
-    //           return DayScheduleWidget(daySchedule: day);
-    //         }),
-    //         const SizedBox(height: 100),
-    //       ]
-    //     );
-    //   }(),
-    //   desktop: Expanded(child: ScheduleViewGrid(days: days)),
-    // );
+    if (viewMode == ScheduleViewModes.grid) {
+      child = Expanded(child: ScheduleViewGrid(days: days));
+    }
+
+    if (viewMode == ScheduleViewModes.list) {
+      child = Expanded(child: ScheduleViewList(days: days));
+    }
+
+    if (viewMode == ScheduleViewModes.auto) {
+      child = AdaptiveLayout(
+        mobile: () => ScheduleViewList(days: days),
+        desktop: () => Expanded(child: ScheduleViewGrid(days: days)),
+      );
+    }
+
+    return AnimatedSwitcher(
+      duration: const Duration(milliseconds: 300),
+      child: child,
+    );
   }
 }
+
+
+class ScheduleViewList extends StatelessWidget {
+  final List<DaySchedule> days;
+
+  const ScheduleViewList({
+    required this.days,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context) {
+    return Column(
+      spacing: 10,
+      children: [
+        ...days.map((final day) {
+          return DayScheduleWidget(daySchedule: day);
+        }),
+        const SizedBox(height: 100),
+      ]
+    );
+  }
+}
+
 
 class ScheduleViewGrid extends ConsumerStatefulWidget {
   final List<DaySchedule> days;
@@ -80,7 +98,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
     final builder = ref.watch(scheduleTilesBuilderProvider);
 
     final bool isShowZamena = scheduleSettings.isShowZamena;
-    const bool obedSwitch = true;
+    final bool obedSwitch = scheduleSettings.obed;
 
     List<Map<int, Widget>> tiles = widget.days.map((final daySchedule) {
       return Map<int, Widget>.fromEntries(
@@ -153,44 +171,42 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
           }).toList()
         ),
         // Paras
-        Expanded(
-          child: SkeletonizedProvider<List<LessonTimings>>(
-            provider: timingsProvider,
-            fakeData: () => [],
-            data: (final List<LessonTimings> timings) {
-              return ListView(
-                children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
-                  return AnimatedSize(
-                    alignment: Alignment.topCenter,
-                    curve: Curves.easeInOut,
-                    duration: const Duration(milliseconds: 200),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        spacing: 10,
-                        children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                      
-                      
-                          final dayParas = tiles[day.key][timings.key + 1];
-                      
-                          return Expanded(child: Column(
-                            children: [
-                              // Text('day ${day.key.toString()} timing ${timings.key}'),
-                              Expanded(child: dayParas ?? const SizedBox()),
-                            ],
-                          ));
-                          // return Expanded(child: );
-                          // return [timings.key];
-                        }).toList(),
-                      ),
+        SkeletonizedProvider<List<LessonTimings>>(
+          provider: timingsProvider,
+          fakeData: () => [],
+          data: (final List<LessonTimings> timings) {
+            return Column(
+              children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
+                return AnimatedSize(
+                  alignment: Alignment.topCenter,
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 200),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      spacing: 10,
+                      children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
+                    
+                    
+                        final dayParas = tiles[day.key][timings.key + 1];
+                    
+                        return Expanded(child: Column(
+                          children: [
+                            // Text('day ${day.key.toString()} timing ${timings.key}'),
+                            Expanded(child: dayParas ?? const SizedBox()),
+                          ],
+                        ));
+                        // return Expanded(child: );
+                        // return [timings.key];
+                      }).toList(),
                     ),
-                  );
-                }).toList()
-              );
-            },
-            error: (final e,final o) {
-              return const Text('data');
-            },
-          ),
+                  ),
+                );
+              }).toList()
+            );
+          },
+          error: (final e,final o) {
+            return const Text('data');
+          },
         ),
       ],
     );

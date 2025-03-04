@@ -93,19 +93,17 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
         desktop: () => () {
           return Padding(
             padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: SliverList.list(
+            child: ListView(
               children: [
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
                 const DateHeader(),
                 const SizedBox(height: 10),
-                const CurrentLessonTimer(),
+                // const CurrentLessonTimer(),ы
                 const SearchResultHeader(),
                 const SizedBox(height: 5),
                 // LessonView(scrollController: scrollController),
-                const SearchResultHeader(),
-                const SizedBox(height: 10),
                 const ScheduleViewSettingsWidget(),
                 const SizedBox(height: 10),
                 ScheduleView(scrollController: scrollController),

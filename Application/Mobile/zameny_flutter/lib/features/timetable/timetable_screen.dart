@@ -69,7 +69,7 @@ class TimeTableScreen extends StatelessWidget {
                   SizedBox(height: 10),
                   TimeTableHeader(),
                   SizedBox(height: 10),
-                  CurrentTimingTimer(),
+                  // CurrentTimingTimer(),
                   TimeOptions(),
                   SizedBox(height: 10),
                   TimeTable(),
