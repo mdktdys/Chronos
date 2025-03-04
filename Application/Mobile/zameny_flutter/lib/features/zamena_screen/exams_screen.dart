@@ -462,6 +462,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
               },
             ),
           ],
-        ),);
+        ),
+      );
   }
 }
