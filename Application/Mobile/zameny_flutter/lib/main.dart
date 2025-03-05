@@ -19,7 +19,7 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  final supabase = await Supabase.initialize(
+  final Supabase supabase = await Supabase.initialize(
     anonKey: API_ANON_KEY,
     url: API_URL,
   );

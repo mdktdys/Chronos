@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/new/config/delays.dart';
+
+final layoutProvider = StateProvider<Platform>((final ref) => Platform.mobile);
 
 class AdaptiveLayout extends ConsumerWidget {
   final Widget Function() mobile;
@@ -18,16 +21,30 @@ class AdaptiveLayout extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    return LayoutBuilder(
-      builder: (final context, final constraints) {
-        if (constraints.maxWidth >= Constants.maxWidthDesktop) {
-          return desktop();
-        } else if (constraints.maxWidth >= 600) {
-          return (tablet ?? desktop)();
-        } else {
-          return mobile();
-        }
-      },
+    final double width = MediaQuery.of(context).size.width;
+    Widget? child;
+
+    final platform = (width >= Constants.maxWidthDesktop)
+        ? Platform.desktop
+        : (width >= 600)
+            ? Platform.tablet
+            : Platform.mobile;
+
+    if (platform == Platform.desktop) {
+      child = desktop();
+    } else if (platform == Platform.tablet) {
+      child = tablet?.call() ?? mobile();
+    }
+    
+    return AnimatedSwitcher(
+      duration: Delays.morphDuration,
+      child: child ?? mobile(),
     );
   }
-} 
+}
+
+enum Platform {
+  desktop,
+  mobile,
+  tablet,
+}

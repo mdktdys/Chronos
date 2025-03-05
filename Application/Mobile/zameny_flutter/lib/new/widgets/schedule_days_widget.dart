@@ -8,6 +8,7 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_t
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/new/config/delays.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
@@ -31,22 +32,22 @@ class ScheduleDaysWidget extends ConsumerWidget {
     Widget child = const SizedBox.shrink();
 
     if (viewMode == ScheduleViewModes.grid) {
-      child = Expanded(child: ScheduleViewGrid(days: days));
+      child = ScheduleViewGrid(days: days);
     }
 
     if (viewMode == ScheduleViewModes.list) {
-      child = Expanded(child: ScheduleViewList(days: days));
+      child = ScheduleViewList(days: days);
     }
 
     if (viewMode == ScheduleViewModes.auto) {
       child = AdaptiveLayout(
         mobile: () => ScheduleViewList(days: days),
-        desktop: () => Expanded(child: ScheduleViewGrid(days: days)),
+        desktop: () => ScheduleViewGrid(days: days),
       );
     }
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: Delays.morphDuration,
       child: child,
     );
   }
@@ -150,65 +151,67 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
     }).toList();
 
 
-    return Column(
-      children: [
-        //headers
-        Row(
-          children: widget.days.map((final DaySchedule day) {
-            return Expanded(
-              child: DayScheduleHeader(
-                toggleObed: () => _toggleDayObed(day),
-                needObedSwitch: false,
-                links: day.zamenaLinks ?? [],
-                obed: obed[day] ?? false,
-                date: day.date,
-                fullSwap: (
-                  (day.zamenaFull != null)
-                  && scheduleSettings.isShowZamena
-                ),
-              ),
-            );
-          }).toList()
-        ),
-        // Paras
-        SkeletonizedProvider<List<LessonTimings>>(
-          provider: timingsProvider,
-          fakeData: () => [],
-          data: (final List<LessonTimings> timings) {
-            return Column(
-              children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
-                return AnimatedSize(
-                  alignment: Alignment.topCenter,
-                  curve: Curves.easeInOut,
-                  duration: const Duration(milliseconds: 200),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      spacing: 10,
-                      children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                    
-                    
-                        final dayParas = tiles[day.key][timings.key + 1];
-                    
-                        return Expanded(child: Column(
-                          children: [
-                            // Text('day ${day.key.toString()} timing ${timings.key}'),
-                            Expanded(child: dayParas ?? const SizedBox()),
-                          ],
-                        ));
-                        // return Expanded(child: );
-                        // return [timings.key];
-                      }).toList(),
-                    ),
+    return Expanded(
+      child: Column(
+        children: [
+          //headers
+          Row(
+            children: widget.days.map((final DaySchedule day) {
+              return Expanded(
+                child: DayScheduleHeader(
+                  toggleObed: () => _toggleDayObed(day),
+                  needObedSwitch: false,
+                  links: day.zamenaLinks ?? [],
+                  obed: obed[day] ?? false,
+                  date: day.date,
+                  fullSwap: (
+                    (day.zamenaFull != null)
+                    && scheduleSettings.isShowZamena
                   ),
-                );
-              }).toList()
-            );
-          },
-          error: (final e,final o) {
-            return const Text('data');
-          },
-        ),
-      ],
+                ),
+              );
+            }).toList()
+          ),
+          // Paras
+          SkeletonizedProvider<List<LessonTimings>>(
+            provider: timingsProvider,
+            fakeData: () => [],
+            data: (final List<LessonTimings> timings) {
+              return Column(
+                children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
+                  return AnimatedSize(
+                    alignment: Alignment.topCenter,
+                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: 200),
+                    child: IntrinsicHeight(
+                      child: Row(
+                        spacing: 10,
+                        children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
+                      
+                      
+                          final dayParas = tiles[day.key][timings.key + 1];
+                      
+                          return Expanded(child: Column(
+                            children: [
+                              // Text('day ${day.key.toString()} timing ${timings.key}'),
+                              Expanded(child: dayParas ?? const SizedBox()),
+                            ],
+                          ));
+                          // return Expanded(child: );
+                          // return [timings.key];
+                        }).toList(),
+                      ),
+                    ),
+                  );
+                }).toList()
+              );
+            },
+            error: (final e,final o) {
+              return const Text('data');
+            },
+          ),
+        ],
+      ),
     );
   }
 
