@@ -6,8 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/new/models/paras_model.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/shared/providers/timer_provider.dart';
 
@@ -20,7 +23,7 @@ class CurrentLessonTimer extends ConsumerStatefulWidget {
 }
 
 class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
-late Timer ticker;
+  late Timer ticker;
   bool obed = false;
 
   @override
@@ -100,9 +103,31 @@ late Timer ticker;
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
-    const bool needObedSwitch = true;
+    // const bool needObedSwitch = true;
+    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
 
-    final DaySchedule schedule = ref.watch(todayDayScheduleProvider).value!.first;
+    Widget child = const SizedBox.shrink();
+
+    if (
+      timing == null
+      || current.weekday == 7
+    ) {
+      child = const SizedBox.shrink();
+    }
+
+    if (schedule == null) {
+      
+    } else {
+      List<Paras> paras = schedule.paras.where((final para) => para.number == timing!.number).toList();
+
+      child = Column(
+        children: paras.map((final para) => CourseTileRework(
+          searchType: SearchType.group,
+          lesson: para.lesson!.first,
+          index: para.number!
+        )).toList()
+      );
+    }
 
     // schedule.paras.where((paras) => paras.)
 
@@ -124,89 +149,7 @@ late Timer ticker;
                           style: context.styles.ubuntuPrimaryBold24,
                         ),
                         const SizedBox(height: 5),
-                        // AnimatedSize(
-                        //   alignment: Alignment.topCenter,
-                        //   duration: const Duration(milliseconds: 150),
-                        //   curve: Curves.ease,
-                        //   child: Consumer(
-                        //     builder: (final context, final ref, final child) {
-                        //       final scheduleState = ref.watch(riverpodScheduleProvider);
-                          
-                        //       if (scheduleState.isLoading) {
-                        //         return const CircularProgressIndicator();
-                        //       }
-                              
-                        //       if (provider.currentWeek == provider.todayWeek) {
-                        //         final Lesson? lesson = scheduleState.lessons.where((final element) =>
-                        //                 element.date.weekday == current.weekday &&
-                        //                 timing.number == element.number)
-                        //             .firstOrNull;
-                          
-                        //         Zamena? zamena = scheduleState.zamenas
-                        //             .where((final element) =>
-                        //                 element.date.weekday == current.weekday &&
-                        //                 timing.number == element.lessonTimingsID)
-                        //             .firstOrNull;
-                          
-                        //         if (zamena != null) {
-                        //           if (provider.searchType == SearchType.teacher) {
-                        //             zamena = zamena.teacherID == provider.teacherIDSeek ? zamena : null;
-                        //           }
-                        //         }
-                          
-                        //         if (zamena == null) {
-                        //           if (lesson != null) {
-                        //             if (GetIt.I
-                        //                 .get<Data>()
-                        //                 .zamenasFull
-                        //                 .where((final element) =>
-                        //                     element.group == lesson.group &&
-                        //                     element.date.day == current.day &&
-                        //                     element.date.month == current.month)
-                        //                 .isNotEmpty) {
-                        //               return const SizedBox();
-                        //             }
-                        //             return CourseTile(
-                        //               short: true,
-                        //               course: getCourseById(lesson.course)!,
-                        //               lesson: lesson,
-                        //               type: provider.searchType,
-                        //               swaped: null,
-                        //               saturdayTime: isSaturday,
-                        //               obedTime: obed,
-                        //             );
-                        //           }
-                        //         }
-                          
-                        //         if (zamena != null) {
-                        //           return CourseTile(
-                        //             short: true,
-                        //             course: getCourseById(zamena.courseID) ??
-                        //                 Course(
-                        //                   id: -1,
-                        //                   name: 'name',
-                        //                   color: '255,255,255,255',
-                        //                 ),
-                        //             lesson: Lesson(
-                        //               id: -1,
-                        //               number: zamena.lessonTimingsID,
-                        //               group: zamena.groupID,
-                        //               date: zamena.date,
-                        //               course: zamena.courseID,
-                        //               teacher: zamena.teacherID,
-                        //               cabinet: zamena.cabinetID,
-                        //             ),
-                        //             type: provider.searchType,
-                        //             swaped: lesson,
-                        //             saturdayTime: isSaturday,
-                        //             obedTime: obed,
-                        //           );
-                        //         }
-                        //       }
-                        //       return const SizedBox();
-                        //     },
-                        //   ),
-                        // ),
+                        child
                       ],
                     );
                 },

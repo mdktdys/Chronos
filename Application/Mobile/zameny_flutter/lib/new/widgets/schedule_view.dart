@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
-import 'package:zameny_flutter/new/widgets/schedule_days_widget.dart';
+import 'package:zameny_flutter/new/screens/schedule_days_screen.dart';
 import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
 
 class ScheduleView extends ConsumerWidget {

@@ -4,8 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/new/config/delays.dart';
+import 'package:zameny_flutter/new/enums/platforms_enum.dart';
 
-final layoutProvider = StateProvider<Platform>((final ref) => Platform.mobile);
+final platformProvider = StateProvider<Platform>((final ref) => Platform.mobile);
 
 class AdaptiveLayout extends ConsumerWidget {
   final Widget Function() mobile;
@@ -30,6 +31,8 @@ class AdaptiveLayout extends ConsumerWidget {
             ? Platform.tablet
             : Platform.mobile;
 
+    ref.read(platformProvider.notifier).state = platform;
+
     if (platform == Platform.desktop) {
       child = desktop();
     } else if (platform == Platform.tablet) {
@@ -41,10 +44,4 @@ class AdaptiveLayout extends ConsumerWidget {
       child: child ?? mobile(),
     );
   }
-}
-
-enum Platform {
-  desktop,
-  mobile,
-  tablet,
 }

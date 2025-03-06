@@ -7,46 +7,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
-import 'package:zameny_flutter/new/typedefs/on_clicked_typedef.dart';
+import 'package:zameny_flutter/new/widgets/frame_less_button.dart';
 import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/widgets/bottom_sheets/notifications_bottom_sheet.dart';
-
-
-class FrameLessButton extends StatelessWidget {
-  final OnClicked onClicked;
-  final bool isActive;
-  final Widget child;
-
-  const FrameLessButton({
-    required this.onClicked,
-    required this.child,
-    this.isActive = false,
-    super.key
-  });
-
-  @override
-  Widget build(final BuildContext context) {
-    final Color color = Theme.of(context).colorScheme.onSurface.withValues(alpha: 
-      isActive
-        ? 0.10
-        : 0.01);
-
-    return Container(
-      padding: const EdgeInsets.only(bottom: 8),
-      child: Material(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: color,
-        child: InkWell(
-          borderRadius: const BorderRadius.all(Radius.circular(20)),
-          onTap: onClicked,
-          child: child,
-        ),
-      ),
-    );
-  }
-}
-
 
 class ScheduleViewSettingsWidget extends ConsumerWidget {
   const ScheduleViewSettingsWidget({super.key});

@@ -1,8 +1,8 @@
 import 'dart:async';
-
-import 'package:flutter/material.dart';
+import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:intl/intl.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/models/group_model.dart';
@@ -83,42 +83,59 @@ final timeProvider = StateNotifierProvider<TimeNotifier, String?>((final ref) {
 });
 
 
-final todayDayScheduleProvider = AsyncNotifierProvider<TodayDayScheduleNotifier, List<DaySchedule>>(() {
+final todayDayScheduleProvider = AsyncNotifierProvider<TodayDayScheduleNotifier, DaySchedule?>(() {
   return TodayDayScheduleNotifier();
 });
 
 
-class TodayDayScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
+class TodayDayScheduleNotifier extends AsyncNotifier<DaySchedule?> {
   @override
-  FutureOr<List<DaySchedule>> build() async {
-    final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
-    final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
+  FutureOr<DaySchedule?> build() async {
     final SearchItem? searchItem = ref.watch(searchItemProvider);
 
-    final DateTime startdate = DateTime.now();
-    final DateTime endDate = DateTime.now();
-    
     if (searchItem == null) {
-      return [];
+      return null;
     }
+
+    final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
+    final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
+
+    final DateTime startdate = DateTime.now().toStartOfDay();
+    final DateTime endDate = DateTime.now().toEndOfDay();
+
+    log('gere');
 
     if (searchItem is Group) {
-      return daySchedulesProvider.groupSchedule(
+      return (await daySchedulesProvider.groupSchedule(
         searchItem: searchItem,
         startdate: startdate,
         timings: timings,
         endDate: endDate,
-      );
+      ))[0];
 
     } else if (searchItem is Teacher) {
-      return daySchedulesProvider.teacherSchedule(
+      return (await daySchedulesProvider.teacherSchedule(
         searchItem: searchItem,
         startdate: startdate,
         timings: timings,
         endDate: endDate,
-      );
+      ))[0];
     }
 
-    return [];
+    return null;
+  }
+}
+
+extension DateTimeExtension on DateTime {
+  DateTime toStartOfDay() {
+    return DateTime(year, month, day);
+  }
+
+  DateTime toEndOfDay() {
+    return DateTime(year, month, day, 23, 59, 59);
+  }
+
+  String toddmmyyhhmmss() {
+    return DateFormat('dd.MM.y HH.mm.ss').format(this);
   }
 }
