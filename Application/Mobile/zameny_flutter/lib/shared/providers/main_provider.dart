@@ -37,7 +37,7 @@ class RiverPodMainProvider extends ChangeNotifier {
     final BottomBarModel page = model.where((final page) => page.index == value).first;
 
     currentPage = value;
-    ref.watch(navigationProvider).setPath(page.path.toString());
+    ref.watch(navigationProvider).setParams({'page': page.path});
     notifyListeners();  
   }
 
