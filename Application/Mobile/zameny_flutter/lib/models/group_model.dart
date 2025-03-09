@@ -3,13 +3,11 @@ import 'dart:convert';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 
 class Group extends SearchItem {
-  String name;
   int department;
-  // List<Lesson> lessons = [];
   
   Group({
     required super.id,
-    required this.name,
+    required super.name,
     required this.department,
     super.typeId = 1
   });

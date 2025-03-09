@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/views/schedule_screen.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
@@ -103,7 +102,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
                       child: InkWell(
                         onTap: () {
                           // context.go('/schedule?type=${element.typeId}&id=${element.id}');
-                          ref.read(searchItemProvider.notifier).state = element;
+                          ref.read(searchItemProvider.notifier).setState(element);
                           ref.read(filterSearchQueryProvider.notifier).state = '';
                           ref.read(scheduleProvider).searchItemSelected(element);
                           searchController.clear();
@@ -115,7 +114,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
                             horizontal: 8
                           ),
                           child: Text(
-                            element.getFiltername(),
+                            element.name,
                             style: context.styles.ubuntuInverseSurface40014,
                           )
                         ),
@@ -181,25 +180,14 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
 abstract class SearchItem {
   int id;
   int typeId;
+  String name;
   int s = 0;
 
   SearchItem({
     required this.id,
-    required this.typeId
+    required this.name,
+    required this.typeId,
   });
- 
-  String getFiltername() {
-    if (this is Group) {
-      return (this as Group).name;
-    }
-    if (this is Cabinet) {
-      return (this as Cabinet).name;
-    }
-    if (this is Teacher) {
-      return (this as Teacher).name;
-    }
-    return '';
-  }
 
   String get typeName {
     if (this is Group) {

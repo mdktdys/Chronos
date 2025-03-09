@@ -41,7 +41,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
               style: context.styles.ubuntuInverseSurface18
             ),
             Text(
-              provider?.getFiltername() ?? '',
+              provider?.name ?? '',
               textAlign: TextAlign.center,
               style: context.styles.ubuntuInverseSurfaceBold24
             )

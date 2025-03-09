@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
+import 'package:zameny_flutter/shared/providers/groups_provider.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier();
@@ -19,9 +20,30 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
   }
 }
 
-final searchItemProvider = StateProvider<SearchItem?>((final Ref ref) {
-  return null;
+final searchItemProvider = StateNotifierProvider<SearchItemNotifier, SearchItem?>((final Ref ref) {
+  return SearchItemNotifier(ref: ref);
 });
+
+class SearchItemNotifier extends StateNotifier<SearchItem?> {
+  bool isLoading = false;
+  final Ref ref;
+
+  SearchItemNotifier({required this.ref}): super(null);
+  
+  Future<void> getSearchItem({
+    required final int id,
+    required final int type
+  }) async {
+    isLoading = true;
+    final future = await ref.watch(futureSearchItemProvider((id: id, type: type)).future);
+    state = future;
+    isLoading = false;
+  }
+
+  void setState(final SearchItem? value) {
+    state = value;
+  }
+}
 
 final navigationDateProvider = StateNotifierProvider<NavigationDateNotifier, DateTime>(
   (final ref) => NavigationDateNotifier(),

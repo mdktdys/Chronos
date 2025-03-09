@@ -13,7 +13,6 @@ import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/services/Data.dart';
 
 void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
@@ -34,9 +33,6 @@ void main() async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
-
-  final Data data = Data();
-  GetIt.I.registerSingleton<Data>(data); 
 
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 

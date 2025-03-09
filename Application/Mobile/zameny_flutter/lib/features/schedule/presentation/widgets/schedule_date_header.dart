@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
-import 'package:zameny_flutter/services/Data.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class BaseContainer extends StatelessWidget {
@@ -199,11 +197,12 @@ class MonthCell extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final bool chillday = details.date.weekday == 7 ||
-        GetIt.I
-            .get<Data>()
-            .holidays
-            .any((final element) => element.date == details.date);
+    // final bool chillday = details.date.weekday == 7 ||
+    //     GetIt.I
+    //         .get<Data>()
+    //         .holidays
+    //         .any((final element) => element.date == details.date);
+    const bool chillday = false;
     final bool isToday = details.date.day == DateTime.now().day &&
         details.date.month == DateTime.now().month &&
         DateTime.now().year == details.date.year;

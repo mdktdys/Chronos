@@ -3,13 +3,10 @@ import 'dart:convert';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 
 class Teacher extends SearchItem {
-  String name;
-  // List<Lesson> lessons = [];
-
   Teacher({
     required super.id,
-    required this.name,
-    super.typeId = 1
+    required super.name,
+    super.typeId = 2
   });
 
   Map<String, dynamic> toMap() {

@@ -40,7 +40,7 @@ class FavoriteStripeWidget extends ConsumerWidget {
                     borderRadius: BorderRadius.circular(20),
                     child: InkWell(
                       onTap: () {
-                        ref.read(searchItemProvider.notifier).state = item;
+                        ref.read(searchItemProvider.notifier).setState(item);
                         ref.read(filterSearchQueryProvider.notifier).state = '';
                       },
                       borderRadius: BorderRadius.circular(20),
@@ -56,7 +56,7 @@ class FavoriteStripeWidget extends ConsumerWidget {
                           )
                         ),
                         child: Text(
-                          item.getFiltername(),
+                          item.name,
                           style: context.styles.ubuntuInverseSurface40014,
                         )
                       ),

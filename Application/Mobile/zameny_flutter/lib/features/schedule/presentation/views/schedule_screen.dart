@@ -4,12 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
-import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
@@ -17,7 +15,6 @@ import 'package:zameny_flutter/new/widgets/test_widget.dart';
 import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/widgets/top_banner.dart';
 
 MyGlobals myGlobals = MyGlobals();

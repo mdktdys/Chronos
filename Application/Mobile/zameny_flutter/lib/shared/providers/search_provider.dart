@@ -24,8 +24,7 @@ final filteredSearchItemsProvider = FutureProvider<List<SearchItem>>((final ref)
   }
 
   final searchItems = ref.watch(searchItemsProvider).valueOrNull ?? [];
-  // final res = await compute(filterItems, [searchItems, query]);
-  final res = searchItems.where((final element) => element.getFiltername().toLowerCase().contains(query.toLowerCase())).toList();
+  final res = searchItems.where((final element) => element.name.toLowerCase().contains(query.toLowerCase())).toList();
   return res;
 });
 
