@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -63,7 +65,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
           }
 
           if (tiles.isEmpty) {
-            return [MapEntry(para.number!, const SizedBox.shrink())];
+            return [MapEntry(para.number ?? 1, const SizedBox.shrink())];
           }
 
           return tiles.map((final Widget tile) {
@@ -83,74 +85,71 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
               );
             }
 
-            return MapEntry(para.number!, wrappedTile);
+            return MapEntry(para.number ?? 1, wrappedTile);
           });
         }),
       );
     }).toList();
 
-
-    return Expanded(
-      child: Column(
-        children: [
-          //headers
-          Row(
-            children: widget.days.map((final DaySchedule day) {
-              return Expanded(
-                child: DayScheduleHeader(
-                  toggleObed: () => _toggleDayObed(day),
-                  needObedSwitch: false,
-                  links: day.zamenaLinks ?? [],
-                  obed: obed[day] ?? false,
-                  date: day.date,
-                  fullSwap: (
-                    (day.zamenaFull != null)
-                    && scheduleSettings.isShowZamena
-                  ),
+    return Column(
+      children: [
+        //headers
+        Row(
+          children: widget.days.map((final DaySchedule day) {
+            return Expanded(
+              child: DayScheduleHeader(
+                toggleObed: () => _toggleDayObed(day),
+                needObedSwitch: false,
+                links: day.zamenaLinks ?? [],
+                obed: obed[day] ?? false,
+                date: day.date,
+                fullSwap: (
+                  (day.zamenaFull != null)
+                  && scheduleSettings.isShowZamena
                 ),
-              );
-            }).toList()
-          ),
-          // Paras
-          SkeletonizedProvider<List<LessonTimings>>(
-            provider: timingsProvider,
-            fakeData: () => [],
-            data: (final List<LessonTimings> timings) {
-              return Column(
-                children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
-                  return AnimatedSize(
-                    alignment: Alignment.topCenter,
-                    curve: Curves.easeInOut,
-                    duration: const Duration(milliseconds: 200),
-                    child: IntrinsicHeight(
-                      child: Row(
-                        spacing: 10,
-                        children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                      
-                      
-                          final dayParas = tiles[day.key][timings.key + 1];
-                      
-                          return Expanded(child: Column(
-                            children: [
-                              // Text('day ${day.key.toString()} timing ${timings.key}'),
-                              Expanded(child: dayParas ?? const SizedBox()),
-                            ],
-                          ));
-                          // return Expanded(child: );
-                          // return [timings.key];
-                        }).toList(),
-                      ),
+              ),
+            );
+          }).toList()
+        ),
+        // Paras
+        SkeletonizedProvider<List<LessonTimings>>(
+          provider: timingsProvider,
+          fakeData: () => [],
+          data: (final List<LessonTimings> timings) {
+            return Column(
+              children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
+                return AnimatedSize(
+                  alignment: Alignment.topCenter,
+                  curve: Curves.easeInOut,
+                  duration: const Duration(milliseconds: 200),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      spacing: 10,
+                      children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
+                    
+                    
+                        final dayParas = tiles[day.key][timings.key + 1];
+                    
+                        return Expanded(child: Column(
+                          children: [
+                            // Text('day ${day.key.toString()} timing ${timings.key}'),
+                            Expanded(child: dayParas ?? const SizedBox()),
+                          ],
+                        ));
+                        // return Expanded(child: );
+                        // return [timings.key];
+                      }).toList(),
                     ),
-                  );
-                }).toList()
-              );
-            },
-            error: (final e,final o) {
-              return const Text('data');
-            },
-          ),
-        ],
-      ),
+                  ),
+                );
+              }).toList()
+            );
+          },
+          error: (final e,final o) {
+            return const Text('data');
+          },
+        ),
+      ],
     );
   }
 

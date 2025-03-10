@@ -215,6 +215,13 @@
   <script>
     window.scroll(0, window.document.body.scrollHeight);
   </script>
+  <script>
+    document.addEventListener("touchmove", function(event) {
+        event.preventDefault();
+    }, {
+        passive: false
+    });
+  </script>
   <script src="flutter_bootstrap.js" async=""></script>
   <script>
     if ('serviceWorker' in navigator) {
