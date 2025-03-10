@@ -100,26 +100,27 @@ class TodayDayScheduleNotifier extends AsyncNotifier<DaySchedule?> {
     final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
     final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
 
-    final DateTime startdate = DateTime.now().toStartOfDay();
-    final DateTime endDate = DateTime.now().toEndOfDay();
-
-    log('gere');
+    final DateTime startdate = DateTime.now();
+    final DateTime endDate = DateTime.now();
 
     if (searchItem is Group) {
-      return (await daySchedulesProvider.groupSchedule(
+      List<DaySchedule> schedule = await daySchedulesProvider.groupSchedule(
         searchItem: searchItem,
         startdate: startdate,
         timings: timings,
         endDate: endDate,
-      ))[0];
+      );
 
+      return schedule.firstOrNull;
     } else if (searchItem is Teacher) {
-      return (await daySchedulesProvider.teacherSchedule(
+      List<DaySchedule> schedule = await daySchedulesProvider.teacherSchedule(
         searchItem: searchItem,
         startdate: startdate,
         timings: timings,
         endDate: endDate,
-      ))[0];
+      );
+
+      return schedule.firstOrNull;
     }
 
     return null;
@@ -137,5 +138,9 @@ extension DateTimeExtension on DateTime {
 
   String toddmmyyhhmmss() {
     return DateFormat('dd.MM.y HH.mm.ss').format(this);
+  }
+
+  String toyyyymmdd() {
+    return DateFormat('y-MM-dd').format(this);
   }
 }

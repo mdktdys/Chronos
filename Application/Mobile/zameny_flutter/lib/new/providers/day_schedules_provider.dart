@@ -108,7 +108,7 @@ class DaySchedulesProvider {
     zamenasFull = result[3] as List<ZamenaFull>;
 
     List<DaySchedule> schedule = [];
-    final List<DateTime> dates = List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)));
+    final List<DateTime> dates = List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)));
     for (DateTime date in dates) {
       List<Paras> dayParas = [];
 
@@ -162,10 +162,7 @@ class DaySchedulesProvider {
       Api.getZamenasFull(groups, startdate, endDate),
       Api.getLiquidation(groups, startdate, endDate),
       Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
-        Api.getZamenaFileLinks(
-        start: startdate,
-        end: endDate,
-      )
+      Api.getZamenaFileLinks(start: startdate, end: endDate)
     ]);
 
     final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
@@ -174,7 +171,7 @@ class DaySchedulesProvider {
     final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
 
     List<DaySchedule> schedule = [];
-    for (DateTime date in List.generate(endDate.difference(startdate).inDays, (final int index) => startdate.add(Duration(days: index)))) {
+    for (DateTime date in List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)))) {
       List<Paras> dayParas = [];
 
       final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
@@ -200,10 +197,6 @@ class DaySchedulesProvider {
 
         paras.number = timing.number;
         dayParas.add(paras);
-      }
-
-      for (var element in dayParas) {
-        log((element.lesson?.firstOrNull?.course).toString());
       }
 
       final daySchedule = DaySchedule(

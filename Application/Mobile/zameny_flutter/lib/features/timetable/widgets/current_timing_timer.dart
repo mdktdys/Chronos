@@ -15,9 +15,7 @@ class CurrentTimingTimer extends ConsumerWidget {
     final timeLeft = ref.watch(timeProvider);
 
     final now = DateTime.now();
-    final timing = timings!.where(
-      (final timing) => timing.start.isBefore(now) && timing.end.isAfter(now),
-    ).firstOrNull;
+    final timing = timings?.where((final timing) => timing.start.isBefore(now) && timing.end.isAfter(now)).firstOrNull;
 
     if (
       (timing == null)

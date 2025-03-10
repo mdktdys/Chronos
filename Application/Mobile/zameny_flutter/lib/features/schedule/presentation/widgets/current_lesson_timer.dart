@@ -34,6 +34,12 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     });
   }
 
+  @override
+  void dispose() {
+    ticker.cancel();
+    super.dispose();
+  }
+
   void tick() {
     setState(() {});
   }
@@ -105,54 +111,42 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final bool isSaturday = current.weekday == 6;
     // const bool needObedSwitch = true;
     final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
+    Widget? child;
 
-    Widget child = const SizedBox.shrink();
-
-    if (
-      timing == null
-      || current.weekday == 7
-    ) {
-      child = const SizedBox.shrink();
+    if (schedule != null) {
+      List<Paras> paras = schedule.paras.where((final para) => para.number == timing?.number).toList();
+      if (paras.isNotEmpty) {
+        child = Column(
+          children: paras.map((final para) => CourseTileRework(
+            searchType: SearchType.group,
+            lesson: para.lesson!.first,
+            index: para.number!
+          )).toList()
+        );
+      }
     }
-
-    if (schedule == null) {
-      
-    } else {
-      List<Paras> paras = schedule.paras.where((final para) => para.number == timing!.number).toList();
-
-      child = Column(
-        children: paras.map((final para) => CourseTileRework(
-          searchType: SearchType.group,
-          lesson: para.lesson!.first,
-          index: para.number!
-        )).toList()
-      );
-    }
-
-    // schedule.paras.where((paras) => paras.)
 
     return Column(
       children: [
         AnimatedSize(
           duration: const Duration(milliseconds: 150),
           curve: Curves.ease,
+          alignment: Alignment.topCenter,
           child: timing == null || current.weekday == 7
-              ? const SizedBox()
-              : Builder(builder: (final context) {
-                  
-                  return Column(
-                      crossAxisAlignment: CrossAxisAlignment.stretch,
-                      children: [
-                        Text(
-                          'Сейчас идет ${timing.number} пара',
-                          textAlign: TextAlign.start,
-                          style: context.styles.ubuntuPrimaryBold24,
-                        ),
-                        const SizedBox(height: 5),
-                        child
-                      ],
-                    );
-                },
+            ? const SizedBox()
+            : Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    'Сейчас идет ${timing.number} пара',
+                    textAlign: TextAlign.start,
+                    style: context.styles.ubuntuPrimaryBold24,
+                  ),
+                  if (child != null) ... [
+                    const SizedBox(height: 5),
+                    CourseTileReworkedBlank(child: child)
+                  ]
+                ],
               ),
         ),
         Row(

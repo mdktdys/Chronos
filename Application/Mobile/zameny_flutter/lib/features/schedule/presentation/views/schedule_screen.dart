@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
@@ -98,7 +99,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const ScheduleTurboSearch(),
                 const DateHeader(),
                 const SizedBox(height: 10),
-                // const CurrentLessonTimer(),
+                const CurrentLessonTimer(),
                 const SearchResultHeader(),
                 const SizedBox(height: 5),
                 // LessonView(scrollController: scrollController),
@@ -127,7 +128,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                       const SizedBox(height: 10),
                       const DateHeader(),
                       const SizedBox(height: 10),
-                      // const CurrentLessonTimer(),
+                      const CurrentLessonTimer(),
                       const SizedBox(height: 10),
                       // LessonView(scrollController: scrollController),
                       const SearchResultHeader(),

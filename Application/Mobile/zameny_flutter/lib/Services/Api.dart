@@ -1,7 +1,10 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/shared/providers/timer_provider.dart';
 
 abstract class Api {
   static Future<List<Lesson>> getGroupLessons({
@@ -13,8 +16,8 @@ abstract class Api {
       .from('Paras')
       .select('id,group,number,course,teacher,cabinet,date')
       .eq('group', groupID)
-      .lte('date', end.toIso8601String())
-      .gte('date', start.toIso8601String());
+      .lte('date', end.toyyyymmdd())
+      .gte('date', start.toyyyymmdd());
 
     return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
   }
@@ -25,8 +28,8 @@ abstract class Api {
     required final DateTime end
   }) async {
     final client = GetIt.I.get<SupabaseClient>();
-
-    final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toIso8601String()).gte('date', start.toIso8601String());
+    log(end.toyyyymmdd().toString());
+    final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
 
     final List<Lesson> weekLessons = [];
     for (final element in data) {
@@ -47,8 +50,8 @@ abstract class Api {
         .from('Liquidation')
         .select()
         .inFilter('group', groupsID)
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
+        .lte('date', end.toyyyymmdd())
+        .gte('date', start.toyyyymmdd());
 
     return data.map((final json) => Liquidation.fromMap(json)).toList();
   }
@@ -67,8 +70,8 @@ abstract class Api {
         .from('ZamenasFull')
         .select()
         .inFilter('group', groupsID)
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
+        .lte('date', end.toyyyymmdd())
+        .gte('date', start.toyyyymmdd());
 
     return data.map((final json) => ZamenaFull.fromMap(json)).toList();
   }
@@ -100,8 +103,8 @@ abstract class Api {
     final List<dynamic> data = await client
         .from('ZamenaFileLinks')
         .select('id,link,date,created_at')
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String());
+        .lte('date', end.toyyyymmdd())
+        .gte('date', start.toyyyymmdd());
 
     return data.map((final json) => ZamenaFileLink.fromMap(json)).toList();
   }
@@ -125,7 +128,7 @@ abstract class Api {
     final List<dynamic> data = await client
         .from('Zamenas')
         .select()
-        .eq('date', date.toIso8601String())
+        .eq('date', date.toyyyymmdd())
         .order('id',ascending: true);
     final List<Zamena> zamenaBuffer = [];
     for (final element in data) {
@@ -148,8 +151,8 @@ abstract class Api {
         .from('Zamenas')
         .select()
         .inFilter('group', groupsID)
-        .lte('date', end.toIso8601String())
-        .gte('date', start.toIso8601String())
+        .lte('date', end.toyyyymmdd())
+        .gte('date', start.toyyyymmdd())
         .order('date');
 
     final List<Zamena> zamenaBuffer = [];

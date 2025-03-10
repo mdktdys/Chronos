@@ -7,6 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/providers/search_provider.dart';
@@ -62,6 +63,8 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
 
   @override
   Widget build(final BuildContext context) {
+    final favoritesProvider = ref.watch(favoriteSearchItemsProvider);
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -78,49 +81,52 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
           AnimatedSize(
             duration: const Duration(milliseconds: 300),
             child: isFocused || searchController.text.isNotEmpty
-              ? const Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: FavoriteStripeWidget()
-              )
+              ? const FavoriteStripeWidget()
               : const SizedBox(),
           ),
         Builder(
           builder: (final BuildContext context) {
             final List<SearchItem> items = ref.watch(filteredSearchItemsProvider).valueOrNull ?? [];
-            return AnimatedSwitcher(
+            return AnimatedSize(
               duration: const Duration(milliseconds: 300),
-              child: Padding(
-                key: UniqueKey(),
-                padding: const EdgeInsets.only(top: 8),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: items.map((final SearchItem element) {
-                    return Material(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      child: InkWell(
-                        onTap: () {
-                          // context.go('/schedule?type=${element.typeId}&id=${element.id}');
-                          ref.read(searchItemProvider.notifier).setState(element);
-                          ref.read(filterSearchQueryProvider.notifier).state = '';
-                          ref.read(scheduleProvider).searchItemSelected(element);
-                          searchController.clear();
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8
+              child: AnimatedSwitcher(
+                duration: const Duration(milliseconds: 300),
+                child: Padding(
+                  key: UniqueKey(),
+                  padding: const EdgeInsets.only(top: 8),
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: items.map((final SearchItem element) {
+                        return Material(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              // context.go('/schedule?type=${element.typeId}&id=${element.id}');
+                              ref.read(searchItemProvider.notifier).setState(element);
+                              ref.read(filterSearchQueryProvider.notifier).state = '';
+                              ref.read(scheduleProvider).searchItemSelected(element);
+                              searchController.clear();
+                            },
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8
+                              ),
+                              child: Text(
+                                element.name,
+                                style: context.styles.ubuntuInverseSurface40014,
+                              )
+                            ),
                           ),
-                          child: Text(
-                            element.name,
-                            style: context.styles.ubuntuInverseSurface40014,
-                          )
-                        ),
-                      ),
-                    );
-                  }).toList()
+                        );
+                      }).toList()
+                    ),
+                  ),
                 ),
               ),
             );

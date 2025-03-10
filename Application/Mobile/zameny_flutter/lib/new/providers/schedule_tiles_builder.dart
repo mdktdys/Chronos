@@ -127,6 +127,7 @@ class ScheduleTilesBuilder {
           searchType: SearchType.teacher,
           index: lesson.number,
           lesson: lesson,
+          obed: obed,
         );
       }).toList();
 
@@ -153,6 +154,7 @@ class ScheduleTilesBuilder {
           searchType: SearchType.teacher,
           index: para2.number,
           lesson: para2,
+          obed: obed,
         ));
 
       }

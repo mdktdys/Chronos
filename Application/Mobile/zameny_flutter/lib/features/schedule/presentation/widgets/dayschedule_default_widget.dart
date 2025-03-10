@@ -76,22 +76,35 @@ class DayScheduleParasWidget extends ConsumerWidget {
               if (tile is CourseTileRework) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8),
-                  child: Container(
-                    padding: const EdgeInsets.all(8),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    child: tile
-                  ),
+                  child: CourseTileReworkedBlank(child: tile)
                 );
               }
-
               return tile;
             }).toList()
           );
         })
       ],
+    );
+  }
+}
+
+class CourseTileReworkedBlank extends StatelessWidget {
+  final Widget child;
+
+  const CourseTileReworkedBlank({
+    required this.child,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(20),
+        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+      ),
+      child: child
     );
   }
 }
