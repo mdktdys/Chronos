@@ -4,9 +4,8 @@ import 'dart:developer';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/services/api.dart';
+import 'package:zameny_flutter/services/Api.dart';
 
 enum ZamenaViewType {
   teacher,
@@ -53,7 +52,7 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>,List<
         Api.getZamenasByDate(date: currentDate),
         Api.getFullZamenasByDate(currentDate),
         Api.loadZamenaFileLinksByDate(date: currentDate),
-      ]);
+      ].toList());
       return (result[0] as List<Zamena>,result[1] as List<ZamenaFull>,result[2] as List<ZamenaFileLink>);
     } catch (e) {
       log('Ошибка загрузки замен: $e');

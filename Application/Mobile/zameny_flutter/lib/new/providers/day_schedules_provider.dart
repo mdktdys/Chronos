@@ -7,7 +7,7 @@ import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/models/paras_model.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
-import 'package:zameny_flutter/services/api.dart';
+import 'package:zameny_flutter/services/Api.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 import 'package:zameny_flutter/shared/widgets/snowfall.dart';
 
@@ -161,7 +161,7 @@ class DaySchedulesProvider {
       Api.getLiquidation(groups, startdate, endDate),
       Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
       Api.getZamenaFileLinks(start: startdate, end: endDate)
-    ]);
+    ].toList());
 
     final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
     // final List<Liquidation> liquidations = result[1] as List<Liquidation>;
