@@ -1,291 +1,145 @@
-import 'package:flutter/material.dart';
+// import 'dart:developer';
 
-import 'package:bloc_concurrency/bloc_concurrency.dart';
-import 'package:equatable/equatable.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get_it/get_it.dart';
-import 'package:talker_flutter/talker_flutter.dart';
+// import 'package:equatable/equatable.dart';
+// import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/providers/search_provider.dart';
-import 'package:zameny_flutter/Services/Api.dart';
-import 'package:zameny_flutter/Services/Data.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+// import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+// import 'package:zameny_flutter/models/models.dart';
+// import 'package:zameny_flutter/services/Api.dart';
+// import 'package:zameny_flutter/shared/providers/groups_provider.dart';
+// import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
-@immutable
-sealed class ScheduleEvent {}
 
-final class FetchData extends ScheduleEvent {
-  final BuildContext context;
-  final int groupID;
-  final DateTime dateStart;
-  final DateTime dateEnd;
+// class ScheduleState extends Equatable {
+//   final bool isLoading;
+//   final List<Lesson> lessons;
+//   final List<Zamena> zamenas;
+//   final String? error;
 
-  FetchData({
-    required this.groupID,
-    required this.dateStart,
-    required this.dateEnd,
-    required this.context,
-  });
-}
+//   const ScheduleState({
+//     this.isLoading = false,
+//     this.lessons = const [],
+//     this.zamenas = const [],
+//     this.error,
+//   });
 
-final class LoadWeek extends ScheduleEvent {
-  final int groupID;
-  final DateTime dateStart;
-  final DateTime dateEnd;
+//   ScheduleState copyWith({
+//     final bool? isLoading,
+//     final List<Lesson>? lessons,
+//     final List<Zamena>? zamenas,
+//     final String? error,
+//   }) {
+//     return ScheduleState(
+//       isLoading: isLoading ?? this.isLoading,
+//       lessons: lessons ?? this.lessons,
+//       zamenas: zamenas ?? this.zamenas,
+//       error: error,
+//     );
+//   }
 
-  LoadWeek({
-    required this.groupID,
-    required this.dateStart,
-    required this.dateEnd
-  });
-}
+//   @override
+//   List<Object?> get props => [isLoading, lessons, zamenas, error];
+// }
 
-final class LoadTeacherWeek extends ScheduleEvent {
-  final int teacherID;
-  final DateTime dateStart;
-  final DateTime dateEnd;
 
-  LoadTeacherWeek(
-      {required this.teacherID,
-      required this.dateStart,
-      required this.dateEnd,});
-}
+// class ScheduleNotifier extends StateNotifier<ScheduleState> {
+//   ScheduleNotifier() : super(const ScheduleState());
 
-final class LoadGroupWeek extends ScheduleEvent {
-  final int groupID;
-  final DateTime dateStart;
-  final DateTime dateEnd;
+//   Future<void> loadCabinetWeek({
+//     required final int cabinetID,
+//     required final DateTime dateStart,
+//     required final DateTime dateEnd,
+//   }) async {
+//     state = state.copyWith(isLoading: true);
+//     try {
+//       final lessons = await Api.loadWeekCabinetSchedule(
+//         start: dateStart,
+//         end: dateEnd,
+//         cabinetID: cabinetID,
+//       );
+//       final zamenas = await Api.loadCabinetZamenas(
+//         cabinetID: cabinetID,
+//         start: dateStart,
+//         end: dateEnd,
+//       );
 
-  LoadGroupWeek({
-    required this.groupID,
-    required this.dateStart,
-    required this.dateEnd,
-  });
-}
+//       state = state.copyWith(
+//         isLoading: false,
+//         lessons: lessons,
+//         zamenas: zamenas,
+//       );
+//     } catch (error) {
+//       state = state.copyWith(
+//         isLoading: false,
+//         error: error.toString(),
+//       );
+//     }
+//   }
 
-final class LoadCabinetWeek extends ScheduleEvent {
-  final int cabinetID;
-  final DateTime dateStart;
-  final DateTime dateEnd;
+//   Future<void> loadTeacherWeek({
+//     required final int teacherID,
+//     required final DateTime dateStart,
+//     required final DateTime dateEnd,
+//   }) async {
+//     state = state.copyWith(isLoading: true);
+//     try {
+//       final lessons = await Api.loadWeekTeacherSchedule(
+//         start: dateStart,
+//         end: dateEnd,
+//         teacherID: teacherID,
+//       );
+//       final zamenas = await Api.loadTeacherZamenas(
+//         teacherID: teacherID,
+//         start: dateStart,
+//         end: dateEnd,
+//       );
 
-  LoadCabinetWeek({
-    required this.cabinetID,
-    required this.dateStart,
-    required this.dateEnd,
-  });
-}
+//       state = state.copyWith(
+//         isLoading: false,
+//         lessons: lessons,
+//         zamenas: zamenas,
+//       );
+//     } catch (error) {
+//       state = state.copyWith(
+//         isLoading: false,
+//         error: error.toString(),
+//       );
+//     }
+//   }
 
-final class LoadInitial extends ScheduleEvent {
-  final BuildContext context;
-  final WidgetRef ref;
-  LoadInitial({required this.context, required this.ref});
-}
+//   Future<void> loadGroupWeek({
+//     required final int groupID,
+//     required final DateTime dateStart,
+//     required final DateTime dateEnd,
+//   }) async {
+//     state = state.copyWith(isLoading: true);
+//     try {
+//       final lessons = await Api.loadWeekSchedule(
+//         start: dateStart,
+//         end: dateEnd,
+//         groupID: groupID,
+//       );
+//       final zamenas = await Api.loadZamenas(
+//         groupsID: [groupID],
+//         start: dateStart,
+//         end: dateEnd,
+//       );
 
-sealed class ScheduleState extends Equatable {}
+//       state = state.copyWith(
+//         isLoading: false,
+//         lessons: lessons,
+//         zamenas: zamenas,
+//       );
+//     } catch (error) {
+//       state = state.copyWith(
+//         isLoading: false,
+//         error: error.toString(),
+//       );
+//     }
+//   }
+// }
 
-final class ScheduleLoaded extends ScheduleState {
-  final List<Lesson> lessons;
-  final List<Zamena> zamenas;
-  ScheduleLoaded({required this.lessons, required this.zamenas});
-
-  @override
-  List<Object> get props => [lessons, zamenas];
-}
-
-final class ScheduleFailedLoading extends ScheduleState {
-  final String error;
-  ScheduleFailedLoading({required this.error});
-  @override
-  List<Object> get props => [];
-}
-
-final class ScheduleInitial extends ScheduleState {
-  @override
-  List<Object> get props => [];
-}
-
-final class ScheduleLoading extends ScheduleState {
-  @override
-  List<Object> get props => [];
-}
-
-class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
-  ScheduleBloc() : super(ScheduleLoading()) {
-    on<LoadCabinetWeek>(
-      (final event, final emit) async {
-        emit(ScheduleLoading());
-        try {
-          late List<Lesson> lessons;
-          late List<Zamena> zamenas;
-          await Future.wait(
-            [
-              Api.loadWeekCabinetSchedule(
-                start: event.dateStart,
-                end: event.dateEnd,
-                cabinetID: event.cabinetID,
-              ).then((final value) => lessons = value),
-              Api.loadCabinetZamenas(
-                cabinetID: event.cabinetID,
-                start: event.dateStart,
-                end: event.dateEnd,
-              ).then((final value) => zamenas = value),
-              Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
-          ]);
-          emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
-          ),);
-        } catch (err) {
-          emit(ScheduleFailedLoading(error: err.toString()));
-        }
-      },
-      transformer: restartable(),
-    );
-    on<LoadTeacherWeek>(
-      (final event, final emit) async {
-        emit(ScheduleLoading());
-        try {
-          late List<Lesson> lessons;
-          late List<Zamena> zamenas;
-          late List<int> groupsID;
-          await Future.wait([
-            Api.loadWeekTeacherSchedule(
-                    start: event.dateStart,
-                    end: event.dateEnd,
-                    teacherID: event.teacherID,)
-                .then((final value) {
-              final Teacher teacher = GetIt.I
-                  .get<Data>()
-                  .teachers
-                  .where((final element) => element.id == event.teacherID)
-                  .first;
-              teacher.lessons = value;
-              lessons = value;
-              groupsID = List<int>.from(lessons.map((final e) => e.group));
-            }),
-            Api.loadTeacherZamenas(
-                    teacherID: event.teacherID,
-                    start: event.dateStart,
-                    end: event.dateEnd,)
-                .then((final value) => zamenas = value),
-            Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
-            Api.loadHolidays(event.dateStart, event.dateEnd),
-          ]);
-
-          await Future.wait([
-            Api.loadZamenasFull(groupsID, event.dateStart, event.dateEnd),
-            Api.loadLiquidation(groupsID, event.dateStart, event.dateEnd),
-            Api.loadZamenas(
-                    groupsID: groupsID,
-                    start: event.dateStart,
-                    end: event.dateEnd,)
-                .then((final value) => zamenas.addAll(value)),
-          ]);
-
-          emit(ScheduleLoaded(
-            lessons: lessons,
-            zamenas: zamenas,
-          ),);
-        } catch (err) {
-          emit(ScheduleFailedLoading(error: err.toString()));
-        }
-      },
-      transformer: restartable(),
-    );
-    on<LoadInitial>((final event, final emit) async {
-      final scheduleProvider_ = event.ref.read(scheduleProvider);
-      emit(ScheduleLoading());
-      try {
-        GetIt.I.get<Talker>().debug('fetch data');
-        await Future.wait([
-          Api.loadTimings(),
-          Api.loadDepartments(),
-          Api.loadCourses(),
-          Api.loadGroups(),
-          Api.loadTeachers(),
-          Api.loadCabinets(),
-        ]);
-        if (event.context.mounted) {
-          event.ref.read(searchProvider).updateSearchItems();
-        }
-
-        if (scheduleProvider_.groupIDSeek == -1 &&
-            scheduleProvider_.searchType == SearchType.group) {
-          emit(ScheduleInitial());
-          return;
-        }
-
-        if (scheduleProvider_.searchType == SearchType.group) {
-          if (event.context.mounted) {
-            scheduleProvider_.groupSelected(
-                scheduleProvider_.groupIDSeek, event.context,);
-          }
-        } else if (scheduleProvider_.searchType == SearchType.cabinet) {
-          if (event.context.mounted) {
-            scheduleProvider_.cabinetSelected(
-                scheduleProvider_.cabinetIDSeek, event.context,);
-          }
-        } else if (scheduleProvider_.searchType == SearchType.teacher) {
-          if (event.context.mounted) {
-            scheduleProvider_.teacherSelected(
-                scheduleProvider_.teacherIDSeek, event.context,);
-          }
-        } else {
-          if (scheduleProvider_.groupIDSeek != -1) {
-            final DateTime monday = scheduleProvider_.navigationDate.subtract(
-                Duration(days: scheduleProvider_.navigationDate.weekday - 1),);
-            final DateTime sunday = monday.add(const Duration(days: 6));
-            final DateTime startOfWeek =
-                DateTime(monday.year, monday.month, monday.day);
-            final DateTime endOfWeek =
-                DateTime(sunday.year, sunday.month, sunday.day, 23, 59, 59);
-            if (event.context.mounted) {
-              add(LoadGroupWeek(
-                  groupID: scheduleProvider_.groupIDSeek,
-                  dateStart: startOfWeek,
-                  dateEnd: endOfWeek,),);
-            }
-          } else {
-            emit(ScheduleInitial());
-          }
-        }
-      } catch (err) {
-        emit(ScheduleFailedLoading(error: err.toString()));
-      }
-    });
-    on<LoadGroupWeek>(
-      (final event, final emit) async {
-        emit(ScheduleLoading());
-
-        try {
-          final results = await Future.wait([
-            Api.loadZamenaFileLinks(start: event.dateStart, end: event.dateEnd),
-            Api.loadZamenasFull(
-                [event.groupID], event.dateStart, event.dateEnd,),
-            Api.loadWeekSchedule(
-                start: event.dateStart,
-                end: event.dateEnd,
-                groupID: event.groupID,),
-            Api.loadZamenas(
-                groupsID: [event.groupID],
-                start: event.dateStart,
-                end: event.dateEnd,),
-            Api.loadLiquidation([event.groupID], event.dateStart, event.dateEnd),
-          ]);
-
-          emit(ScheduleLoaded(
-            lessons: results[2] as List<Lesson>,
-            zamenas: results[3] as List<Zamena>,
-          ),);
-        } catch (e) {
-          // Обработка ошибок
-          emit(ScheduleFailedLoading(error: e.toString()));
-        }
-      },
-      transformer: restartable(),
-    );
-  }
-}
+// final riverpodScheduleProvider =
+//     StateNotifierProvider<ScheduleNotifier, ScheduleState>(
+//   (final ref) => ScheduleNotifier(),
+// );

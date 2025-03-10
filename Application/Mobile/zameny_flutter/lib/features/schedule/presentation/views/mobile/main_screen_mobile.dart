@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/shared/providers/main_provider.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/mobile_bottom_bar.dart';
 import 'package:zameny_flutter/features/schedule/presentation/views/schedule_screen.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/mobile_bottom_bar.dart';
 import 'package:zameny_flutter/features/settings/settings_screen.dart';
-import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/exams_screen.dart';
+import 'package:zameny_flutter/new/screens/time_table_screen/time_table_screen.dart';
+import 'package:zameny_flutter/shared/providers/main_provider.dart';
 
 class MobileView extends ConsumerWidget {
   const MobileView({super.key});
@@ -25,7 +25,7 @@ class MobileView extends ConsumerWidget {
           controller: provider.pageController,
           children: const [
             TimeTableScreenWrapper(),
-            ScheduleWrapper(),
+            ScheduleScreen(),
             ZamenaScreenWrapper(),
             // MapScreen(),
             SettingsScreenWrapper(),

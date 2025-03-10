@@ -3,17 +3,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:zameny_flutter/shared/tools.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/shared/providers/main_provider.dart';
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/features/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/features/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header_toggle_week_button.dart';
+import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/extensions/datetime_extension.dart';
+import 'package:zameny_flutter/new/widgets/skeletonized_provider.dart';
+import 'package:zameny_flutter/shared/providers/groups_provider.dart';
+import 'package:zameny_flutter/shared/providers/main_provider.dart';
 import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
-import 'package:zameny_flutter/shared/widgets/loading_widget.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 
 class ZamenaScreenWrapper extends StatelessWidget {
@@ -105,7 +108,9 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
       duration: const Duration(milliseconds: 300),
       switchInCurve: Curves.easeIn,
       switchOutCurve: Curves.easeOut,
-      child: ref.watch(zamenasListProvider).when(
+      child: SkeletonizedProvider<(List<Zamena>,List<ZamenaFull>,List<ZamenaFileLink>)>(
+        provider: zamenasListProvider,
+        fakeData: ZamenasNotifier.fake,
         data: (final data) {
           if (data.$1.isEmpty) {
             return const Center(
@@ -126,18 +131,20 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
               zamenas: data.$1,
               fullZamenas: data.$2,
             );
-        }
+          }
         },
         error: (final error, final trace) {
           return Center(
             key: const ValueKey('error'),
-            child: FailedLoadWidget(error: error.toString()),
+            child: FailedLoadWidget(
+              error: error.toString(),
+              onClicked: () {
+                ref.invalidate(zamenasListProvider);
+              },
+            ),
           );
         },
-        loading: () {
-          return const LoadingWidget(key: ValueKey('loading'));
-        },
-      ),
+      )
     );
   }
 }
@@ -211,22 +218,31 @@ class ZamenaFileBlock extends ConsumerWidget {
   }
 }
 
-class ZamenaViewTeacher extends StatelessWidget {
-  final List<Zamena> zamenas;
+class ZamenaViewTeacher extends ConsumerWidget {
   final List<ZamenaFull> fullZamenas;
-  const ZamenaViewTeacher({required this.zamenas, required this.fullZamenas, super.key});
+  final List<Zamena> zamenas;
+
+  const ZamenaViewTeacher({
+    required this.zamenas,
+    required this.fullZamenas,
+    super.key
+  });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
     final date = DateTime.now();
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: teachersList.map((final teacherId) {
-          final groupZamenas =
-              zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
-              groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
-          final teacher = getTeacherById(teacherId);
+          final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
+          groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+          final Teacher? teacher = ref.watch(teacherProvider(teacherId));
+
+          if (teacher == null) {
+            return const SizedBox();
+          }
+
           if(teacher.name.replaceAll(' ', '') == ''){
             return const SizedBox();
           }
@@ -246,26 +262,29 @@ class ZamenaViewTeacher extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: groupZamenas.map((final zamena) {
-                  final course = getCourseById(zamena.courseID)!;
-                  final cabinet = getCabinetById(zamena.cabinetID);
-                  final group = getGroupById(zamena.groupID);
-                  return CourseTile(
-                    clickabe: false,
-                      course: course,
-                      lesson: Lesson(
-                          id: course.id,
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                      ),
+                      child: CourseTileRework(
+                        searchType: SearchType.teacher,
+                        index: zamena.lessonTimingsID,
+                        lesson: Lesson(
                           number: zamena.lessonTimingsID,
-                          group: group!.id,
-                          date: date,
-                          course: course.id,
+                          cabinet: zamena.cabinetID,
+                          course: zamena.courseID,
+                          group: zamena.groupID,
+                          id: zamena.courseID,
                           teacher: teacher.id,
-                          cabinet: cabinet.id,),
-                      swaped: null,
-                      type: SearchType.teacher,
-                      refresh: () {},
-                      saturdayTime: false,
-                      obedTime: false,
-                      short: true,);
+                          date: date,
+                        )
+                      ),
+                    ),
+                  );
                 }).toList(),
               ),
             ],
@@ -274,14 +293,14 @@ class ZamenaViewTeacher extends StatelessWidget {
   }
 }
 
-class ZamenaViewGroup extends StatelessWidget {
+class ZamenaViewGroup extends ConsumerWidget {
   final List<Zamena> zamenas;
   final List<ZamenaFull> fullZamenas;
-  const ZamenaViewGroup(
-      {required this.zamenas, required this.fullZamenas, super.key,});
+
+  const ZamenaViewGroup({required this.zamenas, required this.fullZamenas, super.key,});
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> groupsList = zamenas.map((final zamena) => zamena.groupID).toSet();
     final date = DateTime.now();
     return Column(
@@ -298,7 +317,7 @@ class ZamenaViewGroup extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    getGroupById(group)!.name,
+                    ref.watch(groupProvider(group))!.name,
                     style: context.styles.ubuntuInverseSurface20
                   ),
                   isFullZamena
@@ -312,28 +331,49 @@ class ZamenaViewGroup extends StatelessWidget {
               Column(
                 mainAxisSize: MainAxisSize.min,
                 children: groupZamenas.map((final zamena) {
-                  final course = getCourseById(zamena.courseID)!;
-                  final teacher = getTeacherById(zamena.teacherID);
-                  final cabinet = getCabinetById(zamena.cabinetID);
-                  // return const Text("data");
-                  return CourseTile(
-                    clickabe: false,
-                      course: course,
+                  final course =  ref.watch(courseProvider(zamena.courseID))!;
+                  final teacher = ref.watch(teacherProvider(zamena.teacherID))!;
+                  final cabinet = ref.watch(cabinetProvider(zamena.cabinetID))!;
+
+                  if (course.id == 10843) {
+                    return EmptyCourseTileRework(
+                      obed: false,
+                      index: zamena.lessonTimingsID,
                       lesson: Lesson(
-                        id: course.id,
+                        id: -1,
                         number: zamena.lessonTimingsID,
-                        group: group,
-                        date: date,
-                        course: course.id,
-                        teacher: teacher.id,
-                        cabinet: cabinet.id,
+                        group: zamena.groupID,
+                        date: zamena.date,
+                        course: zamena.courseID,
+                        teacher: zamena.teacherID,
+                        cabinet: zamena.cabinetID
+                      )
+                    );
+                  }
+
+                  return Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                       ),
-                      swaped: null,
-                      type: SearchType.group,
-                      refresh: () {},
-                      saturdayTime: false,
-                      obedTime: false,
-                      short: true,);
+                      child: CourseTileRework(
+                        searchType: SearchType.group,
+                        index: zamena.lessonTimingsID,
+                        lesson: Lesson(
+                          id: course.id,
+                          number: zamena.lessonTimingsID,
+                          group: group,
+                          date: date,
+                          course: course.id,
+                          teacher: teacher.id,
+                          cabinet: cabinet.id,
+                        )
+                      ),
+                    ),
+                  );
                 }).toList(),
               ),
             ],
@@ -365,8 +405,8 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
           children: [
             ToggleWeekButton(
               next: false,
-              onTap: (final way, final context) {
-                ref.read(zamenaProvider).toggleWeek(way, context);
+              onTap: () {
+                ref.read(zamenaProvider).toggleWeek(-1);
               },
             ),
             const SizedBox(
@@ -381,7 +421,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        getDayName(ref.watch(zamenaProvider).currentDate.weekday),
+                        ref.watch(zamenaProvider).currentDate.weekdayName(),
                         style: context.styles.ubuntuInverseSurfaceBold16,
                       ),
                       Text(
@@ -417,11 +457,12 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
             ),
             ToggleWeekButton(
               next: true,
-              onTap: (final way, final context) {
-                ref.read(zamenaProvider).toggleWeek(way, context);
+              onTap: () {
+                ref.read(zamenaProvider).toggleWeek(1);
               },
             ),
           ],
-        ),);
+        ),
+      );
   }
 }

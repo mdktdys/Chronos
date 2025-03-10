@@ -3,17 +3,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 
 class ToggleWeekButton extends StatelessWidget {
+  final VoidCallback onTap;
   final bool next;
-  final Function(int way, BuildContext context) onTap;
-  const ToggleWeekButton({required this.next, required this.onTap, super.key});
+
+  const ToggleWeekButton({
+    required this.onTap,
+    required this.next,
+    super.key
+  });
 
   @override
   Widget build(final BuildContext context) {
     return Bounceable(
-      onTap: () {
-        onTap.call(next ? 1 : -1, context);
-        // provider.toggleWeek(next ? 1 : -1, context);
-      },
+      onTap: onTap,
       child: Container(
         decoration: BoxDecoration(
           color: Theme.of(context).colorScheme.primary,

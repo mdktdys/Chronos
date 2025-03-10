@@ -41,11 +41,10 @@ class ZamenasType {
 
 
 class Cabinet extends SearchItem {
-  int id;
-  String name;
   Cabinet({
-    required this.id,
-    required this.name,
+    required super.id,
+    required super.name,
+    super.typeId = 3,
   });
 
   Map<String, dynamic> toMap() {

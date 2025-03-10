@@ -31,6 +31,20 @@ class Lesson {
     };
   }
 
+  factory Lesson.fake({
+    required final int number
+  }) {
+    return Lesson(
+      id: 1,
+      number: number,
+      group: 1,
+      course: 1,
+      teacher: 1,
+      cabinet: 1,
+      date: DateTime.now()
+    );
+  }
+
   factory Lesson.fromMap(final Map<String, dynamic> map) {
     return Lesson(
       id: map['id'] as int,

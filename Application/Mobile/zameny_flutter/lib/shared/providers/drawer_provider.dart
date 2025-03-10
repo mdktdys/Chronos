@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:riverpod/riverpod.dart';
 
 final drawerProvider = StateProvider<_DrawerService>((final ref) {
   return _DrawerService(ref);

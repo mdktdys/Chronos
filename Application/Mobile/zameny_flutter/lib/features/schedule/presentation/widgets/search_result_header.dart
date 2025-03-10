@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 
-import 'package:zameny_flutter/shared/providers/bloc/export_bloc.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 
 class SearchResultHeader extends ConsumerStatefulWidget {
@@ -19,136 +19,160 @@ class SearchResultHeader extends ConsumerStatefulWidget {
 }
 
 class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
-bool opened = false;
-  ExportBloc exportBloc = ExportBloc();
+  bool opened = false;
+  // ExportBloc exportBloc = ExportBloc();
 
   @override
   Widget build(final BuildContext context) {
-    final provider = ref.watch(scheduleProvider);
+    // final provider = ref.watch(scheduleProvider);
     //bool enabled = provider.searchType == SearchType.group ? true : false;
+    final provider = ref.watch(searchItemProvider);
+
+    final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
+
     return Stack(
       alignment: Alignment.center,
       children: [
-        // Align(
-        //   alignment: Alignment.topLeft,
-        //   child: IconButton(
-        //     onPressed: () {
-        //       // FirebaseApi().initNotifications(context);
-        //       // ref.read(bottomSheetsProvider).openSheet(const NotificationsBottomSheet());
-        //     },
-        //     icon: const Icon(Icons.notification_add)
-        //   ),
-        // ),
         Column(
           children: [
             Text(
-              provider.getSearchTypeNamed(),
+              provider?.typeName ?? '',
               textAlign: TextAlign.center,
               style: context.styles.ubuntuInverseSurface18
             ),
             Text(
-              provider.searchDiscribtion(),
+              provider?.name ?? '',
               textAlign: TextAlign.center,
               style: context.styles.ubuntuInverseSurfaceBold24
             )
           ],
         ),
-        provider.searchType != SearchType.cabinet
-            ? Align(
-                alignment: Alignment.topRight,
-                child: Modal(
-                  visible: opened,
-                  modal: Dialog(
-                    alignment: Alignment.topRight,
-                    child: Container(
-                        padding: const EdgeInsets.all(12),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(26),
-                            border: Border.all(
-                                color: Colors.white.withValues(alpha: 0.15),),),
-                        child:
-                            Column(mainAxisSize: MainAxisSize.min, children: [
-                          BlocBuilder<ExportBloc, ExportState>(
-                              bloc: exportBloc,
-                              builder: (final context, final state) {
-                                return AnimatedSwitcher(
-                                  duration: const Duration(milliseconds: 150),
-                                  child: Builder(
-                                      key: ValueKey<String>(state.toString()),
-                                      builder: (final context) {
-                                        if (state is ExportFailed) {
-                                          return SizedBox(
-                                            height: 30,
-                                            child: Row(
-                                              mainAxisSize: MainAxisSize.min,
-                                              children: [
-                                                const Icon(Icons.warning),
-                                                const SizedBox(
-                                                  width: 5,
-                                                ),
-                                                Text(
-                                                  state.reason,
-                                                  style: context.styles.ubuntu.copyWith(color: Colors.red),
-                                                ),
-                                              ],
-                                            ),
-                                          );
-                                        }
-                                        if (state is ExportLoading) {
-                                          return SizedBox(
-                                            height: 30,
-                                            width: 30,
-                                            child: Center(
-                                                child:
-                                                    CircularProgressIndicator(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .primary,
-                                            ),),
-                                          );
-                                        }
-                                        if (state is ExportReady) {
-                                          return GestureDetector(
-                                            onTap: () async {
-                                              exportBloc.add(ExportStart(context: context, ref: ref,),);
-                                            },
-                                            child: SizedBox(
-                                              height: 30,
-                                              child: Row(
-                                                mainAxisSize: MainAxisSize.min,
-                                                children: [
-                                                  const Icon(Icons.image),
-                                                  const SizedBox(
-                                                    width: 5,
-                                                  ),
-                                                  Text(
-                                                    'Экспортировать расписание',
-                                                    style: context.styles.ubuntuInverseSurface,
-                                                  ),
-                                                ],
-                                              ),
-                                            ),
-                                          );
-                                        }
-                                        return const SizedBox.shrink();
-                                      },),
-                                );
-                              },),
-                        ],),),
-                  ),
-                  onClose: () => setState(() => opened = false),
-                  child: IconButton(
-                    icon: const Icon(
-                      Icons.more_vert,
-                      color: Colors.white,
-                    ),
-                    onPressed: () {
-                      setState(() => opened = true);
-                    },
-                  ),
+        Align(
+          alignment: Alignment.topRight,
+          child: Material(
+            borderRadius: BorderRadius.circular(20),
+            child: InkWell(
+              borderRadius: BorderRadius.circular(20),
+              onTap: () {
+                if (provider != null) {
+                  if (isSubscribed) {
+                    ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
+                  } else {
+                    ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
+                  }
+                  setState(() {});
+                }
+              },
+              child: Container(
+                decoration: BoxDecoration(
+                  shape: BoxShape.circle,
+                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                 ),
+                padding: const EdgeInsets.all(8),
+                child: SvgPicture.asset(
+                  isSubscribed ? Images.heart : Images.heartOutlined,
+                  colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                )
               )
-            : const SizedBox.shrink(),
+            ),
+          ),
+        )
+        // provider.searchType != SearchType.cabinet
+        //     ? Align(
+        //         alignment: Alignment.topRight,
+        //         child: Modal(
+        //           visible: opened,
+        //           modal: Dialog(
+        //             alignment: Alignment.topRight,
+        //             child: Container(
+        //                 padding: const EdgeInsets.all(12),
+        //                 decoration: BoxDecoration(
+        //                     borderRadius: BorderRadius.circular(26),
+        //                     border: Border.all(
+        //                         color: Colors.white.withValues(alpha: 0.15),),),
+        //                 child:
+        //                     Column(mainAxisSize: MainAxisSize.min, children: [
+        //                   BlocBuilder<ExportBloc, ExportState>(
+        //                       bloc: exportBloc,
+        //                       builder: (final context, final state) {
+        //                         return AnimatedSwitcher(
+        //                           duration: const Duration(milliseconds: 150),
+        //                           child: Builder(
+        //                               key: ValueKey<String>(state.toString()),
+        //                               builder: (final context) {
+        //                                 if (state is ExportFailed) {
+        //                                   return SizedBox(
+        //                                     height: 30,
+        //                                     child: Row(
+        //                                       mainAxisSize: MainAxisSize.min,
+        //                                       children: [
+        //                                         const Icon(Icons.warning),
+        //                                         const SizedBox(
+        //                                           width: 5,
+        //                                         ),
+        //                                         Text(
+        //                                           state.reason,
+        //                                           style: context.styles.ubuntu.copyWith(color: Colors.red),
+        //                                         ),
+        //                                       ],
+        //                                     ),
+        //                                   );
+        //                                 }
+        //                                 if (state is ExportLoading) {
+        //                                   return SizedBox(
+        //                                     height: 30,
+        //                                     width: 30,
+        //                                     child: Center(
+        //                                         child:
+        //                                             CircularProgressIndicator(
+        //                                       color: Theme.of(context)
+        //                                           .colorScheme
+        //                                           .primary,
+        //                                     ),),
+        //                                   );
+        //                                 }
+        //                                 if (state is ExportReady) {
+        //                                   return GestureDetector(
+        //                                     onTap: () async {
+        //                                       exportBloc.add(ExportStart(context: context, ref: ref,),);
+        //                                     },
+        //                                     child: SizedBox(
+        //                                       height: 30,
+        //                                       child: Row(
+        //                                         mainAxisSize: MainAxisSize.min,
+        //                                         children: [
+        //                                           const Icon(Icons.image),
+        //                                           const SizedBox(
+        //                                             width: 5,
+        //                                           ),
+        //                                           Text(
+        //                                             'Экспортировать расписание',
+        //                                             style: context.styles.ubuntuInverseSurface,
+        //                                           ),
+        //                                         ],
+        //                                       ),
+        //                                     ),
+        //                                   );
+        //                                 }
+        //                                 return const SizedBox.shrink();
+        //                               },),
+        //                         );
+        //                       },),
+        //                 ],),),
+        //           ),
+        //           onClose: () => setState(() => opened = false),
+        //           child: IconButton(
+        //             icon: const Icon(
+        //               Icons.more_vert,
+        //               color: Colors.white,
+        //             ),
+        //             onPressed: () {
+        //               setState(() => opened = true);
+        //             },
+        //           ),
+        //         ),
+        //       )
+        //     : const SizedBox.shrink(),
       ],
     );
   }

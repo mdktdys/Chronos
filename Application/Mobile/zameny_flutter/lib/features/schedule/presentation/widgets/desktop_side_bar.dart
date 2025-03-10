@@ -8,6 +8,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
+import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class DesktopSideBar extends ConsumerStatefulWidget {
   const DesktopSideBar({super.key});
@@ -27,17 +28,16 @@ class _DesktopSideBarState extends ConsumerState<DesktopSideBar> {
         splashColor: Colors.transparent,
         hoverColor: Colors.transparent,
         highlightColor: Colors.transparent,
-        // excludeFromSemantics: true,
         mouseCursor: MouseCursor.defer,
         onTap: () {
-          setState(() {
-            hover = !hover;
-          });
+          hover = !hover;
+
+          setState(() {});
         },
-        onHover: (final value) {
-          setState(() {
-            hover = value;
-          });
+        onHover: (final bool value) {
+          hover = value;
+
+          setState(() {});
         },
         child: AnimatedContainer(
           duration: const Duration(milliseconds: 200),
@@ -48,6 +48,41 @@ class _DesktopSideBarState extends ConsumerState<DesktopSideBar> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              Material(
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  onTap: () {
+                    ref.invalidate(searchItemProvider);
+                  },
+                  child: SizedBox(
+                    child: Row(
+                      children: [
+                        SizedBox(
+                          height: 48,
+                          width: 48,
+                          child: Image.asset('assets/icon/whale.png')
+                        ),
+                        if (hover)
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 10),
+                              child: Text(
+                                "Замены уксивтика",
+                                maxLines: 1,
+                                style: context.styles.ubuntu20
+                              ),
+                            ).animate(
+                              effects: [
+                                const MoveEffect(begin: Offset(-10, 0), duration: Duration(milliseconds: 200), curve: Curves.easeOut),
+                                const FadeEffect(begin: 0.0, duration: Duration(milliseconds: 200))
+                              ]
+                            ),
+                          ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
               Column(
                 children: model.map((final BottomBarModel tile) {
                   bool isCurrent = provider.currentPage == tile.index; 

@@ -3,9 +3,9 @@ import 'package:flutter/rendering.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/Services/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
 import 'package:zameny_flutter/secrets.dart';
+import 'package:zameny_flutter/services/navigation/navigation_provider.dart';
 
 final mainProvider = ChangeNotifierProvider<RiverPodMainProvider>((final ref) {
   return RiverPodMainProvider(ref);
@@ -37,8 +37,8 @@ class RiverPodMainProvider extends ChangeNotifier {
     final BottomBarModel page = model.where((final page) => page.index == value).first;
 
     currentPage = value;
-    ref.watch(navigationProvider).setPath(page.path.toString());
-    notifyListeners();
+    ref.watch(navigationProvider).setParams({'page': page.path});
+    notifyListeners();  
   }
 
   void switchFalling() {

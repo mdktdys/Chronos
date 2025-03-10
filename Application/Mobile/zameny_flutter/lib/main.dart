@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 
 import 'package:firebase_core/firebase_core.dart';
@@ -9,8 +8,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
+import 'package:talker_riverpod_logger/talker_riverpod_logger.dart';
 
-import 'package:zameny_flutter/Services/Data.dart';
 import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
 import 'package:zameny_flutter/secrets.dart';
@@ -19,7 +18,7 @@ void main() async {
   WidgetsBinding widgetsBinding = WidgetsFlutterBinding.ensureInitialized();
   FlutterNativeSplash.preserve(widgetsBinding: widgetsBinding);
 
-  final supabase = await Supabase.initialize(
+  final Supabase supabase = await Supabase.initialize(
     anonKey: API_ANON_KEY,
     url: API_URL,
   );
@@ -35,10 +34,10 @@ void main() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
 
-  final Data data = Data.fromShared();
-  GetIt.I.registerSingleton<Data>(data); 
-
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 
-  runApp(const ProviderScope(child: Application()));
+  runApp(ProviderScope(
+    observers: [TalkerRiverpodObserver()],
+    child: const Application()
+  ));
 }

@@ -11,9 +11,9 @@ class ScheduleScreen extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    return const AdaptiveLayout(
-      mobile: MobileView(),
-      desktop: DesktopView(),
+    return AdaptiveLayout(
+      mobile: () => const MobileView(),
+      desktop: () => const DesktopView(),
     );
   }
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutterfall/flutterfall.dart';
+
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 
@@ -33,8 +34,8 @@ class SnowFall extends ConsumerWidget {
     : const IgnorePointer(
       child: RepaintBoundary(
         child: FlutterFall(
-          totalObjects: 25,
-          particleImage: [Images.snowflake],
+          totalParticles: 25,
+          particleImages: [Images.snowflake],
         ),
       ),
     );
@@ -56,5 +57,9 @@ extension DateTimeExtensions on DateTime {
       // Standard range within the same year
       return (thisDate.isAfter(startDate) && thisDate.isBefore(endDate)) || thisDate == startDate || thisDate == endDate;
     }
+  }
+
+  bool sameDate(final DateTime other) {
+    return year == other.year && month == other.month && other.day == day;
   }
 }

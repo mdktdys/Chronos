@@ -6,12 +6,13 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:zameny_flutter/shared/providers/main_provider.dart';
+import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_header.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_logo_block.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_version_block.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
-import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/shared/providers/main_provider.dart';
 
 class SettingsCategory extends StatelessWidget {
   final String category;
@@ -130,7 +131,7 @@ class SettingsScreen extends ConsumerWidget {
           padding: const EdgeInsets.symmetric(horizontal: 20),
           alignment: Alignment.topCenter,
           child: ConstrainedBox(
-            constraints: const BoxConstraints(maxWidth: 1200),
+            constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
             child: Column(
               children: [
                 const SizedBox(height: 10),
