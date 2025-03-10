@@ -8,11 +8,9 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/widgets/frame_less_button.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
-import 'package:zameny_flutter/shared/widgets/failed_load_widget.dart';
 
 final zamenaTimerProvider = FutureProvider.autoDispose<DateTime>((final ref) async {
   final res = await GetIt.I.get<SupabaseClient>().from('checks').select().order('id').limit(1);
@@ -162,7 +160,6 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
             icon: const Icon(
               Icons.more_horiz_rounded,
               size: 36,
-              // color: Theme.of(context).primaryColorLight,
             ),
           ),
         ],
@@ -170,40 +167,3 @@ class _ScheduleHeaderState extends ConsumerState<ScheduleHeader> {
     );
   }
 }
-
-            // GestureDetector(
-            //   onTap: () {
-            //     ref.read(drawerProvider).openDrawer();
-            //   },
-            //   child: SizedBox(
-            //       width: 52,
-            //       height: 52,
-            //       child: Center(
-            //           child: SvgPicture.asset(
-            //         "assets/icon/vuesax_linear_note.svg",
-            //         colorFilter: ColorFilter.mode(
-            //             Theme.of(context).colorScheme.inverseSurface,
-            //             BlendMode.srcIn),
-            //         width: 32,
-            //         height: 32,
-            //       ))),
-            // ),
-            // GestureDetector(
-            //   onTap: () {
-            //     // ref.watch(norificationProvider).enableNotifications();
-            //   },
-            //   child: SizedBox(
-            //       width: 52,
-            //       height: 52,
-            //       child: Center(
-            //           child: SvgPicture.asset(
-            //         "assets/icon/notification.svg",
-            //         colorFilter: ColorFilter.mode(
-            //             ref.watch(norificationProvider).fcmToken == null
-            //                 ? Colors.transparent
-            //                 : Colors.transparent,
-            //             BlendMode.srcIn),
-            //         width: 32,
-            //         height: 32,
-            //       ))),
-            // ),
