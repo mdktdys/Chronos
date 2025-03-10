@@ -23,7 +23,7 @@ class FrameLessButton extends StatelessWidget {
         : 0.01);
 
     return Container(
-      padding: const EdgeInsets.only(bottom: 8),
+      padding: const EdgeInsets.all(8),
       child: Material(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: color,
