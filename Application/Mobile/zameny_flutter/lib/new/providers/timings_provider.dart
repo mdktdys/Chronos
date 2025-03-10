@@ -2,9 +2,8 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/services/api.dart';
+import 'package:zameny_flutter/services/Api.dart';
 
 final timingsProvider = AsyncNotifierProvider<TimingsNotifier, List<LessonTimings>>((){
   return TimingsNotifier();
