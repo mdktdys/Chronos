@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/widgets/favorite_stripe_widget.dart';
@@ -61,6 +62,8 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
 
   @override
   Widget build(final BuildContext context) {
+    bool shouldShow = isFocused || searchController.text.isNotEmpty;
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -76,7 +79,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
         if (widget.withFavorite)
           AnimatedSize(
             duration: const Duration(milliseconds: 300),
-            child: isFocused || searchController.text.isNotEmpty
+            child: shouldShow
               ? const FavoriteStripeWidget()
               : const SizedBox(),
           ),
@@ -87,94 +90,40 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
               duration: const Duration(milliseconds: 300),
               child: AnimatedSwitcher(
                 duration: const Duration(milliseconds: 300),
-                child: Padding(
-                  key: UniqueKey(),
-                  padding: const EdgeInsets.only(top: 8),
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 8),
-                    child: Wrap(
-                      spacing: 8,
-                      runSpacing: 8,
-                      children: items.map((final SearchItem element) {
-                        return Material(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          child: InkWell(
-                            onTap: () {
-                              // context.go('/schedule?type=${element.typeId}&id=${element.id}');
-                              ref.read(searchItemProvider.notifier).setState(element);
-                              ref.read(filterSearchQueryProvider.notifier).state = '';
-                              ref.read(scheduleProvider).searchItemSelected(element);
-                              searchController.clear();
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4,
-                                horizontal: 8
-                              ),
-                              child: Text(
-                                element.name,
-                                style: context.styles.ubuntuInverseSurface40014,
-                              )
-                            ),
+                child: Wrap(
+                  spacing: 8,
+                  runSpacing: 8,
+                  children: items.map((final SearchItem element) {
+                    return Material(
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                      borderRadius: BorderRadius.circular(20),
+                      child: InkWell(
+                        onTap: () {
+                          // context.go('/schedule?type=${element.typeId}&id=${element.id}');
+                          ref.read(searchItemProvider.notifier).setState(element);
+                          ref.read(filterSearchQueryProvider.notifier).state = '';
+                          ref.read(scheduleProvider).searchItemSelected(element);
+                          searchController.clear();
+                        },
+                        borderRadius: BorderRadius.circular(20),
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: 4,
+                            horizontal: 8
                           ),
-                        );
-                      }).toList()
-                    ),
-                  ),
+                          child: Text(
+                            element.name,
+                            style: context.styles.ubuntuInverseSurface40014,
+                          )
+                        ),
+                      ),
+                    );
+                  }).toList()
                 ),
               ),
             );
           }
         )
-        // AnimatedSize(
-        //   duration: const Duration(milliseconds: 300),
-        //   alignment: Alignment.topCenter,
-        //   curve: Easing.legacy,
-        //   child: ImplicitlyAnimatedList<SearchItem>(
-        //     spawnIsolate: true,
-        //     physics: const NeverScrollableScrollPhysics(),
-        //     shrinkWrap: true,
-        //     items: ref.watch(filteredSearchItemsProvider).valueOrNull ?? [],
-        //     areItemsTheSame: (final a, final b) => a.s == b.s,
-        //     insertDuration: const Duration(milliseconds: 300),
-        //     removeDuration: const Duration(milliseconds: 300),
-        //     itemBuilder: (final context, final animation, final item, final index) {
-        //       return SizeTransition(
-        //         sizeFactor: animation,
-        //         axisAlignment: -1,
-        //         child: Padding(
-        //           padding: const EdgeInsets.symmetric(vertical: 2.0),
-        //           child: Material(
-        //             clipBehavior: Clip.hardEdge,
-        //             borderRadius: BorderRadius.circular(16),
-        //             child: InkWell(
-        //               key: UniqueKey(),
-        //               onTap: () {
-        //                 ref.read(filterSearchQueryProvider.notifier).state = '';
-                        
-        //                 setState(() {
-        //                   searchController.text = '';
-        //                   FocusScope.of(context).unfocus();
-        //                 });
-        //                 
-        //               },
-        //               child: Container(
-        //                 width: double.infinity,
-        //                 padding: const EdgeInsets.all(12),
-        //                 child: Text(
-        //                   item.getFiltername(),
-        //                   style: context.styles.ubuntuInverseSurface18,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         ),
-        //       );
-        //     },
-        //   ),
-        // ),
       ],
     );
   }
