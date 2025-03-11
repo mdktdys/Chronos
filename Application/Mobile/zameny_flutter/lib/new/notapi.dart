@@ -28,7 +28,6 @@ abstract class Api {
     required final DateTime end
   }) async {
     final client = GetIt.I.get<SupabaseClient>();
-    log(end.toyyyymmdd().toString());
     final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
 
     final List<Lesson> weekLessons = [];

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/foundation.dart';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
@@ -9,14 +11,16 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:zameny_flutter/models/subscribtion.dart';
 
 final norificationsProvider = ChangeNotifierProvider<NotificationsNotifier>((final ref) {
-  return NotificationsNotifier();
+  return NotificationsNotifier(ref: ref);
 });
 
 class NotificationsNotifier extends ChangeNotifier {
   late final _firebaseMessaging = FirebaseMessaging.instance;
-  late final String? fCMToken;
+  String? fCMToken;
 
-  NotificationsNotifier(){
+  Ref ref;
+
+  NotificationsNotifier({required this.ref}){
     fCMToken = GetIt.I.get<SharedPreferences>().getString('FCM');
   }
 
@@ -27,12 +31,26 @@ class NotificationsNotifier extends ChangeNotifier {
       return;
     }
 
-    await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert({
-      'token': fCMToken,
-      'clientID': kIsWeb ? 1 : 2,
-      'subType': targetTypeId,
-      'subID': targetId,
-    });
+    try{
+      await GetIt.I.get<SupabaseClient>().from('MessagingClients').insert({
+        'token': fCMToken,
+        'clientID': kIsWeb ? 1 : 2,
+        'subType': targetTypeId,
+        'subID': targetId,
+      });
+    } on Exception catch(e) {
+      log(e.toString());
+    }
+  }
+
+  Future<void> unsubForNotifciations(final int targetId, final int targetTypeId) async {
+    fCMToken ??= await _getToken();
+
+    if(fCMToken == null) {
+      return;
+    }
+
+    await GetIt.I.get<SupabaseClient>().from('MessagingClients').delete().eq('token', fCMToken!).eq('clientID', kIsWeb ? 1 : 2).eq('subType', targetTypeId).eq('subID', targetId);
   }
 
   Future<String?> _getToken() async {
@@ -54,6 +72,6 @@ final subsriptionProvider = FutureProvider<List<Subscription>>((final Ref ref) a
     return [];
   }
 
-  final response = await GetIt.I.get<SupabaseClient>().from('MessagingClients').select('token').eq('token', token);
+  final response = await GetIt.I.get<SupabaseClient>().from('MessagingClients').select().eq('token', token);
   return response.map((final sub){ return Subscription.fromMap(sub);}).toList();
 });
