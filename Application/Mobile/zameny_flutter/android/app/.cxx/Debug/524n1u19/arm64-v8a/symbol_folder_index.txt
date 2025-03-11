@@ -1,0 +1,1 @@
+C:\Develop\Flutter Projects\Chronos\Application\Mobile\zameny_flutter\build\app\intermediates\cxx\Debug\524n1u19\obj\arm64-v8a
