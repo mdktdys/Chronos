@@ -1,5 +1,4 @@
 import 'dart:convert';
-import 'dart:developer';
 
 class Subscription {
   final int targetId;
@@ -28,7 +27,6 @@ class Subscription {
   }
 
   factory Subscription.fromMap(final Map<String, dynamic> map) {
-    log(map.toString());
     return Subscription(
       targetId: map['subID'] as int,
       targetTypeId: map['subType'] as int,

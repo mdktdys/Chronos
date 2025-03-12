@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
@@ -29,9 +31,10 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
     //bool enabled = provider.searchType == SearchType.group ? true : false;
 
     final provider = ref.watch(searchItemProvider);
-
+    final subscriptions = ref.watch(subsriptionProvider);
     final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
-    final bool isNotificationSubscribed = ref.watch(subsriptionProvider).value?.any((final sub) => provider != null && sub.targetId == provider.id && sub.targetTypeId == provider.typeId) ?? false;
+    final bool isNotificationSubscribed = subscriptions.value?.any((final sub) => provider != null && sub.targetId == provider.id && sub.targetTypeId == provider.typeId) ?? false;
+    log(isNotificationSubscribed.toString());
 
     return Stack(
       alignment: Alignment.center,
@@ -61,14 +64,18 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () {
-                    if (provider != null) {
-                      if (isNotificationSubscribed) {
-                        ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
-                      } else {
-                        ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
-                      }
-                      setState(() {});
+                    if (provider == null) {
+                      return;
                     }
+                    
+                    if (isNotificationSubscribed) {
+                      ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
+                      ref.invalidate(subsriptionProvider);
+                    } else {
+                      ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
+                      ref.invalidate(subsriptionProvider);
+                    }
+                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -77,8 +84,8 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                     ),
                     padding: const EdgeInsets.all(8),
                     child: SvgPicture.asset(
-                      isSubscribed ? Images.viewModeList : Images.viewModeAuto,
-                      colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                      isNotificationSubscribed ? Images.notificationBold : Images.notification,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
                     )
                   )
                 ),
