@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
@@ -8,6 +10,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
+import 'package:zameny_flutter/shared/providers/notifications_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 
@@ -24,11 +27,14 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
 
   @override
   Widget build(final BuildContext context) {
-    // final provider = ref.watch(scheduleProvider);
+    //final provider = ref.watch(scheduleProvider);
     //bool enabled = provider.searchType == SearchType.group ? true : false;
-    final provider = ref.watch(searchItemProvider);
 
+    final provider = ref.watch(searchItemProvider);
+    final subscriptions = ref.watch(subsriptionProvider);
     final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
+    final bool isNotificationSubscribed = subscriptions.value?.any((final sub) => provider != null && sub.targetId == provider.id && sub.targetTypeId == provider.typeId) ?? false;
+    log(isNotificationSubscribed.toString());
 
     return Stack(
       alignment: Alignment.center,
@@ -49,32 +55,69 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
         ),
         Align(
           alignment: Alignment.topRight,
-          child: Material(
-            borderRadius: BorderRadius.circular(20),
-            child: InkWell(
-              borderRadius: BorderRadius.circular(20),
-              onTap: () {
-                if (provider != null) {
-                  if (isSubscribed) {
-                    ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
-                  } else {
-                    ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
-                  }
-                  setState(() {});
-                }
-              },
-              child: Container(
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            spacing: 8,
+            children: [
+              Material(
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    if (provider == null) {
+                      return;
+                    }
+                    
+                    if (isNotificationSubscribed) {
+                      ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
+                      ref.invalidate(subsriptionProvider);
+                    } else {
+                      ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
+                      ref.invalidate(subsriptionProvider);
+                    }
+                    setState(() {});
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle, 
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: SvgPicture.asset(
+                      isNotificationSubscribed ? Images.notificationBold : Images.notification,
+                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                    )
+                  )
                 ),
-                padding: const EdgeInsets.all(8),
-                child: SvgPicture.asset(
-                  isSubscribed ? Images.heart : Images.heartOutlined,
-                  colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
-                )
-              )
-            ),
+              ),
+              Material(
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    if (provider != null) {
+                      if (isSubscribed) {
+                        ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
+                      } else {
+                        ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
+                      }
+                      setState(() {});
+                    }
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: SvgPicture.asset(
+                      isSubscribed ? Images.heart : Images.heartOutlined,
+                      colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                    )
+                  )
+                ),
+              ),
+            ],
           ),
         )
         // provider.searchType != SearchType.cabinet

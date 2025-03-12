@@ -333,6 +333,20 @@ class CustomTextStyles extends ThemeExtension<CustomTextStyles> {
     color: Colors.white,
   );
 
+  late final TextStyle ubuntuPrimaryBold14 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+    color: theme.colorScheme.primary,
+  );
+
+  late final TextStyle ubuntuPrimaryBold18 = TextStyle(
+    fontWeight: FontWeight.bold,
+    fontFamily: 'Ubuntu',
+    fontSize: 18,
+    color: theme.colorScheme.primary,
+  );
+
   late final TextStyle ubuntuPrimaryBold20 = TextStyle(
     fontWeight: FontWeight.bold,
     fontFamily: 'Ubuntu',

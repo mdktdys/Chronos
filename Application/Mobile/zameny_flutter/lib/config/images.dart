@@ -11,4 +11,7 @@ abstract class Images{
   static const String viewModeGrid = 'assets/icon/grid_grid.svg';
   static const String viewModeAuto = 'assets/icon/grid_auto.svg';
   static const String viewModeList = 'assets/icon/grid_list.svg';
+
+  static const String notification = 'assets/icon/notification.svg';
+  static const String notificationBold = 'assets/icon/boldnotification.svg';
 }
