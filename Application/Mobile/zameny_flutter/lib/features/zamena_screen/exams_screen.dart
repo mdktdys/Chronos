@@ -232,6 +232,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
     final date = DateTime.now();
+
     return Column(
         mainAxisSize: MainAxisSize.min,
         children: teachersList.map((final teacherId) {
@@ -273,6 +274,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
                       child: CourseTileRework(
                         searchType: SearchType.teacher,
                         index: zamena.lessonTimingsID,
+                        isSaturday: false,
                         lesson: Lesson(
                           number: zamena.lessonTimingsID,
                           cabinet: zamena.cabinetID,
@@ -362,6 +364,7 @@ class ZamenaViewGroup extends ConsumerWidget {
                       child: CourseTileRework(
                         searchType: SearchType.group,
                         index: zamena.lessonTimingsID,
+                        isSaturday: false,
                         lesson: Lesson(
                           id: course.id,
                           number: zamena.lessonTimingsID,

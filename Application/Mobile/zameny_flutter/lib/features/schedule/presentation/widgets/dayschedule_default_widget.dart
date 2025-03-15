@@ -37,12 +37,14 @@ class DayScheduleParasWidget extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final SearchItem? item = ref.watch(searchItemProvider);
+    final bool isSaturday = daySchedule.date.weekday == 6;
 
     if (daySchedule.paras.isEmpty) {
       return const NoParasWidget();
     }
 
     final builder = ref.watch(scheduleTilesBuilderProvider);
+
     return Column(
       children: [
         ... daySchedule.paras.map((final Paras para) {
@@ -51,6 +53,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
     
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
+              isSaturday: isSaturday,
               isShowZamena: isShowZamena,
               para: para,
               obed: obed,
@@ -59,6 +62,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
           if (item is Group) {
             tiles = builder.buildGroupTiles(
+              isSaturday: isSaturday,
               zamenaFull: daySchedule.zamenaFull,
               isShowZamena: isShowZamena,
               para: para,
@@ -72,13 +76,13 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
           return Column(
             children: tiles.map((final tile) {
-
               if (tile is CourseTileRework) {
                 return Padding(
                   padding: const EdgeInsets.only(top: 8),
                   child: CourseTileReworkedBlank(child: tile)
                 );
               }
+
               return tile;
             }).toList()
           );
@@ -172,26 +176,26 @@ class NoParasWidget extends StatelessWidget {
     return Container(
       height: 110,
       margin: const EdgeInsets.only(
-        top: 20,
         bottom: 10,
+        top: 20,
       ),
       width: double.infinity,
       decoration: BoxDecoration(
         borderRadius: const BorderRadius.all(Radius.circular(20)),
         color: Colors.transparent,
         border: DashedBorder.all(
-          dashLength: 10,
           color:Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+          dashLength: 10,
         ),
       ),
       child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Center(
-            child: Text(
-              'Нет пар 🎉',
-              style: context.styles.ubuntuInversePrimary20,
-            ),
+        padding: const EdgeInsets.all(20),
+        child: Center(
+          child: Text(
+            'Нет пар 🎉',
+            style: context.styles.ubuntuInversePrimary20,
           ),
+        ),
       ),
     );
   }
@@ -369,12 +373,14 @@ class CourseTileRework extends ConsumerStatefulWidget {
   final Lesson lesson;
   final bool isZamena;
   final bool obed;
+  final bool isSaturday;
   final int index;
 
   const CourseTileRework({
     required this.searchType,
     required this.lesson,
     required this.index,
+    required this.isSaturday,
     this.isZamena = false,
     this.swapedLesson,
     this.obed = false,
@@ -393,8 +399,6 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
   late Cabinet? cabinet;
   late LessonTimings? timings;
   late Group? group;
-  late String? startTime;
-  late String? endTime;
   late Color timeColor;
   late String title;
   late String subTitle;
@@ -413,14 +417,21 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
     timings = ref.watch(timingProvider(widget.lesson.number));
     group = ref.watch(groupProvider(widget.lesson.group));
     
-    startTime = widget.obed
-      ? timings?.obedStart.hhmm()
-      : timings?.start.hhmm();
+    final String? startTime;
+    final String? endTime;
 
+    if (widget.isSaturday) {
+      startTime = timings?.saturdayStart.hhmm();
+      endTime = timings?.saturdayEnd.hhmm();
+    } else {
+      startTime = widget.obed
+        ? timings?.obedStart.hhmm()
+        : timings?.start.hhmm();
 
-    endTime = widget.obed
-      ? timings?.obedEnd.hhmm()
-      : timings?.end.hhmm();
+      endTime  = widget.obed
+        ? timings?.obedEnd.hhmm()
+        : timings?.end.hhmm();
+    }
 
 
     timeColor = widget.obed

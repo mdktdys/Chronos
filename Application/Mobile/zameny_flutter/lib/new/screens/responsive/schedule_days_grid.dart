@@ -41,12 +41,14 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
     final bool obedSwitch = scheduleSettings.obed;
 
     List<Map<int, Widget>> tiles = widget.days.map((final daySchedule) {
+      final bool isSaturday = daySchedule.date.weekday == 6;
       return Map<int, Widget>.fromEntries(
         daySchedule.paras.expand((final Paras para) {  
           List<Widget> tiles = [];
 
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
+              isSaturday: isSaturday,
               isShowZamena: isShowZamena,
               obed: obedSwitch,
               para: para,
@@ -55,6 +57,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
 
           if (item is Group) {
             tiles = builder.buildGroupTiles(
+              isSaturday: isSaturday,
               zamenaFull: daySchedule.zamenaFull,
               isShowZamena: isShowZamena,
               obed: obedSwitch,
