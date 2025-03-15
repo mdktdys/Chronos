@@ -4,7 +4,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/features/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
