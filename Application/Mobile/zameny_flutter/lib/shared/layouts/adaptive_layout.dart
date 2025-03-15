@@ -31,8 +31,6 @@ class AdaptiveLayout extends ConsumerWidget {
             ? Platform.tablet
             : Platform.mobile;
 
-    // ref.read(platformProvider.notifier).state = platform;
-
     if (platform == Platform.desktop) {
       child = desktop();
     } else if (platform == Platform.tablet) {

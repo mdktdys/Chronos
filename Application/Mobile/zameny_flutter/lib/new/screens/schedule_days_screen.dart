@@ -23,18 +23,10 @@ class ScheduleDaysWidget extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final ScheduleViewModes viewMode = ref.watch(scheduleSettingsProvider).viewmode;
-    final Platform platform = ref.watch(platformProvider);
     Widget child = const SizedBox.shrink();
 
     if (viewMode == ScheduleViewModes.grid) {
-      if (
-        platform == Platform.mobile
-        || platform == Platform.tablet
-      ) {
-        child = ScheduleViewList(days: days);
-      } else {
-        child = ScheduleViewGrid(days: days);
-      }
+      child = ScheduleViewGrid(days: days);
     }
 
     if (viewMode == ScheduleViewModes.list) {

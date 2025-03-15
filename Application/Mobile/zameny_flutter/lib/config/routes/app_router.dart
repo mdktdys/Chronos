@@ -1,8 +1,8 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
-import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
+import 'package:zameny_flutter/features/main_screen.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 final routerProvider = Provider<GoRouter>((final ref) {
@@ -13,7 +13,6 @@ final routerProvider = Provider<GoRouter>((final ref) {
         path: '/',
         builder: (final context, final state) {
           Map<String, dynamic> params = state.uri.queryParameters;
-          // final DateTime? navigationDate = params['date']; 
           final int? typeId = int.tryParse(params['type'] ?? '');
           final int? id = int.tryParse(params['id'] ?? '');
           final String? page =  params['page'];
@@ -24,7 +23,7 @@ final routerProvider = Provider<GoRouter>((final ref) {
             ref.read(searchItemProvider.notifier).getSearchItem(id: id, type: typeId);
           }
 
-          return ApplicationBase(page: pageIndex);
+          return MainScreen(page: pageIndex);
         },
       ),
     ]
