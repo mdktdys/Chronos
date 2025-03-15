@@ -17,6 +17,7 @@ class ScheduleTilesBuilder {
   List<Widget> buildGroupTiles({
     required final ZamenaFull? zamenaFull,
     required final bool isShowZamena,
+    required final bool isSaturday,
     required final Paras para,
     required final bool obed,
   }) {
@@ -26,6 +27,7 @@ class ScheduleTilesBuilder {
       return para.lesson!.map((final lesson) {
         return CourseTileRework(
           searchType: SearchType.group,
+          isSaturday: isSaturday,
           index: lesson.number,
           lesson: lesson,
           obed: obed,
@@ -39,6 +41,7 @@ class ScheduleTilesBuilder {
           searchType: SearchType.group,
           index: zamena.lessonTimingsID,
           obed: obed,
+          isSaturday: isSaturday,
           lesson: Lesson(
             id: -1,
             number: zamena.lessonTimingsID,
@@ -57,6 +60,7 @@ class ScheduleTilesBuilder {
 
     if (zamena == null && lesson != null) {
       tiles.add(CourseTileRework(
+        isSaturday: isSaturday,
         searchType: SearchType.group,
         obed: obed,
         index: lesson.number,
@@ -90,6 +94,7 @@ class ScheduleTilesBuilder {
         tiles.add(CourseTileRework(
           searchType: SearchType.group,
           index: zamena!.lessonTimingsID,
+          isSaturday: isSaturday,
           isZamena: true,
           swapedLesson: lesson,
           obed: obed,
@@ -117,6 +122,7 @@ class ScheduleTilesBuilder {
     required final bool isShowZamena,
     required final Paras para,
     required final bool obed,
+    required final bool isSaturday,
   }) {
 
     List<Widget> tiles = [];
@@ -125,6 +131,7 @@ class ScheduleTilesBuilder {
       tiles = para.lesson!.map((final lesson) {
         return CourseTileRework(
           searchType: SearchType.teacher,
+          isSaturday: isSaturday,
           index: lesson.number,
           lesson: lesson,
           obed: obed,
@@ -153,6 +160,7 @@ class ScheduleTilesBuilder {
         tiles.add(CourseTileRework(
           searchType: SearchType.teacher,
           index: para2.number,
+          isSaturday: isSaturday,
           lesson: para2,
           obed: obed,
         ));
@@ -170,6 +178,7 @@ class ScheduleTilesBuilder {
         tiles.add(CourseTileRework(
           searchType: SearchType.teacher,
           isZamena: true,
+          isSaturday: isSaturday,
           obed: obed,
           index: para2.lessonTimingsID,
           lesson: Lesson(
@@ -199,6 +208,7 @@ class ScheduleTilesBuilder {
           tiles.add(CourseTileRework(
             searchType: SearchType.teacher,
             isZamena: true,
+            isSaturday: isSaturday,
             obed: obed,
             index: para2.lessonTimingsID,
             swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
@@ -218,6 +228,7 @@ class ScheduleTilesBuilder {
             searchType: SearchType.teacher,
             isZamena: true,
             obed: obed,
+            isSaturday: isSaturday,
             swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.number == para2.lessonTimingsID),
             index: para2.lessonTimingsID,
             lesson: Lesson(

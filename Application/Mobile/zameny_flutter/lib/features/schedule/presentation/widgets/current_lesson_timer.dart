@@ -125,7 +125,8 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
               return CourseTileRework(
                 searchType: SearchType.group,
                 lesson: para.lesson!.first,
-                index: para.number!
+                isSaturday: isSaturday,
+                index: para.number!,
               );
             }
 
