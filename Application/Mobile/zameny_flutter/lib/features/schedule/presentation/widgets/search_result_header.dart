@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_animate/flutter_animate.dart';
@@ -15,7 +13,7 @@ import 'package:zameny_flutter/shared/providers/notifications_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
 
 class SearchItemNotificationButton extends ConsumerWidget {
-  final SearchItem item;
+  final SearchItem? item;
 
   const SearchItemNotificationButton({
     required this.item,
@@ -24,23 +22,53 @@ class SearchItemNotificationButton extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final AsyncValue<SubscribtionState> subscription = ref.watch(subsribtionProvider(item));
+    if (item == null) {
+      return const SizedBox.shrink();
+    }
+
+    final AsyncValue<SubscribtionState> subscription = ref.watch(subsribtionProvider(item!));
+    final provider = ref.read(subsribtionProvider(item!).notifier);
 
     return subscription.when(
       loading: () {
-        return const CircularProgressIndicator();
+        return const RefreshProgressIndicator();
       },
       error: (final e,final o) {
-        return const Text('data');
+        return const SizedBox.shrink();
       },
       data: (final data) {
+        bool isNotificationSubscribed = false;
+
         if (data is SubscribtionSubscribed) {
-          return const Text('subed');
+          isNotificationSubscribed = true;
         } else if (data is SubscribtionNonSubscribed) {
-          return const Text('non sub');
+          isNotificationSubscribed = false;
         }
 
-        return const SizedBox();
+        return Material(
+          borderRadius: BorderRadius.circular(20),
+          child: InkWell(
+            borderRadius: BorderRadius.circular(20),
+            onTap: () async {
+              if (isNotificationSubscribed) {
+                await provider.onsubscribe();
+              } else {
+                await provider.subscribe();
+              }
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle, 
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+              ),
+              padding: const EdgeInsets.all(8),
+              child: SvgPicture.asset(
+                isNotificationSubscribed ? Images.notificationBold : Images.notification,
+                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+              )
+            )
+          ),
+        );
       },
     );
   }
@@ -64,10 +92,8 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
     //bool enabled = provider.searchType == SearchType.group ? true : false;
 
     final provider = ref.watch(searchItemProvider);
-    final subscriptions = ref.watch(subsriptionProvider);
+  
     final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
-    final bool isNotificationSubscribed = subscriptions.value?.any((final sub) => provider != null && sub.targetId == provider.id && sub.targetTypeId == provider.typeId) ?? false;
-    log(isNotificationSubscribed.toString());
 
     return Stack(
       alignment: Alignment.center,
@@ -93,32 +119,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             spacing: 8,
             children: [
               SearchItemNotificationButton(item: provider!),
-              Material(
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () async {
-                    if (isNotificationSubscribed) {
-                      await ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
-                      ref.refresh(subsriptionProvider);
-                    } else {
-                      await  ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
-                      ref.refresh(subsriptionProvider);
-                    }
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle, 
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: SvgPicture.asset(
-                      isNotificationSubscribed ? Images.notificationBold : Images.notification,
-                      colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
-                    )
-                  )
-                ),
-              ),
               Material(
                 borderRadius: BorderRadius.circular(20),
                 child: InkWell(

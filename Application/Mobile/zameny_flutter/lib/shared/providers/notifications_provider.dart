@@ -30,7 +30,6 @@ class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, 
 
   @override
   AsyncValue<SubscribtionState> build(final SearchItem seachItem) {
-    ref.watch(subsriptionProvider);
     item = seachItem;
     _load();
     return const AsyncValue.loading();
@@ -44,6 +43,18 @@ class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, 
     } else {
       state = AsyncValue.data(SubscribtionNonSubscribed());
     }
+  }
+
+  Future<void> subscribe() async {
+    await ref.read(norificationsProvider).subscribeForNotifciations(item!.id, item!.typeId);
+    ref.refresh(subsriptionProvider);
+    ref.invalidateSelf();
+  }
+
+  Future<void> onsubscribe() async {
+    await ref.read(norificationsProvider).unsubForNotifciations(item!.id, item!.typeId);
+    ref.refresh(subsriptionProvider);
+    ref.invalidateSelf();
   }
 }
 

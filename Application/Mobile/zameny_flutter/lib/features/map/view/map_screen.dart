@@ -5,7 +5,6 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:o3d/o3d.dart';
 
-import 'package:zameny_flutter/config/theme/text_styles.dart';
 import 'package:zameny_flutter/features/map/providers/map_provider.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
 

@@ -258,33 +258,33 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
               }).toList(),),
             ),
           ),
-          const SizedBox(height: 10,),
-          Container(
-            child: Column(
-              spacing: 10,
-              children: colors.entries.map((final entry) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 5.0),
-                  child: Container(
-                    padding: const EdgeInsets.all(10),
-                    decoration: BoxDecoration(
-                      color: entry.value,
-                      borderRadius: BorderRadius.circular(8),
-                      border: Border.all(color: Colors.black12),
-                    ),
-                    child: Text(
-                      entry.key,
-                      style: TextStyle(
-                        color: ThemeData.estimateBrightnessForColor(entry.value) == Brightness.dark
-                            ? Colors.white
-                            : Colors.black,
-                        fontWeight: FontWeight.bold,
-                      ),
-                    ),
-                  ),
-                );}).toList()
-            ),
-          )
+          // const SizedBox(height: 10,),
+          // Container(
+          //   child: Column(
+          //     spacing: 10,
+          //     children: colors.entries.map((final entry) {
+          //       return Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 5.0),
+          //         child: Container(
+          //           padding: const EdgeInsets.all(10),
+          //           decoration: BoxDecoration(
+          //             color: entry.value,
+          //             borderRadius: BorderRadius.circular(8),
+          //             border: Border.all(color: Colors.black12),
+          //           ),
+          //           child: Text(
+          //             entry.key,
+          //             style: TextStyle(
+          //               color: ThemeData.estimateBrightnessForColor(entry.value) == Brightness.dark
+          //                   ? Colors.white
+          //                   : Colors.black,
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //         ),
+          //       );}).toList()
+          //   ),
+          // )s
         ],
       );
   }
