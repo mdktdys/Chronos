@@ -6,6 +6,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/config/theme/theme_provider.dart';
+import 'package:zameny_flutter/config/theme/themes.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/settings_category_tile.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/settings_category_widget.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/theme_tile.dart';

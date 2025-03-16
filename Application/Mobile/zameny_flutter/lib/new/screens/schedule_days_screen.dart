@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/new/config/delays.dart';
-import 'package:zameny_flutter/new/enums/platforms_enum.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/screens/responsive/schedule_days_grid.dart';
