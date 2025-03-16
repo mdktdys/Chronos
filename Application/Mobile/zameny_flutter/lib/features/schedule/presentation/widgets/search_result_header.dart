@@ -9,9 +9,42 @@ import 'package:flutter_svg/svg.dart';
 
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/shared/providers/notifications_provider.dart';
 import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+
+class SearchItemNotificationButton extends ConsumerWidget {
+  final SearchItem item;
+
+  const SearchItemNotificationButton({
+    required this.item,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final AsyncValue<SubscribtionState> subscription = ref.watch(subsribtionProvider(item));
+
+    return subscription.when(
+      loading: () {
+        return const CircularProgressIndicator();
+      },
+      error: (final e,final o) {
+        return const Text('data');
+      },
+      data: (final data) {
+        if (data is SubscribtionSubscribed) {
+          return const Text('subed');
+        } else if (data is SubscribtionNonSubscribed) {
+          return const Text('non sub');
+        }
+
+        return const SizedBox();
+      },
+    );
+  }
+}
 
 
 class SearchResultHeader extends ConsumerStatefulWidget {
@@ -59,23 +92,19 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 8,
             children: [
+              SearchItemNotificationButton(item: provider!),
               Material(
                 borderRadius: BorderRadius.circular(20),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    if (provider == null) {
-                      return;
-                    }
-                    
+                  onTap: () async {
                     if (isNotificationSubscribed) {
-                      ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
-                      ref.invalidate(subsriptionProvider);
+                      await ref.read(norificationsProvider).unsubForNotifciations(provider.id, provider.typeId);
+                      ref.refresh(subsriptionProvider);
                     } else {
-                      ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
-                      ref.invalidate(subsriptionProvider);
+                      await  ref.read(norificationsProvider).subscribeForNotifciations(provider.id, provider.typeId);
+                      ref.refresh(subsriptionProvider);
                     }
-                    setState(() {});
                   },
                   child: Container(
                     decoration: BoxDecoration(
@@ -95,15 +124,13 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () {
-                    if (provider != null) {
-                      if (isSubscribed) {
-                        ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
-                      } else {
-                        ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
-                      }
-                      setState(() {});
+                    if (isSubscribed) {
+                      ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
+                    } else {
+                      ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
                     }
-                  },
+                    setState(() {});
+                                    },
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,

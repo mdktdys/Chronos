@@ -177,6 +177,29 @@ class ThemeSwitchBlock extends ConsumerStatefulWidget {
 class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
   @override
   Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    final colors = {
+      'outline': theme.colorScheme.outline,
+      'Primary': theme.colorScheme.primary,
+      'On Primary': theme.colorScheme.onPrimary,
+      'Secondary': theme.colorScheme.secondary,
+      'On Secondary': theme.colorScheme.onSecondary,
+      'Tertiary': theme.colorScheme.tertiary,
+      'On Tertiary': theme.colorScheme.onTertiary,
+      'Surface': theme.colorScheme.surface,
+      'On Surface': theme.colorScheme.onSurface,
+      'Background': theme.colorScheme.surface,
+      'On Background': theme.colorScheme.onSurface,
+      'Error': theme.colorScheme.error,
+      'On Error': theme.colorScheme.onError,
+      'Surface Container': theme.colorScheme.surfaceContainer,
+      'Surface Container Low': theme.colorScheme.surfaceContainerLow,
+      'Surface Container High': theme.colorScheme.surfaceContainerHigh,
+      'Surface Tint': theme.colorScheme.surfaceTint,
+    };
+
+  
     final bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return Column(
       children: [
@@ -192,8 +215,9 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
           width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-              borderRadius: const BorderRadius.all(Radius.circular(20)),),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
           child: SegmentedButtonTheme(
             data: Theme.of(context).segmentedButtonTheme,
             child: SegmentedButton(
@@ -224,7 +248,6 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
                 return Row(
                   children: [
                     ThemeTile(
-                      ref: ref,
                       scheme: theme.$2,
                       flexScheme: theme.$1,
                       isDark: isDark,
@@ -235,6 +258,33 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
               }).toList(),),
             ),
           ),
+          const SizedBox(height: 10,),
+          Container(
+            child: Column(
+              spacing: 10,
+              children: colors.entries.map((final entry) {
+                return Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 5.0),
+                  child: Container(
+                    padding: const EdgeInsets.all(10),
+                    decoration: BoxDecoration(
+                      color: entry.value,
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: Colors.black12),
+                    ),
+                    child: Text(
+                      entry.key,
+                      style: TextStyle(
+                        color: ThemeData.estimateBrightnessForColor(entry.value) == Brightness.dark
+                            ? Colors.white
+                            : Colors.black,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                  ),
+                );}).toList()
+            ),
+          )
         ],
       );
   }

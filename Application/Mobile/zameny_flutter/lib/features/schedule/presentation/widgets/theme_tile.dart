@@ -6,23 +6,25 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/theme_provider.dart';
 
-class ThemeTile extends StatelessWidget {
+class ThemeTile extends ConsumerWidget {
   final FlexSchemeData scheme;
   final FlexScheme flexScheme;
   final bool isDark;
 
-  const ThemeTile(
-      {required this.ref, required this.scheme, required this.flexScheme, required this.isDark, super.key,});
-
-  final WidgetRef ref;
+  const ThemeTile({
+    required this.flexScheme,
+    required this.scheme,
+    required this.isDark,
+    super.key,
+  });
 
   @override
-  Widget build(final BuildContext context) {
+  Widget build(final BuildContext context, final WidgetRef ref) {
     final theme = isDark ? scheme.dark : scheme.light;
     final bool isCurrent = ref.watch(lightThemeProvider).scheme == flexScheme;
     return Bounceable(
       onTap: () {
-        ref.read(lightThemeProvider).setScheme(scheme, flexScheme);
+        ref.read(lightThemeProvider).setScheme(flexScheme);
       },
       child: AnimatedContainer(
         duration: const Duration(milliseconds: 100),

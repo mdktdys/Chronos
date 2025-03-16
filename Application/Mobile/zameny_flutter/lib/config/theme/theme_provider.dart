@@ -25,7 +25,17 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   }
 
   ThemeSettings(this.ref) {
-    _loadSettings();
+    final prefs = GetIt.I.get<SharedPreferences>();
+    themeModeIndex = prefs.getInt('themeModeIndex') ?? 3;
+
+    scheme = FlexScheme.values.firstWhere(
+      (final scheme) => scheme.toString() == (prefs.getString('scheme') ?? FlexScheme.material.toString()),
+      orElse: () => FlexScheme.material,
+    );
+
+    setThemeMode(themeModeIndex);
+    _updateTheme();
+
     WidgetsBinding.instance.addObserver(this);  
   }
 
@@ -56,45 +66,34 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
         break;
       default:
     }
+
     _updateTheme();
     saveSettings();
   }
 
   void _updateTheme() {
-    final brightness = WidgetsBinding.instance.platformDispatcher.platformBrightness;
-    final bool isSystemDarkMode = brightness == Brightness.dark;
+    final bool isSystemDarkMode = WidgetsBinding.instance.platformDispatcher.platformBrightness == Brightness.dark;
 
-    switch (themeMode) {
-      case ThemeMode.dark:
-        theme = FlexThemeData.dark(
-          useMaterial3: true,
-          scheme: scheme,
-        ).applyCustomTextTheme();
-        break;
-      case ThemeMode.light:
-        theme = FlexThemeData.light(
-          useMaterial3: true,
-          scheme: scheme,
-        ).applyCustomTextTheme();
-        break;
-      case ThemeMode.system:
-        theme = isSystemDarkMode
-            ? FlexThemeData.dark(
-                useMaterial3: true,
-                scheme: scheme,
-              ).applyCustomTextTheme()
-            : FlexThemeData.light(
-                useMaterial3: true,
-                scheme: scheme,
-              ).applyCustomTextTheme();
-        break;
+    if (themeMode == ThemeMode.dark || (ThemeMode.system == themeMode && isSystemDarkMode)) {
+      theme = FlexThemeData.dark(
+        useMaterial3: true,
+        scheme: scheme,
+      ).applyCustomTextTheme();
     }
+
+    if (themeMode == ThemeMode.light || (ThemeMode.system == themeMode && !isSystemDarkMode)) {
+      theme = FlexThemeData.light(
+        useMaterial3: true,
+        scheme: scheme,
+      ).applyCustomTextTheme();
+    }
+
     notifyListeners();
   }
 
-  // Обновление цветовой схемы
-  void setScheme(final FlexSchemeData newScheme, final FlexScheme flexScheme) {
+  void setScheme(final FlexScheme flexScheme) {
     scheme = flexScheme;
+
     _updateTheme();
     saveSettings();
   }
@@ -103,22 +102,5 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
     final prefs = GetIt.I.get<SharedPreferences>();
     await prefs.setInt('themeModeIndex', themeModeIndex);
     await prefs.setString('scheme', scheme.toString());
-  }
-
-  Future<void> _loadSettings() async {
-    final prefs = GetIt.I.get<SharedPreferences>();
-    themeModeIndex = prefs.getInt('themeModeIndex') ?? 3;
-    scheme = _getSchemeFromString(prefs.getString('scheme') ?? FlexScheme.material.toString());
-
-    setThemeMode(themeModeIndex);
-    _updateTheme();
-  }
-
-  // Метод для преобразования строки в FlexScheme
-  FlexScheme _getSchemeFromString(final String schemeString) {
-    return FlexScheme.values.firstWhere(
-      (final scheme) => scheme.toString() == schemeString,
-      orElse: () => FlexScheme.material,
-    );
   }
 }

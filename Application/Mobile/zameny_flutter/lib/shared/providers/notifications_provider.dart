@@ -8,14 +8,48 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
+import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/models/subscribtion.dart';
 
 final norificationsProvider = ChangeNotifierProvider<NotificationsNotifier>((final ref) {
   return NotificationsNotifier(ref: ref);
 });
 
+sealed class SubscribtionState {}
+class SubscribtionNonSubscribed extends SubscribtionState {}
+class SubscribtionSubscribed extends SubscribtionState {}
+
+final subsribtionProvider = NotifierProviderFamily<
+  SubsribtionNotifier,
+  AsyncValue<SubscribtionState>,
+  SearchItem
+>(SubsribtionNotifier.new);
+
+class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, SearchItem> {
+  SearchItem? item;
+
+  @override
+  AsyncValue<SubscribtionState> build(final SearchItem seachItem) {
+    ref.watch(subsriptionProvider);
+    item = seachItem;
+    _load();
+    return const AsyncValue.loading();
+  }
+
+  Future<void> _load() async {
+    final subs = await ref.read(subsriptionProvider.future);
+   
+    if (subs.any((final sub) => sub.targetId == item?.id && sub.targetTypeId == item?.typeId)) {
+      state = AsyncValue.data(SubscribtionSubscribed());
+    } else {
+      state = AsyncValue.data(SubscribtionNonSubscribed());
+    }
+  }
+}
+
 class NotificationsNotifier extends ChangeNotifier {
   late final _firebaseMessaging = FirebaseMessaging.instance;
+  AsyncValue state = const AsyncValue.data('value');
   String? fCMToken;
 
   Ref ref;
@@ -49,7 +83,9 @@ class NotificationsNotifier extends ChangeNotifier {
     if(fCMToken == null) {
       return;
     }
-
+    log('token $fCMToken');
+    log('subType $targetTypeId');
+    log('subID $targetId');
     await GetIt.I.get<SupabaseClient>().from('MessagingClients').delete().eq('token', fCMToken!).eq('clientID', kIsWeb ? 1 : 2).eq('subType', targetTypeId).eq('subID', targetId);
   }
 
@@ -73,5 +109,6 @@ final subsriptionProvider = FutureProvider<List<Subscription>>((final Ref ref) a
   }
 
   final response = await GetIt.I.get<SupabaseClient>().from('MessagingClients').select().eq('token', token);
+  log(response.toString());
   return response.map((final sub){ return Subscription.fromMap(sub);}).toList();
 });
