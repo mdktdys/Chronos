@@ -88,38 +88,45 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
             final List<SearchItem> items = ref.watch(filteredSearchItemsProvider).valueOrNull ?? [];
             return AnimatedSize(
               duration: const Duration(milliseconds: 300),
-              child: AnimatedSwitcher(
-                duration: const Duration(milliseconds: 300),
-                child: Wrap(
-                  spacing: 8,
-                  runSpacing: 8,
-                  children: items.map((final SearchItem element) {
-                    return Material(
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                      borderRadius: BorderRadius.circular(20),
-                      child: InkWell(
-                        onTap: () {
-                          // context.go('/schedule?type=${element.typeId}&id=${element.id}');
-                          ref.read(searchItemProvider.notifier).setState(element);
-                          ref.read(filterSearchQueryProvider.notifier).state = '';
-                          ref.read(scheduleProvider).searchItemSelected(element);
-                          searchController.clear();
-                        },
-                        borderRadius: BorderRadius.circular(20),
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                            vertical: 4,
-                            horizontal: 8
+              child: Column(
+                children: [
+                  Padding(
+                    padding: EdgeInsets.only(top: (shouldShow && items.isNotEmpty) ? 8 : 0)
+                  ),
+                  AnimatedSwitcher(
+                    duration: const Duration(milliseconds: 300),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: items.map((final SearchItem element) {
+                        return Material(
+                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                          borderRadius: BorderRadius.circular(20),
+                          child: InkWell(
+                            onTap: () {
+                              // context.go('/schedule?type=${element.typeId}&id=${element.id}');
+                              ref.read(searchItemProvider.notifier).setState(element);
+                              ref.read(filterSearchQueryProvider.notifier).state = '';
+                              ref.read(scheduleProvider).searchItemSelected(element);
+                              searchController.clear();
+                            },
+                            borderRadius: BorderRadius.circular(20),
+                            child: Container(
+                              padding: const EdgeInsets.symmetric(
+                                vertical: 4,
+                                horizontal: 8
+                              ),
+                              child: Text(
+                                element.name,
+                                style: context.styles.ubuntuInverseSurface40014,
+                              )
+                            ),
                           ),
-                          child: Text(
-                            element.name,
-                            style: context.styles.ubuntuInverseSurface40014,
-                          )
-                        ),
-                      ),
-                    );
-                  }).toList()
-                ),
+                        );
+                      }).toList()
+                    ),
+                  ),
+                ],
               ),
             );
           }

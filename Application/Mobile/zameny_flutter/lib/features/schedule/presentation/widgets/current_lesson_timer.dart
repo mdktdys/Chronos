@@ -117,11 +117,24 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
       List<Paras> paras = schedule.paras.where((final para) => para.number == timing?.number).toList();
       if (paras.isNotEmpty) {
         child = Column(
-          children: paras.map((final para) => CourseTileRework(
-            searchType: SearchType.group,
-            lesson: para.lesson!.first,
-            index: para.number!
-          )).toList()
+          children: paras.map((final para) {
+            if (
+              para.lesson != null
+              && para.lesson!.isNotEmpty
+            ) {
+              return CourseTileRework(
+                searchType: SearchType.group,
+                lesson: para.lesson!.first,
+                isSaturday: isSaturday,
+                index: para.number!,
+              );
+            }
+
+            if (para.zamena != null) {
+              
+            }
+            return const SizedBox();
+          }).toList()
         );
       }
     }

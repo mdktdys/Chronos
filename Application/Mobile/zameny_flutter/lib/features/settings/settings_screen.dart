@@ -1,110 +1,21 @@
 import 'package:flutter/material.dart';
 
-import 'package:flex_color_scheme/flex_color_scheme.dart';
-import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/config/theme/theme_provider.dart';
+import 'package:zameny_flutter/config/theme/themes.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/settings_category_tile.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/settings_category_widget.dart';
+import 'package:zameny_flutter/features/schedule/presentation/widgets/theme_tile.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_header.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_logo_block.dart';
 import 'package:zameny_flutter/features/settings/widgets/settings_version_block.dart';
 import 'package:zameny_flutter/features/timetable/timetable_screen.dart';
 import 'package:zameny_flutter/shared/providers/main_provider.dart';
-
-class SettingsCategory extends StatelessWidget {
-  final String category;
-  final List<Widget> tiles;
-
-  const SettingsCategory({
-    required this.category,
-    required this.tiles,
-    super.key
-  });
-
-  @override
-  Widget build(final BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        Text(
-          category,
-          style: context.styles.ubuntuPrimaryBold20,
-        ),
-        const SizedBox(height: 10),
-        ...tiles
-      ],
-    );
-  }
-}
-
-class SettingsCategoryTile extends StatelessWidget {
-  final VoidCallback onClicked;
-  final String description;
-  final String title;
-  final String icon;
-
-  const SettingsCategoryTile({
-    required this.description,
-    required this.onClicked,
-    required this.title,
-    required this.icon,
-    super.key,
-  });
-
-  @override
-  Widget build(final BuildContext context) {
-    return InkWell(
-      borderRadius: BorderRadius.circular(20),
-      onTap: onClicked,
-      child: Container(
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-          borderRadius: const BorderRadius.all(Radius.circular(20),
-          ),
-        ),
-        child: Padding(
-          padding: const EdgeInsets.all(10),
-          child: Row(
-            mainAxisAlignment:MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      title,
-                      style: context.styles.ubuntuBold14,
-                    ),
-                    const SizedBox(height: 5),
-                    Text(
-                      description,
-                      style: context.styles.ubuntu12,
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0,),
-                child: Container(
-                  width: 48,
-                  height: 48,
-                  alignment: Alignment.center,
-                  child: SvgPicture.asset(
-                    icon,
-                    colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
-                  ),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class SettingsScreenWrapper extends ConsumerWidget {
   const SettingsScreenWrapper({super.key});
@@ -133,47 +44,37 @@ class SettingsScreen extends ConsumerWidget {
           child: ConstrainedBox(
             constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
             child: Column(
+              spacing: 10,
               children: [
-                const SizedBox(height: 10),
                 const SettingsHeader(),
-                Column(
-                  children: [
-                    const SizedBox(height: 10),
-                    const SettingsLogoBlock(),
-                    const SizedBox(height: 20),
-                    SettingsCategory(
-                      category: 'Контакты',
-                      tiles: [
-                        SettingsCategoryTile(
-                          title: 'Сайтик колледжа',
-                          description: 'Ну тут понятно',
-                          icon: 'assets/icon/vuesax_linear_teacher.svg',
-                          onClicked: () async =>  await launchUrl(Uri.parse('https://www.uksivt.ru/'), mode: LaunchMode.externalApplication)
-                        ),
-                        const SizedBox(height: 10),
-                        SettingsCategoryTile(
-                          title: 'Есть идеи или предложения?',
-                          description: 'Отпишите мне в телеграмчике',
-                          icon: 'assets/icon/vuesax_linear_send-2.svg',
-                          onClicked: () async =>  await launchUrl(Uri.parse('https://t.me/mdktdys'), mode: LaunchMode.externalApplication)
-                        ),
-                        const SizedBox(height: 10),
-                        SettingsCategoryTile(
-                          title: 'Актуальные замены!',
-                          description: 'Получайте уведомления о заменах\nв тг канальчике ;)',
-                          icon: 'assets/icon/vuesax_linear_message-programming.svg',
-                          onClicked: () async =>  await launchUrl(Uri.parse('https://t.me/bot_uksivt'), mode: LaunchMode.externalApplication)
-                        )
-                      ],
+                const SettingsLogoBlock(),
+                SettingsCategory(
+                  category: 'Контакты',
+                  tiles: [
+                    SettingsCategoryTile(
+                      title: 'Сайтик колледжа',
+                      description: 'Ну тут понятно',
+                      icon: Images.teacherHat,
+                      onClicked: () async =>  await launchUrl(Uri.parse('https://www.uksivt.ru/'), mode: LaunchMode.externalApplication)
                     ),
-                    const SizedBox(height: 3),
-                    const ThemeSwitchBlock(),
-                    const SizedBox(height: 5),
-                    const DevTools(),
-                    const SettingsVersionBlock(),
-                    const SizedBox(height: 120),
+                    SettingsCategoryTile(
+                      title: 'Есть идеи или предложения?',
+                      description: 'Отпишите мне в телеграмчике',
+                      icon: Images.send,
+                      onClicked: () async =>  await launchUrl(Uri.parse('https://t.me/mdktdys'), mode: LaunchMode.externalApplication)
+                    ),
+                    SettingsCategoryTile(
+                      title: 'Актуальные замены!',
+                      description: 'Получайте уведомления о заменах\nв тг канальчике ;)',
+                      icon: Images.code,
+                      onClicked: () async =>  await launchUrl(Uri.parse('https://t.me/bot_uksivt'), mode: LaunchMode.externalApplication)
+                    )
                   ],
                 ),
+                const ThemeSwitchBlock(),
+                const DevTools(),
+                const SettingsVersionBlock(),
+                const SizedBox(height: 120),
               ],
             ),
           ),
@@ -276,6 +177,29 @@ class ThemeSwitchBlock extends ConsumerStatefulWidget {
 class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
   @override
   Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+
+    final colors = {
+      'outline': theme.colorScheme.outline,
+      'Primary': theme.colorScheme.primary,
+      'On Primary': theme.colorScheme.onPrimary,
+      'Secondary': theme.colorScheme.secondary,
+      'On Secondary': theme.colorScheme.onSecondary,
+      'Tertiary': theme.colorScheme.tertiary,
+      'On Tertiary': theme.colorScheme.onTertiary,
+      'Surface': theme.colorScheme.surface,
+      'On Surface': theme.colorScheme.onSurface,
+      'Background': theme.colorScheme.surface,
+      'On Background': theme.colorScheme.onSurface,
+      'Error': theme.colorScheme.error,
+      'On Error': theme.colorScheme.onError,
+      'Surface Container': theme.colorScheme.surfaceContainer,
+      'Surface Container Low': theme.colorScheme.surfaceContainerLow,
+      'Surface Container High': theme.colorScheme.surfaceContainerHigh,
+      'Surface Tint': theme.colorScheme.surfaceTint,
+    };
+
+  
     final bool isDark = Theme.of(context).colorScheme.brightness == Brightness.dark;
     return Column(
       children: [
@@ -291,8 +215,9 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
           width: double.infinity,
           padding: const EdgeInsets.all(10),
           decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-              borderRadius: const BorderRadius.all(Radius.circular(20)),),
+            color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+            borderRadius: const BorderRadius.all(Radius.circular(20)),
+          ),
           child: SegmentedButtonTheme(
             data: Theme.of(context).segmentedButtonTheme,
             child: SegmentedButton(
@@ -323,83 +248,44 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
                 return Row(
                   children: [
                     ThemeTile(
-                        ref: ref,
-                        scheme: theme.$2,
-                        flexScheme: theme.$1,
-                        isDark: isDark,),
-                        const SizedBox(width: 5),
+                      scheme: theme.$2,
+                      flexScheme: theme.$1,
+                      isDark: isDark,
+                    ),
+                    const SizedBox(width: 5),
                   ],
                 );
               }).toList(),),
             ),
           ),
+          // const SizedBox(height: 10,),
+          // Container(
+          //   child: Column(
+          //     spacing: 10,
+          //     children: colors.entries.map((final entry) {
+          //       return Padding(
+          //         padding: const EdgeInsets.symmetric(vertical: 5.0),
+          //         child: Container(
+          //           padding: const EdgeInsets.all(10),
+          //           decoration: BoxDecoration(
+          //             color: entry.value,
+          //             borderRadius: BorderRadius.circular(8),
+          //             border: Border.all(color: Colors.black12),
+          //           ),
+          //           child: Text(
+          //             entry.key,
+          //             style: TextStyle(
+          //               color: ThemeData.estimateBrightnessForColor(entry.value) == Brightness.dark
+          //                   ? Colors.white
+          //                   : Colors.black,
+          //               fontWeight: FontWeight.bold,
+          //             ),
+          //           ),
+          //         ),
+          //       );}).toList()
+          //   ),
+          // )s
         ],
       );
-  }
-}
-
-class ThemeTile extends StatelessWidget {
-  final FlexSchemeData scheme;
-  final FlexScheme flexScheme;
-  final bool isDark;
-
-  const ThemeTile(
-      {required this.ref, required this.scheme, required this.flexScheme, required this.isDark, super.key,});
-
-  final WidgetRef ref;
-
-  @override
-  Widget build(final BuildContext context) {
-    final theme = isDark ? scheme.dark : scheme.light;
-    final bool isCurrent = ref.watch(lightThemeProvider).scheme == flexScheme;
-    return Bounceable(
-      onTap: () {
-        ref.read(lightThemeProvider).setScheme(scheme, flexScheme);
-      },
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 100),
-        decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(14),
-          border: isCurrent ? Border.all(color: Theme.of(context).colorScheme.inversePrimary, width: 4) :  null, )
-        ,
-        child: ClipRRect(
-          borderRadius: BorderRadius.circular( isCurrent ? 10 : 6),
-          child: SizedBox(
-            width: 40,
-            height: 40,
-            child: Column(
-              children: [
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: Container(color: theme.primary),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: theme.tertiary,
-                      ),
-                    ),
-                  ],),
-                ),
-                Expanded(
-                  child: Row(children: [
-                    Expanded(
-                      child: Container(
-                        color: theme.primaryContainer,
-                      ),
-                    ),
-                    Expanded(
-                      child: Container(
-                        color: theme.secondary,
-                      ),
-                    ),
-                  ],),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
   }
 }

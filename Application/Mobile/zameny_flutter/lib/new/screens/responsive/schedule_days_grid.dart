@@ -41,12 +41,14 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
     final bool obedSwitch = scheduleSettings.obed;
 
     List<Map<int, Widget>> tiles = widget.days.map((final daySchedule) {
+      final bool isSaturday = daySchedule.date.weekday == 6;
       return Map<int, Widget>.fromEntries(
         daySchedule.paras.expand((final Paras para) {  
           List<Widget> tiles = [];
 
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
+              isSaturday: isSaturday,
               isShowZamena: isShowZamena,
               obed: obedSwitch,
               para: para,
@@ -55,6 +57,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
 
           if (item is Group) {
             tiles = builder.buildGroupTiles(
+              isSaturday: isSaturday,
               zamenaFull: daySchedule.zamenaFull,
               isShowZamena: isShowZamena,
               obed: obedSwitch,
@@ -76,7 +79,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
                   ),
                   child: tile,
                 ),
@@ -124,8 +127,6 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                     child: Row(
                       spacing: 10,
                       children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                    
-                    
                         final dayParas = tiles[day.key][timings.key + 1];
                     
                         return Expanded(child: Column(

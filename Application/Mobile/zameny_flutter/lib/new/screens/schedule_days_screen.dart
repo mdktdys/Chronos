@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/new/config/delays.dart';
-import 'package:zameny_flutter/new/enums/platforms_enum.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/new/models/day_schedule.dart';
 import 'package:zameny_flutter/new/screens/responsive/schedule_days_grid.dart';
@@ -23,18 +22,10 @@ class ScheduleDaysWidget extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final ScheduleViewModes viewMode = ref.watch(scheduleSettingsProvider).viewmode;
-    final Platform platform = ref.watch(platformProvider);
     Widget child = const SizedBox.shrink();
 
     if (viewMode == ScheduleViewModes.grid) {
-      if (
-        platform == Platform.mobile
-        || platform == Platform.tablet
-      ) {
-        child = ScheduleViewList(days: days);
-      } else {
-        child = ScheduleViewGrid(days: days);
-      }
+      child = ScheduleViewGrid(days: days);
     }
 
     if (viewMode == ScheduleViewModes.list) {

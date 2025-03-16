@@ -99,7 +99,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const ScheduleTurboSearch(),
                 const DateHeader(),
                 const SizedBox(height: 10),
-                // const CurrentLessonTimer(),
+                const CurrentLessonTimer(),
                 const SearchResultHeader(),
                 const SizedBox(height: 5),
                 // LessonView(scrollController: scrollController),
@@ -112,6 +112,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
         }(),
         mobile: () => () {
           return Scaffold(
+            backgroundColor: Theme.of(context).colorScheme.surface,
             body: CustomScrollView(
               controller: scrollController,
               physics: const BouncingScrollPhysics(),
@@ -128,7 +129,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                       const SizedBox(height: 10),
                       const DateHeader(),
                       const SizedBox(height: 10),
-                      // const CurrentLessonTimer(),
+                      const CurrentLessonTimer(),
                       const SizedBox(height: 10),
                       // LessonView(scrollController: scrollController),
                       const SearchResultHeader(),
