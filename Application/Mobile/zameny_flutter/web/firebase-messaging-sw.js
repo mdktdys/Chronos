@@ -7,7 +7,7 @@ const firebaseApp = firebase.initializeApp({
   apiKey: "AIzaSyATPTeDPIpSg9KA1kpOs1rt60eKXZuSBXo",
   authDomain: "chronos-29a6e.firebaseapp.com",
   projectId: "chronos-29a6e",
-  storageBucket: "chronos-29a6e.appspot.com",
+  storageBucket: "chronos-29a6e.firebasestorage.app",
   messagingSenderId: "504912878580",
   appId: "1:504912878580:web:0bcb045c42293824af77a1",
   measurementId: "G-FCND0JX3N6",

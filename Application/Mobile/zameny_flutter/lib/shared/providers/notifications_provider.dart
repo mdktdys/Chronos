@@ -102,7 +102,7 @@ class NotificationsNotifier extends ChangeNotifier {
 
   Future<String?> _getToken() async {
     await _firebaseMessaging.requestPermission(provisional: kIsWeb ? false : true);
-    final String? fCMToken = await _firebaseMessaging.getToken(vapidKey: 'BNkpZqKNiMicNxbQP139ob4Jk7br__2pEAMln-0WvI3yudGcaPSNnICvYvQ2ooEstZQVut1hOhuZX2YFqK-LqL0');
+    final String? fCMToken = await _firebaseMessaging.getToken(vapidKey: 'BJnmledYcYUvwlAqyOkgZ2QKyIICQBQKA5aUDTboTjMp2jGf0ibZY8qaKLpBSw7DQfrX9A70SAHYqNraqdSQI0c');
 
     if (fCMToken != null) {
       GetIt.I.get<SharedPreferences>().setString('FCM', fCMToken);
