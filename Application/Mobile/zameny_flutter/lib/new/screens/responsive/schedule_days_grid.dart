@@ -79,7 +79,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                   padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: Theme.of(context).colorScheme.surface.withValues(alpha: 0.1),
+                    color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                   ),
                   child: tile,
                 ),

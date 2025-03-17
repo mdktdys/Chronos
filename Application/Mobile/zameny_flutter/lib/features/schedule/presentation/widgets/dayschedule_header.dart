@@ -7,6 +7,7 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/new/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/shared/tools.dart';
+import 'package:zameny_flutter/shared/widgets/snowfall.dart';
 
 class DayScheduleHeader extends StatelessWidget {
   final VoidCallback toggleObed;
@@ -157,54 +158,54 @@ class DayScheduleHeader extends StatelessWidget {
                               ),
                             ),
                             links.length > 1
-                                ? Align(
-                                    alignment: Alignment.topRight,
-                                    child: Container(
-                                      width: 16,
-                                      height: 16,
-                                      decoration: BoxDecoration(
-                                          shape: BoxShape.circle,
-                                          color: Theme.of(context)
-                                              .colorScheme
-                                              .surface,
-                                          border: Border.all(
-                                              color: Theme.of(context)
-                                                  .colorScheme
-                                                  .inverseSurface
-                                                  .withValues(alpha: 0.3),),),
-                                      child: Center(
-                                        child: FittedBox(
-                                          child: Text(
-                                              links.length.toString(),
-                                              style: context.styles.ubuntu
-                                          ),
-                                        ),
-                                      ),
-                                    )
-                                  )
-                                : const SizedBox(),
+                              ? Align(
+                                  alignment: Alignment.topRight,
+                                  child: Container(
+                                    width: 16,
+                                    height: 16,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Theme.of(context).colorScheme.surface,
+                                  border: Border.all(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.3),
+                                  ),
+                                ),
+                                child: Center(
+                                  child: FittedBox(
+                                    child: Text(
+                                        links.length.toString(),
+                                        style: context.styles.ubuntu
+                                    ),
+                                  ),
+                                ),
+                              )
+                            )
+                            : const SizedBox(),
                           ],
                         ),
                       ),
                     )
                   : const SizedBox(width: 5),
-              date == DateTime.now()
-                  ? Container(
-                      decoration:  BoxDecoration(
+               DateTime.now().sameDate(date)
+                  ? Padding(
+                      padding: const EdgeInsets.all(2.0),
+                      child: Container(
+                        decoration:  BoxDecoration(
                           color: Theme.of(context).colorScheme.primary,
-                          borderRadius: const BorderRadius.all(Radius.circular(20)),),
-                      child:  Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          'Сегодня',
-                          style: TextStyle(
-                              color: Theme.of(context).canvasColor,
-                              fontSize: 16,
-                              fontFamily: 'Ubuntu',
-                              fontWeight: FontWeight.bold,),
+                          borderRadius: const BorderRadius.all(Radius.circular(20)),
+                        ),
+                        child:  Padding(
+                          padding: const EdgeInsets.all(4.0),
+                          child: Text(
+                            'Сегодня',
+                            style: TextStyle(
+                                color: Theme.of(context).canvasColor,
+                                fontSize: 12,
+                                fontFamily: 'Ubuntu',
+                                fontWeight: FontWeight.bold,),
+                          ),
                         ),
                       ),
-                    )
+                  )
                   : const SizedBox(),
             ],
           ),
