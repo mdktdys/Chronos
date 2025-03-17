@@ -1,44 +1,25 @@
-importScripts("https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js");
-importScripts(
-  "https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js"
-);
+importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-app-compat.js");
+importScripts("https://www.gstatic.com/firebasejs/10.7.0/firebase-messaging-compat.js");
 
-const firebaseApp = firebase.initializeApp({
-  apiKey: "AIzaSyATPTeDPIpSg9KA1kpOs1rt60eKXZuSBXo",
+firebase.initializeApp({
+  apiKey: "AIzaSyDQHXMfFWktheUcZ4hzS5TGnkTMkv8_pLk",
   authDomain: "chronos-29a6e.firebaseapp.com",
+  databaseURL: "...",
   projectId: "chronos-29a6e",
   storageBucket: "chronos-29a6e.firebasestorage.app",
   messagingSenderId: "504912878580",
-  appId: "1:504912878580:web:0bcb045c42293824af77a1",
-  measurementId: "G-FCND0JX3N6",
+  appId: "1:504912878580:web:ab27abbe4d01a9c4af77a1",
+  measurementId: "G-KVKSH8BE55"
 });
 
-const messagingApp = firebaseApp.messaging();
+const messaging = firebase.messaging();
 
-messagingApp.onBackgroundMessage((payload) => {
-  // Customize notification here
-  console.log("onBackgroundMeasdssage", payload.data);
-  const notificationTitle = payload.data?.title ?? "Замены уксивтика";
+messaging.onBackgroundMessage((message) => {
+  const notificationTitle = message.data?.title ?? "Замены уксивтика";
   const notificationOptions = {
     badge: "https://uksivt.xyz/icons/Icon-192.png",
-    body: payload.data?.body,
-    image: payload.data?.image,
+    body: message.data?.body,
+    image: message.data?.image,
   };
   self.registration.showNotification(notificationTitle, notificationOptions);
-});
-
-self.addEventListener("notificationclick", (event) => {
-  event.notification.close();
-
-  // This looks to see if the current is already open and
-  // focuses if it is
-  event.waitUntil(
-    self.clients.matchAll().then((clientList) => {
-      if (clientList.length > 0) {
-        return clientList[0].focus();
-      }
-
-      return self.clients.openWindow("/");
-    })
-  );
 });
