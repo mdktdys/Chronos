@@ -222,15 +222,12 @@
         passive: false
     });
   </script>
-  <script src="flutter_bootstrap.js" async=""></script>
-  <script>
+  <script src="flutter_bootstrap.js" async>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', async function () {
-        const registrations = await navigator.serviceWorker.getRegistrations();
-        for (const registration of registrations) {
-          await registration.unregister();
-        }
-        await navigator.serviceWorker.register('/firebase-messaging-sw.js');
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('firebase-messaging-sw.js', {
+          scope: '/firebase-cloud-messaging-push-scope',
+        });
       });
     }
   </script>
