@@ -1,6 +1,8 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:meta_seo/meta_seo.dart';
 
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
@@ -41,6 +43,14 @@ class SearchItemNotifier extends StateNotifier<SearchItem?> {
   }
 
   void setState(final SearchItem? value) {
+    if(kIsWeb) {
+
+      MetaSEO meta = MetaSEO();
+      meta.ogTitle(ogTitle: 'Замены уксивтика');
+      meta.description(description: value != null ? 'Расписание ${value.name}' : '🐋 Следите за актуальным расписание колледжа УКСИВТ в удобном месте');
+      meta.keywords(keywords: 'уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт, замены уксивт');
+    }
+
     state = value;
   }
 }
