@@ -46,14 +46,18 @@ class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, 
   }
 
   Future<void> subscribe() async {
+    state = const AsyncValue.loading();
     await ref.read(norificationsProvider).subscribeForNotifciations(item!.id, item!.typeId);
-    ref.refresh(subsriptionProvider);
+    state = AsyncValue.data(SubscribtionSubscribed());
+    ref.invalidate(subsriptionProvider);
     ref.invalidateSelf();
   }
 
   Future<void> onsubscribe() async {
+    state = const AsyncValue.loading();
     await ref.read(norificationsProvider).unsubForNotifciations(item!.id, item!.typeId);
-    ref.refresh(subsriptionProvider);
+    state = AsyncValue.data(SubscribtionNonSubscribed());
+    ref.invalidate(subsriptionProvider);
     ref.invalidateSelf();
   }
 }
