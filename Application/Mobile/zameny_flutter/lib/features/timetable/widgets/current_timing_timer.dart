@@ -28,7 +28,6 @@ class CurrentTimingTimer extends ConsumerWidget {
       duration: const Duration(milliseconds: 150),
       curve: Curves.ease,
       child: SizedBox(
-        width: double.infinity,
         child: Padding(
           padding: const EdgeInsets.all(12.0),
           child: Column(

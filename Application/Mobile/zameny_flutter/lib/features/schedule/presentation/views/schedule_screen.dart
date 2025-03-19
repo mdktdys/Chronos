@@ -9,6 +9,7 @@ import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_d
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_header.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/features/schedule/presentation/widgets/search_result_header.dart';
+import 'package:zameny_flutter/features/timetable/widgets/current_timing_timer.dart';
 import 'package:zameny_flutter/new/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view.dart';
 import 'package:zameny_flutter/new/widgets/schedule_view_settings_widget.dart';
@@ -70,6 +71,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                       style: context.styles.ubuntuPrimaryBold24,
                     ),
                   ),
+                ),
+                const Row(
+                  children: [
+                    Expanded(child: CurrentTimingTimer()),
+                    ZamenaCheckTime(),
+                  ],
                 ),
                 const FavoriteStripeWidget(),
                 const Expanded(

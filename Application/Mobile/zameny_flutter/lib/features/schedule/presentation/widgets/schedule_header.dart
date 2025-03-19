@@ -35,9 +35,9 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
 
   void _startTimer(final DateTime time) {
     _timer?.cancel(); // Отменяем текущий таймер, если он существует
-    Duration duration = const Duration(seconds: 10) - DateTime.now().difference(time);
+    Duration duration = const Duration(minutes: 5) - DateTime.now().difference(time);
     if (duration.isNegative) {
-      duration = const Duration(seconds: 10);
+      duration = const Duration(seconds: 5);
     }
     log('Timer set for ${duration.inSeconds} seconds');
 
@@ -75,12 +75,14 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
   @override
   Widget build(final BuildContext context) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Row(
           children: [
-            Text('${time.hour}:${time.minute}',
-                style: const TextStyle(fontFamily: 'Ubuntu'),),
+            Text(
+              '${time.hour}:${time.minute}',
+              style: TextStyle(fontFamily: 'Ubuntu',color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6), fontSize: 14),
+            ),
             refreshing? 
             const SizedBox(
               height: 10,
@@ -92,7 +94,7 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
           refreshing? 'Проверяю' : 'Проверено',
           style: TextStyle(
             fontFamily: 'Ubuntu',
-            fontSize: 10,
+            fontSize: 14,
             color: Theme.of(context)
                 .colorScheme
                 .inverseSurface

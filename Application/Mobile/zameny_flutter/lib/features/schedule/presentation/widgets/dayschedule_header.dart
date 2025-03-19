@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
+import 'package:zameny_flutter/new/bottom_sheets/zamena_links_bottom_sheet.dart';
 import 'package:zameny_flutter/new/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/shared/widgets/snowfall.dart';
@@ -70,78 +70,9 @@ class DayScheduleHeader extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                             context: context,
                             builder: (final context) {
-                              return Container(
-                                //margin: EdgeInsets.only(bottom: 60),
-                                padding: const EdgeInsets.all(20),
-                                child: Container(
-                                  padding: const EdgeInsets.all(8),
-                                  decoration: BoxDecoration(
-                                      color:
-                                          Theme.of(context).colorScheme.surface,
-                                      border: Border.all(
-                                          color:
-                                              Theme.of(context).colorScheme.primary,),
-                                      borderRadius: const BorderRadius.all(
-                                          Radius.circular(20),),),
-                                  child: ListView.separated(
-                                    // shrinkWrap: true,
-                                    separatorBuilder: (final context, final index) =>
-                                        const Divider(),
-                                    itemCount: links.length,
-                                    itemBuilder: (final context, final index) {
-                                      return GestureDetector(
-                                        onTap: () => launchUrl(
-                                            Uri.parse(links.toList()[index].link),),
-                                        child: Container(
-                                            padding: const EdgeInsets.all(8),
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  'Ссылка:',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Ubuntu',
-                                                      fontSize: 14,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .inverseSurface,),
-                                                ),
-                                                Text(links.toList()[index].link,
-                                                    style: TextStyle(
-                                                        fontFamily: 'Ubuntu',
-                                                        fontSize: 10,
-                                                        color: Theme.of(context)
-                                                            .colorScheme
-                                                            .inverseSurface
-                                                            .withValues(alpha: 0.6),),),
-                                                Text(
-                                                  'Время добавления в систему:',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Ubuntu',
-                                                      fontSize: 14,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .inverseSurface,),
-                                                ),
-                                                Text(
-                                                  '${links.toList()[index].created}',
-                                                  style: TextStyle(
-                                                      fontFamily: 'Ubuntu',
-                                                      fontSize: 10,
-                                                      color: Theme.of(context)
-                                                          .colorScheme
-                                                          .inverseSurface
-                                                          .withValues(alpha: 0.6),),
-                                                ),
-                                              ],
-                                            ),),
-                                      );
-                                    },
-                                  ),
-                                ),
-                              );
-                            },);
+                              return ZamenaLinksBottomSheet(links: links);
+                            },
+                          );
                       },
                       icon: SizedBox(
                         width: 30,
@@ -232,3 +163,5 @@ class DayScheduleHeader extends StatelessWidget {
     );
   }
 }
+
+
