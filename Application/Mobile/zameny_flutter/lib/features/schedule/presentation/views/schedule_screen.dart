@@ -72,7 +72,12 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                     ),
                   ),
                 ),
-                const CurrentTimingTimer(),
+                const Row(
+                  children: [
+                    Expanded(child: CurrentTimingTimer()),
+                    ZamenaCheckTime(),
+                  ],
+                ),
                 const FavoriteStripeWidget(),
                 const Expanded(
                   child: SingleChildScrollView(
