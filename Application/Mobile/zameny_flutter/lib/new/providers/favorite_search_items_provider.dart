@@ -7,8 +7,8 @@ import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
-import 'package:zameny_flutter/shared/providers/search_provider.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/new/providers/search_provider.dart';
 
 final favoriteSearchItemsProvider = ChangeNotifierProvider<FavoriteSearchItemsNotifier>((final ref) {
   return FavoriteSearchItemsNotifier(ref: ref);

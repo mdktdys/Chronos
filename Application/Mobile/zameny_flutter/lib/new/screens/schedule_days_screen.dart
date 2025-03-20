@@ -2,13 +2,13 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/new/config/delays.dart';
-import 'package:zameny_flutter/new/enums/schedule_view_modes.dart';
-import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
+import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/screens/responsive/schedule_days_grid.dart';
 import 'package:zameny_flutter/new/screens/responsive/schedule_days_list.dart';
-import 'package:zameny_flutter/shared/layouts/adaptive_layout.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+import 'package:zameny_flutter/widgets/adaptive_layout.dart';
 
 
 class ScheduleDaysWidget extends ConsumerWidget {

@@ -2,8 +2,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
 
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
-import 'package:zameny_flutter/features/main_screen.dart';
-import 'package:zameny_flutter/shared/providers/schedule_provider.dart';
+import 'package:zameny_flutter/modules/main_screen.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 
 final routerProvider = Provider<GoRouter>((final ref) {
   return GoRouter(

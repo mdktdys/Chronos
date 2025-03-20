@@ -1,37 +1,11 @@
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
-
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
-
-
 analyzer:
   errors:
     cast_nullable_to_non_nullable: ignore
     avoid_renaming_method_parameters: ignore
-  # errors:
-    # require_trailing_commas: ignore
-  # errors:
-    # use_key_in_widget_constructors: ignore
-    # avoid_renaming_method_parameters: ignore
-    # library_private_types_in_public_aSpi: ignore
-    # library_prefixes: ignore
-    # prefer_interpolation_to_compose_strings: ignore
-    # non_constant_identifier_names: ignore
-include: package:flutter_lints/flutter.yaml
-# This file configures the analyzer, which statically analyzes Dart code to
-# check for errors, warnings, and lints.
-#
-# The issues identified by the analyzer are surfaced in the UI of Dart-enabled
-# IDEs (https://dart.dev/tools#ides-and-editors). The analyzer can also be
-# invoked from the command line by running `flutter analyze`.
+  plugins:
+    - custom_lint
 
-# The following line activates a set of recommended lints for Flutter apps,
-# packages, and plugins designed to encourage good coding practices.
+include: package:flutter_lints/flutter.yaml
 
 linter:
   rules:

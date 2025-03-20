@@ -1,6 +1,7 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 
 class ZamenasType {
   int id;
@@ -44,6 +45,7 @@ class Cabinet extends SearchItem {
   Cabinet({
     required super.id,
     required super.name,
+    super.type = SearchType.cabinet,
     super.typeId = 3,
   });
 

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:zameny_flutter/features/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/new/models/day_schedule.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/models/day_schedule.dart';
 
 
 

@@ -17,4 +17,6 @@ abstract class Images{
   static const String teacherHat = 'assets/icon/vuesax_linear_teacher.svg';
   static const String send = 'assets/icon/vuesax_linear_send-2.svg';
   static const String code = 'assets/icon/vuesax_linear_message-programming.svg';
+
+  static const String whale = 'assets/icon/whale.png';
 }
