@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/features/schedule/presentation/widgets/schedule_turbo_search.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
 
 class Teacher extends SearchItem {
   Teacher({
