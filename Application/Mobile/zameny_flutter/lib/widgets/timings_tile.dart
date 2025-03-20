@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/new/providers/time_table_provider.dart';
+import 'package:zameny_flutter/modules/timetable/time_table_provider.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class TimingTile extends ConsumerWidget {

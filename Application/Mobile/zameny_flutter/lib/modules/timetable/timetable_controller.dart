@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:zameny_flutter/new/providers/time_table_provider.dart';
+import 'package:zameny_flutter/modules/timetable/time_table_provider.dart';
 part 'timetable_controller.g.dart';
 
 @riverpod

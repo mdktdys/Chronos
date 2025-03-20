@@ -9,15 +9,15 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
-import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
@@ -45,49 +45,53 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
     final builder = ref.watch(scheduleTilesBuilderProvider);
 
+    List<Widget> paras = [];
+    for (Paras para in daySchedule.paras) {
+      List<Widget> tiles = [];
+
+      if (item is Teacher) {
+        tiles = builder.buildTeacherTiles(
+          isSaturday: isSaturday,
+          isShowZamena: isShowZamena,
+          para: para,
+          obed: obed,
+        );
+      }
+
+      if (item is Group) {
+        tiles = builder.buildGroupTiles(
+          isSaturday: isSaturday,
+          zamenaFull: daySchedule.zamenaFull,
+          isShowZamena: isShowZamena,
+          para: para,
+          obed: obed,
+        );
+      }
+
+      if (tiles.isEmpty) {
+        continue;
+      }
+
+      paras.add(Column(
+        children: tiles.map((final tile) {
+          if (tile is CourseTileRework) {
+            return Padding(
+              padding: const EdgeInsets.only(top: 8),
+              child: CourseTileReworkedBlank(child: tile)
+            );
+          }
+
+          return tile;
+        }).toList()
+      ));
+    }
+
+    if (paras.isEmpty) {
+      return const NoParasWidget();
+    }
+
     return Column(
-      children: [
-        ... daySchedule.paras.map((final Paras para) {
-
-          List<Widget> tiles = [];
-    
-          if (item is Teacher) {
-            tiles = builder.buildTeacherTiles(
-              isSaturday: isSaturday,
-              isShowZamena: isShowZamena,
-              para: para,
-              obed: obed,
-            );
-          }
-
-          if (item is Group) {
-            tiles = builder.buildGroupTiles(
-              isSaturday: isSaturday,
-              zamenaFull: daySchedule.zamenaFull,
-              isShowZamena: isShowZamena,
-              para: para,
-              obed: obed,
-            );
-          }
-
-          if (tiles.isEmpty) {
-            return const SizedBox.shrink();
-          }
-
-          return Column(
-            children: tiles.map((final tile) {
-              if (tile is CourseTileRework) {
-                return Padding(
-                  padding: const EdgeInsets.only(top: 8),
-                  child: CourseTileReworkedBlank(child: tile)
-                );
-              }
-
-              return tile;
-            }).toList()
-          );
-        })
-      ],
+      children: paras,
     );
   }
 }

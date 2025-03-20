@@ -1,15 +1,18 @@
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 
 abstract class SearchItem {
-  int id;
-  int typeId;
+  SearchType type;
   String name;
+  int typeId;
   int s = 0;
+  int id;
 
   SearchItem({
     required this.id,
     required this.name,
     required this.typeId,
+    required this.type,
   });
 
   String get typeName {

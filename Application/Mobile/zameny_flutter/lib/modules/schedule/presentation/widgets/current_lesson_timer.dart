@@ -6,13 +6,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/paras_model.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/models/day_schedule.dart';
-import 'package:zameny_flutter/models/paras_model.dart';
-import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/timer_provider.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
@@ -106,11 +108,12 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
 
   @override
   Widget build(final BuildContext context) {
+    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
+    final SearchItem? item = ref.watch(searchItemProvider);
+
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
-    // const bool needObedSwitch = true;
-    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
     Widget? child;
 
     if (schedule != null) {
@@ -123,7 +126,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
               && para.lesson!.isNotEmpty
             ) {
               return CourseTileRework(
-                searchType: SearchType.group,
+                searchType: item?.type ?? SearchType.group,
                 lesson: para.lesson!.first,
                 isSaturday: isSaturday,
                 index: para.number!,

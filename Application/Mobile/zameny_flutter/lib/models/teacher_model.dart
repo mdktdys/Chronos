@@ -1,11 +1,13 @@
 import 'dart:convert';
 
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 
 class Teacher extends SearchItem {
   Teacher({
     required super.id,
     required super.name,
+    super.type = SearchType.teacher,
     super.typeId = 2
   });
 
