@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 
 class SettingsLogoBlock extends StatelessWidget {
@@ -12,14 +13,16 @@ class SettingsLogoBlock extends StatelessWidget {
     return Container(
       padding: const EdgeInsets.all(5),
       decoration: BoxDecoration(
-          gradient: LinearGradient(
-              begin: Alignment.topLeft,
-              end: Alignment.bottomRight,
-              colors: [
-                Theme.of(context).colorScheme.primary,
-                Theme.of(context).colorScheme.tertiary,
-              ],),
-          borderRadius: const BorderRadius.all(Radius.circular(20)),),
+        borderRadius: const BorderRadius.all(Radius.circular(20)),
+        gradient: LinearGradient(
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+          colors: [
+            Theme.of(context).colorScheme.primary,
+            Theme.of(context).colorScheme.tertiary,
+          ],
+        ),
+      ),
       child: Container(
         padding: const EdgeInsets.all(8),
         decoration: BoxDecoration(
@@ -47,8 +50,7 @@ class SettingsLogoBlock extends StatelessWidget {
             FittedBox(
               fit: BoxFit.scaleDown,
               child: Image.asset(
-                'assets/icon/whale_1f40b.png',
-                width: 60,
+                Images.whale,
                 height: 60,
               ),
             ),

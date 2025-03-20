@@ -32,7 +32,7 @@ class DesktopView extends ConsumerWidget {
                   ScheduleScreen(),
                   ZamenaScreenWrapper(),
                   // MapScreen(),
-                  SettingsScreenWrapper(),
+                  SettingsScreen(),
                 ],
               ),
             ),

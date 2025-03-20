@@ -28,7 +28,7 @@ class MobileView extends ConsumerWidget {
             ScheduleScreen(),
             ZamenaScreenWrapper(),
             // MapScreen(),
-            SettingsScreenWrapper(),
+            SettingsScreen(),
           ],
         ),
         const AnimatedBottomBar(),
