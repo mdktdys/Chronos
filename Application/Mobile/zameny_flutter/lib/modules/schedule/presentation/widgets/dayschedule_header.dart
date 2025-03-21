@@ -1,16 +1,20 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
-import 'package:zameny_flutter/widgets/bottom_sheets/zamena_links_bottom_sheet.dart';
 import 'package:zameny_flutter/shared/tools.dart';
+import 'package:zameny_flutter/widgets/base_container.dart';
+import 'package:zameny_flutter/widgets/bottom_sheets/zamena_links_bottom_sheet.dart';
 
 class DayScheduleHeader extends StatelessWidget {
   final VoidCallback toggleObed;
   final List<ZamenaFileLink> links;
+  final TelegramZamenaLinks? telegramLink;
   final bool needObedSwitch;
   final bool? fullSwap;
   final DateTime date;
@@ -22,15 +26,20 @@ class DayScheduleHeader extends StatelessWidget {
     required this.links,
     required this.date,
     required this.obed,
+    this.telegramLink,
     this.fullSwap,
     super.key,
   });
 
   @override
   Widget build(final BuildContext context) {
+    final ThemeData theme = Theme.of(context);
+    final CustomTextStyles textStyles = theme.extension<CustomTextStyles>()!;
+
     return Align(
       alignment: Alignment.centerLeft,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -157,6 +166,49 @@ class DayScheduleHeader extends StatelessWidget {
                 ),
               ],
             ),
+          if (telegramLink != null && links.isEmpty) ...[
+            const SizedBox(height: 8),
+            Material(
+              borderRadius: const BorderRadius.all(Radius.circular(20)),
+              child: InkWell(
+                borderRadius: const BorderRadius.all(Radius.circular(20)),
+                onTap: () {
+                  try {
+                    launchUrl(Uri.parse('tg://resolve?domain=bot_uksivt'));
+                  } catch (_) {
+                    launchUrl(Uri.parse('https://t.me/bot_uksivt'));
+                  }
+                },
+                child: BaseContainer(
+                  padding: const EdgeInsets.all(8),
+                  child: Row(
+                    spacing: 10,
+                    children: [
+                      Container(
+                        height: 48,
+                        width: 48,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                          border: Border.all(color: const Color(0xFF27a7e7)),
+                        ),
+                        padding: const EdgeInsets.all(8),
+                        child: SvgPicture.asset(
+                          "assets/icon/telegram.svg",
+                          width: 32,
+                          height: 24,
+                          colorFilter: const ColorFilter.mode(Color(0xFF27a7e7), BlendMode.srcIn),
+                        ),
+                      ),
+                      Text(
+                        'Замены есть в телеграмме!',
+                        style: textStyles.ubuntu18
+                      ),
+                    ],
+                  )
+                ),
+              ),
+            )
+            ]
         ],
       ),
     );

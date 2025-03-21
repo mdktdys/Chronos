@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/screens/schedule_days_screen.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';

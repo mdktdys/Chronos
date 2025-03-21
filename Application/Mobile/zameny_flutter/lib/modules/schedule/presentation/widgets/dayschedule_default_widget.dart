@@ -9,7 +9,7 @@ import 'package:skeletonizer/skeletonizer.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
@@ -90,9 +90,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
       return const NoParasWidget();
     }
 
-    return Column(
-      children: paras,
-    );
+    return Column(children: paras);
   }
 }
 
@@ -150,6 +148,7 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
         DayScheduleHeader(
           date: widget.daySchedule.date,
           links: widget.daySchedule.zamenaLinks ?? [],
+          telegramLink: widget.daySchedule.telegramLink,
           fullSwap: (widget.daySchedule.zamenaFull != null && provider.isShowZamena),
           toggleObed: _toggleObed,
           needObedSwitch: needObedSwitch,

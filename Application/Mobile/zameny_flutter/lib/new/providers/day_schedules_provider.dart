@@ -4,10 +4,11 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/models/day_schedule.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
@@ -78,6 +79,7 @@ class DaySchedulesProvider {
     List<Zamena> zamenas;
     List<ZamenaFull> zamenasFull;
     List<ZamenaFileLink> links;
+    List<TelegramZamenaLinks> telegramLinks;
 
     final result = await Future.wait([
       Api.getGroupLessons(
@@ -98,13 +100,15 @@ class DaySchedulesProvider {
         [searchItem.id],
         startdate,
         endDate
-      )
+      ),
+      Api.getAlreadyFoundLinks(start: startdate, end: endDate)
     ]);
 
     lessons = result[0] as List<Lesson>;
     zamenas = result[1] as List<Zamena>;
     links = result[2] as List<ZamenaFileLink>;
     zamenasFull = result[3] as List<ZamenaFull>;
+    telegramLinks = result[4] as List<TelegramZamenaLinks>;
 
     List<DaySchedule> schedule = [];
     final List<DateTime> dates = List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)));
@@ -130,6 +134,7 @@ class DaySchedulesProvider {
       }
 
       final daySchedule = DaySchedule(
+          telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
           zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
           zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
           paras: dayParas,
@@ -161,13 +166,15 @@ class DaySchedulesProvider {
       Api.getZamenasFull(groups, startdate, endDate),
       Api.getLiquidation(groups, startdate, endDate),
       Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
-      Api.getZamenaFileLinks(start: startdate, end: endDate)
+      Api.getZamenaFileLinks(start: startdate, end: endDate),
+      Api.getAlreadyFoundLinks(start: startdate, end: endDate)
     ].toList());
 
     final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
     // final List<Liquidation> liquidations = result[1] as List<Liquidation>;
     final List<Zamena> groupsLessons = result[2] as List<Zamena>;
     final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
+    final List<TelegramZamenaLinks> telegramLinks = result[4] as List<TelegramZamenaLinks>;
 
     List<DaySchedule> schedule = [];
     for (DateTime date in List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)))) {
@@ -200,6 +207,7 @@ class DaySchedulesProvider {
 
       final daySchedule = DaySchedule(
         zamenaFull: null,
+        telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
         zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
         paras: dayParas,
         date: date,
