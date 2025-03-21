@@ -2,9 +2,11 @@ import 'dart:math' as math;
 
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
+import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 class DaySchedule {
   final List<ZamenaFileLink>? zamenaLinks;
   final ZamenaFull? zamenaFull;
+  final TelegramZamenaLinks? telegramLink;
   final List<Paras> paras;
   final DateTime date;
 
@@ -13,6 +15,7 @@ class DaySchedule {
     required this.zamenaFull,
     required this.paras,
     required this.date,
+    this.telegramLink,
   });
   
   factory DaySchedule.fake(final DateTime date) {

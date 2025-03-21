@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/models/teacher_model.dart';
-import 'package:zameny_flutter/models/day_schedule.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
@@ -104,6 +104,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                 links: day.zamenaLinks ?? [],
                 obed: obed[day] ?? false,
                 date: day.date,
+                telegramLink: day.telegramLink,
                 fullSwap: (
                   (day.zamenaFull != null)
                   && scheduleSettings.isShowZamena

@@ -3,6 +3,7 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 
 abstract class Api {
   static Future<List<Lesson>> getGroupLessons({
@@ -104,6 +105,15 @@ abstract class Api {
         .gte('date', start.toyyyymmdd());
 
     return data.map((final json) => ZamenaFileLink.fromMap(json)).toList();
+  }
+
+  static Future<List<TelegramZamenaLinks>> getAlreadyFoundLinks({
+    required final DateTime start,
+    required final DateTime end
+  }) async {
+    final SupabaseClient client = GetIt.I.get<SupabaseClient>();
+    final List<dynamic> data = await client.from('AlreadyFoundsLinks').select('date,created_at').lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
+    return data.map((final json) => TelegramZamenaLinks.fromMap(json)).toList();
   }
 
   static Future<List<ZamenaFull>> getFullZamenasByDate(final DateTime date) async {
