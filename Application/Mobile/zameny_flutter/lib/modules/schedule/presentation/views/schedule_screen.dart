@@ -7,18 +7,18 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/current_lesson_timer.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_result_header.dart';
-import 'package:zameny_flutter/widgets/current_timing_timer.dart';
+import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/adaptive_layout.dart';
+import 'package:zameny_flutter/widgets/current_timing_timer.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/widgets/schedule_header.dart';
 import 'package:zameny_flutter/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/widgets/schedule_view.dart';
 import 'package:zameny_flutter/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/widgets/test_widget.dart';
-import 'package:zameny_flutter/widgets/zamena_check_time.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/top_banner.dart';
+import 'package:zameny_flutter/widgets/zamena_check_time.dart';
 
 MyGlobals myGlobals = MyGlobals();
 
@@ -105,6 +105,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 const ScheduleHeader(),
                 const SizedBox(height: 10),
                 const ScheduleTurboSearch(),
+                const SizedBox(height: 10),
                 const DateHeader(),
                 const SizedBox(height: 10),
                 const CurrentLessonTimer(),
