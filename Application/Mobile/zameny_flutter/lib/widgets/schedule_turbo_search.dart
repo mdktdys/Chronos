@@ -11,6 +11,7 @@ import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
+import 'package:zameny_flutter/widgets/search_item_chip.dart';
 
 class ScheduleTurboSearch extends ConsumerStatefulWidget {
   final bool withFavorite;
@@ -79,7 +80,9 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
         ),
         if (widget.withFavorite)
           AnimatedSize(
+            curve: Curves.easeInOut,
             duration: const Duration(milliseconds: 300),
+            alignment: Alignment.topCenter,
             child: shouldShow
               ? const FavoriteStripeWidget()
               : const SizedBox(),
@@ -89,43 +92,30 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
             final List<SearchItem> items = ref.watch(filteredSearchItemsProvider).valueOrNull ?? [];
             return AnimatedSize(
               duration: const Duration(milliseconds: 300),
+              alignment: Alignment.topCenter,
+              curve: Curves.easeInOut,
               child: Column(
                 children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: (shouldShow && items.isNotEmpty) ? 8 : 0)
-                  ),
+                  Padding(padding: EdgeInsets.only(top: (shouldShow && items.isNotEmpty) ? 8 : 0)),
                   AnimatedSwitcher(
                     duration: const Duration(milliseconds: 300),
                     child: Wrap(
+                      key: Key(items.length.toString()),
                       spacing: 8,
                       runSpacing: 8,
-                      children: items.map((final SearchItem element) {
-                        return Material(
-                          color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                          borderRadius: BorderRadius.circular(20),
-                          child: InkWell(
-                            onTap: () {
-                              ref.read(searchItemProvider.notifier).setState(element);
-                              ref.read(filterSearchQueryProvider.notifier).state = '';
-                              ref.read(navigationProvider.notifier).setParams({
-                                'type': element.typeId,
-                                'id': element.id,
-                              });
+                      children: items.map((final SearchItem searchItem) {
+                        return SearchItemChip(
+                          searchItem: searchItem,
+                          onTap: () {
+                            ref.read(searchItemProvider.notifier).setState(searchItem);
+                            ref.read(filterSearchQueryProvider.notifier).state = '';
+                            ref.read(navigationProvider.notifier).setParams({
+                              'type': searchItem.typeId,
+                              'id': searchItem.id,
+                            });
 
-                              searchController.clear();
-                            },
-                            borderRadius: BorderRadius.circular(20),
-                            child: Container(
-                              padding: const EdgeInsets.symmetric(
-                                vertical: 4,
-                                horizontal: 8
-                              ),
-                              child: Text(
-                                element.name,
-                                style: context.styles.ubuntuInverseSurface40014,
-                              )
-                            ),
-                          ),
+                            searchController.clear();
+                          }
                         );
                       }).toList()
                     ),

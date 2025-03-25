@@ -231,111 +231,114 @@ class EmptyCourseTileRework extends ConsumerWidget {
       ? timings?.obedEnd.hhmm()
       : timings?.end.hhmm();
 
-    return Container(
-      width: double.infinity,
-      padding: const EdgeInsets.all(8),
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(Radius.circular(20)),
-        color: Colors.transparent,
-        border: DashedBorder.all(
-          dashLength: 10,
-          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
-        ),
-      ),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            children: [
-              Text(
-                'Замена',
-                style: context.styles.ubuntu.copyWith(
-                  color: Colors.red,
-                  shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
-                ),
-              ),
-              const SizedBox(width: 5,),
-              const Icon(
-                Icons.warning_amber_rounded,
-                color: Colors.red,
-                shadows: [
-                  Shadow(color: Colors.red, blurRadius: 4),
-                ],
-                size: 24,
-              ),
-            ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: Container(
+        width: double.infinity,
+        padding: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: Colors.transparent,
+          border: DashedBorder.all(
+            dashLength: 10,
+            color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
           ),
-          IntrinsicHeight(
-              child: Row(
-                spacing: 10,
-                children: [
-                  Skeleton.leaf(
-                    child: Container(
-                      width: 10,
-                      decoration: BoxDecoration(
-                        borderRadius: const BorderRadius.all(Radius.circular(20)),
-                        border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              children: [
+                Text(
+                  'Замена',
+                  style: context.styles.ubuntu.copyWith(
+                    color: Colors.red,
+                    shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
+                  ),
+                ),
+                const SizedBox(width: 5,),
+                const Icon(
+                  Icons.warning_amber_rounded,
+                  color: Colors.red,
+                  shadows: [
+                    Shadow(color: Colors.red, blurRadius: 4),
+                  ],
+                  size: 24,
+                ),
+              ],
+            ),
+            IntrinsicHeight(
+                child: Row(
+                  spacing: 10,
+                  children: [
+                    Skeleton.leaf(
+                      child: Container(
+                        width: 10,
+                        decoration: BoxDecoration(
+                          borderRadius: const BorderRadius.all(Radius.circular(20)),
+                          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(vertical: 8.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Skeleton.leaf(
-                          child: Container(
-                            width: 30,
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
-                            ),
-                            child: Padding(
-                              padding: const EdgeInsets.all(8.0),
-                              child: Text(
-                                index.toString(),
-                                textAlign: TextAlign.center,
-                                style: context.styles.ubuntuWhiteBold14.copyWith(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 8.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Skeleton.leaf(
+                            child: Container(
+                              width: 30,
+                              decoration: BoxDecoration(
+                                shape: BoxShape.circle,
+                                border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(8.0),
+                                child: Text(
+                                  index.toString(),
+                                  textAlign: TextAlign.center,
+                                  style: context.styles.ubuntuWhiteBold14.copyWith(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                        Text(
-                          startTime.toString(),
-                          style: context.styles.ubuntuBold16.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
-                        ),
-                        Text(
-                          endTime.toString(),
-                          style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
-                        )
-                      ],
-                    ),
-                  ),
-                  Expanded(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          (course?.name).toString(),
-                          style: context.styles.ubuntuPrimaryBold20.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
-                        ),
-                        Text(
-                          (teacher?.name).toString(),
-                          style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
-                        ),
-                        if (cabinet?.name != null)
                           Text(
-                            (cabinet?.name).toString(),
+                            startTime.toString(),
+                            style: context.styles.ubuntuBold16.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6)),
+                          ),
+                          Text(
+                            endTime.toString(),
+                            style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
+                          )
+                        ],
+                      ),
+                    ),
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            (course?.name).toString(),
+                            style: context.styles.ubuntuPrimaryBold20.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
+                          ),
+                          Text(
+                            (teacher?.name).toString(),
                             style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
                           ),
-                      ],
+                          if (cabinet?.name != null)
+                            Text(
+                              (cabinet?.name).toString(),
+                              style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                            ),
+                        ],
+                      )
                     )
-                  )
-                ],
+                  ],
+                ),
               ),
-            ),
-        ],
+          ],
+        ),
       ),
     );
   }

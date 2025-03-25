@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:talker_flutter/talker_flutter.dart';
 
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
@@ -29,7 +28,7 @@ class FavoriteSearchItemsNotifier extends ChangeNotifier {
 
       if (provider != null) {
         List<SearchItem?> actual = raw.map((final item) {
-          return provider.firstWhereOrNull((final SearchItem searchItem) => searchItem.id == item['id'] && searchItem.typeId == item['type']);
+          return provider.where((final SearchItem searchItem) => searchItem.id == item['id'] && searchItem.typeId == item['type']).firstOrNull;
         }).toList();
 
         items.addAll(actual.whereType<SearchItem>());
