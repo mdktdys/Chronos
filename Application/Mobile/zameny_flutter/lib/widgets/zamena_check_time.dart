@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -30,7 +29,6 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
     if (duration.isNegative) {
       duration = const Duration(seconds: 5);
     }
-    log('Timer set for ${duration.inSeconds} seconds');
 
     _timer = Timer(duration, () {
       ref.invalidate(zamenaTimerProvider);
@@ -53,7 +51,7 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
         return const Text('Ошибка');
       },
       loading: () {
-        return const Text('Загрузка...');
+        return const SizedBox.shrink();
       },
     );
   }

@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_animate/flutter_animate.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -84,16 +82,11 @@ class SearchResultHeader extends ConsumerStatefulWidget {
 
 class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
   bool opened = false;
-  // ExportBloc exportBloc = ExportBloc();
 
   @override
   Widget build(final BuildContext context) {
-    //final provider = ref.watch(scheduleProvider);
-    //bool enabled = provider.searchType == SearchType.group ? true : false;
-
-    final provider = ref.watch(searchItemProvider);
-  
-    final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(provider);
+    final SearchItem? searchItem = ref.watch(searchItemProvider);
+    final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(searchItem);
 
     return Stack(
       alignment: Alignment.center,
@@ -101,12 +94,12 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
         Column(
           children: [
             Text(
-              provider?.typeName ?? '',
+              searchItem?.typeName ?? '',
               textAlign: TextAlign.center,
               style: context.styles.ubuntuInverseSurface18
             ),
             Text(
-              provider?.name ?? '',
+              searchItem?.name ?? '',
               textAlign: TextAlign.center,
               style: context.styles.ubuntuInverseSurfaceBold24
             )
@@ -118,19 +111,19 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 8,
             children: [
-              SearchItemNotificationButton(item: provider!),
+              SearchItemNotificationButton(item: searchItem!),
               Material(
                 borderRadius: BorderRadius.circular(20),
                 child: InkWell(
                   borderRadius: BorderRadius.circular(20),
                   onTap: () {
                     if (isSubscribed) {
-                      ref.read(favoriteSearchItemsProvider).remove(searchItem: provider);
+                      ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem);
                     } else {
-                      ref.read(favoriteSearchItemsProvider).add(searchItem: provider);
+                      ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem);
                     }
                     setState(() {});
-                                    },
+                  },
                   child: Container(
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
@@ -244,86 +237,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
         //       )
         //     : const SizedBox.shrink(),
       ],
-    );
-  }
-}
-
-class Modal extends StatefulWidget {
-  const Modal({
-    required this.visible, required this.onClose, required this.modal, required this.child, super.key,
-  });
-
-  final Widget child;
-  final Widget modal;
-  final bool visible;
-  final VoidCallback onClose;
-
-  @override
-  State<Modal> createState() => _ModalState();
-}
-
-class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
-  late final AnimationController controller;
-
-  @override
-  void initState() {
-    controller = AnimationController(vsync: this, value: 0);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return Barrier(
-      visible: widget.visible,
-      onClose: widget.onClose,
-      child: PortalTarget(
-        visible: widget.visible,
-        closeDuration: const Duration(milliseconds: 150),
-        anchor: const Aligned(
-            follower: Alignment.topRight, target: Alignment.topRight,),
-        portalFollower: Animate(
-          controller: controller,
-          value: 0.05,
-          effects: const [
-            FadeEffect(duration: Duration(milliseconds: 250)),
-            ScaleEffect(
-                duration: Duration(milliseconds: 250),
-                alignment: Alignment.topRight,
-                curve: Curves.fastLinearToSlowEaseIn,),
-          ],
-          child: widget.modal,
-        ),
-        child: widget.child,
-      ),
-    );
-  }
-}
-
-class Barrier extends StatelessWidget {
-  const Barrier({
-    required this.onClose, required this.visible, required this.child, super.key,
-  });
-
-  final Widget child;
-  final VoidCallback onClose;
-  final bool visible;
-
-  @override
-  Widget build(final BuildContext context) {
-    return PortalTarget(
-      visible: visible,
-      closeDuration: kThemeAnimationDuration,
-      portalFollower: GestureDetector(
-        behavior: HitTestBehavior.opaque,
-        onTap: onClose,
-        child: const SizedBox(),),
-      child: child,
     );
   }
 }
