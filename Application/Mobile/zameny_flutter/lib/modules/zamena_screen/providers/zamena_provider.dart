@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:math';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
@@ -68,6 +69,19 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>)> {
   }
 
   static (List<Zamena>,List<ZamenaFull>) fake() {
-    return (List<Zamena>.empty(),List<ZamenaFull>.empty());
+    final Random random = Random();
+    final DateTime date = DateTime.now();
+
+    final List<Zamena> zamena = List.generate(random.nextInt(6), (final int index) {
+      return Zamena.mock(
+        date: date,
+        timing: index,
+      );
+    });
+
+    return (
+      zamena,
+      []
+    );
   }
 }

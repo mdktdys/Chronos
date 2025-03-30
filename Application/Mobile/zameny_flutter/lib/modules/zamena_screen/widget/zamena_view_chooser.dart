@@ -12,6 +12,9 @@ class ZamenaViewChooser extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final ThemeData theme = Theme.of(context);
+    final ZamenaViewType viewType = ref.watch(zamenaScreenProvider).view;
+
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       children: [
@@ -25,12 +28,12 @@ class ZamenaViewChooser extends ConsumerWidget {
             child: Text(
               'Группы',
               style: context.styles.ubuntu16.copyWith(
-                fontWeight: ref.watch(zamenaScreenProvider).view == ZamenaViewType.group
+                fontWeight: viewType == ZamenaViewType.group
                   ? FontWeight.bold
                   : FontWeight.w400,
-                color: ref.watch(zamenaScreenProvider).view == ZamenaViewType.group
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6),
+                color: viewType == ZamenaViewType.group
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.inverseSurface.withValues(alpha: 0.6),
                 ),
             ),
           ),
@@ -43,16 +46,16 @@ class ZamenaViewChooser extends ConsumerWidget {
           child: Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Преподы',
+              'Преподаватели',
               style: context.styles.ubuntu16.copyWith(
-                fontWeight: ref.watch(zamenaScreenProvider).view == ZamenaViewType.teacher
+                fontWeight: viewType == ZamenaViewType.teacher
                   ? FontWeight.bold
                   : FontWeight.w400,
                 fontFamily: 'Ubuntu',
                 fontSize: 16,
-                color: ref.watch(zamenaScreenProvider).view == ZamenaViewType.teacher
-                  ? Theme.of(context).colorScheme.primary
-                  : Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6),
+                color: viewType == ZamenaViewType.teacher
+                  ? theme.colorScheme.primary
+                  : theme.colorScheme.inverseSurface.withValues(alpha: 0.6),
               ),
             ),
           ),

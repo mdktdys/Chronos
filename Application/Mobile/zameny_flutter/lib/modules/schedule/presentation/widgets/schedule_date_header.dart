@@ -121,8 +121,9 @@ class DateHeaderDatePicker extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              //TODO refactor
               Text(
-                'Осенний семестр 2024/2025',
+                'II Семестр 2024/2025',
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: ctx.styles.ubuntuInverseSurfaceBold16,

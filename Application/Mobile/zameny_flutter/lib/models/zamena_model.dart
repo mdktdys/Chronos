@@ -42,6 +42,21 @@ class Zamena {
     );
   }
 
+  factory Zamena.mock({
+    required final DateTime date,
+    required final int timing,
+  }) {
+    return Zamena(
+      id: 1,
+      groupID: 2776,
+      teacherID: 1,
+      courseID: 1,
+      cabinetID: 1,
+      lessonTimingsID: timing,
+      date: date,
+    );
+  }
+
   String toJson() => json.encode(toMap());
 
   factory Zamena.fromJson(final String source) => Zamena.fromMap(json.decode(source) as Map<String, dynamic>);

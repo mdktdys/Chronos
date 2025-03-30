@@ -20,6 +20,8 @@ class SearchItemNotificationButton extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final ThemeData theme = Theme.of(context);
+
     if (item == null) {
       return const SizedBox.shrink();
     }
@@ -61,8 +63,10 @@ class SearchItemNotificationButton extends ConsumerWidget {
               ),
               padding: const EdgeInsets.all(8),
               child: SvgPicture.asset(
-                isNotificationSubscribed ? Images.notificationBold : Images.notification,
-                colorFilter: const ColorFilter.mode(Colors.white, BlendMode.srcIn),
+                isNotificationSubscribed
+                  ? Images.notificationBold
+                  : Images.notification,
+                colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
               )
             )
           ),
@@ -87,6 +91,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
   Widget build(final BuildContext context) {
     final SearchItem? searchItem = ref.watch(searchItemProvider);
     final bool isSubscribed = ref.watch(favoriteSearchItemsProvider).items.contains(searchItem);
+    final ThemeData theme = Theme.of(context);
 
     return Stack(
       alignment: Alignment.center,
@@ -111,6 +116,29 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             mainAxisAlignment: MainAxisAlignment.end,
             spacing: 8,
             children: [
+              Material(
+                borderRadius: BorderRadius.circular(20),
+                child: InkWell(
+                  borderRadius: BorderRadius.circular(20),
+                  onTap: () {
+                    ref.read(scheduleSettingsProvider).export();
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+                    ),
+                    padding: const EdgeInsets.all(8),
+                    child: SvgPicture.asset(
+                      Images.export,
+                      colorFilter: ColorFilter.mode(
+                        theme.colorScheme.primary,
+                        BlendMode.srcIn
+                      ),
+                    )
+                  )
+                ),
+              ),
               SearchItemNotificationButton(item: searchItem!),
               Material(
                 borderRadius: BorderRadius.circular(20),
