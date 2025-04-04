@@ -20,4 +20,5 @@ abstract class Images{
   static const String code = 'assets/icon/vuesax_linear_message-programming.svg';
 
   static const String whale = 'assets/icon/whale.png';
+  static const String copy = 'assets/icon/link-2.svg';
 }
