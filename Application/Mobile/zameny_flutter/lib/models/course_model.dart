@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:skeletonizer/skeletonizer.dart';
+
 class Course {
   int id;
   String name;
@@ -23,6 +25,14 @@ class Course {
       name: (map['fullname'] ?? map['name']) as String,
       color: map['color'] as String,
       fullname: map['fullname'] as String?,
+    );
+  }
+
+  factory Course.mock() {
+    return Course(
+      id: 1,
+      name: BoneMock.name,
+      color: '255,255,255,255'
     );
   }
 

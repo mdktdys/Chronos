@@ -1,19 +1,34 @@
 import 'package:flutter/foundation.dart';
-import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:screenshot/screenshot.dart';
 
 import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/new/sharing/sharing.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
-  return ScheduleSettingsNotifier();
+  return ScheduleSettingsNotifier(ref: ref);
 });
 class ScheduleSettingsNotifier extends ChangeNotifier {
+  Ref ref;
+  ScreenshotController screenShotController = ScreenshotController();
   ScheduleViewModes viewmode = ScheduleViewModes.auto;
   bool isShowZamena = true;
   bool obed = false;
+
+  ScheduleSettingsNotifier({required this.ref});
+
+  Future<void> export() async {
+    final Uint8List? image = await screenShotController.capture();
+
+    if (image == null) {
+      return;
+    }
+
+    ref.read(sharingProvier).shareFile(text: 'Расписание', files: [image]);
+  }
 
   void notify() {
     notifyListeners();
@@ -35,7 +50,12 @@ class SearchItemNotifier extends StateNotifier<SearchItem?> {
     required final int type
   }) async {
     isLoading = true;
-    await ref.watch(futureSearchItemProvider((id: id, type: type)).future);
+
+    await ref.watch(futureSearchItemProvider((
+      id: id,
+      type: type
+    )).future);
+
     isLoading = false;
   }
 

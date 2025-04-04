@@ -64,7 +64,7 @@ Color getColorForText(final String text) {
     blue = 230;
   }
 
-  return Color.fromARGB(255, red, green, blue);
+  return Color.fromARGB(130, red, green, blue);
 }
 
   
