@@ -1,0 +1,9 @@
+[{
+    "relation": ["delegate_permission/common.handle_all_urls"],
+    "target": {
+      "namespace": "android_app",
+      "package_name": "com.mdktdys.zameny_flutter",
+      "sha256_cert_fingerprints":
+      ["43:B7:6B:B6:CE:55:82:B6:90:22:7B:0D:B9:9D:C8:F7:88:2A:78:B4:FC:33:51:0D:BA:CB:E3:BB:E3:B8:50:81"]
+    }
+  }]
