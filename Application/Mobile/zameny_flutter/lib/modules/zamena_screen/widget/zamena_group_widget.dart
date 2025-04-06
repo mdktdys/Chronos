@@ -50,6 +50,8 @@ class ZamenaGroupWidget extends ConsumerWidget {
 
             if (course.id == 10843) {
               return EmptyCourseTileRework(
+                placeReason: '',
+                searchType: SearchType.group,
                 obed: false,
                 index: zamena.lessonTimingsID,
                 lesson: Lesson(
@@ -73,6 +75,7 @@ class ZamenaGroupWidget extends ConsumerWidget {
                   color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                 ),
                 child: CourseTileRework(
+                  placeReason: '',
                   searchType: SearchType.group,
                   index: zamena.lessonTimingsID,
                   isSaturday: false,

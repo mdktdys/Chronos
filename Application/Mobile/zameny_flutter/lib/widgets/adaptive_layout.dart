@@ -6,8 +6,6 @@ import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/enums/platforms_enum.dart';
 
-final platformProvider = StateProvider<Platform>((final ref) => Platform.mobile);
-
 class AdaptiveLayout extends ConsumerWidget {
   final Widget Function() mobile;
   final Widget Function()? tablet;

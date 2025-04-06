@@ -15,8 +15,10 @@ class _Sharing {
 
   _Sharing(this.ref);
 
-  Future<void> shareFile(
-      {required final String text, required final List<Uint8List> files}) async {
+  Future<void> shareFile({
+    required final String text,
+    required final List<Uint8List> files
+  }) async {
     share(text: text, files: files);
   }
 }

@@ -80,6 +80,7 @@ class DaySchedulesProvider {
     List<ZamenaFull> zamenasFull;
     List<ZamenaFileLink> links;
     List<TelegramZamenaLinks> telegramLinks;
+    List<Holiday> holidays;
 
     final result = await Future.wait([
       Api.getGroupLessons(
@@ -101,7 +102,8 @@ class DaySchedulesProvider {
         startdate,
         endDate
       ),
-      Api.getAlreadyFoundLinks(start: startdate, end: endDate)
+      Api.getAlreadyFoundLinks(start: startdate, end: endDate),
+      Api.getHolidays(startdate, endDate)
     ]);
 
     lessons = result[0] as List<Lesson>;
@@ -109,6 +111,7 @@ class DaySchedulesProvider {
     links = result[2] as List<ZamenaFileLink>;
     zamenasFull = result[3] as List<ZamenaFull>;
     telegramLinks = result[4] as List<TelegramZamenaLinks>;
+    holidays = result[5] as List<Holiday>;
 
     List<DaySchedule> schedule = [];
     final List<DateTime> dates = List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)));
@@ -134,12 +137,13 @@ class DaySchedulesProvider {
       }
 
       final daySchedule = DaySchedule(
-          telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
-          zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
-          zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
-          paras: dayParas,
-          date: date,
-        );
+        holidays: holidays.where((final holiday) => holiday.date.sameDate(date)).toList(),
+        telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
+        zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,
+        zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
+        paras: dayParas,
+        date: date,
+      );
 
       schedule.add(daySchedule);
     }
@@ -167,7 +171,8 @@ class DaySchedulesProvider {
       Api.getLiquidation(groups, startdate, endDate),
       Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
       Api.getZamenaFileLinks(start: startdate, end: endDate),
-      Api.getAlreadyFoundLinks(start: startdate, end: endDate)
+      Api.getAlreadyFoundLinks(start: startdate, end: endDate),
+      Api.getHolidays(startdate, endDate)
     ].toList());
 
     final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
@@ -175,6 +180,7 @@ class DaySchedulesProvider {
     final List<Zamena> groupsLessons = result[2] as List<Zamena>;
     final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
     final List<TelegramZamenaLinks> telegramLinks = result[4] as List<TelegramZamenaLinks>;
+    final List<Holiday> holidays = result[5] as List<Holiday>;
 
     List<DaySchedule> schedule = [];
     for (DateTime date in List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)))) {
@@ -187,7 +193,7 @@ class DaySchedulesProvider {
         final Paras paras = Paras();
 
         final List<Lesson> teacherLesson = teacherDayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
-        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.teacherID == searchItem.id).toList();
+        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number).toList();
         final List<ZamenaFull> paraZamenaFull = zamenasFull.where((final zamena) => zamena.date.sameDate(date)).toList();
 
         paras.lesson = teacherLesson;
@@ -205,8 +211,9 @@ class DaySchedulesProvider {
         dayParas.add(paras);
       }
 
-      final daySchedule = DaySchedule(
+      final DaySchedule daySchedule = DaySchedule(
         zamenaFull: null,
+        holidays: holidays.where((final holiday) => holiday.date.sameDate(date)).toList(),
         telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
         zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
         paras: dayParas,

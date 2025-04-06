@@ -9,12 +9,14 @@ class DaySchedule {
   final TelegramZamenaLinks? telegramLink;
   final List<Paras> paras;
   final DateTime date;
+  final List<Holiday> holidays;
 
   DaySchedule({
     required this.zamenaLinks,
     required this.zamenaFull,
     required this.paras,
     required this.date,
+    required this.holidays,
     this.telegramLink,
   });
   
@@ -22,6 +24,7 @@ class DaySchedule {
     final math.Random random = math.Random();
 
     return DaySchedule(
+      holidays: [],
       zamenaFull: null,
       zamenaLinks: [],
       date: date,
