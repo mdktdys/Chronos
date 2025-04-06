@@ -54,6 +54,21 @@ abstract class Api {
     return data.map((final json) => Liquidation.fromMap(json)).toList();
   }
 
+  static Future<List<Holiday>> getHolidays(
+    final DateTime start,
+    final DateTime end,
+  ) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> data = await client
+        .from('Holidays')
+        .select()
+        .lte('date', end.toyyyymmdd())
+        .gte('date', start.toyyyymmdd());
+
+    return data.map((final json) => Holiday.fromMap(json)).toList();
+  }
+
   static Future<List<LessonTimings>> getTimings() async {
     final List<LessonTimings> timings = (await GetIt.I.get<SupabaseClient>().from('timings').select()).map((final json) => LessonTimings.fromMap(json)).toList();
     timings.sort(((final a, final b) => a.number - b.number));

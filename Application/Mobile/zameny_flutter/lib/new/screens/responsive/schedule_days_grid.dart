@@ -47,6 +47,12 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
         daySchedule.paras.expand((final Paras para) {  
           List<Widget> tiles = [];
 
+          if (daySchedule.holidays.isNotEmpty && scheduleSettings.isShowZamena) {
+            return List.generate(daySchedule.holidays.length,(final int index) {
+              return MapEntry(1, NoParasWidget(reason: daySchedule.holidays[index].name));
+            }).toList();
+          }
+
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
               teacherId: item.id,

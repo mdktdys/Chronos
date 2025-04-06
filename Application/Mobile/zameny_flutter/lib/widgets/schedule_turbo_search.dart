@@ -3,10 +3,13 @@ import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
@@ -66,6 +69,12 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
   Widget build(final BuildContext context) {
     bool shouldShow = isFocused || searchController.text.isNotEmpty;
 
+    final providers = [
+      ref.watch(groupsProvider),
+      ref.watch(teachersProvider),
+      ref.watch(cabinetsProvider),
+    ];
+
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -124,7 +133,27 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
               ),
             );
           }
-        )
+        ),
+        if (providers.any((final provider) => provider.isLoading))
+          Padding(
+            padding: const EdgeInsets.only(top: 8.0),
+            child: const Text(
+              'Загружаю...',
+              textAlign: TextAlign.center,
+            ).animate(
+              autoPlay: true,
+              onComplete: (final controller) {
+                controller.loop(reverse: true);
+              },
+              effects: [
+                const FadeEffect(
+                  begin: 0.3,
+                  end: 0.6,
+                  duration: Duration(seconds: 1)
+                )
+              ]
+            ),
+          )
       ],
     );
   }

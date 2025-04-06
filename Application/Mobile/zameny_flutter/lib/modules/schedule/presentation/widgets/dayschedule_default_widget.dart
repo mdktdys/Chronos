@@ -36,11 +36,22 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final settings = ref.watch(scheduleSettingsProvider);
     final SearchItem? item = ref.watch(searchItemProvider);
     final bool isSaturday = daySchedule.date.weekday == 6;
 
     if (daySchedule.paras.isEmpty) {
-      return const NoParasWidget();
+      return const NoParasWidget(
+        reason: 'Нет пар',
+      );
+    }
+
+    if (daySchedule.holidays.isNotEmpty && settings.isShowZamena) {
+      return Column(
+        children: daySchedule.holidays.map((final holiday) {
+          return NoParasWidget(reason: holiday.name);
+        }).toList()
+      );
     }
 
     final builder = ref.watch(scheduleTilesBuilderProvider);
@@ -88,7 +99,9 @@ class DayScheduleParasWidget extends ConsumerWidget {
     }
 
     if (paras.isEmpty) {
-      return const NoParasWidget();
+      return const NoParasWidget(
+        reason: 'Нет пар',
+      );
     }
 
     return Column(children: paras);
@@ -180,7 +193,10 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
 }
 
 class NoParasWidget extends StatelessWidget {
+  final String reason;
+
   const NoParasWidget({
+    required this.reason,
     super.key,
   });
 
@@ -205,7 +221,7 @@ class NoParasWidget extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Center(
           child: Text(
-            'Нет пар 🎉',
+            '$reason 🎉',
             style: context.styles.ubuntuInversePrimary20,
           ),
         ),
