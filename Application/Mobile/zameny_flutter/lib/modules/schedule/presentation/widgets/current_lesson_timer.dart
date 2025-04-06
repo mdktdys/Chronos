@@ -126,6 +126,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
               && para.lesson!.isNotEmpty
             ) {
               return CourseTileRework(
+                placeReason: 'timer',
                 searchType: item?.type ?? SearchType.group,
                 lesson: para.lesson!.first,
                 isSaturday: isSaturday,

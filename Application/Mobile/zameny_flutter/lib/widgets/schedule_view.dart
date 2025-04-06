@@ -28,7 +28,7 @@ class ScheduleView extends ConsumerWidget {
         error: (final o, final s) {
           return const Text('data');
         },
-        data: (final data) {
+        data: (final List<DaySchedule> data) {
           final empty = data.every((final DaySchedule element) => element.paras.isEmpty);
       
           if (empty) {

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
@@ -26,7 +27,7 @@ class ScheduleViewGrid extends ConsumerStatefulWidget {
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _ScheduleViewGridState();
-}
+} 
 
 class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
   final Map<DaySchedule, bool> obed = {};
@@ -48,6 +49,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
 
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
+              teacherId: item.id,
               isSaturday: isSaturday,
               isShowZamena: isShowZamena,
               obed: obedSwitch,
@@ -124,21 +126,25 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                   alignment: Alignment.topCenter,
                   curve: Curves.easeInOut,
                   duration: const Duration(milliseconds: 200),
-                  child: IntrinsicHeight(
-                    child: Row(
-                      spacing: 10,
-                      children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                        final dayParas = tiles[day.key][timings.key + 1];
-                    
-                        return Expanded(child: Column(
-                          children: [
-                            // Text('day ${day.key.toString()} timing ${timings.key}'),
-                            Expanded(child: dayParas ?? const SizedBox()),
-                          ],
-                        ));
-                        // return Expanded(child: );
-                        // return [timings.key];
-                      }).toList(),
+                  child: AnimatedSwitcher(
+                    duration: Delays.morphDuration,
+                    child: IntrinsicHeight(
+                      key: UniqueKey(),
+                      child: Row(
+                        spacing: 10,
+                        children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
+                          final dayParas = tiles[day.key][timings.key + 1];
+                      
+                          return Expanded(child: Column(
+                            children: [
+                              // Text('day ${day.key.toString()} timing ${timings.key}'),
+                              Expanded(child: dayParas ?? const SizedBox()),
+                            ],
+                          ));
+                          // return Expanded(child: );
+                          // return [timings.key];
+                        }).toList(),
+                      ),
                     ),
                   ),
                 );

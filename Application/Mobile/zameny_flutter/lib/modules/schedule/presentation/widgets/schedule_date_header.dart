@@ -55,6 +55,17 @@ class DateHeaderDatePicker extends ConsumerWidget {
 
     final bool isCurrentWeek = todayWeekNumber == currentWeekNumber;
 
+    final DateTime date = DateTime.now();
+
+    String title = '';
+    if (date.month >= 9) {
+      title = 'I Семестр ${date.year}/${date.year + 1}';
+    } else if (date.month >= 1 && date.month <= 6) {
+      title = 'II Семестр ${date.year - 1}/${date.year}';
+    } else {
+      title = 'Лето';
+    }
+
     return ClipRRect(
       borderRadius: BorderRadius.circular(20),
       child: Material(
@@ -121,9 +132,8 @@ class DateHeaderDatePicker extends ConsumerWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              //TODO refactor
               Text(
-                'II Семестр 2024/2025',
+                title,
                 maxLines: 2,
                 textAlign: TextAlign.center,
                 style: ctx.styles.ubuntuInverseSurfaceBold16,

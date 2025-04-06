@@ -187,7 +187,7 @@ class DaySchedulesProvider {
         final Paras paras = Paras();
 
         final List<Lesson> teacherLesson = teacherDayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
-        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number && lesson.teacherID == searchItem.id).toList();
+        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number).toList();
         final List<ZamenaFull> paraZamenaFull = zamenasFull.where((final zamena) => zamena.date.sameDate(date)).toList();
 
         paras.lesson = teacherLesson;
@@ -205,7 +205,7 @@ class DaySchedulesProvider {
         dayParas.add(paras);
       }
 
-      final daySchedule = DaySchedule(
+      final DaySchedule daySchedule = DaySchedule(
         zamenaFull: null,
         telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
         zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),

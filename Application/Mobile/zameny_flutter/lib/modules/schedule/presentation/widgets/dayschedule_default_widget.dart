@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
@@ -18,6 +19,7 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/secrets.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
@@ -49,6 +51,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
 
       if (item is Teacher) {
         tiles = builder.buildTeacherTiles(
+          teacherId: item.id,
           isSaturday: isSaturday,
           isShowZamena: isShowZamena,
           para: para,
@@ -152,10 +155,19 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
           needObedSwitch: needObedSwitch,
           obed: obed,
         ),
-        DayScheduleParasWidget(
-          isShowZamena: provider.isShowZamena,
-          daySchedule: widget.daySchedule,
-          obed: obed,
+        AnimatedSize(
+          duration: Delays.morphDuration,
+          alignment: Alignment.topCenter,
+          curve: Curves.easeInOut,
+          child: AnimatedSwitcher(
+            duration: Delays.morphDuration,
+            child: DayScheduleParasWidget(
+              key: UniqueKey(),
+              isShowZamena: provider.isShowZamena,
+              daySchedule: widget.daySchedule,
+              obed: obed,
+            ),
+          ),
         ),
       ],
     );
@@ -203,11 +215,15 @@ class NoParasWidget extends StatelessWidget {
 }
 
 class EmptyCourseTileRework extends ConsumerWidget {
+  final SearchType searchType;
+  final String placeReason;
   final Lesson lesson;
   final bool obed;
   final int index;
 
   const EmptyCourseTileRework({
+    required this.placeReason,
+    required this.searchType,
     required this.lesson,
     required this.index,
     required this.obed,
@@ -219,6 +235,7 @@ class EmptyCourseTileRework extends ConsumerWidget {
     final Course? course = ref.watch(courseProvider(lesson.course));
     final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
     final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
+    final Group? group = ref.watch(groupProvider(lesson.group));
     final LessonTimings? timings = ref.watch(timingProvider(lesson.number));
 
     final String? startTime = obed
@@ -228,6 +245,15 @@ class EmptyCourseTileRework extends ConsumerWidget {
     final String? endTime = obed
       ? timings?.obedEnd.hhmm()
       : timings?.end.hhmm();
+
+    String? subTitle = '';
+    if (searchType == SearchType.teacher) {
+      subTitle = group?.name;
+    } else if (searchType == SearchType.group) {
+      subTitle = teacher?.name;
+    } else if (searchType == SearchType.cabinet) {
+      subTitle = group?.name;
+    }
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -251,17 +277,13 @@ class EmptyCourseTileRework extends ConsumerWidget {
                   'Замена',
                   style: context.styles.ubuntu.copyWith(
                     color: Colors.red,
-                    shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
                   ),
                 ),
                 const SizedBox(width: 5,),
                 const Icon(
                   Icons.warning_amber_rounded,
                   color: Colors.red,
-                  shadows: [
-                    Shadow(color: Colors.red, blurRadius: 4),
-                  ],
-                  size: 24,
+                  size: 18,
                 ),
               ],
             ),
@@ -274,7 +296,7 @@ class EmptyCourseTileRework extends ConsumerWidget {
                         width: 10,
                         decoration: BoxDecoration(
                           borderRadius: const BorderRadius.all(Radius.circular(20)),
-                          border: Border.all(color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
+                          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
                         ),
                       ),
                     ),
@@ -283,6 +305,8 @@ class EmptyCourseTileRework extends ConsumerWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
+                          if (IS_DEV)
+                            Text(placeReason),
                           Skeleton.leaf(
                             child: Container(
                               width: 30,
@@ -321,7 +345,7 @@ class EmptyCourseTileRework extends ConsumerWidget {
                             style: context.styles.ubuntuPrimaryBold20.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6))
                           ),
                           Text(
-                            (teacher?.name).toString(),
+                            subTitle.toString(),
                             style: context.styles.ubuntu.copyWith(color:  Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),),
                           ),
                           if (cabinet?.name != null)
@@ -344,6 +368,7 @@ class EmptyCourseTileRework extends ConsumerWidget {
 
 
 class CourseTileRework extends ConsumerStatefulWidget {
+  final String placeReason;
   final SearchType searchType;
   final Lesson? swapedLesson;
   final Lesson lesson;
@@ -357,6 +382,7 @@ class CourseTileRework extends ConsumerStatefulWidget {
     required this.lesson,
     required this.index,
     required this.isSaturday,
+    required this.placeReason,
     this.isZamena = false,
     this.swapedLesson,
     this.obed = false,
@@ -451,6 +477,9 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      if (IS_DEV) ...[
+                        Text(widget.placeReason)
+                      ],
                       Skeleton.leaf(
                         child: Container(
                           width: 30,
@@ -520,16 +549,12 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                             'Замена',
                             style: context.styles.ubuntu.copyWith(
                               color: Colors.red,
-                              shadows: [const Shadow(color: Colors.red, blurRadius: 4)],
                             ),
                           ),
                           const SizedBox(width: 5,),
                           const Icon(
                             Icons.warning_amber_rounded,
                             color: Colors.red,
-                            shadows: [
-                              Shadow(color: Colors.red, blurRadius: 4),
-                            ],
                             size: 24,
                           ),
                         ],

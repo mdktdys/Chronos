@@ -1,7 +1,8 @@
 import 'dart:convert';
-import 'dart:developer';
 import 'dart:typed_data';
 
+import 'package:get_it/get_it.dart';
+import 'package:talker_flutter/talker_flutter.dart';
 import 'package:web/web.dart';
 
 Future<void> share({required final String text, required final List<Uint8List> files}) async {
@@ -16,6 +17,6 @@ Future<void> share({required final String text, required final List<Uint8List> f
       link.click();
     });
   } catch (error) {
-    log(error.toString());
+    GetIt.I.get<Talker>().critical(error.toString());
   }
 }

@@ -62,6 +62,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
                         color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                       ),
                       child: CourseTileRework(
+                        placeReason: '',
                         searchType: SearchType.teacher,
                         index: zamena.lessonTimingsID,
                         isSaturday: false,
