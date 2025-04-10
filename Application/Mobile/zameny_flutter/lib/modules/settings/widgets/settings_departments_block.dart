@@ -53,7 +53,7 @@ class SettingsDepartmentsBlock extends StatelessWidget {
                       ),
                     ],
                   ),
-                  if (department != DepartmentForms.computer)
+                  if (department != DepartmentForms.econom)
                     const Divider(
                       indent: 10,
                       endIndent: 10,
