@@ -6,18 +6,18 @@ enum DepartmentForms {
   ),
   informatics(
     'Информатика и программирование',
-    'https://docs.google.com/forms/d/e/1FAIpQLSfD2CgQ8sAmnhiUoR8qOmKbXcYMyctUERSWy-uYOoZf1mfEAg/viewform',
+    'https://docs.google.com/forms/d/e/1FAIpQLSfD2CgQ8sAmnhiUoR8qOmKbXcYMyctUERSWy-uYOoZf1mfEAg/viewform?usp=sf_link',
     'assets/icon/informatics.svg',
   ),
   computer(
     'Вычислительная техника',
     'https://docs.google.com/forms/d/1IajFtj5A1YWWvvQ687P4UTKdmNfY3MRl--J7FSQA35w/edit#responses',
     'assets/icon/computer.svg',
-  // ),
-  // econom(
-  //   'Экономики',
-  //   'https://example.com/econom-form',
-  //   'assets/icon/econom.svg',
+  ),
+  econom(
+    'Экономика и землеустройство',
+    'https://docs.google.com/forms/d/e/1FAIpQLScyWMvXES_WOcy20RT1Yu34SdrICbtqnlUzsstqFlF8RQqVWA/viewform?usp=sf_link',
+    'assets/icon/econom.svg',
   // ),
   // law(
   //   'Права',
