@@ -35,13 +35,13 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
   @override
   Widget build(final BuildContext context) {
     final SearchItem? item = ref.watch(searchItemProvider);
-    final scheduleSettings = ref.watch(scheduleSettingsProvider);
-    final builder = ref.watch(scheduleTilesBuilderProvider);
+    final ScheduleSettingsNotifier scheduleSettings = ref.watch(scheduleSettingsProvider);
+    final ScheduleTilesBuilder builder = ref.watch(scheduleTilesBuilderProvider);
 
     final bool isShowZamena = scheduleSettings.isShowZamena;
     final bool obedSwitch = scheduleSettings.obed;
 
-    List<Map<int, Widget>> tiles = widget.days.map((final daySchedule) {
+    List<Map<int, Widget>> tiles = widget.days.map((final DaySchedule daySchedule) {
       final bool isSaturday = daySchedule.date.weekday == 6;
       return Map<int, Widget>.fromEntries(
         daySchedule.paras.expand((final Paras para) {  

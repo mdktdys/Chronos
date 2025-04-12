@@ -136,7 +136,7 @@ class DaySchedulesProvider {
         dayParas.add(paras);
       }
 
-      final daySchedule = DaySchedule(
+      final DaySchedule daySchedule = DaySchedule(
         holidays: holidays.where((final holiday) => holiday.date.sameDate(date)).toList(),
         telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
         zamenaFull: zamenasFull.where((final zamena) => zamena.date.sameDate(date)).firstOrNull,

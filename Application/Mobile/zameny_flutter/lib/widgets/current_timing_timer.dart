@@ -12,8 +12,8 @@ class CurrentTimingTimer extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final timings = ref.watch(timingsProvider).value;
-    final timeLeft = ref.watch(timeProvider);
+    final List<LessonTimings>? timings = ref.watch(timingsProvider).value;
+    final String? timeLeft = ref.watch(timeProvider);
 
     final now = DateTime.now();
 
@@ -22,7 +22,7 @@ class CurrentTimingTimer extends ConsumerWidget {
     }
 
     LessonTimings? timing;
-    if (now.weekday == DateTime.sunday) {
+    if (now.weekday == DateTime.saturday) {
       timing = timings?.where((final LessonTimings timing) => timing.saturdayStart.isBefore(now) && timing.saturdayEnd.isAfter(now)).firstOrNull;
     } else {
       timing = timings?.where((final LessonTimings timing) => timing.start.isBefore(now) && timing.end.isAfter(now)).firstOrNull;
@@ -49,10 +49,11 @@ class CurrentTimingTimer extends ConsumerWidget {
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text(
-                    'Осталось: $timeLeft',
-                    style: context.styles.ubuntuBold18.copyWith(color: Theme.of(context).primaryColorLight.withValues(alpha: 0.7)),
-                  ),
+                  if (timeLeft != null)
+                    Text(
+                      'Осталось: $timeLeft',
+                      style: context.styles.ubuntuBold18.copyWith(color: Theme.of(context).primaryColorLight.withValues(alpha: 0.7)),
+                    ),
                 ],
               ),
             ],

@@ -26,7 +26,7 @@ class ScheduleTilesBuilder {
     if (!isShowZamena) {
       return para.lesson!.map((final lesson) {
         return CourseTileRework(
-          placeReason: '',
+          placeReason: '1',
           searchType: SearchType.group,
           isSaturday: isSaturday,
           index: lesson.number,
@@ -39,7 +39,7 @@ class ScheduleTilesBuilder {
     if (zamenaFull != null) {
       return para.zamena!.map((final zamena) {
         return CourseTileRework(
-          placeReason: '',
+          placeReason: '2',
           searchType: SearchType.group,
           index: zamena.lessonTimingsID,
           obed: obed,
@@ -62,7 +62,7 @@ class ScheduleTilesBuilder {
 
     if (zamena == null && lesson != null) {
       tiles.add(CourseTileRework(
-        placeReason: '',
+        placeReason: '3',
         isSaturday: isSaturday,
         searchType: SearchType.group,
         obed: obed,
@@ -83,7 +83,7 @@ class ScheduleTilesBuilder {
             searchType: SearchType.group,
             obed: obed,
             index: zamena!.lessonTimingsID,
-            placeReason: '',
+            placeReason: '4',
             lesson: Lesson(
             id: -1,
             number: lesson.number,
@@ -97,7 +97,7 @@ class ScheduleTilesBuilder {
         
       } else {
         tiles.add(CourseTileRework(
-          placeReason: '',
+          placeReason: '5',
           searchType: SearchType.group,
           index: zamena!.lessonTimingsID,
           isSaturday: isSaturday,
@@ -284,7 +284,6 @@ class ScheduleTilesBuilder {
 
         } else {
           // Если это просто замена другой группы
-
           if (para2.teacherID != teacherId) {
             final Lesson? lesson = para.lesson!.where((final Lesson lesson) => lesson.group == para2.groupID).firstOrNull;
 
@@ -326,7 +325,7 @@ class ScheduleTilesBuilder {
 
         if (
           para.zamenaFull != null
-          || para.zamenaFull!.isNotEmpty
+          && para.zamenaFull!.isNotEmpty
         ) {
           if (para.zamenaFull!.any((final ZamenaFull zamenafull) => zamenafull.group == lesson.group)) {
 
@@ -346,14 +345,35 @@ class ScheduleTilesBuilder {
               obed: obed
             ));
           } else {
-            if (para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false) {
-              tiles.add(EmptyCourseTileRework(
-                placeReason: '3',
+            if (
+              para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false
+            ) {
+
+              if (para.zamena?.any((final Zamena zamena) => zamena.teacherID == teacherId) ?? false) {
+
+              } else {
+                tiles.add(EmptyCourseTileRework(
+                  placeReason: '3',
+                  searchType: SearchType.teacher,
+                  lesson: lesson,
+                  index: lesson.number,
+                  obed: obed
+                ));
+              }
+              
+            } else {
+              tiles.add(CourseTileRework(
+                placeReason: 'para on another zamenas',
                 searchType: SearchType.teacher,
-                lesson: lesson,
                 index: lesson.number,
-                obed: obed
+                isSaturday: isSaturday,
+                lesson: lesson,
+                obed: obed,
               ));
+            }
+            
+            if (para.zamena?.any((final Zamena zamena) => zamena.groupID != lesson.group && lesson.teacher == teacherId) ?? false) {
+              
             }
           }
 

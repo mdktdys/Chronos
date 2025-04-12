@@ -7,12 +7,17 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
+import 'package:zameny_flutter/models/group_model.dart';
+import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/timer_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
@@ -80,30 +85,86 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
 
+    if (provider.value == null) {
+      return null;
+    }
+
     final List<LessonTimings> timings = provider.value!;
 
     if (isSaturday) {
-      final LessonTimings? timing = timings.where((final element) =>
-        element.start.isBefore(current) &&
-        element.saturdayEnd.isAfter(current),)
-        .firstOrNull;
+      final LessonTimings? timing = timings.where((final element) => element.saturdayStart.isBefore(current) && element.saturdayEnd.isAfter(current)).firstOrNull;
       return timing;
     } else {
       if (obed) {
-        final LessonTimings? timing = timings
-          .where((final element) =>
-          element.obedStart.isBefore(current) &&
-          element.obedEnd.isAfter(current),)
-          .firstOrNull;
+        final LessonTimings? timing = timings.where((final element) => element.obedStart.isBefore(current) && element.obedEnd.isAfter(current)).firstOrNull;
         return timing;
       } else {
-        final LessonTimings? timing = timings
-          .where((final element) =>
-          element.start.isBefore(current) && element.end.isAfter(current),)
-          .firstOrNull;
+        final LessonTimings? timing = timings.where((final element) => element.start.isBefore(current) && element.end.isAfter(current)).firstOrNull;
         return timing;
       }
     }
+  }
+
+  Widget? _buildLessonTile({
+    required final SearchItem item,
+    required final DaySchedule daySchedule,
+    required final int number,
+  }) {
+    final ScheduleSettingsNotifier scheduleSettings = ref.watch(scheduleSettingsProvider);
+    final ScheduleTilesBuilder builder = ref.watch(scheduleTilesBuilderProvider);
+    List<Widget> tiles = [];
+
+    final bool isSaturday = daySchedule.date.weekday == 6;
+    final bool isShowZamena = scheduleSettings.isShowZamena;
+    final bool obedSwitch = scheduleSettings.obed;
+
+    final Paras? para = daySchedule.paras.where((final Paras para) => para.number == number).firstOrNull;
+    
+    if (para == null) {
+      return null;
+    }
+
+    if (item is Teacher) {
+      tiles = builder.buildTeacherTiles(
+        teacherId: item.id,
+        isSaturday: isSaturday,
+        isShowZamena: isShowZamena,
+        obed: obedSwitch,
+        para: para,
+      );
+    }
+
+    if (item is Group) {
+      tiles = builder.buildGroupTiles(
+        isSaturday: isSaturday,
+        zamenaFull: daySchedule.zamenaFull,
+        isShowZamena: isShowZamena,
+        obed: obedSwitch,
+        para: para,
+      );
+    }
+
+    return Column(
+      children: tiles.map((final Widget tile) {
+        Widget wrappedTile = tile;
+        
+        if (tile is CourseTileRework) {
+          wrappedTile = Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Container(
+              padding: const EdgeInsets.all(8),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+              ),
+              child: tile,
+            ),
+          );
+        }
+
+        return wrappedTile;
+      }).toList()
+    );
   }
 
   @override
@@ -116,31 +177,61 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final bool isSaturday = current.weekday == 6;
     Widget? child;
 
-    if (schedule != null) {
-      List<Paras> paras = schedule.paras.where((final para) => para.number == timing?.number).toList();
-      if (paras.isNotEmpty) {
-        child = Column(
-          children: paras.map((final para) {
-            if (
-              para.lesson != null
-              && para.lesson!.isNotEmpty
-            ) {
-              return CourseTileRework(
-                placeReason: 'timer',
-                searchType: item?.type ?? SearchType.group,
-                lesson: para.lesson!.first,
-                isSaturday: isSaturday,
-                index: para.number!,
-              );
-            }
+    //TODO REWORK FOR TEACHER
+    if (
+      schedule != null
+      && timing != null
+    ) {
+      child = _buildLessonTile(
+        number: timing.number,
+        daySchedule: schedule,
+        item: item!,
+      );
 
-            if (para.zamena != null) {
-              
-            }
-            return const SizedBox();
-          }).toList()
-        );
-      }
+      // List<Paras> paras = schedule.paras.where((final para) => para.number == timing?.number).toList();
+      // if (paras.isNotEmpty) {
+      //   child = Column(
+      //     children: paras.map((final para) {
+      //       if (
+      //         para.lesson != null
+      //         && para.lesson!.isNotEmpty
+      //       ) {
+      //         return CourseTileRework(
+      //           placeReason: 'timer',
+      //           searchType: item?.type ?? SearchType.group,
+      //           lesson: para.lesson!.first,
+      //           isSaturday: isSaturday,
+      //           index: para.number!,
+      //         );
+      //       }
+
+      //       if (
+      //         para.zamena != null
+      //         && para.zamena!.isNotEmpty
+      //       ) {
+      //         final Zamena zamena = para.zamena!.first;
+
+      //         return CourseTileRework(
+      //           placeReason: 'timer zamena',
+      //           searchType: item?.type ?? SearchType.group,
+      //           lesson: Lesson(
+      //             id: zamena.id,
+      //             number: zamena.lessonTimingsID,
+      //             group: zamena.groupID,
+      //             date: zamena.date,
+      //             course: zamena.courseID,
+      //             teacher: zamena.teacherID,
+      //             cabinet: zamena.cabinetID
+      //           ),
+      //           isSaturday: isSaturday,
+      //           index: para.number!,
+      //         );
+      //       }
+
+      //       return const SizedBox();
+      //     }).toList()
+      //   );
+      // }
     }
 
     return Column(
@@ -160,8 +251,8 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
                     style: context.styles.ubuntuPrimaryBold24,
                   ),
                   if (child != null) ... [
-                    const SizedBox(height: 5),
-                    CourseTileReworkedBlank(child: child)
+                    // const SizedBox(height: 5),
+                    child
                   ]
                 ],
               ),
