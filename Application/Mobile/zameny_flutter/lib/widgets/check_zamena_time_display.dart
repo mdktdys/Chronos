@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
+
 class CheckZamenaTimeDisplay extends StatelessWidget {
   final bool refreshing;
   final DateTime time;
@@ -18,7 +20,7 @@ class CheckZamenaTimeDisplay extends StatelessWidget {
         Row(
           children: [
             Text(
-              '${time.hour}:${time.minute}',
+              time.hhmm(),
               style: TextStyle(
                 fontFamily: 'Ubuntu',
                 color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6),
