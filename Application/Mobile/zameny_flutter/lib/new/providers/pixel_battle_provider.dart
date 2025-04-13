@@ -7,11 +7,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-final pixelProvider = StateNotifierProvider<PixelNotifier, Map<String, Color>>((final ref) {
+final pixelProvider = StateNotifierProvider<PixelNotifier, Map<Offset, Color>>((final ref) {
   return PixelNotifier();
 });
 
-class PixelNotifier extends StateNotifier<Map<String, Color>> {
+class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
   PixelNotifier() : super({}) {
     _init();
   }
@@ -23,15 +23,15 @@ class PixelNotifier extends StateNotifier<Map<String, Color>> {
 
   Future<void> _init() async {
     await _fetchPixels();
-    _subscribeToPixels();
+    // _subscribeToPixels();
   }
 
   Future<void> _fetchPixels() async {
-    final response = await supabase.from('pixels').select();
+    final response = await supabase.from('pixels').select('x,y,color').order('id');
 
     state = {
       for (var item in response)
-        '${item['x']}_${item['y']}': Color(_hexToColor(item['color']))
+        Offset(item['x'],item['y']): Color(_hexToColor(item['color']))
     };
   }
 
@@ -51,16 +51,14 @@ class PixelNotifier extends StateNotifier<Map<String, Color>> {
       callback: (final PostgresChangePayload payload) {
         log(payload.toString());
         final Map<String, dynamic> data = payload.newRecord;
-        final updatedState = Map<String, Color>.from(state);
-        updatedState['${data['x']}_${data['y']}'] = Color(_hexToColor(data['color']));
+        final updatedState = Map<Offset, Color>.from(state);
+        updatedState[Offset(data['x'],data['y'])] = Color(_hexToColor(data['color']));
         state = updatedState;
       }
     ).subscribe();
   }
 
   Future<void> placePixel(final Offset position, final double pixelSize) async {
-    // final x = (position.dx / pixelSize).floor();
-    // final y = (position.dy / pixelSize).floor();
 
     if (selectedColor == null) {
       return;

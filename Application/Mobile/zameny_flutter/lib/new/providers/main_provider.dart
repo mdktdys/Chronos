@@ -24,8 +24,7 @@ class RiverPodMainProvider extends ChangeNotifier {
   bool falling = true;
 
   int currentPage = 1;
-  // bool get pageViewScrollEnabled => currentPage != 3;
-  bool get pageViewScrollEnabled => true;
+  bool get pageViewScrollEnabled => currentPage != 4;
 
   void setPage(final int index) {
     currentPage = index;

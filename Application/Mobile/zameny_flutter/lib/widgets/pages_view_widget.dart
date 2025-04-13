@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repaint/repaint.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/views/schedule_screen.dart';
 import 'package:zameny_flutter/modules/settings/settings_screen.dart';
 import 'package:zameny_flutter/modules/timetable/time_table_screen.dart';
@@ -59,8 +60,9 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((final timeStamp) {
+      final width = MediaQuery.of(context).size.width;
       _transformationController.value = Matrix4.identity();
-      _transformationController.value.translate(pixelSize * gridSize / 2);
+      _transformationController.value.translate((width - gridSize * pixelSize) / 2);
     });
   }
 
@@ -100,13 +102,28 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
             ),
           ),
         ),
+        // Padding(
+        //   padding: const EdgeInsets.all(20),
+        //   child: Align(
+        //     alignment: Alignment.topCenter,
+        //     child: ConstrainedBox(
+        //       constraints: const BoxConstraints(maxWidth: 500),
+        //       child: const PaletteWidget(),
+        //     ),
+        //   ),
+        // ),
         Padding(
           padding: const EdgeInsets.all(20),
           child: Align(
             alignment: Alignment.topCenter,
             child: ConstrainedBox(
               constraints: const BoxConstraints(maxWidth: 500),
-              child: const PaletteWidget(),
+              child: BaseBlank(
+                child: Text(
+                  'Сейчас недоступно',
+                  style: context.styles.ubuntu16,
+                ),
+              ),
             ),
           ),
         ),
@@ -115,6 +132,8 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
   }
   
   void _onCellClicked(final Offset position) {
+    return;
+
     if (position.dx < 0 || position.dy < 0) {
       return;
     }
@@ -205,7 +224,7 @@ class ColorBlank extends StatelessWidget {
 class PixelPainter implements RePainter {
   final double width;
   final double height;
-  final Map<String, Color> pixels;
+  final Map<Offset, Color> pixels;
   final double pixelSize;
   final int gridSize;
   final Offset? selectedCell;
@@ -315,9 +334,8 @@ class PixelPainter implements RePainter {
     final paint = Paint();
 
     pixels.forEach((final key, final color) {
-      final parts = key.split('_');
-      final x = int.parse(parts[0]);
-      final y = int.parse(parts[1]);
+      final x = key.dx;
+      final y = key.dy;
 
       paint.color = color;
       context.canvas.drawRect(
