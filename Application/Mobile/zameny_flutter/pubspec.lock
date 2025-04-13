@@ -952,6 +952,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.2"
+  repaint:
+    dependency: "direct main"
+    description:
+      name: repaint
+      sha256: "733b16daf86b7f84eec670f02788fc40bd3cdf261a01f9aa5a854b85f987cea6"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.1.1"
   retry:
     dependency: transitive
     description:

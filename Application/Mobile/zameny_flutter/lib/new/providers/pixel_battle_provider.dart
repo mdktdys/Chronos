@@ -19,6 +19,7 @@ class PixelNotifier extends StateNotifier<Map<String, Color>> {
   final SupabaseClient supabase = Supabase.instance.client;
   late final RealtimeChannel _subscription;
   Offset? selectedCell;
+  Color? selectedColor;
 
   Future<void> _init() async {
     await _fetchPixels();
@@ -38,7 +39,7 @@ class PixelNotifier extends StateNotifier<Map<String, Color>> {
     final x = (position.dx / pixelSize).floor();
     final y = (position.dy / pixelSize).floor();
     selectedCell = Offset(x.toDouble(), y.toDouble());
-    // Принудительно обновляем состояние, чтобы перерисовать канвас
+
     state = Map.from(state);
   }
 
@@ -58,14 +59,17 @@ class PixelNotifier extends StateNotifier<Map<String, Color>> {
   }
 
   Future<void> placePixel(final Offset position, final double pixelSize) async {
-    final x = (position.dx / pixelSize).floor();
-    final y = (position.dy / pixelSize).floor();
-    final selectedColor = Colors.primaries[math.Random().nextInt(Colors.primaries.length)];
+    // final x = (position.dx / pixelSize).floor();
+    // final y = (position.dy / pixelSize).floor();
+
+    if (selectedColor == null) {
+      return;
+    }
 
     await supabase.from('pixels').insert({
-      'x': x,
-      'y': y,
-      'color': _colorToHex(selectedColor),
+      'x': position.dx.toInt(),
+      'y': position.dy.toInt(),
+      'color': _colorToHex(selectedColor!),
     });
 
     // final updatedState = Map<String, Color>.from(state);
