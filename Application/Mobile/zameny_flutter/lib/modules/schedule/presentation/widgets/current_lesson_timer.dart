@@ -177,7 +177,6 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final bool isSaturday = current.weekday == 6;
     Widget? child;
 
-    //TODO REWORK FOR TEACHER
     if (
       schedule != null
       && timing != null
@@ -187,51 +186,6 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
         daySchedule: schedule,
         item: item!,
       );
-
-      // List<Paras> paras = schedule.paras.where((final para) => para.number == timing?.number).toList();
-      // if (paras.isNotEmpty) {
-      //   child = Column(
-      //     children: paras.map((final para) {
-      //       if (
-      //         para.lesson != null
-      //         && para.lesson!.isNotEmpty
-      //       ) {
-      //         return CourseTileRework(
-      //           placeReason: 'timer',
-      //           searchType: item?.type ?? SearchType.group,
-      //           lesson: para.lesson!.first,
-      //           isSaturday: isSaturday,
-      //           index: para.number!,
-      //         );
-      //       }
-
-      //       if (
-      //         para.zamena != null
-      //         && para.zamena!.isNotEmpty
-      //       ) {
-      //         final Zamena zamena = para.zamena!.first;
-
-      //         return CourseTileRework(
-      //           placeReason: 'timer zamena',
-      //           searchType: item?.type ?? SearchType.group,
-      //           lesson: Lesson(
-      //             id: zamena.id,
-      //             number: zamena.lessonTimingsID,
-      //             group: zamena.groupID,
-      //             date: zamena.date,
-      //             course: zamena.courseID,
-      //             teacher: zamena.teacherID,
-      //             cabinet: zamena.cabinetID
-      //           ),
-      //           isSaturday: isSaturday,
-      //           index: para.number!,
-      //         );
-      //       }
-
-      //       return const SizedBox();
-      //     }).toList()
-      //   );
-      // }
     }
 
     return Column(
@@ -250,10 +204,8 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
                     textAlign: TextAlign.start,
                     style: context.styles.ubuntuPrimaryBold24,
                   ),
-                  if (child != null) ... [
-                    // const SizedBox(height: 5),
+                  if (child != null)
                     child
-                  ]
                 ],
               ),
         ),

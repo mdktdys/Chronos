@@ -4,6 +4,7 @@ import 'package:go_router/go_router.dart';
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
 import 'package:zameny_flutter/modules/main_screen.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/widgets/pages_view_widget.dart';
 
 final routerProvider = Provider<GoRouter>((final ref) {
   return GoRouter(
@@ -25,6 +26,14 @@ final routerProvider = Provider<GoRouter>((final ref) {
 
           return MainScreen(page: pageIndex);
         },
+        routes: [
+          GoRoute(
+            path: 'pixel',
+            builder: (final context, final state) {
+              return const PixelBattleScreen();
+            },
+          )
+        ]
       ),
     ]
   );
