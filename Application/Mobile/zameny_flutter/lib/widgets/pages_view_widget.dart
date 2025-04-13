@@ -153,29 +153,49 @@ class _PaletteWidgetState extends ConsumerState<PaletteWidget> {
   @override
   Widget build(final BuildContext context) {
     final Color? selectedColor = ref.watch(pixelProvider.notifier).selectedColor;
-
+    
     return BaseBlank(
-      child: Expanded(
-        child: SingleChildScrollView(
-          scrollDirection: Axis.horizontal,
-          child: Row(
-            spacing: 10,
-            children: colors.map((final color) => Bounceable(
-              onTap: () {
-                ref.read(pixelProvider.notifier).selectedColor = color;
-                setState(() {});
-              },
-              child: AnimatedContainer(
-                duration: Delays.morphDuration,
-                width: 50 + (selectedColor == color ? 10 : 0),
-                height: 50 + (selectedColor == color ? 10 : 0),
-                decoration: BoxDecoration(
-                  color: color,
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ),
-            )).toList(),
-          ),
+      child: SingleChildScrollView(
+        scrollDirection: Axis.horizontal,
+        child: Row(
+          spacing: 10,
+          children: colors.map((final Color color) => ColorBlank(
+            selected: selectedColor != null && selectedColor == color,
+            color: color,
+            onClicked: () {
+              ref.read(pixelProvider.notifier).selectedColor = color;
+              setState(() {});
+            },
+          )).toList(),
+        ),
+      ),
+    );
+  }
+}
+
+class ColorBlank extends StatelessWidget {
+  final Color color;
+  final VoidCallback onClicked;
+  final bool selected;
+
+  const ColorBlank({
+    required this.onClicked,
+    required this.selected,
+    required this.color,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context) {
+    return Bounceable(
+      onTap: onClicked,
+      child: AnimatedContainer(
+        duration: Delays.morphDuration,
+        width: 50 + (selected ? 10 : 0),
+        height: 50 + (selected ? 10 : 0),
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(10),
         ),
       ),
     );
