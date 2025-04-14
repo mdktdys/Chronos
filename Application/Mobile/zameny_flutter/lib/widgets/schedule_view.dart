@@ -26,12 +26,16 @@ class ScheduleView extends ConsumerWidget {
         provider: scheduleProvider,
         fakeData: ScheduleNotifier.fake,
         error: (final o, final s) {
-          return const Text('data');
+          return const Text('Ошибка');
         },
         data: (final List<DaySchedule> data) {
-          final empty = data.every((final DaySchedule element) => element.paras.isEmpty);
-      
-          if (empty) {
+          final bool empty = data.every((final DaySchedule element) => element.paras.isEmpty);
+          final provider = ref.watch(scheduleProvider);
+
+          if (
+            empty &&
+            !provider.isLoading
+          ) {
             return const SizedBox.shrink();
           }
       
