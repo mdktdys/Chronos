@@ -39,7 +39,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
   bool get wantKeepAlive => true;
   late final ScrollController scrollController;
 
-    @override
+  @override
   void initState() {
     super.initState();
     scrollController = ScrollController();
@@ -75,7 +75,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 ),
                 const Row(
                   children: [
-                    Expanded(child: CurrentTimingTimer()),
+                    Expanded(
+                      child: CurrentTimingTimer()
+                    ),
                     ZamenaCheckTime(),
                   ],
                 ),

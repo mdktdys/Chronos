@@ -28,15 +28,8 @@ class TopBanner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Новое расписание и замены тут ',
+                'Новое расписание и замены тут 🌟',
                 style: context.styles.ubuntuWhite500,
-              ),
-              Text(
-                '❄️',
-                style: GoogleFonts.notoEmoji(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
               ),
               Text(
                 ' *тык*',

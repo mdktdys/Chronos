@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/zamena_timer_provider.dart';
 import 'package:zameny_flutter/widgets/check_zamena_time_display.dart';
 
@@ -48,7 +49,10 @@ class _ZamenaCheckTimeState extends ConsumerState<ZamenaCheckTime> {
         );
       },
       error: (final e, final o) {
-        return const Text('Ошибка');
+        return Text(
+          'Ошибка',
+          style: context.styles.ubuntu14,
+        );
       },
       loading: () {
         return const SizedBox.shrink();
