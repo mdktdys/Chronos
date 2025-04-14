@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,7 +17,7 @@ class TopBanner extends StatelessWidget {
       color: Colors.transparent,
       height: 30,
       child: Center(
-        child: GestureDetector(
+        child: Bounceable(
           onTap: () {
             try {
               launchUrl(Uri.parse('tg://resolve?domain=bot_uksivt'));

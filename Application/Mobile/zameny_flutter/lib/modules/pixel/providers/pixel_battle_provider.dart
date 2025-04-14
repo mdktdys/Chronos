@@ -29,7 +29,10 @@ class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
 
     state = {
       for (Map<String, dynamic> item in response)
-        Offset(item['x'],item['y']): Color(int.parse(item['color'].substring(1), radix: 16) + 0xFF000000)
+        Offset(
+          (item['x'] as int).toDouble(),
+          (item['y'] as int).toDouble()
+        ) : Color(int.parse(item['color'].substring(1), radix: 16) + 0xFF000000)
     };
   }
 
