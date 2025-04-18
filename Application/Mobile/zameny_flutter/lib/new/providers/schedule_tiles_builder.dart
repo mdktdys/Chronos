@@ -156,8 +156,10 @@ class ScheduleTilesBuilder {
       && para.lesson != null
     ) {
       for (Lesson para2 in para.lesson!) {
-
-        if (para.zamenaFull != null) { 
+        if (
+          para.zamenaFull != null
+          && para.zamenaFull!.isNotEmpty
+        ) { 
           final bool zamenaFull = para.zamenaFull!.any((final zamena) => zamena.group == para2.group);
 
           if (zamenaFull) {
@@ -248,7 +250,6 @@ class ScheduleTilesBuilder {
       && para.zamena!.isNotEmpty
     ) {
       for (Zamena para2 in para.zamena!) {
-
         // Если это замена обычной пары той же группы
         if (para.lesson!.any((final Lesson lesson) => lesson.group == para2.groupID)) {
 
@@ -385,6 +386,19 @@ class ScheduleTilesBuilder {
               lesson: lesson,
               index: lesson.number,
               obed: obed
+            ));
+
+            continue;
+          }
+
+          if (!(para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group) ?? true)) {
+            tiles.add(CourseTileRework(
+              placeReason: 'para with another zamena',
+              searchType: SearchType.teacher,
+              index: lesson.number,
+              isSaturday: isSaturday,
+              lesson: lesson,
+              obed: obed,
             ));
           }
         }

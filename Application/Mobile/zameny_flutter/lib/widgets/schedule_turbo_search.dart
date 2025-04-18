@@ -136,9 +136,10 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
         if (providers.any((final provider) => provider.isLoading))
           Padding(
             padding: const EdgeInsets.only(top: 8.0),
-            child: const Text(
+            child: Text(
               'Загружаю...',
               textAlign: TextAlign.center,
+              style: context.styles.ubuntu14,
             ).animate(
               autoPlay: true,
               onComplete: (final controller) {

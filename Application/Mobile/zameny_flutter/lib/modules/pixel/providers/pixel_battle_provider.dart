@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
-import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -12,14 +10,14 @@ final pixelProvider = StateNotifierProvider<PixelNotifier, Map<Offset, Color>>((
 });
 
 class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
-  PixelNotifier() : super({}) {
-    _init();
-  }
-
   final SupabaseClient supabase = Supabase.instance.client;
   late final RealtimeChannel _subscription;
   Offset? selectedCell;
   Color? selectedColor;
+
+  PixelNotifier() : super({}) {
+    _init();
+  }
 
   Future<void> _init() async {
     await _fetchPixels();
@@ -30,17 +28,12 @@ class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
     final response = await supabase.from('pixels').select('x,y,color').order('id');
 
     state = {
-      for (var item in response)
-        Offset(item['x'],item['y']): Color(_hexToColor(item['color']))
+      for (Map<String, dynamic> item in response)
+        Offset(
+          (item['x'] as int).toDouble(),
+          (item['y'] as int).toDouble()
+        ) : Color(int.parse(item['color'].substring(1), radix: 16) + 0xFF000000)
     };
-  }
-
-  void updateSelectedCell(final Offset position, final double pixelSize) {
-    final x = (position.dx / pixelSize).floor();
-    final y = (position.dy / pixelSize).floor();
-    selectedCell = Offset(x.toDouble(), y.toDouble());
-
-    state = Map.from(state);
   }
 
   void _subscribeToPixels() {
@@ -49,17 +42,15 @@ class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
       table: 'pixels',
       event: PostgresChangeEvent.all,
       callback: (final PostgresChangePayload payload) {
-        log(payload.toString());
         final Map<String, dynamic> data = payload.newRecord;
-        final updatedState = Map<Offset, Color>.from(state);
-        updatedState[Offset(data['x'],data['y'])] = Color(_hexToColor(data['color']));
+        final Map<Offset, Color> updatedState = Map<Offset, Color>.from(state);
+        updatedState[Offset(data['x'],data['y'])] = Color(int.parse(data['color'].substring(1), radix: 16) + 0xFF000000);
         state = updatedState;
       }
     ).subscribe();
   }
 
   Future<void> placePixel(final Offset position, final double pixelSize) async {
-
     if (selectedColor == null) {
       return;
     }
@@ -67,25 +58,22 @@ class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
     await supabase.from('pixels').insert({
       'x': position.dx.toInt(),
       'y': position.dy.toInt(),
-      'color': _colorToHex(selectedColor!),
+      'color': '#${selectedColor!.toARGB32().toRadixString(16).substring(2).toUpperCase()}',
     });
-
-    // final updatedState = Map<String, Color>.from(state);
-    // updatedState['${x}_$y'] = selectedColor;
-    // state = updatedState;
-  }
-
-  int _hexToColor(final String hex) {
-    return int.parse(hex.substring(1), radix: 16) + 0xFF000000;
-  }
-
-  String _colorToHex(final Color color) {
-    return '#${color.value.toRadixString(16).substring(2).toUpperCase()}';
   }
 
   @override
   void dispose() {
     _subscription.unsubscribe();
     super.dispose();
+  }
+
+  void updateSelectedCell(final Offset position, final double pixelSize) {
+    selectedCell = Offset(
+      (position.dx / pixelSize).floorToDouble(),
+      (position.dy / pixelSize).floorToDouble()
+    );
+
+    state = Map.from(state);
   }
 }

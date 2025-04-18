@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 
@@ -21,12 +22,15 @@ class Test extends ConsumerWidget {
       final empty = provider.value!.every((final DaySchedule element) => element.paras.isEmpty);
 
       if (empty) {
-        return const SliverFillRemaining(
-        hasScrollBody: false,
-        child: Center(
-          child: Text('Нет расписания')
-        ),
-      ); 
+        return SliverFillRemaining(
+          hasScrollBody: false,
+          child: Center(
+            child: Text(
+              'Нет расписания',
+              style: context.styles.ubuntu14,
+            )
+          ),
+        ); 
       }
       else {
         const SliverToBoxAdapter(child: SizedBox(height: 90,));

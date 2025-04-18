@@ -137,10 +137,11 @@ class DayScheduleHeader extends StatelessWidget {
                           child: Text(
                             'Сегодня',
                             style: TextStyle(
-                                color: Theme.of(context).canvasColor,
-                                fontSize: 12,
-                                fontFamily: 'Ubuntu',
-                                fontWeight: FontWeight.bold,),
+                              color: Theme.of(context).canvasColor,
+                              fontSize: 12,
+                              fontFamily: 'Ubuntu',
+                              fontWeight: FontWeight.bold,
+                            ),
                           ),
                         ),
                       ),

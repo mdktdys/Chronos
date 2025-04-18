@@ -14,26 +14,28 @@ class BottomNavigationItem extends ConsumerWidget {
   final String activeicon;
 
   const BottomNavigationItem({
+    required this.activeicon,
     required this.index,
     required this.onTap,
     required this.icon,
     required this.text,
-    required this.activeicon, 
     required this.enabled, 
     super.key,
   });
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final provider = ref.watch(mainProvider);
+    final RiverPodMainProvider provider = ref.watch(mainProvider);
+    final ThemeData theme = Theme.of(context);
+
     return Material(
       color: Colors.transparent,
       child: InkWell(
         radius: 20,
         enableFeedback: false,
         borderRadius: BorderRadius.circular(20),
-        highlightColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
-        splashColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.3),
+        highlightColor: theme.colorScheme.primary.withValues(alpha: 0.2),
+        splashColor: theme.colorScheme.primary.withValues(alpha: 0.3),
         onTap: () {
           if (enabled) {
             onTap.call(index);
@@ -52,9 +54,9 @@ class BottomNavigationItem extends ConsumerWidget {
               colorFilter: ColorFilter.mode(
                 enabled
                   ? provider.currentPage == index
-                      ? Theme.of(context).colorScheme.primary
-                      : Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4)
-                  : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                      ? theme.colorScheme.primary
+                      : theme.colorScheme.inverseSurface.withValues(alpha: 0.4)
+                  : theme.colorScheme.primary.withValues(alpha: 0.6),
                 BlendMode.srcIn,
               ),
             ),
