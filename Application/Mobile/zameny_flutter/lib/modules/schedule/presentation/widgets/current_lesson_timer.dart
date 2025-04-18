@@ -166,8 +166,8 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
 
   @override
   Widget build(final BuildContext context) {
-    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
     final SearchItem? item = ref.watch(searchItemProvider);
+    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
 
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
