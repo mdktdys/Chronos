@@ -17,7 +17,7 @@ class Button extends StatelessWidget {
       text: text,
       color: Theme.of(context).colorScheme.primary,
       onClicked: onClicked,
-      textStyle: context.styles.ubuntuWhite20,
+      textStyle: context.styles.ubuntu16.copyWith(color: Colors.white),
     );
   }
 

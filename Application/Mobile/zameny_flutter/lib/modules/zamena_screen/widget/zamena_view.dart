@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_group.dart';
@@ -30,9 +31,12 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
         fakeData: ZamenasNotifier.fake,
         data: (final (List<Zamena>,List<ZamenaFull>) data) {
           if (data.$1.isEmpty) {
-            return const Center(
-              key: ValueKey('noData'),
-              child: Text('Нет замен'),
+            return Center(
+              key: const ValueKey('noData'),
+              child: Text(
+                'Нет замен',
+                style: context.styles.ubuntu14,
+              ),
             );
           }
 

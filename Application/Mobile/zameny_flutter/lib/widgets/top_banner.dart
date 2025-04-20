@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -16,7 +17,7 @@ class TopBanner extends StatelessWidget {
       color: Colors.transparent,
       height: 30,
       child: Center(
-        child: GestureDetector(
+        child: Bounceable(
           onTap: () {
             try {
               launchUrl(Uri.parse('tg://resolve?domain=bot_uksivt'));
@@ -28,15 +29,8 @@ class TopBanner extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                'Новое расписание и замены тут ',
+                'Новое расписание и замены тут 🌟',
                 style: context.styles.ubuntuWhite500,
-              ),
-              Text(
-                '❄️',
-                style: GoogleFonts.notoEmoji(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                ),
               ),
               Text(
                 ' *тык*',
