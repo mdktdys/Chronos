@@ -19,8 +19,6 @@ import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart
 import 'package:zameny_flutter/new/providers/notifications_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/barrier_widget.dart';
-import 'package:zameny_flutter/widgets/base_blank_widget.dart';
-import 'package:zameny_flutter/widgets/modal_widget.dart';
 
 class SearchItemNotificationButton extends ConsumerWidget {
   final SearchItem? item;
@@ -41,49 +39,56 @@ class SearchItemNotificationButton extends ConsumerWidget {
     final AsyncValue<SubscribtionState> subscription = ref.watch(subsribtionProvider(item!));
     final provider = ref.read(subsribtionProvider(item!).notifier);
 
-    return subscription.when(
-      loading: () {
-        return const RefreshProgressIndicator();
-      },
-      error: (final e,final o) {
-        return const SizedBox.shrink();
-      },
-      data: (final data) {
-        bool isNotificationSubscribed = false;
-
-        if (data is SubscribtionSubscribed) {
-          isNotificationSubscribed = true;
-        } else if (data is SubscribtionNonSubscribed) {
-          isNotificationSubscribed = false;
+    return Bounceable(
+      hitTestBehavior: HitTestBehavior.translucent,
+      onTap: () async {
+        if (subscription.isLoading) {
+          return;
         }
 
-        return Material(
-          borderRadius: BorderRadius.circular(20),
-          child: InkWell(
-            borderRadius: BorderRadius.circular(20),
-            onTap: () async {
-              if (isNotificationSubscribed) {
-                await provider.onsubscribe();
-              } else {
-                await provider.subscribe();
-              }
-            },
-            child: Container(
-              decoration: BoxDecoration(
-                shape: BoxShape.circle, 
-                color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-              ),
-              padding: const EdgeInsets.all(8),
-              child: SvgPicture.asset(
-                isNotificationSubscribed
-                  ? Images.notificationBold
-                  : Images.notification,
-                colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
-              )
-            )
-          ),
-        );
+        if (subscription.value is SubscribtionSubscribed) {
+          await provider.onsubscribe();
+        } else {
+          await provider.subscribe();
+        }
       },
+      child: Builder(
+        builder: (final context) {
+          final bool isNotificationSubscribed = subscription.value is SubscribtionSubscribed;
+
+          return AnimatedSwitcher(
+            duration: Delays.morphDuration,
+            child: Row(
+              key: ValueKey(subscription.value),
+              spacing: 8,
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                if (subscription.isLoading)
+                  const SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: FittedBox(
+                      fit: BoxFit.scaleDown,
+                      child: RefreshProgressIndicator(
+                      ),
+                    ),
+                  ),
+                if (subscription.hasValue)
+                  SvgPicture.asset(
+                    isNotificationSubscribed ? Images.notificationBold : Images.notification,
+                    colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
+                    width: 24,
+                  ),
+                Text(
+                  subscription.isLoading ? 'Загружаю...' :
+                  (isNotificationSubscribed ? 'Отписаться от уведомлений' : 'Подписаться на уведомления'),
+                  textAlign: TextAlign.left,
+                )
+              ],
+            ),
+          );
+        }
+      ),
     );
   }
 }
@@ -122,65 +127,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             )
           ],
         ),
-        // Align(
-        //   alignment: Alignment.topRight,
-        //   child: Row(
-        //     mainAxisAlignment: MainAxisAlignment.end,
-        //     spacing: 8,
-        //     children: [
-        //       Material(
-        //         borderRadius: BorderRadius.circular(20),
-        //         child: InkWell(
-        //           borderRadius: BorderRadius.circular(20),
-        //           onTap: () {
-        //             ref.read(scheduleExportProvider).exportSchedule(context: context);
-        //           },
-        //           child: Container(
-        //             decoration: BoxDecoration(
-        //               shape: BoxShape.circle,
-        //               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-        //             ),
-        //             padding: const EdgeInsets.all(8),
-        //             child: SvgPicture.asset(
-        //               Images.export,
-        //               colorFilter: ColorFilter.mode(
-        //                 theme.colorScheme.primary,
-        //                 BlendMode.srcIn
-        //               ),
-        //             )
-        //           )
-        //         ),
-        //       ),
-        //       SearchItemNotificationButton(item: searchItem!),
-        //       Material(
-        //         borderRadius: BorderRadius.circular(20),
-        //         child: InkWell(
-        //           borderRadius: BorderRadius.circular(20),
-        //           onTap: () {
-        //             if (isSubscribed) {
-        //               ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem);
-        //             } else {
-        //               ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem);
-        //             }
-        //             setState(() {});
-        //           },
-        //           child: Container(
-        //             decoration: BoxDecoration(
-        //               shape: BoxShape.circle,
-        //               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-        //             ),
-        //             padding: const EdgeInsets.all(8),
-        //             child: SvgPicture.asset(
-        //               isSubscribed ? Images.heart : Images.heartOutlined,
-        //               colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
-        //             )
-        //           )
-        //         ),
-        //       ),
-        //     ],
-        //   ),
-        // )
-        // provider.searchType != SearchType.cabinet
         Align(
           alignment: Alignment.topRight,
           child: BlurDialog(
@@ -193,62 +139,66 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                   color: Colors.white.withValues(alpha: 0.15),
                 ),
               ),
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                spacing: 16,
-                children: [
-                  Bounceable(
-                    hitTestBehavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      if (isSubscribed) {
-                      ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem!);
-                      } else {
-                        ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem!);
-                      }
-                      setState(() {});
-                    },
-                    child: AnimatedSwitcher(
-                      duration: Delays.morphDuration,
+              child: AnimatedSize(
+                duration: Delays.morphDuration,
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  spacing: 16,
+                  children: [
+                    Bounceable(
+                      hitTestBehavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        if (isSubscribed) {
+                          ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem!);
+                        } else {
+                          ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem!);
+                        }
+                        setState(() {});
+                      },
+                      child: AnimatedSwitcher(
+                        duration: Delays.morphDuration,
+                        child: Row(
+                          key: ValueKey(isSubscribed),
+                          spacing: 8,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              isSubscribed ? Images.heart : Images.heartOutlined,
+                              colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                              width: 24,
+                            ),
+                            Text(
+                              isSubscribed ? 'Удалить из избранного' : 'Добавить в избранное'
+                            )
+                          ],
+                        ),
+                      ),
+                    ),
+                    SearchItemNotificationButton(item: searchItem!),
+                    Bounceable(
+                      hitTestBehavior: HitTestBehavior.translucent,
+                      onTap: () {
+                        close();
+                        ref.read(scheduleExportProvider).exportSchedule(context: context);
+                      },
                       child: Row(
-                        key: ValueKey(isSubscribed),
                         spacing: 8,
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(
-                            isSubscribed ? Images.heart : Images.heartOutlined,
-                            colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                            Images.export,
+                            colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
                             width: 24,
                           ),
-                          Text(
-                            isSubscribed ? 'Удалить из избранного' : 'Добавить в избранное'
+                          const Text(
+                            'Экспортировать расписание'
                           )
                         ],
                       ),
-                    ),
-                  ),
-                  Bounceable(
-                    hitTestBehavior: HitTestBehavior.translucent,
-                    onTap: () {
-                      close();
-                      ref.read(scheduleExportProvider).exportSchedule(context: context);
-                    },
-                    child: Row(
-                      spacing: 8,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        SvgPicture.asset(
-                          Images.export,
-                          colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
-                          width: 24,
-                        ),
-                        const Text(
-                          'Экспортировать расписание'
-                        )
-                      ],
-                    ),
-                  )
-                ],
+                    )
+                  ],
+                ),
               )
             )
           )
