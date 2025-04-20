@@ -64,7 +64,7 @@ dev_dependencies:
 
 flutter_native_splash:
   android: false
-  web: true
+  web: false
   color: "#121212"
   image: "assets/icon/whale_android.png"
   android_12:
