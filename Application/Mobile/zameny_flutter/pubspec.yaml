@@ -63,7 +63,7 @@ dev_dependencies:
   riverpod_lint: ^2.6.5
 
 flutter_native_splash:
-  android: false
+  android: true
   web: false
   color: "#121212"
   image: "assets/icon/whale_android.png"
