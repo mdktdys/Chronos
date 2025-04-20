@@ -1,8 +1,16 @@
+import 'dart:developer';
+import 'dart:ui';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import 'package:flutter_animate/flutter_animate.dart';
+import 'package:flutter_bounceable/flutter_bounceable.dart';
+import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
@@ -10,6 +18,9 @@ import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/providers/notifications_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/widgets/barrier_widget.dart';
+import 'package:zameny_flutter/widgets/base_blank_widget.dart';
+import 'package:zameny_flutter/widgets/modal_widget.dart';
 
 class SearchItemNotificationButton extends ConsumerWidget {
   final SearchItem? item;
@@ -111,161 +122,217 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
             )
           ],
         ),
+        // Align(
+        //   alignment: Alignment.topRight,
+        //   child: Row(
+        //     mainAxisAlignment: MainAxisAlignment.end,
+        //     spacing: 8,
+        //     children: [
+        //       Material(
+        //         borderRadius: BorderRadius.circular(20),
+        //         child: InkWell(
+        //           borderRadius: BorderRadius.circular(20),
+        //           onTap: () {
+        //             ref.read(scheduleExportProvider).exportSchedule(context: context);
+        //           },
+        //           child: Container(
+        //             decoration: BoxDecoration(
+        //               shape: BoxShape.circle,
+        //               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+        //             ),
+        //             padding: const EdgeInsets.all(8),
+        //             child: SvgPicture.asset(
+        //               Images.export,
+        //               colorFilter: ColorFilter.mode(
+        //                 theme.colorScheme.primary,
+        //                 BlendMode.srcIn
+        //               ),
+        //             )
+        //           )
+        //         ),
+        //       ),
+        //       SearchItemNotificationButton(item: searchItem!),
+        //       Material(
+        //         borderRadius: BorderRadius.circular(20),
+        //         child: InkWell(
+        //           borderRadius: BorderRadius.circular(20),
+        //           onTap: () {
+        //             if (isSubscribed) {
+        //               ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem);
+        //             } else {
+        //               ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem);
+        //             }
+        //             setState(() {});
+        //           },
+        //           child: Container(
+        //             decoration: BoxDecoration(
+        //               shape: BoxShape.circle,
+        //               color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
+        //             ),
+        //             padding: const EdgeInsets.all(8),
+        //             child: SvgPicture.asset(
+        //               isSubscribed ? Images.heart : Images.heartOutlined,
+        //               colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+        //             )
+        //           )
+        //         ),
+        //       ),
+        //     ],
+        //   ),
+        // )
+        // provider.searchType != SearchType.cabinet
         Align(
           alignment: Alignment.topRight,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.end,
-            spacing: 8,
-            children: [
-              Material(
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    ref.read(scheduleExportProvider).exportSchedule(context: context);
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
-                    ),
-                    padding: const EdgeInsets.all(8),
-                    child: SvgPicture.asset(
-                      Images.export,
-                      colorFilter: ColorFilter.mode(
-                        theme.colorScheme.primary,
-                        BlendMode.srcIn
+          child: BlurDialog(
+            key: ValueKey(searchItem),
+            popup: (final close) => Container(
+              padding: const EdgeInsets.all(14),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(
+                  color: Colors.white.withValues(alpha: 0.15),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                spacing: 16,
+                children: [
+                  Bounceable(
+                    hitTestBehavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      if (isSubscribed) {
+                      ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem!);
+                      } else {
+                        ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem!);
+                      }
+                      setState(() {});
+                    },
+                    child: AnimatedSwitcher(
+                      duration: Delays.morphDuration,
+                      child: Row(
+                        key: ValueKey(isSubscribed),
+                        spacing: 8,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          SvgPicture.asset(
+                            isSubscribed ? Images.heart : Images.heartOutlined,
+                            colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
+                            width: 24,
+                          ),
+                          Text(
+                            isSubscribed ? 'Удалить из избранного' : 'Добавить в избранное'
+                          )
+                        ],
                       ),
-                    )
-                  )
-                ),
-              ),
-              SearchItemNotificationButton(item: searchItem!),
-              Material(
-                borderRadius: BorderRadius.circular(20),
-                child: InkWell(
-                  borderRadius: BorderRadius.circular(20),
-                  onTap: () {
-                    if (isSubscribed) {
-                      ref.read(favoriteSearchItemsProvider).remove(searchItem: searchItem);
-                    } else {
-                      ref.read(favoriteSearchItemsProvider).add(searchItem: searchItem);
-                    }
-                    setState(() {});
-                  },
-                  child: Container(
-                    decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: Theme.of(context).colorScheme.onSurface.withValues(alpha: 0.1),
                     ),
-                    padding: const EdgeInsets.all(8),
-                    child: SvgPicture.asset(
-                      isSubscribed ? Images.heart : Images.heartOutlined,
-                      colorFilter: const ColorFilter.mode(Colors.redAccent, BlendMode.srcIn),
-                    )
+                  ),
+                  Bounceable(
+                    hitTestBehavior: HitTestBehavior.translucent,
+                    onTap: () {
+                      close();
+                      ref.read(scheduleExportProvider).exportSchedule(context: context);
+                    },
+                    child: Row(
+                      spacing: 8,
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        SvgPicture.asset(
+                          Images.export,
+                          colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
+                          width: 24,
+                        ),
+                        const Text(
+                          'Экспортировать расписание'
+                        )
+                      ],
+                    ),
                   )
-                ),
-              ),
-            ],
-          ),
+                ],
+              )
+            )
+          )
         )
-        // provider.searchType != SearchType.cabinet
-        //     ? Align(
-        //         alignment: Alignment.topRight,
-        //         child: Modal(
-        //           visible: opened,
-        //           modal: Dialog(
-        //             alignment: Alignment.topRight,
-        //             child: Container(
-        //                 padding: const EdgeInsets.all(12),
-        //                 decoration: BoxDecoration(
-        //                     borderRadius: BorderRadius.circular(26),
-        //                     border: Border.all(
-        //                         color: Colors.white.withValues(alpha: 0.15),),),
-        //                 child:
-        //                     Column(mainAxisSize: MainAxisSize.min, children: [
-        //                   BlocBuilder<ExportBloc, ExportState>(
-        //                       bloc: exportBloc,
-        //                       builder: (final context, final state) {
-        //                         return AnimatedSwitcher(
-        //                           duration: const Duration(milliseconds: 150),
-        //                           child: Builder(
-        //                               key: ValueKey<String>(state.toString()),
-        //                               builder: (final context) {
-        //                                 if (state is ExportFailed) {
-        //                                   return SizedBox(
-        //                                     height: 30,
-        //                                     child: Row(
-        //                                       mainAxisSize: MainAxisSize.min,
-        //                                       children: [
-        //                                         const Icon(Icons.warning),
-        //                                         const SizedBox(
-        //                                           width: 5,
-        //                                         ),
-        //                                         Text(
-        //                                           state.reason,
-        //                                           style: context.styles.ubuntu.copyWith(color: Colors.red),
-        //                                         ),
-        //                                       ],
-        //                                     ),
-        //                                   );
-        //                                 }
-        //                                 if (state is ExportLoading) {
-        //                                   return SizedBox(
-        //                                     height: 30,
-        //                                     width: 30,
-        //                                     child: Center(
-        //                                         child:
-        //                                             CircularProgressIndicator(
-        //                                       color: Theme.of(context)
-        //                                           .colorScheme
-        //                                           .primary,
-        //                                     ),),
-        //                                   );
-        //                                 }
-        //                                 if (state is ExportReady) {
-        //                                   return GestureDetector(
-        //                                     onTap: () async {
-        //                                       exportBloc.add(ExportStart(context: context, ref: ref,),);
-        //                                     },
-        //                                     child: SizedBox(
-        //                                       height: 30,
-        //                                       child: Row(
-        //                                         mainAxisSize: MainAxisSize.min,
-        //                                         children: [
-        //                                           const Icon(Icons.image),
-        //                                           const SizedBox(
-        //                                             width: 5,
-        //                                           ),
-        //                                           Text(
-        //                                             'Экспортировать расписание',
-        //                                             style: context.styles.ubuntuInverseSurface,
-        //                                           ),
-        //                                         ],
-        //                                       ),
-        //                                     ),
-        //                                   );
-        //                                 }
-        //                                 return const SizedBox.shrink();
-        //                               },),
-        //                         );
-        //                       },),
-        //                 ],),),
-        //           ),
-        //           onClose: () => setState(() => opened = false),
-        //           child: IconButton(
-        //             icon: const Icon(
-        //               Icons.more_vert,
-        //               color: Colors.white,
-        //             ),
-        //             onPressed: () {
-        //               setState(() => opened = true);
-        //             },
-        //           ),
-        //         ),
-        //       )
-        //     : const SizedBox.shrink(),
       ],
+    );
+  }
+}
+
+class BlurDialog extends StatefulWidget {
+  final Widget Function(Function) popup;
+
+  const BlurDialog({
+    required this.popup,
+    super.key
+  });
+
+  @override
+  State<BlurDialog> createState() => _BlurDialogState();
+}
+
+class _BlurDialogState extends State<BlurDialog> with SingleTickerProviderStateMixin {
+  late final AnimationController controller;
+  bool opened = false;
+
+  @override
+  void initState() {
+    controller = AnimationController(vsync: this, value: 0, duration: Delays.morphDuration);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
+  }
+
+  Future<void> _onClose() async {
+    setState(() => opened = false);
+    controller.reverse();
+    opened = false;
+  }
+
+  @override
+  Widget build(final BuildContext context) {
+    return Barrier(
+      onClose: _onClose,
+      visible: opened,
+      child: PortalTarget(
+        visible: opened,
+        closeDuration: const Duration(seconds: 1),
+        anchor: const Aligned(
+          follower: Alignment.topRight,
+          target: Alignment.bottomLeft,
+        ),
+        portalFollower: Animate(
+          controller: controller,
+          value: 0.05,
+          effects: const [
+            FadeEffect(
+              duration: Duration(milliseconds: 250)
+            ),
+            ScaleEffect(
+              duration: Duration(milliseconds: 250),
+              alignment: Alignment.topRight,
+              curve: Curves.fastLinearToSlowEaseIn,
+            ),
+          ],
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
+            child: widget.popup(_onClose)
+          ),
+        ),
+        child: IconButton(
+          icon: const Icon(
+            Icons.more_vert,
+            color: Colors.white,
+          ),
+          onPressed: () {
+            controller.forward().orCancel;
+            setState(() => opened = true);
+          },
+        ),
+      ),
     );
   }
 }

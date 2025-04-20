@@ -5,7 +5,10 @@ import 'package:flutter_portal/flutter_portal.dart';
 
 class Barrier extends StatelessWidget {
   const Barrier({
-    required this.onClose, required this.visible, required this.child, super.key,
+    required this.onClose,
+    required this.visible,
+    required this.child,
+    super.key,
   });
 
   final Widget child;
@@ -20,7 +23,8 @@ class Barrier extends StatelessWidget {
       portalFollower: GestureDetector(
         behavior: HitTestBehavior.opaque,
         onTap: onClose,
-        child: const SizedBox(),),
+        child: const SizedBox(),
+      ),
       child: child,
     );
   }

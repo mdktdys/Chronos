@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
@@ -6,9 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 
-import 'package:zameny_flutter/widgets/barrier_widget.dart';
-
 class Modal extends StatefulWidget {
+  
   const Modal({
     required this.visible,
     required this.onClose,
@@ -45,27 +43,25 @@ class _ModalState extends State<Modal> with SingleTickerProviderStateMixin {
   Widget build(final BuildContext context) {
     return PortalTarget(
       visible: widget.visible,
-      closeDuration: const Duration(milliseconds: 150),
+      closeDuration: const Duration(seconds: 1),
       anchor: const Aligned(
-      follower: Alignment.topRight, target: Alignment.topRight),
-      portalFollower: GestureDetector(
-        behavior: HitTestBehavior.translucent,
-        onTap: () => widget.onClose(),
+        follower: Alignment.topRight,
+        target: Alignment.bottomLeft,
+      ),
+      portalFollower: Animate(
+        controller: controller,
+        value: 0.05,
+        effects: const [
+          FadeEffect(duration: Duration(milliseconds: 250)),
+          ScaleEffect(
+            duration: Duration(milliseconds: 250),
+            alignment: Alignment.topRight,
+            curve: Curves.fastLinearToSlowEaseIn,
+          ),
+        ],
         child: BackdropFilter(
           filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-          child: Animate(
-            controller: controller,
-            value: 0.05,
-            effects: const [
-              FadeEffect(duration: Duration(milliseconds: 250)),
-              ScaleEffect(
-                duration: Duration(milliseconds: 250),
-                alignment: Alignment.topRight,
-                curve: Curves.fastLinearToSlowEaseIn,
-              ),
-            ],
-            child: widget.modal,
-          ),
+          child: widget.modal,
         ),
       ),
       child: widget.child,
