@@ -117,6 +117,12 @@ class CustomTextStyles extends ThemeExtension<CustomTextStyles> {
     color: theme.colorScheme.inverseSurface,
   );
 
+  late final TextStyle ubuntuInverseSurface14 = TextStyle(
+    fontFamily: 'Ubuntu',
+    fontSize: 14,
+    color: theme.colorScheme.inverseSurface,
+  );
+
   late final TextStyle ubuntuInverseSurface16 = TextStyle(
     fontFamily: 'Ubuntu',
     fontSize: 16,

@@ -57,4 +57,8 @@ extension DateTimeExtension on DateTime {
   String toyyyymmdd() {
     return DateFormat('y-MM-dd').format(this);
   }
+
+  String toddMM() {
+    return "${DateFormat('dd.MM').format(this)} (${weekdayName()})";
+  }
 }

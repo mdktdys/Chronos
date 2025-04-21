@@ -242,7 +242,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
                     : Theme.of(context).primaryColorLight.withValues(alpha: 0.7)
                 ),
               ) : const SizedBox(),
-            !isSaturday
+            !isSaturday && inBounds
               ? Row(
                   children: [
                     SizedBox(

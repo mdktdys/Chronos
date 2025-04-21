@@ -11,6 +11,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
@@ -81,6 +82,7 @@ class SearchItemNotificationButton extends ConsumerWidget {
                   subscription.isLoading ? 'Загружаю...' :
                   (isNotificationSubscribed ? 'Отписаться от уведомлений' : 'Подписаться на уведомления'),
                   textAlign: TextAlign.left,
+                  style: context.styles.ubuntuInverseSurface14,
                 )
               ],
             ),
@@ -167,7 +169,8 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                               width: 24,
                             ),
                             Text(
-                              isSubscribed ? 'Удалить из избранного' : 'Добавить в избранное'
+                              isSubscribed ? 'Удалить из избранного' : 'Добавить в избранное',
+                              style: context.styles.ubuntuInverseSurface14,
                             )
                           ],
                         ),
@@ -189,12 +192,39 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                             colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
                             width: 24,
                           ),
-                          const Text(
-                            'Экспортировать расписание'
+                          Text(
+                            'Экспортировать расписание',
+                            style: context.styles.ubuntuInverseSurface14,
                           )
                         ],
                       ),
-                    )
+                    ),
+                    if (searchItem is Teacher)
+                      Bounceable(
+                        hitTestBehavior: HitTestBehavior.translucent,
+                        onTap: () {
+                          // close();
+                          ref.read(scheduleExportProvider).exportTeacherStats(
+                            teacher: searchItem,
+                            context: context
+                          );
+                        },
+                        child: Row(
+                          spacing: 8,
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            SvgPicture.asset(
+                              Images.export,
+                              colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
+                              width: 24,
+                            ),
+                            Text(
+                              'Статистика [Нестабильно]',
+                              style: context.styles.ubuntuInverseSurface14,
+                            )
+                          ],
+                        ),
+                      )
                   ],
                 ),
               )

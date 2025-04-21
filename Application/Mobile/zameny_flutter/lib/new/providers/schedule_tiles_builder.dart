@@ -8,12 +8,14 @@ import 'package:zameny_flutter/models/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 
 final scheduleTilesBuilderProvider = Provider<ScheduleTilesBuilder>((final ref) {
   return ScheduleTilesBuilder();
 });
 
 class ScheduleTilesBuilder {
+  // данил я не знаю под чем ты это писал но не трогай
   List<Widget> buildGroupTiles({
     required final ZamenaFull? zamenaFull,
     required final bool isShowZamena,
@@ -400,6 +402,343 @@ class ScheduleTilesBuilder {
               lesson: lesson,
               obed: obed,
             ));
+          }
+        }
+      }
+    }
+
+    return tiles;
+  }
+
+  List<ParaData> buildParaData({
+    required final Paras para,
+    required final DateTime date,
+    required final int teacherId,
+  }) {
+    List<ParaData> tiles = [];
+
+    // Если нет замен, то ставим стандартное расписание, без учета пар с полной заменой
+    if (
+      (para.zamena == null
+      || (para.zamena!.isEmpty))
+      && para.lesson != null
+    ) {
+      for (Lesson para2 in para.lesson!) {
+        if (
+          para.zamenaFull != null
+          && para.zamenaFull!.isNotEmpty
+        ) { 
+          final bool zamenaFull = para.zamenaFull!.any((final zamena) => zamena.group == para2.group);
+
+          if (zamenaFull) {
+            // tiles.add(EmptyCourseTileRework(
+            //   placeReason: '1',
+            //   searchType: SearchType.teacher,
+            //   lesson: para2,
+            //   index: para2.number,
+            //   obed: obed
+            // ));
+            continue;
+          }
+        }
+        tiles.add(ParaData(
+          cost: 2,
+          lesson: para2,
+          isZamena: false,
+        ));
+        // tiles.add(
+        //   CourseTileRework(
+        //     placeReason: 'para',
+        //     searchType: SearchType.teacher,
+        //     index: para2.number,
+        //     isSaturday: isSaturday,
+        //     lesson: para2,
+        //     obed: obed,
+        //   )
+        // );
+      }
+    }
+
+    // Если по стандартному расписанию пары нет, то есть замена
+    if (
+      para.lesson == null
+      && para.zamena != null
+      && para.zamena!.isNotEmpty
+    ) {
+      for (Zamena para2 in para.zamena!) {
+        tiles.add(ParaData(
+          cost: 2,
+          lesson: Lesson(
+            id: -1,
+            number: para2.lessonTimingsID,
+            group: para2.groupID,
+            date: date,
+            course: para2.courseID,
+            teacher: para2.teacherID,
+            cabinet: para2.cabinetID
+          ),
+          isZamena: true,
+        ));
+        // tiles.add(CourseTileRework(
+        //   placeReason: 'zamena without para',
+        //   searchType: SearchType.teacher,
+        //   isZamena: true,
+        //   isSaturday: isSaturday,
+        //   obed: obed,
+        //   index: para2.lessonTimingsID,
+        //   lesson: Lesson(
+        //     id: -1,
+        //     number: para2.lessonTimingsID,
+        //     group: para2.groupID,
+        //     date: para2.date,
+        //     course: para2.courseID,
+        //     teacher: para2.teacherID,
+        //     cabinet: para2.cabinetID
+        //   ),
+        // ));
+      }
+    }
+
+    if (
+      para.lesson != null
+      && para.lesson!.isEmpty
+      && para.zamena != null
+      && para.zamena!.isNotEmpty
+    ) {
+      for (Zamena para2 in para.zamena!) {
+
+        if (para2.teacherID == teacherId) {
+          tiles.add(ParaData(
+            cost: 2,
+            isZamena: true,
+            lesson: Lesson(
+              id: -1,
+              number: para2.lessonTimingsID,
+              group: para2.groupID,
+              date: date,
+              course: para2.courseID,
+              teacher: para2.teacherID,
+              cabinet: para2.cabinetID,
+            ),
+          ));
+        //   tiles.add(CourseTileRework(
+        //   placeReason: 'zamena without para',
+        //   searchType: SearchType.teacher,
+        //   isZamena: true,
+        //   isSaturday: isSaturday,
+        //   obed: obed,
+        //   index: para2.lessonTimingsID,
+        //   lesson: Lesson(
+        //     id: -1,
+        //     number: para2.lessonTimingsID,
+        //     group: para2.groupID,
+        //     date: para2.date,
+        //     course: para2.courseID,
+        //     teacher: para2.teacherID,
+        //     cabinet: para2.cabinetID
+        //   ),
+        // ));
+        }
+      }
+    }
+
+    // Если есть и стандартное расписание и замена
+    if (
+      para.lesson != null
+      && para.lesson!.isNotEmpty
+      && para.zamena != null
+      && para.zamena!.isNotEmpty
+    ) {
+      for (Zamena para2 in para.zamena!) {
+        // Если это замена обычной пары той же группы
+        if (para.lesson!.any((final Lesson lesson) => lesson.group == para2.groupID)) {
+
+          if (para2.teacherID != teacherId) {
+
+            // tiles.add(EmptyCourseTileRework(
+            //   lesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
+            //   index: para2.lessonTimingsID,
+            //   obed: obed
+            // ));
+
+            continue;
+          }
+
+          tiles.add(ParaData(
+            cost: 2,
+            isZamena: true,
+            lesson: Lesson(
+              id: -1,
+              number: para2.lessonTimingsID,
+              group: para2.groupID,
+              date: date,
+              course: para2.courseID,
+              teacher: para2.teacherID,
+              cabinet: para2.cabinetID,
+            ),
+          ));
+          
+          // tiles.add(CourseTileRework(
+          //   placeReason: 'group zamena default para',
+          //   searchType: SearchType.teacher,
+          //   isZamena: true,
+          //   isSaturday: isSaturday,
+          //   obed: obed,
+          //   index: para2.lessonTimingsID,
+          //   swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
+          //   lesson: Lesson(
+          //     id: -1,
+          //     number: para2.lessonTimingsID,
+          //     group: para2.groupID,
+          //     date: para2.date,
+          //     course: para2.courseID,
+          //     teacher: para2.teacherID,
+          //     cabinet: para2.cabinetID
+          //   ),
+          // ));
+
+        } else {
+          // Если это просто замена другой группы
+          if (para2.teacherID != teacherId) {
+            final Lesson? lesson = para.lesson!.where((final Lesson lesson) => lesson.group == para2.groupID).firstOrNull;
+
+            if (lesson != null) {
+              // tiles.add(EmptyCourseTileRework(
+              //   placeReason: '2',
+              //   searchType: SearchType.teacher,
+              //   lesson: lesson,
+              //   index: para2.lessonTimingsID,
+              //   obed: obed
+              // ));
+            }
+                      
+            continue;
+          }
+
+          // tiles.add(CourseTileRework(
+          //   placeReason: 'another group zamena',
+          //   searchType: SearchType.teacher,
+          //   isZamena: true,
+          //   obed: obed,
+          //   isSaturday: isSaturday,
+          //   swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.number == para2.lessonTimingsID),
+          //   index: para2.lessonTimingsID,
+          //   lesson: Lesson(
+          //     id: -1,
+          //     number: para2.lessonTimingsID,
+          //     group: para2.groupID,
+          //     date: para2.date,
+          //     course: para2.courseID,
+          //     teacher: para2.teacherID,
+          //     cabinet: para2.cabinetID
+          //   ),
+          // ));
+
+          tiles.add(ParaData(
+            cost: 2,
+            isZamena: true,
+            lesson: Lesson(
+              id: -1,
+              number: para2.lessonTimingsID,
+              group: para2.groupID,
+              date: date,
+              course: para2.courseID,
+              teacher: para2.teacherID,
+              cabinet: para2.cabinetID,
+            ),
+          ));
+        }
+      }
+
+      for (Lesson lesson in para.lesson!) {
+
+        if (
+          para.zamenaFull != null
+          && para.zamenaFull!.isNotEmpty
+        ) {
+          if (para.zamenaFull!.any((final ZamenaFull zamenafull) => zamenafull.group == lesson.group)) {
+
+            if (para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId == zamena.teacherID) ?? false) {
+              continue;
+            }
+
+            if (para.zamena?.any((final zamena) => zamena.teacherID == teacherId) ?? false) {
+              continue;
+            }
+
+            // tiles.add(EmptyCourseTileRework(
+            //   placeReason: '2',
+            //   searchType: SearchType.teacher,
+            //   lesson: lesson,
+            //   index: lesson.number,
+            //   obed: obed
+            // ));
+          } else {
+            if (
+              para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false
+            ) {
+
+              if (para.zamena?.any((final Zamena zamena) => zamena.teacherID == teacherId) ?? false) {
+
+              } else {
+                // tiles.add(EmptyCourseTileRework(
+                //   placeReason: '3',
+                //   searchType: SearchType.teacher,
+                //   lesson: lesson,
+                //   index: lesson.number,
+                //   obed: obed
+                // ));
+              }
+              
+            } else {
+              // tiles.add(CourseTileRework(
+              //   placeReason: 'para on another zamenas',
+              //   searchType: SearchType.teacher,
+              //   index: lesson.number,
+              //   isSaturday: isSaturday,
+              //   lesson: lesson,
+              //   obed: obed,
+              // ));
+
+              tiles.add(ParaData(
+                cost: 2,
+                isZamena: false,
+                lesson: lesson,
+              ));
+            }
+            
+            if (para.zamena?.any((final Zamena zamena) => zamena.groupID != lesson.group && lesson.teacher == teacherId) ?? false) {
+              
+            }
+          }
+
+        } else {
+          if (para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false) {
+            // tiles.add(EmptyCourseTileRework(
+            //   placeReason: '4',
+            //   searchType: SearchType.teacher,
+            //   lesson: lesson,
+            //   index: lesson.number,
+            //   obed: obed
+            // ));
+
+            continue;
+          }
+
+          if (!(para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group) ?? true)) {
+            tiles.add(ParaData(
+              cost: 2,
+              isZamena: true,
+              lesson: lesson
+            ));
+            // tiles.add(CourseTileRework(
+            //   placeReason: 'para with another zamena',
+            //   searchType: SearchType.teacher,
+            //   index: lesson.number,
+            //   isSaturday: isSaturday,
+            //   lesson: lesson,
+            //   obed: obed,
+            // ));
           }
         }
       }
