@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 
 
 
@@ -15,14 +15,17 @@ class ScheduleViewList extends StatelessWidget {
 
   @override
   Widget build(final BuildContext context) {
-    return Column(
-      spacing: 10,
-      children: [
-        ...days.map((final day) {
-          return DayScheduleWidget(daySchedule: day);
-        }),
-        const SizedBox(height: 100),
-      ]
+    return Container(
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        spacing: 10,
+        children: [
+          ...days.map((final day) {
+            return DayScheduleWidget(daySchedule: day);
+          }),
+          const SizedBox(height: 100),
+        ]
+      ),
     );
   }
 }

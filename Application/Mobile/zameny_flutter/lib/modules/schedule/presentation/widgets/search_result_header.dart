@@ -134,7 +134,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(16),
                 border: Border.all(
-                  color: Colors.white.withValues(alpha: 0.15),
+                  color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6),
                 ),
               ),
               child: AnimatedSize(
@@ -271,9 +271,9 @@ class _BlurDialogState extends State<BlurDialog> with SingleTickerProviderStateM
           ),
         ),
         child: IconButton(
-          icon: const Icon(
+          icon: Icon(
             Icons.more_vert,
-            color: Colors.white,
+            color: Theme.of(context).colorScheme.inverseSurface,
           ),
           onPressed: () {
             controller.forward().orCancel;
