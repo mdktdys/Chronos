@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -70,6 +71,27 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final int mints = minutes % 60;
 
     return '$hours:${mints > 9 ? mints : '0$mints'}:${secs > 9 ? secs : '0$secs'}';
+  }
+
+  bool get inTimingsBounds {
+    final DateTime now = DateTime.now();
+    final List<LessonTimings>? timings = ref.watch(timingsProvider).value;
+
+    if (timings == null) {
+      return false;
+    }
+
+    final LessonTimings first = timings.where((final LessonTimings timings) => timings.number == 1).first;
+    final LessonTimings last = timings.where((final LessonTimings timings) => timings.number == 7).first;
+
+    if (
+      first.start.isAfter(now)
+      && last.end.isBefore(now)
+    ) {
+      return false;
+    }
+
+    return true;
   }
 
   LessonTimings? getLessonTiming(final bool obed) {
@@ -172,6 +194,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final LessonTimings? timing = getLessonTiming(obed);
     final DateTime current = DateTime.now();
     final bool isSaturday = current.weekday == 6;
+    final bool inBounds = inTimingsBounds;
     Widget? child;
 
     if (
@@ -219,7 +242,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
                     : Theme.of(context).primaryColorLight.withValues(alpha: 0.7)
                 ),
               ) : const SizedBox(),
-            !isSaturday
+            !isSaturday && inBounds
               ? Row(
                   children: [
                     SizedBox(

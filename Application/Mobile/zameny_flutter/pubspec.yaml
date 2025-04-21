@@ -32,7 +32,6 @@ dependencies:
   flutter_riverpod: ^2.6.1
   mobkit_dashed_border: ^0.0.6
   flutter_portal: ^1.1.4
-  flutter_launcher_icons: ^0.13.1
   flutter_animate: ^4.5.0
   firebase_core: ^3.1.0
   firebase_messaging: ^15.0.1
@@ -55,6 +54,7 @@ dependencies:
   syncfusion_flutter_xlsio: ^25.2.7
 
 dev_dependencies:
+  flutter_launcher_icons: "^0.14.3"
   build_runner: ^2.4.15
   custom_lint: ^0.7.5
   flutter_lints: ^4.0.0
@@ -63,14 +63,34 @@ dev_dependencies:
   riverpod_lint: ^2.6.5
 
 flutter_native_splash:
-  android: false
-  web: true
+  android: true
+  web: false
   color: "#121212"
   image: "assets/icon/whale_android.png"
   android_12:
     image: "assets/icon/whale_android.png"
     color: "#121212"
     icon_background_color: "#121212"
+
+
+flutter_launcher_icons:
+  android: "launcher_icon"
+  ios: false
+  image_path: "assets/icon/whale_android.png"
+  min_sdk_android: 21 # android min sdk min:16, default 21
+  web:
+    generate: false
+    image_path: "path/to/image.png"
+    background_color: "#hexcode"
+    theme_color: "#hexcode"
+  windows:
+    generate: false
+    image_path: "path/to/image.png"
+    icon_size: 48 # min:48, max:256, default: 48
+  macos:
+    generate: false
+    image_path: "path/to/image.png"
+
 
 flutter:
   uses-material-design: true

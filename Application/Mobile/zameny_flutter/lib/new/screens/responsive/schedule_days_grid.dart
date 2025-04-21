@@ -100,68 +100,71 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
       );
     }).toList();
 
-    return Column(
-      children: [
-        //headers
-        Row(
-          children: widget.days.map((final DaySchedule day) {
-            return Expanded(
-              child: DayScheduleHeader(
-                toggleObed: () => _toggleDayObed(day),
-                needObedSwitch: false,
-                links: day.zamenaLinks ?? [],
-                obed: obed[day] ?? false,
-                date: day.date,
-                telegramLink: day.telegramLink,
-                fullSwap: (
-                  (day.zamenaFull != null)
-                  && scheduleSettings.isShowZamena
+    return Container(
+      color: Theme.of(context).colorScheme.surface,
+      child: Column(
+        children: [
+          //headers
+          Row(
+            children: widget.days.map((final DaySchedule day) {
+              return Expanded(
+                child: DayScheduleHeader(
+                  toggleObed: () => _toggleDayObed(day),
+                  needObedSwitch: false,
+                  links: day.zamenaLinks ?? [],
+                  obed: obed[day] ?? false,
+                  date: day.date,
+                  telegramLink: day.telegramLink,
+                  fullSwap: (
+                    (day.zamenaFull != null)
+                    && scheduleSettings.isShowZamena
+                  ),
                 ),
-              ),
-            );
-          }).toList()
-        ),
-        // Paras
-        SkeletonizedProvider<List<LessonTimings>>(
-          provider: timingsProvider,
-          fakeData: () => [],
-          data: (final List<LessonTimings> timings) {
-            return Column(
-              children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
-                return AnimatedSize(
-                  alignment: Alignment.topCenter,
-                  curve: Curves.easeInOut,
-                  duration: const Duration(milliseconds: 200),
-                  child: AnimatedSwitcher(
-                    duration: Delays.morphDuration,
-                    child: IntrinsicHeight(
-                      key: UniqueKey(),
-                      child: Row(
-                        spacing: 10,
-                        children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
-                          final dayParas = tiles[day.key][timings.key + 1];
-                      
-                          return Expanded(child: Column(
-                            children: [
-                              // Text('day ${day.key.toString()} timing ${timings.key}'),
-                              Expanded(child: dayParas ?? const SizedBox()),
-                            ],
-                          ));
-                          // return Expanded(child: );
-                          // return [timings.key];
-                        }).toList(),
+              );
+            }).toList()
+          ),
+          // Paras
+          SkeletonizedProvider<List<LessonTimings>>(
+            provider: timingsProvider,
+            fakeData: () => [],
+            data: (final List<LessonTimings> timings) {
+              return Column(
+                children: timings.asMap().entries.map((final MapEntry<int, LessonTimings> timings) {
+                  return AnimatedSize(
+                    alignment: Alignment.topCenter,
+                    curve: Curves.easeInOut,
+                    duration: const Duration(milliseconds: 200),
+                    child: AnimatedSwitcher(
+                      duration: Delays.morphDuration,
+                      child: IntrinsicHeight(
+                        key: UniqueKey(),
+                        child: Row(
+                          spacing: 10,
+                          children: widget.days.asMap().entries.map((final MapEntry<int, DaySchedule> day) {
+                            final dayParas = tiles[day.key][timings.key + 1];
+                        
+                            return Expanded(child: Column(
+                              children: [
+                                // Text('day ${day.key.toString()} timing ${timings.key}'),
+                                Expanded(child: dayParas ?? const SizedBox()),
+                              ],
+                            ));
+                            // return Expanded(child: );
+                            // return [timings.key];
+                          }).toList(),
+                        ),
                       ),
                     ),
-                  ),
-                );
-              }).toList()
-            );
-          },
-          error: (final e,final o) {
-            return const Text('data');
-          },
-        ),
-      ],
+                  );
+                }).toList()
+              );
+            },
+            error: (final e,final o) {
+              return const Text('data');
+            },
+          ),
+        ],
+      ),
     );
   }
 

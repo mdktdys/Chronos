@@ -21,7 +21,10 @@ final routerProvider = Provider<GoRouter>((final ref) {
           final int pageIndex = model.where((final pg) => pg.path == page).firstOrNull?.index ?? 1;
 
           if (id != null && typeId != null) {
-            ref.read(searchItemProvider.notifier).getSearchItem(id: id, type: typeId);
+            ref.read(searchItemProvider.notifier).getSearchItem(
+              type: typeId,
+              id: id,
+            );
           }
 
           return MainScreen(page: pageIndex);

@@ -20,9 +20,9 @@ void main() async {
 
   await registerServices();
 
-  runApp(ProviderScope(
-    observers: [TalkerRiverpodObserver()],
-    child: const App()
+  runApp(const ProviderScope(
+    observers: [],
+    child: App()
   ));
 }
 

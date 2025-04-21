@@ -7,6 +7,7 @@ import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
+import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 
 class FavoriteStripeWidget extends ConsumerWidget {
   const FavoriteStripeWidget({super.key});
@@ -36,6 +37,10 @@ class FavoriteStripeWidget extends ConsumerWidget {
                   onTap: () {
                     ref.read(searchItemProvider.notifier).setState(item);
                     ref.read(filterSearchQueryProvider.notifier).state = '';
+                    ref.read(navigationProvider.notifier).setParams({
+                      'type': item.typeId,
+                      'id': item.id,
+                    });
                   },
                   borderRadius: BorderRadius.circular(20),
                   child: Container(
