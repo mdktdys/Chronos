@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import 'package:flex_color_scheme/flex_color_scheme.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -76,6 +77,7 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
 
     if (themeMode == ThemeMode.dark || (ThemeMode.system == themeMode && isSystemDarkMode)) {
       theme = FlexThemeData.dark(
+        appBarStyle: FlexAppBarStyle.surface,
         useMaterial3: true,
         scheme: scheme,
       ).applyCustomTextTheme();
@@ -83,11 +85,13 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
 
     if (themeMode == ThemeMode.light || (ThemeMode.system == themeMode && !isSystemDarkMode)) {
       theme = FlexThemeData.light(
+        appBarStyle: FlexAppBarStyle.surface,
         useMaterial3: true,
         scheme: scheme,
       ).applyCustomTextTheme();
     }
 
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: theme!.colorScheme.surface));
     notifyListeners();
   }
 
