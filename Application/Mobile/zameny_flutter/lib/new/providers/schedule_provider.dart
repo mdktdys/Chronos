@@ -279,11 +279,15 @@ class SearchItemNotifier extends StateNotifier<SearchItem?> {
     required final int type
   }) async {
     isLoading = true;
-
-    await ref.watch(futureSearchItemProvider((
+    log('message');
+    final SearchItem? item = await ref.watch(futureSearchItemProvider((
+      type: type,
       id: id,
-      type: type
     )).future);
+
+    if (item != null) {
+      state = item;
+    }
 
     isLoading = false;
   }

@@ -100,11 +100,11 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       key: myGlobals.scaffoldKey,
       body: AdaptiveLayout(
         desktop: () => () {
-          return Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 20.0),
-            child: CustomScrollView(
-              slivers: [
-                SliverList.list(
+          return CustomScrollView(
+            slivers: [
+              SliverPadding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                sliver: SliverList.list(
                   children: [
                     const ScheduleHeader(),
                     const SizedBox(height: 10),
@@ -121,9 +121,9 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                     ScheduleView(scrollController: scrollController),
                   ]
                 ),
-                const Test()
-              ]
-            ),
+              ),
+              const Test()
+            ]
           );
         }(),
         mobile: () => () {
@@ -137,8 +137,8 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                   padding: const EdgeInsets.symmetric(horizontal: 20.0),
                   sliver: SliverList.list(
                     children: [
-                      const TopBanner(),
-                      const SizedBox(height: 10),
+                      // const TopBanner(),
+                      // const SizedBox(height: 10),
                       const ScheduleHeader(),
                       const SizedBox(height: 10),
                       const ScheduleTurboSearch(),
