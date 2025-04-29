@@ -9,6 +9,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel;
 
+import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
@@ -102,8 +103,8 @@ class ScheduleExport {
     required final ThemeData theme,
   }) async {
     final List<LessonTimings> timings = ref.watch(timingsProvider).value!;
-    final startDate = DateTime.now().subtract(const Duration(days: 30)).toStartOfDay();
-    final endDate = DateTime.now().toEndOfDay();
+    final startDate = Constants.septemberFirst.toStartOfDay();
+    final endDate = DateTime.now().add(const Duration(days: 1)).toEndOfDay();
 
     final TeacherStatsData stats = await ref.watch(teacherStatsProvider).getStats(
       startDate: startDate,
