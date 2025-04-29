@@ -36,63 +36,65 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
     final pixels = ref.watch(pixelProvider);
     final notifier = ref.read(pixelProvider.notifier);
 
-    return Stack(
-      children: [
-        InteractiveViewer(
-          maxScale: 1000,
-          minScale: 0.0001,
-          constrained: false,
-          boundaryMargin: const EdgeInsets.all(1200),
-          onInteractionUpdate: (final details) {
-            dragging = true;
-          },
-          onInteractionEnd: (final details) {
-            dragging = false;
-          },
-          transformationController: _transformationController,
-          child: SizedBox(
-            width: gridSize * pixelSize + 40,
-            height: gridSize * pixelSize + 40,
-            child: RePaint(
-              painter: PixelPainter(
-                pixels,
-                pixelSize,
-                gridSize,
-                notifier.selectedCell,
-                _onCellClicked,
-                gridSize * pixelSize + 40,
-                gridSize * pixelSize + 40,
-                20
-              )
+    return Scaffold(
+      body: Stack(
+        children: [
+          InteractiveViewer(
+            maxScale: 1000,
+            minScale: 0.0001,
+            constrained: false,
+            boundaryMargin: const EdgeInsets.all(1200),
+            onInteractionUpdate: (final details) {
+              dragging = true;
+            },
+            onInteractionEnd: (final details) {
+              dragging = false;
+            },
+            transformationController: _transformationController,
+            child: SizedBox(
+              width: gridSize * pixelSize + 40,
+              height: gridSize * pixelSize + 40,
+              child: RePaint(
+                painter: PixelPainter(
+                  pixels,
+                  pixelSize,
+                  gridSize,
+                  notifier.selectedCell,
+                  _onCellClicked,
+                  gridSize * pixelSize + 40,
+                  gridSize * pixelSize + 40,
+                  20
+                )
+              ),
             ),
           ),
-        ),
-        // Padding(
-        //   padding: const EdgeInsets.all(20),
-        //   child: Align(
-        //     alignment: Alignment.topCenter,
-        //     child: ConstrainedBox(
-        //       constraints: const BoxConstraints(maxWidth: 500),
-        //       child: const PaletteWidget(),
-        //     ),
-        //   ),
-        // ),
-        Padding(
-          padding: const EdgeInsets.all(20),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: const BoxConstraints(maxWidth: 500),
-              child: BaseBlank(
-                child: Text(
-                  'Сейчас недоступно',
-                  style: context.styles.ubuntu16,
+          // Padding(
+          //   padding: const EdgeInsets.all(20),
+          //   child: Align(
+          //     alignment: Alignment.topCenter,
+          //     child: ConstrainedBox(
+          //       constraints: const BoxConstraints(maxWidth: 500),
+          //       child: const PaletteWidget(),
+          //     ),
+          //   ),
+          // ),
+          Padding(
+            padding: const EdgeInsets.all(20),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 500),
+                child: BaseBlank(
+                  child: Text(
+                    'Сейчас недоступно',
+                    style: context.styles.ubuntu16,
+                  ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
   

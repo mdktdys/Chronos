@@ -56,12 +56,12 @@ List<BottomBarModel> model = [
     path: 'settings',
     enabled: true,
   ),
-  BottomBarModel(
-    index: 4,
-    enabled: true,
-    activeicon: 'assets/icon/brush_bold.svg',
-    icon: 'assets/icon/brush.svg',
-    title: 'Пиксель',
-    path: 'pixel',
-  )
+  // BottomBarModel(
+  //   index: 4,
+  //   enabled: true,
+  //   activeicon: 'assets/icon/brush_bold.svg',
+  //   icon: 'assets/icon/brush.svg',
+  //   title: 'Пиксель',
+  //   path: 'pixel',
+  // )
 ];
