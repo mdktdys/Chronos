@@ -17,7 +17,6 @@ import 'package:zameny_flutter/widgets/schedule_turbo_search.dart';
 import 'package:zameny_flutter/widgets/schedule_view.dart';
 import 'package:zameny_flutter/widgets/schedule_view_settings_widget.dart';
 import 'package:zameny_flutter/widgets/test_widget.dart';
-import 'package:zameny_flutter/widgets/top_banner.dart';
 import 'package:zameny_flutter/widgets/zamena_check_time.dart';
 
 MyGlobals myGlobals = MyGlobals();
