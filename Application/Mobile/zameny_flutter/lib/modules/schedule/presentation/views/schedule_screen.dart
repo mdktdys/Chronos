@@ -84,11 +84,8 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
               children: [
-                AnimatedContainer(
-                  duration: Delays.morphDuration,
-                  height: focusNode.hasFocus && MediaQuery.sizeOf(context).width <= Constants.maxWidthDesktop ? 0 : MediaQuery.of(context).size.height/3,
-                  curve: Curves.easeInOut,
-                  child: const SizedBox.expand(),
+                const Expanded(
+                  child: SizedBox()
                 ),
                 AnimatedSwitcher(
                   duration: Delays.morphDuration,
