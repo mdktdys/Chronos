@@ -16,9 +16,11 @@ import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/widgets/search_item_chip.dart';
 
 class ScheduleTurboSearch extends ConsumerStatefulWidget {
+  final FocusNode focusNode;
   final bool withFavorite;
 
   const ScheduleTurboSearch({
+    required this.focusNode,
     this.withFavorite = true,
     super.key
   });
@@ -29,7 +31,7 @@ class ScheduleTurboSearch extends ConsumerStatefulWidget {
 
 class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
   late final SearchController searchController;
-  late final FocusNode focusNode;
+
   bool isFocused = false;
   Timer? _debounceTimer;
 
@@ -37,21 +39,23 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
   void initState() {
     super.initState();
     searchController = SearchController();
-    focusNode = FocusNode()..addListener(() async {
-      await Future.delayed(const Duration(milliseconds: 100));
-      isFocused = focusNode.hasFocus;
-
-      if (context.mounted) {
-        setState(() {});
-      }
-    });
+    widget.focusNode.addListener(_trackFocus);
   }
 
   @override
   void dispose() {
     searchController.dispose();
-    focusNode.dispose();
+    widget.focusNode.removeListener(_trackFocus);
     super.dispose();
+  }
+
+  Future<void> _trackFocus() async {
+    await Future.delayed(const Duration(milliseconds: 100));
+    isFocused = widget.focusNode.hasFocus;
+
+    if (context.mounted) {
+      setState(() {});
+    }
   }
 
   void _onTextChanged(final String value) {
@@ -79,7 +83,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         CupertinoSearchTextField(
-          focusNode: focusNode,
+          focusNode: widget.focusNode,
           onSubmitted: (final _) => FocusScope.of(context).unfocus(),
           style: context.styles.ubuntuInverseSurface,
           controller: searchController,

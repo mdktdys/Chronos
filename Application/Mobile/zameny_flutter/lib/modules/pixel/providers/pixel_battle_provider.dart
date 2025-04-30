@@ -36,19 +36,19 @@ class PixelNotifier extends StateNotifier<Map<Offset, Color>> {
     };
   }
 
-  void _subscribeToPixels() {
-    _subscription = supabase.channel('pixels').onPostgresChanges(
-      schema: 'public',
-      table: 'pixels',
-      event: PostgresChangeEvent.all,
-      callback: (final PostgresChangePayload payload) {
-        final Map<String, dynamic> data = payload.newRecord;
-        final Map<Offset, Color> updatedState = Map<Offset, Color>.from(state);
-        updatedState[Offset(data['x'],data['y'])] = Color(int.parse(data['color'].substring(1), radix: 16) + 0xFF000000);
-        state = updatedState;
-      }
-    ).subscribe();
-  }
+  // void _subscribeToPixels() {
+  //   _subscription = supabase.channel('pixels').onPostgresChanges(
+  //     schema: 'public',
+  //     table: 'pixels',
+  //     event: PostgresChangeEvent.all,
+  //     callback: (final PostgresChangePayload payload) {
+  //       final Map<String, dynamic> data = payload.newRecord;
+  //       final Map<Offset, Color> updatedState = Map<Offset, Color>.from(state);
+  //       updatedState[Offset(data['x'],data['y'])] = Color(int.parse(data['color'].substring(1), radix: 16) + 0xFF000000);
+  //       state = updatedState;
+  //     }
+  //   ).subscribe();
+  // }
 
   Future<void> placePixel(final Offset position, final double pixelSize) async {
     if (selectedColor == null) {

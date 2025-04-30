@@ -105,23 +105,25 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
       child: Column(
         children: [
           //headers
-          Row(
-            children: widget.days.map((final DaySchedule day) {
-              return Expanded(
-                child: DayScheduleHeader(
-                  toggleObed: () => _toggleDayObed(day),
-                  needObedSwitch: false,
-                  links: day.zamenaLinks ?? [],
-                  obed: obed[day] ?? false,
-                  date: day.date,
-                  telegramLink: day.telegramLink,
-                  fullSwap: (
-                    (day.zamenaFull != null)
-                    && scheduleSettings.isShowZamena
+          IntrinsicHeight(
+            child: Row(
+              children: widget.days.map((final DaySchedule day) {
+                return Expanded(
+                  child: DayScheduleHeader(
+                    toggleObed: () => _toggleDayObed(day),
+                    needObedSwitch: false,
+                    links: day.zamenaLinks ?? [],
+                    obed: obed[day] ?? false,
+                    date: day.date,
+                    telegramLink: day.telegramLink,
+                    fullSwap: (
+                      (day.zamenaFull != null)
+                      && scheduleSettings.isShowZamena
+                    ),
                   ),
-                ),
-              );
-            }).toList()
+                );
+              }).toList()
+            ),
           ),
           // Paras
           SkeletonizedProvider<List<LessonTimings>>(
