@@ -126,6 +126,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       );
     } else {
       child = Scaffold(
+        resizeToAvoidBottomInset: false,
         key: myGlobals.scaffoldKey,
         body: AdaptiveLayout(
           desktop: () => () {
@@ -159,6 +160,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
           }(),
           mobile: () => () {
             return Scaffold(
+              resizeToAvoidBottomInset: false,
               backgroundColor: Theme.of(context).colorScheme.surface,
               body: CustomScrollView(
                 controller: scrollController,
