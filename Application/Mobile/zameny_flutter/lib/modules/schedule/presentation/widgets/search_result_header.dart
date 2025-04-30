@@ -176,7 +176,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                         ),
                       ),
                     ),
-                    SearchItemNotificationButton(item: searchItem!),
+                    SearchItemNotificationButton(item: searchItem),
                     Bounceable(
                       hitTestBehavior: HitTestBehavior.translucent,
                       onTap: () {

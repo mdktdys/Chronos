@@ -101,18 +101,18 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
   void _onCellClicked(final Offset position) {
     return;
 
-    if (position.dx < 0 || position.dy < 0) {
-      return;
-    }
+    // if (position.dx < 0 || position.dy < 0) {
+    //   return;
+    // }
 
-    if (position.dx >= gridSize || position.dy >= gridSize) {
-      return;
-    }
+    // if (position.dx >= gridSize || position.dy >= gridSize) {
+    //   return;
+    // }
 
-    if (dragging) {
-      return;
-    }
+    // if (dragging) {
+    //   return;
+    // }
 
-    ref.read(pixelProvider.notifier).placePixel(position, pixelSize);
+    // ref.read(pixelProvider.notifier).placePixel(position, pixelSize);
   }
 }

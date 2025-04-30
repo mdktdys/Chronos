@@ -126,7 +126,7 @@ class DayScheduleHeader extends StatelessWidget {
                   : const SizedBox(width: 5),
                DateTime.now().sameDate(date)
                   ? Padding(
-                      padding: const EdgeInsets.all(2.0),
+                      padding: const EdgeInsets.all(8.0),
                       child: Container(
                         decoration:  BoxDecoration(
                           color: Theme.of(context).colorScheme.primary,
@@ -169,43 +169,48 @@ class DayScheduleHeader extends StatelessWidget {
             ),
           if (telegramLink != null && links.isEmpty) ...[
             const SizedBox(height: 8),
-            Material(
-              borderRadius: const BorderRadius.all(Radius.circular(20)),
-              child: InkWell(
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 4.0),
+              child: Material(
                 borderRadius: const BorderRadius.all(Radius.circular(20)),
-                onTap: () {
-                  try {
-                    launchUrl(Uri.parse('tg://resolve?domain=bot_uksivt'));
-                  } catch (_) {
-                    launchUrl(Uri.parse('https://t.me/bot_uksivt'));
-                  }
-                },
-                child: BaseContainer(
-                  padding: const EdgeInsets.all(8),
-                  child: Row(
-                    spacing: 10,
-                    children: [
-                      Container(
-                        height: 48,
-                        width: 48,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                          border: Border.all(color: const Color(0xFF27a7e7)),
+                child: InkWell(
+                  borderRadius: const BorderRadius.all(Radius.circular(20)),
+                  onTap: () {
+                    try {
+                      launchUrl(Uri.parse('tg://resolve?domain=bot_uksivt'));
+                    } catch (_) {
+                      launchUrl(Uri.parse('https://t.me/bot_uksivt'));
+                    }
+                  },
+                  child: BaseContainer(
+                    padding: const EdgeInsets.all(8),
+                    child: Row(
+                      spacing: 10,
+                      children: [
+                        Container(
+                          height: 48,
+                          width: 48,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                            border: Border.all(color: const Color(0xFF27a7e7)),
+                          ),
+                          padding: const EdgeInsets.all(8),
+                          child: SvgPicture.asset(
+                            "assets/icon/telegram.svg",
+                            width: 32,
+                            height: 24,
+                            colorFilter: const ColorFilter.mode(Color(0xFF27a7e7), BlendMode.srcIn),
+                          ),
                         ),
-                        padding: const EdgeInsets.all(8),
-                        child: SvgPicture.asset(
-                          "assets/icon/telegram.svg",
-                          width: 32,
-                          height: 24,
-                          colorFilter: const ColorFilter.mode(Color(0xFF27a7e7), BlendMode.srcIn),
+                        Expanded(
+                          child: Text(
+                            'Замены есть в телеграмме!',
+                            style: textStyles.ubuntu18
+                          ),
                         ),
-                      ),
-                      Text(
-                        'Замены есть в телеграмме!',
-                        style: textStyles.ubuntu18
-                      ),
-                    ],
-                  )
+                      ],
+                    )
+                  ),
                 ),
               ),
             )
