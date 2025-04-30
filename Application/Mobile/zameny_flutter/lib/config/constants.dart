@@ -10,5 +10,5 @@ abstract class Constants {
   static String telegramChannel = 'https://t.me/mdktdys';
   static String telegramBot = 'https://t.me/bot_uksivt';
 
-  static String version = 'v01.05.25_2';
+  static String version = 'v01.05.25_3';
 } 

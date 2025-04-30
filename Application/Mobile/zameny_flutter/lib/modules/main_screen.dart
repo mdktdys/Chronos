@@ -27,15 +27,12 @@ class MainScreen extends ConsumerWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: Stack(
-        children: [
-          SafeArea(
-            child: AdaptiveLayout(
-              desktop: () => const DesktopView(),
-              mobile: () => const MobileView(),
-            )
-          ),
-        ],
+      body: SafeArea(
+        maintainBottomViewPadding: true,
+        child: AdaptiveLayout(
+          desktop: () => const DesktopView(),
+          mobile: () => const MobileView(),
+        )
       ),
     );
   }
