@@ -213,7 +213,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
           duration: const Duration(milliseconds: 150),
           curve: Curves.ease,
           alignment: Alignment.topCenter,
-          child: timing == null || current.weekday == 7
+          child: timing == null || current.weekday == 7 || (schedule?.holidays.isNotEmpty ?? false)
             ? const SizedBox()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -231,7 +231,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            timing != null ?
+            timing != null && current.weekday != 7 && (schedule?.holidays.isEmpty ?? false) ?
               Text(
                 'Осталось: ${getElapsedTime(obed)}',
                 textAlign: TextAlign.start,
@@ -241,7 +241,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
                     : Theme.of(context).primaryColorLight.withValues(alpha: 0.7)
                 ),
               ) : const SizedBox(),
-            !isSaturday && inBounds
+            !isSaturday && inBounds && (schedule?.holidays.isEmpty ?? false)
               ? Row(
                   children: [
                     SizedBox(

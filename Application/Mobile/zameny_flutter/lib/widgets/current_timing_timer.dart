@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/providers/timer_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
@@ -12,6 +13,7 @@ class CurrentTimingTimer extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final DaySchedule? schedule = ref.watch(todayDayScheduleProvider).value;
     final List<LessonTimings>? timings = ref.watch(timingsProvider).value;
     final String? timeLeft = ref.watch(timeProvider);
 
@@ -19,6 +21,10 @@ class CurrentTimingTimer extends ConsumerWidget {
 
     if (now.weekday == DateTime.sunday) {
        return const SizedBox();
+    }
+
+    if (schedule?.holidays.isNotEmpty ?? false) {
+      return const SizedBox();
     }
 
     LessonTimings? timing;
