@@ -20,14 +20,26 @@ import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
 
+enum ScheduleViewMode {
+  schedule(name: 'Расписание'),
+  standart(name: 'Без замен'),
+  zamenas(name: 'Только замены');
+
+  const ScheduleViewMode({required this.name});
+
+  final String name;
+}
+
+
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier(ref: ref);
 });
+
 class ScheduleSettingsNotifier extends ChangeNotifier {
   Ref ref;
   ScreenshotController screenShotController = ScreenshotController();
   ScheduleViewModes viewmode = ScheduleViewModes.auto;
-  bool isShowZamena = true;
+  ScheduleViewMode sheduleViewMode = ScheduleViewMode.schedule;
   bool obed = false;
 
   ScheduleSettingsNotifier({required this.ref});

@@ -24,11 +24,9 @@ import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
   final DaySchedule daySchedule;
-  final bool isShowZamena;
   final bool obed;
 
   const DayScheduleParasWidget({
-    required this.isShowZamena,
     required this.daySchedule,
     required this.obed,
     super.key
@@ -40,18 +38,16 @@ class DayScheduleParasWidget extends ConsumerWidget {
     final SearchItem? item = ref.watch(searchItemProvider);
     final bool isSaturday = daySchedule.date.weekday == 6;
 
-    if (daySchedule.paras.isEmpty) {
-      return const NoParasWidget(
-        reason: 'Нет пар',
-      );
-    }
-
-    if (daySchedule.holidays.isNotEmpty && settings.isShowZamena) {
+    if (daySchedule.holidays.isNotEmpty && (settings.sheduleViewMode == ScheduleViewMode.zamenas)) {
       return Column(
-        children: daySchedule.holidays.map((final holiday) {
+        children: daySchedule.holidays.map((final Holiday holiday) {
           return NoParasWidget(reason: holiday.name);
         }).toList()
       );
+    }
+    
+    if (daySchedule.paras.isEmpty) {
+      return const NoParasWidget(reason: 'Нет пар');
     }
 
     final builder = ref.watch(scheduleTilesBuilderProvider);
@@ -64,7 +60,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
         tiles = builder.buildTeacherTiles(
           teacherId: item.id,
           isSaturday: isSaturday,
-          isShowZamena: isShowZamena,
+          viewMode: settings.sheduleViewMode,
           para: para,
           obed: obed,
         );
@@ -74,7 +70,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
         tiles = builder.buildGroupTiles(
           isSaturday: isSaturday,
           zamenaFull: daySchedule.zamenaFull,
-          isShowZamena: isShowZamena,
+          viewMode: settings.sheduleViewMode,
           para: para,
           obed: obed,
         );
@@ -163,7 +159,7 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
           date: widget.daySchedule.date,
           links: widget.daySchedule.zamenaLinks ?? [],
           telegramLink: widget.daySchedule.telegramLink,
-          fullSwap: (widget.daySchedule.zamenaFull != null && provider.isShowZamena),
+          fullSwap: (widget.daySchedule.zamenaFull != null && (provider.sheduleViewMode == ScheduleViewMode.zamenas || provider.sheduleViewMode == ScheduleViewMode.standart)),
           toggleObed: _toggleObed,
           needObedSwitch: needObedSwitch,
           obed: obed,
@@ -176,7 +172,6 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
             duration: Delays.morphDuration,
             child: DayScheduleParasWidget(
               key: UniqueKey(),
-              isShowZamena: provider.isShowZamena,
               daySchedule: widget.daySchedule,
               obed: obed,
             ),

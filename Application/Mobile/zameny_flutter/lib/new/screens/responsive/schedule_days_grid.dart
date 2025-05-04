@@ -38,7 +38,6 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
     final ScheduleSettingsNotifier scheduleSettings = ref.watch(scheduleSettingsProvider);
     final ScheduleTilesBuilder builder = ref.watch(scheduleTilesBuilderProvider);
 
-    final bool isShowZamena = scheduleSettings.isShowZamena;
     final bool obedSwitch = scheduleSettings.obed;
 
     List<Map<int, Widget>> tiles = widget.days.map((final DaySchedule daySchedule) {
@@ -47,7 +46,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
         daySchedule.paras.expand((final Paras para) {  
           List<Widget> tiles = [];
 
-          if (daySchedule.holidays.isNotEmpty && scheduleSettings.isShowZamena) {
+          if (daySchedule.holidays.isNotEmpty && (scheduleSettings.sheduleViewMode == ScheduleViewMode.schedule)) {
             return List.generate(daySchedule.holidays.length,(final int index) {
               return MapEntry(1, NoParasWidget(reason: daySchedule.holidays[index].name));
             }).toList();
@@ -57,7 +56,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
             tiles = builder.buildTeacherTiles(
               teacherId: item.id,
               isSaturday: isSaturday,
-              isShowZamena: isShowZamena,
+              viewMode: scheduleSettings.sheduleViewMode,
               obed: obedSwitch,
               para: para,
             );
@@ -67,7 +66,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
             tiles = builder.buildGroupTiles(
               isSaturday: isSaturday,
               zamenaFull: daySchedule.zamenaFull,
-              isShowZamena: isShowZamena,
+              viewMode: scheduleSettings.sheduleViewMode,
               obed: obedSwitch,
               para: para,
             );
@@ -118,7 +117,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                     telegramLink: day.telegramLink,
                     fullSwap: (
                       (day.zamenaFull != null)
-                      && scheduleSettings.isShowZamena
+                      && (scheduleSettings.sheduleViewMode == ScheduleViewMode.schedule || scheduleSettings.sheduleViewMode == ScheduleViewMode.zamenas)
                     ),
                   ),
                 );

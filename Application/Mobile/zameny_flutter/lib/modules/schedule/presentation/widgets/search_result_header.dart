@@ -193,7 +193,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                             width: 24,
                           ),
                           Text(
-                            'Экспортировать расписание',
+                            'Экспорт расписание',
                             style: context.styles.ubuntuInverseSurface14,
                           )
                         ],
@@ -214,12 +214,12 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             SvgPicture.asset(
-                              Images.export,
+                              Images.stats,
                               colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
                               width: 24,
                             ),
                             Text(
-                              'Статистика [Нестабильно]',
+                              'Экспорт часов',
                               style: context.styles.ubuntuInverseSurface14,
                             )
                           ],

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
@@ -84,9 +83,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
               mainAxisAlignment: MainAxisAlignment.center,
               spacing: 20,
               children: [
-                const Expanded(
-                  child: SizedBox()
-                ),
+                const Expanded(child: SizedBox()),
                 AnimatedSwitcher(
                   duration: Delays.morphDuration,
                   child: Text(
@@ -100,9 +97,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                 ),
                 const Row(
                   children: [
-                    Expanded(
-                      child: CurrentTimingTimer()
-                    ),
+                    Expanded(child: CurrentTimingTimer()),
                     ZamenaCheckTime(),
                   ],
                 ),
@@ -135,9 +130,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                     children: [
                       const ScheduleHeader(),
                       const SizedBox(height: 10),
-                      ScheduleTurboSearch(
-                        focusNode: focusNode,
-                      ),
+                      ScheduleTurboSearch(focusNode: focusNode),
                       const SizedBox(height: 10),
                       const DateHeader(),
                       const SizedBox(height: 10),

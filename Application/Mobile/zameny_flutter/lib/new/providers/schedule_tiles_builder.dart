@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -8,7 +10,9 @@ import 'package:zameny_flutter/models/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
+
 
 final scheduleTilesBuilderProvider = Provider<ScheduleTilesBuilder>((final ref) {
   return ScheduleTilesBuilder();
@@ -18,14 +22,14 @@ class ScheduleTilesBuilder {
   // данил я не знаю под чем ты это писал но не трогай
   List<Widget> buildGroupTiles({
     required final ZamenaFull? zamenaFull,
-    required final bool isShowZamena,
+    required final ScheduleViewMode viewMode,
     required final bool isSaturday,
     required final Paras para,
     required final bool obed,
   }) {
     List<Widget> tiles = [];
 
-    if (!isShowZamena) {
+    if (viewMode == ScheduleViewMode.standart) {
       return para.lesson!.map((final lesson) {
         return CourseTileRework(
           placeReason: '1',
@@ -33,6 +37,50 @@ class ScheduleTilesBuilder {
           isSaturday: isSaturday,
           index: lesson.number,
           lesson: lesson,
+          obed: obed,
+        );
+      }).toList();
+    }
+
+    if (viewMode == ScheduleViewMode.zamenas) {
+      return para.zamena!.map((final zamena) {
+        if (zamena.courseID == 10843) {
+          final Lesson? lesson = para.lesson!.firstOrNull;
+
+          if (lesson != null) {
+            return EmptyCourseTileRework(
+              searchType: SearchType.group,
+              obed: obed,
+              index: zamena.lessonTimingsID,
+              placeReason: '-',
+              lesson: Lesson(
+                id: -1,
+                number: lesson.number,
+                group: lesson.group,
+                date: lesson.date,
+                course: lesson.course,
+                teacher: lesson.teacher,
+                cabinet: lesson.cabinet,
+              )
+            ); 
+          }
+        }
+
+        return CourseTileRework(
+          placeReason: 'only zamena',
+          searchType: SearchType.group,
+          isSaturday: isSaturday,
+          index: zamena.lessonTimingsID,
+          isZamena: true,
+          lesson: Lesson(
+            id: zamena.id,
+            teacher: zamena.teacherID,
+            course: zamena.courseID,
+            number: zamena.lessonTimingsID,
+            group: zamena.groupID,
+            cabinet: zamena.cabinetID,
+            date: zamena.date
+          ),
           obed: obed,
         );
       }).toList();
@@ -128,7 +176,7 @@ class ScheduleTilesBuilder {
 
   List<Widget> buildTeacherTiles({
     required final int teacherId,
-    required final bool isShowZamena,
+    required final ScheduleViewMode viewMode,
     required final Paras para,
     required final bool obed,
     required final bool isSaturday,
@@ -136,8 +184,8 @@ class ScheduleTilesBuilder {
 
     List<Widget> tiles = [];
 
-    if (!isShowZamena) {
-      tiles = para.lesson!.map((final lesson) {
+    if (viewMode == ScheduleViewMode.standart) {
+      return para.lesson!.map((final lesson) {
         return CourseTileRework(
           placeReason: 'para default',
           searchType: SearchType.teacher,
@@ -147,8 +195,133 @@ class ScheduleTilesBuilder {
           obed: obed,
         );
       }).toList();
+    }
+
+    // Только замены
+    if (viewMode == ScheduleViewMode.zamenas) {
+      // Если есть дефолтная пара
+      if (
+        para.lesson != null
+        && para.lesson!.isNotEmpty
+      ) {
+        if (
+          para.zamena != null
+          && para.zamena!.isNotEmpty
+        ) {
+          for (Zamena zamena in para.zamena!) {
+            if (zamena.teacherID == teacherId) {
+              tiles.add(CourseTileRework(
+                placeReason: 'only zamena',
+                searchType: SearchType.teacher,
+                isSaturday: isSaturday,
+                index: zamena.lessonTimingsID,
+                isZamena: true,
+                lesson: Lesson(
+                  id: zamena.id,
+                  teacher: zamena.teacherID,
+                  course: zamena.courseID,
+                  number: zamena.lessonTimingsID,
+                  group: zamena.groupID,
+                  cabinet: zamena.cabinetID,
+                  date: zamena.date
+                ),
+                swapedLesson: para.lesson!.first,
+                obed: obed,
+              ));
+            } else {
+              if (para.lesson!.first.group == zamena.groupID) {
+                tiles.add(EmptyCourseTileRework(
+                  placeReason: 'only zamena swap lesson',
+                  searchType: SearchType.teacher,
+                  lesson: para.lesson!.first,
+                  index: para.lesson!.first.number,
+                  obed: obed
+                ));
+              }
+            }
+          }
+        }
+
+        if (
+          para.zamenaFull != null
+          && para.zamenaFull!.isNotEmpty
+          && para.zamenaFull!.any((final ZamenaFull zamenaFull) => zamenaFull.group == para.lesson!.first.group)
+          && !para.zamena!.any((final Zamena zamena) => zamena.teacherID == teacherId)
+        ) {
+          tiles.add(EmptyCourseTileRework(
+            placeReason: 'only zamena swap lesson',
+            searchType: SearchType.teacher,
+            lesson: para.lesson!.first,
+            index: para.lesson!.first.number,
+            obed: obed
+          ));
+        }
+
+      // Если нет дефолтной пары но есть замена
+      } else if (
+        para.zamena != null
+        && para.zamena!.isNotEmpty
+      ) {
+        for (Zamena zamena in para.zamena!) {
+          if (zamena.teacherID == teacherId) {
+            tiles.add(CourseTileRework(
+              placeReason: 'only zamena',
+              searchType: SearchType.teacher,
+              isSaturday: isSaturday,
+              index: zamena.lessonTimingsID,
+              isZamena: true,
+              lesson: Lesson(
+                id: zamena.id,
+                teacher: zamena.teacherID,
+                course: zamena.courseID,
+                number: zamena.lessonTimingsID,
+                group: zamena.groupID,
+                cabinet: zamena.cabinetID,
+                date: zamena.date
+              ),
+              obed: obed,
+            ));
+          }
+        }
+      }
 
       return tiles;
+      // return para.zamena!.map((final zamena) {
+      //   // Если замена не на того же преподавателя
+      //   if (zamena.teacherID != teacherId) {
+      //     // Если есть в стандартном расписании
+      //     final List<Lesson>? lessons = para.lesson?.where((final Lesson lesson) => lesson.group == zamena.groupID).toList();
+      //     if (lessons != null && lessons.isNotEmpty) {
+      //       return EmptyCourseTileRework(
+      //         placeReason: 'only zamena swap lesson',
+      //         searchType: SearchType.teacher,
+      //         lesson: lessons.first,
+      //         index: lessons.first.number,
+      //         obed: obed
+      //       );
+      //     } else {
+      //       return Text('${zamena.groupID.toString()} ${para.lesson.toString()}');
+      //     }
+      //   }
+
+      //   return CourseTileRework(
+      //     placeReason: 'only zamena',
+      //     searchType: SearchType.group,
+      //     isSaturday: isSaturday,
+      //     index: zamena.lessonTimingsID,
+      //     isZamena: true,
+      //     lesson: Lesson(
+      //       id: zamena.id,
+      //       teacher: zamena.teacherID,
+      //       course: zamena.courseID,
+      //       number: zamena.lessonTimingsID,
+      //       group: zamena.groupID,
+      //       cabinet: zamena.cabinetID,
+      //       date: zamena.date
+      //     ),
+      //     obed: obed,
+      //   );
+      // }).toList();
     }
 
     // Если нет замен, то ставим стандартное расписание, без учета пар с полной заменой

@@ -11,6 +11,7 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/extensions/color_extension.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
@@ -21,6 +22,7 @@ import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
+import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/widgets/button.dart';
 
 part 'export_schedule_provider.g.dart';
@@ -103,57 +105,108 @@ class ScheduleExport {
     required final ThemeData theme,
   }) async {
     final List<LessonTimings> timings = ref.watch(timingsProvider).value!;
-    final startDate = Constants.septemberFirst.toStartOfDay();
-    final endDate = DateTime.now().add(const Duration(days: 1)).toEndOfDay();
-
+    final DateTime startDate = Constants.septemberFirst;
+    final DateTime endDate = DateTime.now().add(const Duration(days: 1));
+    
     final TeacherStatsData stats = await ref.watch(teacherStatsProvider).getStats(
-      startDate: startDate,
-      endDate: endDate,
+      startDate: startDate.toStartOfDay(),
+      endDate: endDate.toEndOfDay(),
       item: teacher
     );
 
     final excel.Workbook workbook = excel.Workbook();
     final excel.Worksheet sheet = workbook.worksheets[0];
+    sheet.name = 'Часы';
+    final String primary = theme.colorScheme.primary.getShadeColor().colorToHex();
+    final String surface = theme.colorScheme.primary.getShadeColor(shadeValue: 20).colorToHex();
 
-    sheet.getRangeByName('A1').setText('Пары преподавателя ${teacher.name} за ${startDate.toyyyymmdd()} - ${endDate.toyyyymmdd()}');
-    sheet.getRangeByName('A3').setText('Замены');
-    sheet.getRangeByName('A4').setText('Дата');
+    sheet.getRangeByName('A1').setText('Часы преподавателя ${teacher.name}');
+    
+    DateTime currentMonth = DateTime(startDate.year, startDate.month);
+    int index = 1;
+    while (currentMonth.isBefore(DateTime(endDate.year, endDate.month + 1))) {
+      final List<DayData> monthDayDatas = stats.schedule.where((final DayData dayData) => dayData.date.month == currentMonth.month && dayData.date.year == currentMonth.year).toList();
+      workbook.worksheets.addWithName(currentMonth.toMonth());
+      final excel.Worksheet monthSheet = workbook.worksheets[index];
+      monthSheet.getRangeByName('A1').setText('Дата');
+      monthSheet.getRangeByName('A1').cellStyle.backColor = primary;
 
-    for (var i = 0; i < timings.length; i++) {
-      final LessonTimings timing = timings[i];
+      sheet.getRangeByName('A${index + 2}').setText(currentMonth.toMonth());
+      sheet.getRangeByName('A${index + 2}').cellStyle.backColor = surface;
 
-       sheet.getRangeByName('A${5 + i}').setText(timing.number.toString());
+      for (var i = 0; i < timings.length; i++) {
+        final LessonTimings timing = timings[i];  
+        monthSheet.getRangeByName('A${2 + i}').setText(timing.number.toString());
+        monthSheet.getRangeByName('A${2 + i}').cellStyle.backColor = surface;
+      }
+
+      monthSheet.getRangeByIndex(1, 1, 8, 1 + monthDayDatas.length).cellStyle.borders.all.lineStyle = excel.LineStyle.thin;
+      monthSheet.getRangeByIndex(1, 1, 8, 1 + monthDayDatas.length).cellStyle.borders.all.color = Colors.black.hexCode;
+
+      for (var i = 0; i < monthDayDatas.length; i++) {
+        final DayData data = monthDayDatas[i];
+
+        _buildDay(
+          rowOffset: 2,
+          offset: i + 2,
+          sheet: monthSheet,
+          data: data,
+          primary: primary,
+        );
+      }
+      
+      int year = currentMonth.year;
+      int month = currentMonth.month + 1;
+      if (month > 12) {
+        month = 1;
+        year++;
+        
+      }
+      currentMonth = DateTime(year, month);
+      index ++;
     }
 
-    for (var i = 0; i < stats.schedule.length; i++) {
-      final DayData data = stats.schedule[i];
-      _buildDay(
-        rowOffset: 5,
-        offset: i + 2,
-        sheet: sheet,
-        data: data,
-      );
-    }
-
-    _buildStats(
-      rowOffset: 15,
+    final int lenght = _buildStats(
+      endDate: endDate,
+      startDate: startDate,
+      rowOffset: 2,
       stats: stats,
-      sheet: sheet
+      sheet: sheet,
+      monthLenght: index,
+      primary: primary
     );
 
-    sheet.getRangeByIndex(3, 1, 11, 1 + stats.schedule.length).cellStyle.borders.all.lineStyle = excel.LineStyle.thin;
-    sheet.getRangeByIndex(3, 1, 11, 1 + stats.schedule.length).cellStyle.borders.all.color = Colors.black.hexCode;
+    sheet.getRangeByName('A${index + 2}').setText('Итого');
+    sheet.getRangeByName('A${index + 2}').cellStyle.backColor = primary;
+
+    sheet.getRangeByName('A2').setText('Группа / Месяц');
+    sheet.getRangeByName('A2').cellStyle.backColor = primary;
+    sheet.getRangeByName('A2').cellStyle.hAlign = excel.HAlignType.center;
+    sheet.getRangeByName('A2').cellStyle.vAlign = excel.VAlignType.center;
+    sheet.getRangeByName('A2').cellStyle.wrapText = true;
+
+    sheet.getRangeByIndex(1, 1, index + 2, 1 + lenght).cellStyle.borders.all.lineStyle = excel.LineStyle.thin;
+    sheet.getRangeByIndex(1, 1, index + 2, 1 + lenght).cellStyle.borders.all.color = Colors.black.hexCode;
+    sheet.getRangeByIndex(1, 1, 1, 1 + lenght).merge();
+    sheet.getRangeByIndex(1, 1, 1, 1 + lenght).cellStyle.backColor = primary;
+    sheet.getRangeByIndex(1, 1, 1, 1 + lenght).cellStyle.hAlign = excel.HAlignType.center;
+
+    sheet.autoFitColumn(1);
 
     final List<int> bytes = workbook.saveAsStream();
     workbook.dispose();
     
-    ref.read(sharingProvier).shareFile(text: 'Расписание ${teacher.name}', files: [Uint8List.fromList(bytes)], format: 'xlsx');
+    ref.read(sharingProvier).shareFile(text: 'Часы ${teacher.name}', files: [Uint8List.fromList(bytes)], format: 'xlsx');
   }
 
-  void _buildStats({
+  int _buildStats({
     required final int rowOffset,
+    required final DateTime startDate,
+    required final DateTime endDate,
     required final TeacherStatsData stats,
-    required final excel.Worksheet sheet
+    required final excel.Worksheet sheet,
+    required final int monthLenght,
+    required final String primary
   }) {
     final Set<int> groupsIds = stats.schedule
     .expand((final a) => a.paras)
@@ -185,7 +238,7 @@ class ScheduleExport {
     //   sheet.getRangeByIndex(rowOffset - 1, 2 + i).cellStyle.wrapText = true;
     // }
 
-    List<(Group, Course, int)> mapped = [];
+    List<(Group, Course, int, List<int>)> mapped = [];
     for (var x = 0; x < groups.length; x++) {
       for (var y = 0; y < courses.length; y++) {
         final Group group = groups[x];
@@ -196,35 +249,71 @@ class ScheduleExport {
           .toList();
 
         final int sum = hours.fold(0, (final total, final current) => total + current);
+        
+        DateTime currentMonth = DateTime(startDate.year, startDate.month);
+        final List<int> monthsHours = [];
+        while (currentMonth.isBefore(DateTime(endDate.year, endDate.month + 1))) {
+          final List<int> hours = stats.schedule.where((final DayData a) => a.date.month == currentMonth.month && a.date.year == currentMonth.year).expand((final day) => day.paras).expand((final para) => para)
+          .where((final lessonSlot) => lessonSlot.lesson.group == group.id && lessonSlot.lesson.course == course.id)
+          .map((final lessonSlot) => lessonSlot.cost)
+          .toList();
+
+          final int sum = hours.fold(0, (final total, final current) => total + current);
+          monthsHours.add(sum);
+
+          int year = currentMonth.year;
+          int month = currentMonth.month + 1;
+          if (month > 12) {
+            month = 1;
+            year++;
+            
+          }
+          currentMonth = DateTime(year, month);
+        }
+
 
         if (sum != 0) {
           mapped.add((
             group,
             course,
-            sum
+            sum,
+            monthsHours
           ));
         }
-
-        // sheet.getRangeByIndex(rowOffset + y, 2 + x).setText(sum.toString());
       }
     }
 
+    mapped.sort((final a, final b) => a.$1.name.compareTo(b.$1.name));
+
     for (var i = 0; i < mapped.length; i++) {
-      final (Group, Course, int) item = mapped[i];
-      sheet.getRangeByIndex(rowOffset + i, 2).setText('${item.$1.name}\n${item.$2.name}');
-      sheet.getRangeByIndex(rowOffset + i, 3).setText('${item.$3}');
+      final (Group, Course, int, List<int>) item = mapped[i];
+      sheet.getRangeByIndex(2, rowOffset + i).setText('${item.$1.name}\n${item.$2.name}');
+      sheet.getRangeByIndex(2, rowOffset + i).cellStyle.backColor = getColorForText(item.$1.name).getShadeColor(shadeValue: 30).hexCode;
+      sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).setText('${item.$3}');
+      sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).cellStyle.backColor = primary;
+      sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).cellStyle.hAlign = excel.HAlignType.center;
+
+      for (var j = 0; j < monthLenght - 1; j++) {
+        sheet.getRangeByIndex(3 + j, rowOffset + i).setText(item.$4[j].toString());
+        sheet.getRangeByIndex(3 + j, rowOffset + i).cellStyle.hAlign = excel.HAlignType.center;
+      }
+
+      sheet.setColumnWidthInPixels(rowOffset + i, 100);
     }
+
+    return mapped.length;
   }
 
   void _buildDay ({
     required final int offset,
     required final DayData data,
     required final int rowOffset,
-    required final excel.Worksheet sheet
+    required final excel.Worksheet sheet,
+    required final String primary
   }) {
-    // Помогите, она хочет еще один выходной документ...
-    sheet.getRangeByIndex(rowOffset - 2, offset).setText(data.zamenaLink);
+    // sheet.getRangeByIndex(rowOffset - 2, offset).setText(data.zamenaLink);
     sheet.getRangeByIndex(rowOffset - 1, offset).setText(data.date.toddMM().toString());
+    sheet.getRangeByIndex(rowOffset - 1, offset).cellStyle.backColor = primary;
 
     for (var i = 0; i < data.paras.length; i++) {
       final List<ParaData> paraData = data.paras[i];
