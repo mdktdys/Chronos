@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:zameny_flutter/models/zamena_model.dart';
+
 class Lesson {
   int id;
   int number;
@@ -79,6 +81,18 @@ class Lesson {
       course: course ?? this.course,
       teacher: teacher ?? this.teacher,
       cabinet: cabinet ?? this.cabinet,
+    );
+  }
+
+  factory Lesson.fromZamena(final Zamena zamena) {
+    return Lesson(
+      id: zamena.id,
+      number: zamena.lessonTimingsID,
+      group: zamena.groupID,
+      date: zamena.date,
+      course: zamena.courseID,
+      teacher: zamena.teacherID,
+      cabinet: zamena.cabinetID
     );
   }
 }

@@ -15,8 +15,11 @@ import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/tile_data.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
 
@@ -48,7 +51,7 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     required final SearchItem searchItem,
     required final ThemeData theme,
   }) async {
-    final timings = ref.watch(timingsProvider).value;
+    final List<LessonTimings>? timings = ref.watch(timingsProvider).value;
     DateTime startdate = ref.watch(navigationDateProvider);
     startdate = startdate.subtract(Duration(days: startdate.weekday - 1));
     final DateTime endDate = startdate.add(const Duration(days: 6));
@@ -58,6 +61,8 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     }
 
     List<DaySchedule>? schedule;
+    List<List<List<TileData>>> tiles = [];
+
     if (searchItem is Group) {
       schedule = await ref.watch(dayScheduleProvider).groupSchedule(
         timings: timings,
@@ -65,6 +70,22 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
         searchItem: searchItem,
         endDate: endDate
       );
+
+      tiles = schedule.map((final DaySchedule sched) {
+        if (sched.holidays.isNotEmpty && sheduleViewMode == ScheduleViewMode.schedule) {
+          return List<List<TileData>>.of([]);
+        }
+
+        return sched.paras.map((final Paras para) {
+          return ref.watch(scheduleTileDataBuilderProvider).buildGroupTiles(
+            zamenaFull: sched.zamenaFull,
+            viewMode: sheduleViewMode,
+            isSaturday: false,
+            para: para,
+            obed: obed
+          );
+        }).toList();
+      }).toList();
     } else if (searchItem is Teacher) {
       schedule = await ref.watch(dayScheduleProvider).teacherSchedule(
         timings: timings,
@@ -72,6 +93,22 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
         searchItem: searchItem,
         endDate: endDate
       );
+
+      tiles = schedule.map((final DaySchedule sched) {
+        if (sched.holidays.isNotEmpty && sheduleViewMode == ScheduleViewMode.schedule) {
+          return List<List<TileData>>.of([]);
+        }
+        
+        return sched.paras.map((final Paras para) {
+          return ref.watch(scheduleTileDataBuilderProvider).buildTeacherTiles(
+            teacherId: searchItem.id,
+            viewMode: sheduleViewMode,
+            isSaturday: false,
+            para: para,
+            obed: obed
+          );
+        }).toList();
+      }).toList();
     }
 
     if (schedule == null) {
@@ -99,7 +136,7 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
       offset: offset,
       sheet: sheet,
       theme: theme,
-      schedule: schedule,
+      schedule: tiles,
       leftIndex: 0,
       rightIndex: 3,
       searchItem: searchItem
@@ -109,7 +146,7 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
       offset: offset,
       sheet: sheet,
       theme: theme,
-      schedule: schedule,
+      schedule: tiles,
       leftIndex: 1,
       rightIndex: 4,
       searchItem: searchItem
@@ -119,7 +156,7 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
       offset: offset,
       sheet: sheet,
       theme: theme,
-      schedule: schedule,
+      schedule: tiles,
       leftIndex: 2,
       rightIndex: 5,
       searchItem: searchItem
@@ -138,7 +175,7 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     required final int offset,
     required final Worksheet sheet,
     required final ThemeData theme,
-    required final List<DaySchedule> schedule,
+    required final List<List<List<TileData>>> schedule,
     required final int leftIndex,
     required final int rightIndex,
     required final SearchItem searchItem,
@@ -161,38 +198,47 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     thursdayTitleCell.cellStyle.backColor = primary;
     sheet.getRangeByName('D$offset:F$offset').merge();
 
-    final mondayLessons = schedule[leftIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
-    ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
-    final thursdayLessons = schedule[rightIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
-    ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
+    // final mondayLessons = schedule[leftIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
+    // ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
+    // final thursdayLessons = schedule[rightIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
+    // ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
 
-    int minimal;
-    if (mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty) {
-      minimal = math.min(mondayLessons.first.number!, thursdayLessons.first.number!);
-    } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty) {
-      minimal = thursdayLessons.first.number!;
-    } else if (mondayLessons.isNotEmpty && thursdayLessons.isEmpty) {
-      minimal = mondayLessons.first.number!;
-    } else {
-      minimal = 0;
-    }
+    final mondayLessons = schedule[leftIndex];
+    final thursdayLessons = schedule[rightIndex];
 
-    int maximal;
-    if (mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty) {
-      maximal = math.max(mondayLessons.last.number!, thursdayLessons.last.number!);
-    } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty) {
-      maximal = thursdayLessons.last.number!;
-    } else if (mondayLessons.isNotEmpty && thursdayLessons.isEmpty) {
-      maximal = mondayLessons.last.number!;
-    } else {
-      maximal = 0;
-    }
+    int minimal = 1;
+    // if (
+    //   mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty
+    //   && mondayLessons.first.isNotEmpty && thursdayLessons.first.isNotEmpty
+    // ) {
+    //   minimal = math.min(mondayLessons.first.first.lesson.number, thursdayLessons.first.first.lesson.number);
+    // } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty && thursdayLessons.first.isNotEmpty) {
+    //   minimal = thursdayLessons.first.first.lesson.number;
+    // } else if (mondayLessons.isNotEmpty && mondayLessons.first.isNotEmpty && thursdayLessons.isEmpty) {
+    //   minimal = mondayLessons.first.first.lesson.number;
+    // } else {
+    //   minimal = 0;
+    // }
+
+    int maximal = 7;
+    // if (
+    //   mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty
+    //   && mondayLessons.last.isNotEmpty && thursdayLessons.last.isNotEmpty
+    // ) {
+    //   maximal = math.max(mondayLessons.last.first.lesson.number, thursdayLessons.last.first.lesson.number);
+    // } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty && thursdayLessons.last.isNotEmpty) {
+    //   maximal = thursdayLessons.last.first.lesson.number;
+    // } else if (mondayLessons.isNotEmpty && mondayLessons.last.isNotEmpty && thursdayLessons.isEmpty) {
+    //   maximal = mondayLessons.last.first.lesson.number;
+    // } else {
+    //   maximal = 0;
+    // }
 
     int j = 0;
     for (int i = minimal; i <= maximal; i++) {
       j++;
-      final Paras? para = mondayLessons.where((final Paras para) => para.number == i).firstOrNull;
-      final Paras? paraS = thursdayLessons.where((final Paras para) => para.number == i).firstOrNull;
+      final TileData? para = mondayLessons.where((final List<TileData> para) => para.firstOrNull?.lesson.number == i).firstOrNull?.firstOrNull;
+      final TileData? paraS = thursdayLessons.where((final List<TileData> para) => para.firstOrNull?.lesson.number == i).firstOrNull?.firstOrNull;
 
       if (para != null) {
         _place(
@@ -224,19 +270,25 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
   void _place({
     required final SearchItem searchItem,
     required final Worksheet sheet,
-    required final Paras para,
+    required final TileData para,
     required final String cell,
     required final int column,
   }) {
     final List<String> columns = ['A', 'B', 'C', 'D', 'E', 'F'];
 
-    final Lesson? lesson = para.lesson!.firstOrNull;
-    final Course? course = ref.watch(courseProvider(lesson!.course));
+    Lesson? lesson;
+    if (para is TileZamenaOnLesson) {
+      lesson = para.zamena;
+    } else {
+      lesson = para.lesson;
+    }
+
+    final Course? course = ref.watch(courseProvider(lesson.course));
     final Cabinet? cabinet = ref.watch(cabinetProvider(lesson.cabinet));
     final Teacher? teacher = ref.watch(teacherProvider(lesson.teacher));
     final Group? group = ref.watch(groupProvider(lesson.group));
 
-    sheet.getRangeByName('${columns[column]}$cell').setText(para.number.toString());
+    sheet.getRangeByName('${columns[column]}$cell').setText(para.lesson.number.toString());
     sheet.getRangeByName('${columns[column]}$cell').type = CellType.blank;
     sheet.getRangeByName('${columns[column]}$cell').cellStyle.hAlign = HAlignType.center;
     sheet.getRangeByName('${columns[column]}$cell').cellStyle.vAlign = VAlignType.center;
@@ -250,6 +302,14 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     }
     sheet.getRangeByName('${columns[column + 1]}$cell').cellStyle.vAlign = VAlignType.center;
     sheet.getRangeByName('${columns[column + 1]}$cell').cellStyle.wrapText = true;
+
+    if (para is TileRemovedLessonData) {
+      sheet.getRangeByName('${columns[column + 1]}$cell').cellStyle.fontColor = Colors.grey.hexCode;
+    } else if (para is TileWithZamenaData) {
+      sheet.getRangeByName('${columns[column + 1]}$cell').cellStyle.fontColor = Colors.red.hexCode;
+    } else if (para is TileZamenaOnLesson) {  
+      sheet.getRangeByName('${columns[column + 1]}$cell').cellStyle.fontColor = Colors.red.hexCode;
+    }
 
     sheet.getRangeByName('${columns[column + 2]}$cell').setText(cabinet?.name.toString());
     sheet.getRangeByName('${columns[column + 2]}$cell').cellStyle.vAlign = VAlignType.center;
