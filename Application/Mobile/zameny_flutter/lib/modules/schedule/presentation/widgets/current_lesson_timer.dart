@@ -133,7 +133,6 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     List<Widget> tiles = [];
 
     final bool isSaturday = daySchedule.date.weekday == 6;
-    final bool isShowZamena = scheduleSettings.isShowZamena;
     final bool obedSwitch = scheduleSettings.obed;
 
     final Paras? para = daySchedule.paras.where((final Paras para) => para.number == number).firstOrNull;
@@ -146,7 +145,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
       tiles = builder.buildTeacherTiles(
         teacherId: item.id,
         isSaturday: isSaturday,
-        isShowZamena: isShowZamena,
+        viewMode: scheduleSettings.sheduleViewMode,
         obed: obedSwitch,
         para: para,
       );
@@ -156,7 +155,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
       tiles = builder.buildGroupTiles(
         isSaturday: isSaturday,
         zamenaFull: daySchedule.zamenaFull,
-        isShowZamena: isShowZamena,
+        viewMode: scheduleSettings.sheduleViewMode,
         obed: obedSwitch,
         para: para,
       );

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
@@ -179,46 +180,46 @@ class DateHeaderDatePicker extends ConsumerWidget {
   }
 }
 
-// class MonthCell extends ConsumerWidget {
-//   const MonthCell({required this.details, super.key});
-//   final sf.DateRangePickerCellDetails details;
+class MonthCell extends ConsumerWidget {
+  const MonthCell({required this.details, super.key});
+  final sf.DateRangePickerCellDetails details;
 
-//   @override
-//   Widget build(final BuildContext context, final WidgetRef ref) {
-//     // final bool chillday = details.date.weekday == 7 ||
-//     //     GetIt.I
-//     //         .get<Data>()
-//     //         .holidays
-//     //         .any((final element) => element.date == details.date);
-//     const bool chillday = false;
-//     final bool isToday = details.date.day == DateTime.now().day &&
-//         details.date.month == DateTime.now().month &&
-//         DateTime.now().year == details.date.year;
-//     if (isToday) {
-//       //GetIt.I.get<Talker>().good("da");
-//     }
-//     return Stack(
-//       children: [
-//         Padding(
-//           padding: const EdgeInsets.all(4.0),
-//           child: Container(
-//             padding: const EdgeInsets.all(8),
-//             decoration: !chillday
-//                 ? BoxDecoration(
-//                     borderRadius: BorderRadius.circular(4),
-//                     color: Colors.white.withValues(alpha: 0.1),)
-//                 : null,
-//             child: Center(child: Text(details.date.day.toString())),
-//           ),
-//         ),
-//         isToday
-//             ? Container(
-//                 decoration: BoxDecoration(
-//                     borderRadius: BorderRadius.circular(8),
-//                     border: Border.all(color: Theme.of(context).colorScheme.primary,),),
-//               )
-//             : const SizedBox.shrink(),
-//       ],
-//     );
-//   }
-// }
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    // final bool chillday = details.date.weekday == 7 ||
+    //     GetIt.I
+    //         .get<Data>()
+    //         .holidays
+    //         .any((final element) => element.date == details.date);
+    const bool chillday = false;
+    final bool isToday = details.date.day == DateTime.now().day &&
+        details.date.month == DateTime.now().month &&
+        DateTime.now().year == details.date.year;
+    if (isToday) {
+      //GetIt.I.get<Talker>().good("da");
+    }
+    return Stack(
+      children: [
+        Padding(
+          padding: const EdgeInsets.all(4.0),
+          child: Container(
+            padding: const EdgeInsets.all(8),
+            decoration: !chillday
+                ? BoxDecoration(
+                    borderRadius: BorderRadius.circular(4),
+                    color: Colors.white.withValues(alpha: 0.1),)
+                : null,
+            child: Center(child: Text(details.date.day.toString())),
+          ),
+        ),
+        isToday
+            ? Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Theme.of(context).colorScheme.primary,),),
+              )
+            : const SizedBox.shrink(),
+      ],
+    );
+  }
+}

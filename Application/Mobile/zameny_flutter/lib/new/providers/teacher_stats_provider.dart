@@ -47,10 +47,12 @@ class TeacherStats {
         );
       }).toList();
 
+      final bool isHoliday = daySchedule.holidays.isNotEmpty;
+
       daysData.add(DayData(
         zamenaLink: daySchedule.zamenaLinks?.firstOrNull?.link,
         date: daySchedule.date,
-        paras: paras
+        paras: isHoliday ? [] : paras
       ));
     }
 
