@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/models/lesson_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
+import 'package:zameny_flutter/models/tile_data.dart';
 import 'package:zameny_flutter/models/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
@@ -13,168 +12,75 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 
-
-final scheduleTilesBuilderProvider = Provider<ScheduleTilesBuilder>((final ref) {
-  return ScheduleTilesBuilder();
+final scheduleTileDataBuilderProvider = Provider<ScheduleTileBuilder>((final Ref ref) {
+  return ScheduleTileBuilder();
 });
 
-class ScheduleTilesBuilder {
-  // данил я не знаю под чем ты это писал но не трогай
-  List<Widget> buildGroupTiles({
+class ScheduleTileBuilder {
+  List<TileData> buildGroupTiles({
     required final ZamenaFull? zamenaFull,
     required final ScheduleViewMode viewMode,
     required final bool isSaturday,
     required final Paras para,
     required final bool obed,
   }) {
-    List<Widget> tiles = [];
+    List<TileData> tiles = [];
 
     if (viewMode == ScheduleViewMode.standart) {
-      return para.lesson!.map((final lesson) {
-        return CourseTileRework(
-          placeReason: '1',
-          searchType: SearchType.group,
-          isSaturday: isSaturday,
-          index: lesson.number,
-          lesson: lesson,
-          obed: obed,
-        );
+      return para.lesson!.map<TileLessonData>((final Lesson lesson) {
+        return TileLessonData(lesson: lesson);
       }).toList();
-    }
-
-    if (viewMode == ScheduleViewMode.zamenas) {
-      return para.zamena!.map((final zamena) {
+    } else if (viewMode == ScheduleViewMode.zamenas) {
+      return para.zamena!.map<TileData>((final zamena) {
         if (zamena.courseID == 10843) {
           final Lesson? lesson = para.lesson!.firstOrNull;
 
           if (lesson != null) {
-            return EmptyCourseTileRework(
-              searchType: SearchType.group,
-              obed: obed,
-              index: zamena.lessonTimingsID,
-              placeReason: '-',
-              lesson: Lesson(
-                id: -1,
-                number: lesson.number,
-                group: lesson.group,
-                date: lesson.date,
-                course: lesson.course,
-                teacher: lesson.teacher,
-                cabinet: lesson.cabinet,
-              )
-            ); 
+            return TileRemovedLessonData(lesson: lesson);
           }
         }
 
-        return CourseTileRework(
-          placeReason: 'only zamena',
-          searchType: SearchType.group,
-          isSaturday: isSaturday,
-          index: zamena.lessonTimingsID,
-          isZamena: true,
-          lesson: Lesson(
-            id: zamena.id,
-            teacher: zamena.teacherID,
-            course: zamena.courseID,
-            number: zamena.lessonTimingsID,
-            group: zamena.groupID,
-            cabinet: zamena.cabinetID,
-            date: zamena.date
-          ),
-          obed: obed,
-        );
+        return TileWithZamenaData(lesson: Lesson.fromZamena(zamena));
       }).toList();
-    }
+    } else if (viewMode == ScheduleViewMode.schedule) {
+      if (zamenaFull != null) {
+        return para.zamena!.map((final Zamena zamena) {
+          return TileWithZamenaData(lesson: Lesson.fromZamena(zamena));
+        }).toList();
+      }
 
-    if (zamenaFull != null) {
-      return para.zamena!.map((final zamena) {
-        return CourseTileRework(
-          placeReason: '2',
-          searchType: SearchType.group,
-          index: zamena.lessonTimingsID,
-          obed: obed,
-          isSaturday: isSaturday,
-          lesson: Lesson(
-            id: -1,
-            number: zamena.lessonTimingsID,
-            group: zamena.groupID,
-            date: zamena.date,
-            course: zamena.courseID,
-            teacher: zamena.teacherID,
-            cabinet: zamena.cabinetID
-          ),
-        );
-      }).toList();
-    }
+      final Zamena? zamena = para.zamena?.firstOrNull;
+      final Lesson? lesson = para.lesson?.firstOrNull; 
 
-    final Zamena? zamena = para.zamena?.firstOrNull;
-    final Lesson? lesson = para.lesson?.firstOrNull; 
-
-    if (zamena == null && lesson != null) {
-      tiles.add(CourseTileRework(
-        placeReason: '3',
-        isSaturday: isSaturday,
-        searchType: SearchType.group,
-        obed: obed,
-        index: lesson.number,
-        lesson: lesson,
-      ));
-
-    } else {
-
-      if (zamena?.courseID == 10843) {
-
-        if (lesson == null) {
-          return [];
-        }
-        
-        tiles.add(
-          EmptyCourseTileRework(
-            searchType: SearchType.group,
-            obed: obed,
-            index: zamena!.lessonTimingsID,
-            placeReason: '4',
-            lesson: Lesson(
-            id: -1,
-            number: lesson.number,
-            group: lesson.group,
-            date: lesson.date,
-            course: lesson.course,
-            teacher: lesson.teacher,
-            cabinet: lesson.cabinet,
-          ),)
-        );
-        
+      if (zamena == null && lesson != null) {
+        tiles.add(TileLessonData(lesson: lesson));
       } else {
-        tiles.add(CourseTileRework(
-          placeReason: '5',
-          searchType: SearchType.group,
-          index: zamena!.lessonTimingsID,
-          isSaturday: isSaturday,
-          isZamena: true,
-          swapedLesson: lesson,
-          obed: obed,
-          
-          lesson: Lesson(
+        if (zamena?.courseID == 10843) {
+          if (lesson == null) {
+            return [];
+          }
 
-            id: -1,
-            number: zamena.lessonTimingsID,
-            group: zamena.groupID,
-            date: zamena.date,
-            course: zamena.courseID,
+          tiles.add(TileRemovedLessonData(lesson: lesson));
+        } else {
 
-            teacher: zamena.teacherID,
-            cabinet: zamena.cabinetID
-          ),
-        ),
-      );
+          if (lesson == null) {
+            tiles.add(TileWithZamenaData(lesson: Lesson.fromZamena(zamena!)));
+          } else {
+            tiles.add(
+              TileZamenaOnLesson(
+                lesson: lesson,
+                zamena: Lesson.fromZamena(zamena!)
+              )
+            );
+          }
+        }
       }
     }
 
     return tiles;
   }
 
-  List<Widget> buildTeacherTiles({
+  List<TileData> buildTeacherTiles({
     required final int teacherId,
     required final ScheduleViewMode viewMode,
     required final Paras para,
@@ -182,18 +88,11 @@ class ScheduleTilesBuilder {
     required final bool isSaturday,
   }) {
 
-    List<Widget> tiles = [];
+    List<TileData> tiles = [];
 
     if (viewMode == ScheduleViewMode.standart) {
-      return para.lesson!.map((final lesson) {
-        return CourseTileRework(
-          placeReason: 'para default',
-          searchType: SearchType.teacher,
-          isSaturday: isSaturday,
-          index: lesson.number,
-          lesson: lesson,
-          obed: obed,
-        );
+      return para.lesson!.map<TileLessonData>((final Lesson lesson) {
+        return TileLessonData(lesson: lesson);
       }).toList();
     }
 
@@ -210,33 +109,14 @@ class ScheduleTilesBuilder {
         ) {
           for (Zamena zamena in para.zamena!) {
             if (zamena.teacherID == teacherId) {
-              tiles.add(CourseTileRework(
-                placeReason: 'only zamena',
-                searchType: SearchType.teacher,
-                isSaturday: isSaturday,
-                index: zamena.lessonTimingsID,
-                isZamena: true,
-                lesson: Lesson(
-                  id: zamena.id,
-                  teacher: zamena.teacherID,
-                  course: zamena.courseID,
-                  number: zamena.lessonTimingsID,
-                  group: zamena.groupID,
-                  cabinet: zamena.cabinetID,
-                  date: zamena.date
-                ),
-                swapedLesson: para.lesson!.first,
-                obed: obed,
+
+              tiles.add(TileZamenaOnLesson(
+                lesson: para.lesson!.first,
+                zamena: Lesson.fromZamena(zamena)
               ));
             } else {
               if (para.lesson!.first.group == zamena.groupID) {
-                tiles.add(EmptyCourseTileRework(
-                  placeReason: 'only zamena swap lesson',
-                  searchType: SearchType.teacher,
-                  lesson: para.lesson!.first,
-                  index: para.lesson!.first.number,
-                  obed: obed
-                ));
+                tiles.add(TileRemovedLessonData(lesson: para.lesson!.first));
               }
             }
           }
@@ -248,13 +128,7 @@ class ScheduleTilesBuilder {
           && para.zamenaFull!.any((final ZamenaFull zamenaFull) => zamenaFull.group == para.lesson!.first.group)
           && !para.zamena!.any((final Zamena zamena) => zamena.teacherID == teacherId)
         ) {
-          tiles.add(EmptyCourseTileRework(
-            placeReason: 'only zamena swap lesson',
-            searchType: SearchType.teacher,
-            lesson: para.lesson!.first,
-            index: para.lesson!.first.number,
-            obed: obed
-          ));
+          tiles.add(TileRemovedLessonData(lesson: para.lesson!.first));
         }
 
       // Если нет дефолтной пары но есть замена
@@ -264,64 +138,12 @@ class ScheduleTilesBuilder {
       ) {
         for (Zamena zamena in para.zamena!) {
           if (zamena.teacherID == teacherId) {
-            tiles.add(CourseTileRework(
-              placeReason: 'only zamena',
-              searchType: SearchType.teacher,
-              isSaturday: isSaturday,
-              index: zamena.lessonTimingsID,
-              isZamena: true,
-              lesson: Lesson(
-                id: zamena.id,
-                teacher: zamena.teacherID,
-                course: zamena.courseID,
-                number: zamena.lessonTimingsID,
-                group: zamena.groupID,
-                cabinet: zamena.cabinetID,
-                date: zamena.date
-              ),
-              obed: obed,
-            ));
+            tiles.add(TileWithZamenaData(lesson: Lesson.fromZamena(zamena)));
           }
         }
       }
 
       return tiles;
-      // return para.zamena!.map((final zamena) {
-      //   // Если замена не на того же преподавателя
-      //   if (zamena.teacherID != teacherId) {
-      //     // Если есть в стандартном расписании
-      //     final List<Lesson>? lessons = para.lesson?.where((final Lesson lesson) => lesson.group == zamena.groupID).toList();
-      //     if (lessons != null && lessons.isNotEmpty) {
-      //       return EmptyCourseTileRework(
-      //         placeReason: 'only zamena swap lesson',
-      //         searchType: SearchType.teacher,
-      //         lesson: lessons.first,
-      //         index: lessons.first.number,
-      //         obed: obed
-      //       );
-      //     } else {
-      //       return Text('${zamena.groupID.toString()} ${para.lesson.toString()}');
-      //     }
-      //   }
-
-      //   return CourseTileRework(
-      //     placeReason: 'only zamena',
-      //     searchType: SearchType.group,
-      //     isSaturday: isSaturday,
-      //     index: zamena.lessonTimingsID,
-      //     isZamena: true,
-      //     lesson: Lesson(
-      //       id: zamena.id,
-      //       teacher: zamena.teacherID,
-      //       course: zamena.courseID,
-      //       number: zamena.lessonTimingsID,
-      //       group: zamena.groupID,
-      //       cabinet: zamena.cabinetID,
-      //       date: zamena.date
-      //     ),
-      //     obed: obed,
-      //   );
-      // }).toList();
     }
 
     // Если нет замен, то ставим стандартное расписание, без учета пар с полной заменой
@@ -338,25 +160,12 @@ class ScheduleTilesBuilder {
           final bool zamenaFull = para.zamenaFull!.any((final zamena) => zamena.group == para2.group);
 
           if (zamenaFull) {
-            tiles.add(EmptyCourseTileRework(
-              placeReason: '1',
-              searchType: SearchType.teacher,
-              lesson: para2,
-              index: para2.number,
-              obed: obed
-            ));
+            tiles.add(TileRemovedLessonData(lesson: para2));
             continue;
           }
         }
 
-        tiles.add(CourseTileRework(
-          placeReason: 'para',
-          searchType: SearchType.teacher,
-          index: para2.number,
-          isSaturday: isSaturday,
-          lesson: para2,
-          obed: obed,
-        ));
+        tiles.add(TileLessonData(lesson: para2));
       }
     }
 
@@ -367,23 +176,7 @@ class ScheduleTilesBuilder {
       && para.zamena!.isNotEmpty
     ) {
       for (Zamena para2 in para.zamena!) {
-        tiles.add(CourseTileRework(
-          placeReason: 'zamena without para',
-          searchType: SearchType.teacher,
-          isZamena: true,
-          isSaturday: isSaturday,
-          obed: obed,
-          index: para2.lessonTimingsID,
-          lesson: Lesson(
-            id: -1,
-            number: para2.lessonTimingsID,
-            group: para2.groupID,
-            date: para2.date,
-            course: para2.courseID,
-            teacher: para2.teacherID,
-            cabinet: para2.cabinetID
-          ),
-        ));
+        tiles.add(TileWithZamenaData(lesson: Lesson.fromZamena(para2)));
       }
     }
 
@@ -394,25 +187,8 @@ class ScheduleTilesBuilder {
       && para.zamena!.isNotEmpty
     ) {
       for (Zamena para2 in para.zamena!) {
-
         if (para2.teacherID == teacherId) {
-          tiles.add(CourseTileRework(
-          placeReason: 'zamena without para',
-          searchType: SearchType.teacher,
-          isZamena: true,
-          isSaturday: isSaturday,
-          obed: obed,
-          index: para2.lessonTimingsID,
-          lesson: Lesson(
-            id: -1,
-            number: para2.lessonTimingsID,
-            group: para2.groupID,
-            date: para2.date,
-            course: para2.courseID,
-            teacher: para2.teacherID,
-            cabinet: para2.cabinetID
-          ),
-        ));
+          tiles.add(TileWithZamenaData(lesson: Lesson.fromZamena(para2)));
         }
       }
     }
@@ -438,62 +214,30 @@ class ScheduleTilesBuilder {
 
             continue;
           }
-          
-          tiles.add(CourseTileRework(
-            placeReason: 'group zamena default para',
-            searchType: SearchType.teacher,
-            isZamena: true,
-            isSaturday: isSaturday,
-            obed: obed,
-            index: para2.lessonTimingsID,
-            swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
-            lesson: Lesson(
-              id: -1,
-              number: para2.lessonTimingsID,
-              group: para2.groupID,
-              date: para2.date,
-              course: para2.courseID,
-              teacher: para2.teacherID,
-              cabinet: para2.cabinetID
-            ),
-          ));
 
+          tiles.add(
+            TileZamenaOnLesson(
+              lesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.group == para2.groupID),
+              zamena: Lesson.fromZamena(para2)
+            )
+          );
         } else {
           // Если это просто замена другой группы
           if (para2.teacherID != teacherId) {
             final Lesson? lesson = para.lesson!.where((final Lesson lesson) => lesson.group == para2.groupID).firstOrNull;
 
             if (lesson != null) {
-              tiles.add(EmptyCourseTileRework(
-                placeReason: '2',
-                searchType: SearchType.teacher,
-                lesson: lesson,
-                index: para2.lessonTimingsID,
-                obed: obed
-              ));
+              tiles.add(TileRemovedLessonData(lesson: lesson));
             }
                       
             continue;
           }
 
-          tiles.add(CourseTileRework(
-            placeReason: 'another group zamena',
-            searchType: SearchType.teacher,
-            isZamena: true,
-            obed: obed,
-            isSaturday: isSaturday,
-            swapedLesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.number == para2.lessonTimingsID),
-            index: para2.lessonTimingsID,
-            lesson: Lesson(
-              id: -1,
-              number: para2.lessonTimingsID,
-              group: para2.groupID,
-              date: para2.date,
-              course: para2.courseID,
-              teacher: para2.teacherID,
-              cabinet: para2.cabinetID
-            ),
-          ));
+          tiles.add(
+            TileZamenaOnLesson(
+              lesson: para.lesson!.firstWhere((final Lesson lesson) => lesson.number == para2.lessonTimingsID),
+              zamena: Lesson.fromZamena(para2))
+            );
         }
       }
 
@@ -513,13 +257,7 @@ class ScheduleTilesBuilder {
               continue;
             }
 
-            tiles.add(EmptyCourseTileRework(
-              placeReason: '2',
-              searchType: SearchType.teacher,
-              lesson: lesson,
-              index: lesson.number,
-              obed: obed
-            ));
+            tiles.add(TileRemovedLessonData(lesson: lesson));
           } else {
             if (
               para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false
@@ -528,24 +266,11 @@ class ScheduleTilesBuilder {
               if (para.zamena?.any((final Zamena zamena) => zamena.teacherID == teacherId) ?? false) {
 
               } else {
-                tiles.add(EmptyCourseTileRework(
-                  placeReason: '3',
-                  searchType: SearchType.teacher,
-                  lesson: lesson,
-                  index: lesson.number,
-                  obed: obed
-                ));
+                tiles.add(TileRemovedLessonData(lesson: lesson));
               }
               
             } else {
-              tiles.add(CourseTileRework(
-                placeReason: 'para on another zamenas',
-                searchType: SearchType.teacher,
-                index: lesson.number,
-                isSaturday: isSaturday,
-                lesson: lesson,
-                obed: obed,
-              ));
+              tiles.add(TileLessonData(lesson: lesson));
             }
             
             if (para.zamena?.any((final Zamena zamena) => zamena.groupID != lesson.group && lesson.teacher == teacherId) ?? false) {
@@ -555,26 +280,12 @@ class ScheduleTilesBuilder {
 
         } else {
           if (para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group && teacherId != zamena.teacherID) ?? false) {
-            tiles.add(EmptyCourseTileRework(
-              placeReason: '4',
-              searchType: SearchType.teacher,
-              lesson: lesson,
-              index: lesson.number,
-              obed: obed
-            ));
-
+            tiles.add(TileRemovedLessonData(lesson: lesson));
             continue;
           }
 
           if (!(para.zamena?.any((final Zamena zamena) => zamena.groupID == lesson.group) ?? true)) {
-            tiles.add(CourseTileRework(
-              placeReason: 'para with another zamena',
-              searchType: SearchType.teacher,
-              index: lesson.number,
-              isSaturday: isSaturday,
-              lesson: lesson,
-              obed: obed,
-            ));
+            tiles.add(TileLessonData(lesson: lesson));
           }
         }
       }
@@ -582,6 +293,137 @@ class ScheduleTilesBuilder {
 
     return tiles;
   }
+}
+
+final scheduleTilesBuilderProvider = Provider<ScheduleTilesBuilder>((final ref) {
+  return ScheduleTilesBuilder(ref: ref);
+});
+
+class ScheduleTilesBuilder {
+  final Ref ref;
+
+  ScheduleTilesBuilder({required this.ref});
+
+  List<Widget> buildGroupTiles({
+    required final ZamenaFull? zamenaFull,
+    required final ScheduleViewMode viewMode,
+    required final bool isSaturday,
+    required final Paras para,
+    required final bool obed,
+  }) {
+    final List<TileData> tiles = ref.watch(scheduleTileDataBuilderProvider).buildGroupTiles(
+      zamenaFull: zamenaFull,
+      viewMode: viewMode,
+      isSaturday: isSaturday,
+      para: para,
+      obed: obed
+    );
+
+    return tiles.map((final TileData tile) {
+      switch (tile) {
+        case TileLessonData a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.group,
+            isSaturday: isSaturday,
+            index: a.lesson.number,
+            lesson: a.lesson,
+            obed: obed,
+          );
+        case TileRemovedLessonData a:
+          return EmptyCourseTileRework(
+            placeReason: "placeReason",
+            searchType: SearchType.group,
+            lesson: a.lesson,
+            index: a.lesson.number,
+            obed: obed
+          );
+        case TileWithZamenaData a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.group,
+            isZamena: true,
+            isSaturday: isSaturday,
+            index: a.lesson.number,
+            lesson: a.lesson,
+            obed: obed,
+          );
+        case TileZamenaOnLesson a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.group,
+            isZamena: true,
+            isSaturday: isSaturday,
+            index: a.zamena.number,
+            lesson: a.zamena,
+            swapedLesson: a.lesson,
+            obed: obed,
+          );
+      }
+    }).toList();
+  }
+
+  List<Widget> buildTeacherTiles({
+    required final int teacherId,
+    required final ScheduleViewMode viewMode,
+    required final Paras para,
+    required final bool obed,
+    required final bool isSaturday,
+  }) {
+
+    final List<TileData> tiles = ref.watch(scheduleTileDataBuilderProvider).buildTeacherTiles(
+      teacherId: teacherId,
+      viewMode: viewMode,
+      isSaturday: isSaturday,
+      para: para,
+      obed: obed
+    );
+
+    return tiles.map((final TileData tile) {
+      switch (tile) {
+        case TileLessonData a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.teacher,
+            isSaturday: isSaturday,
+            index: a.lesson.number,
+            lesson: a.lesson,
+            obed: obed,
+          );
+        case TileRemovedLessonData a:
+          return EmptyCourseTileRework(
+            placeReason: "placeReason",
+            searchType: SearchType.teacher,
+            lesson: a.lesson,
+            index: a.lesson.number,
+            obed: obed
+          );
+        case TileWithZamenaData a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.teacher,
+            isZamena: true,
+            isSaturday: isSaturday,
+            index: a.lesson.number,
+            lesson: a.lesson,
+            obed: obed,
+          );
+        case TileZamenaOnLesson a:
+          return CourseTileRework(
+            placeReason: 'para default',
+            searchType: SearchType.teacher,
+            isZamena: true,
+            isSaturday: isSaturday,
+            index: a.zamena.number,
+            lesson: a.zamena,
+            swapedLesson: a.lesson,
+            obed: obed,
+          );
+      }
+    }).toList();
+  }
+
+  
 
   List<ParaData> buildParaData({
     required final Paras para,

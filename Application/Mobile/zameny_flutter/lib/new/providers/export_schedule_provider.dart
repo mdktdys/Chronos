@@ -35,7 +35,7 @@ enum ExportScheduleType {
   ),
   excel(
     'Excel',
-    'Будет отображено расписание без замен',
+    null,
     Images.excel,
   );
 
