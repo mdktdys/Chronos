@@ -117,7 +117,7 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
                     telegramLink: day.telegramLink,
                     fullSwap: (
                       (day.zamenaFull != null)
-                      && (scheduleSettings.sheduleViewMode == ScheduleViewMode.schedule)
+                      && (scheduleSettings.sheduleViewMode == ScheduleViewMode.schedule || scheduleSettings.sheduleViewMode == ScheduleViewMode.zamenas)
                     ),
                   ),
                 );

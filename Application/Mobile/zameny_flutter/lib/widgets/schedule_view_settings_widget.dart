@@ -78,7 +78,7 @@ class _CustomSwitchState<T> extends State<CustomSwitch<T>> {
                 -1.0 + (2.0 * index) / (widget.values.length - 1),
                 0,
               ),
-            duration: const Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 150),
             curve: Curves.easeInOut,
             child: AnimatedContainer(
               duration: Delays.morphDuration,
@@ -116,7 +116,7 @@ class ScheduleViewSettingsWidget extends ConsumerWidget {
                 provider.sheduleViewMode = mode;
                 notifier.notify();
               },
-              width: 100,
+              width: 70,
               values: ScheduleViewMode.values
             ),
             Text(
@@ -189,13 +189,18 @@ class ScheduleViewSettingsWidget extends ConsumerWidget {
                   provider.sheduleViewMode = mode;
                   notifier.notify();
                 },
-                width: 100,
+                width: 70,
                 values: ScheduleViewMode.values
               ),
-              Text(
-                key: ValueKey(provider.sheduleViewMode),
-                provider.sheduleViewMode.name,
-                style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6)),
+              AnimatedSize(
+                duration: Delays.morphDuration,
+                alignment: Alignment.centerLeft,
+                curve: Curves.easeInOut,
+                child: Text(
+                  key: ValueKey(provider.sheduleViewMode),
+                  provider.sheduleViewMode.name,
+                  style: context.styles.ubuntu.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6)),
+                ),
               ),
               if (notifier.viewmode != ScheduleViewModes.list)
                 Row(
