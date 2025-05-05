@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter/foundation.dart';
@@ -19,7 +18,6 @@ import 'package:zameny_flutter/models/tile_data.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
-import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
 
@@ -198,41 +196,36 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
     thursdayTitleCell.cellStyle.backColor = primary;
     sheet.getRangeByName('D$offset:F$offset').merge();
 
-    // final mondayLessons = schedule[leftIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
-    // ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
-    // final thursdayLessons = schedule[rightIndex].paras.where((final Paras para) => para.lesson?.isNotEmpty ?? false).toList()
-    // ..sort((final a,final b) => a.number! > b.number! ? 1 : -1);
-
-    final mondayLessons = schedule[leftIndex];
-    final thursdayLessons = schedule[rightIndex];
+    final List<List<TileData>> mondayLessons = schedule[leftIndex];
+    final List<List<TileData>> thursdayLessons = schedule[rightIndex];
 
     int minimal = 1;
-    // if (
-    //   mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty
-    //   && mondayLessons.first.isNotEmpty && thursdayLessons.first.isNotEmpty
-    // ) {
-    //   minimal = math.min(mondayLessons.first.first.lesson.number, thursdayLessons.first.first.lesson.number);
-    // } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty && thursdayLessons.first.isNotEmpty) {
-    //   minimal = thursdayLessons.first.first.lesson.number;
-    // } else if (mondayLessons.isNotEmpty && mondayLessons.first.isNotEmpty && thursdayLessons.isEmpty) {
-    //   minimal = mondayLessons.first.first.lesson.number;
-    // } else {
-    //   minimal = 0;
-    // }
+    final int? leftMinimal = mondayLessons.expand((final a) => a).firstOrNull?.lesson.number;
+    final int? rightMinimal = thursdayLessons.expand((final a) => a).firstOrNull?.lesson.number;
+    
+    if (leftMinimal != null && rightMinimal != null) {
+      minimal = math.min(leftMinimal, rightMinimal);
+    } else if (leftMinimal != null && rightMinimal == null) {
+      minimal = leftMinimal;
+    } else if (leftMinimal == null && rightMinimal != null) {
+      minimal = rightMinimal;
+    } else {
+      minimal = 0;
+    }
+
+    final int? leftMaximal = mondayLessons.expand((final a) => a).lastOrNull?.lesson.number;
+    final int? rightMaximal = thursdayLessons.expand((final a) => a).lastOrNull?.lesson.number;
 
     int maximal = 7;
-    // if (
-    //   mondayLessons.isNotEmpty && thursdayLessons.isNotEmpty
-    //   && mondayLessons.last.isNotEmpty && thursdayLessons.last.isNotEmpty
-    // ) {
-    //   maximal = math.max(mondayLessons.last.first.lesson.number, thursdayLessons.last.first.lesson.number);
-    // } else if (mondayLessons.isEmpty && thursdayLessons.isNotEmpty && thursdayLessons.last.isNotEmpty) {
-    //   maximal = thursdayLessons.last.first.lesson.number;
-    // } else if (mondayLessons.isNotEmpty && mondayLessons.last.isNotEmpty && thursdayLessons.isEmpty) {
-    //   maximal = mondayLessons.last.first.lesson.number;
-    // } else {
-    //   maximal = 0;
-    // }
+    if (leftMaximal != null && rightMaximal != null) {
+      maximal = math.max(leftMaximal, rightMaximal);
+    } else if (leftMaximal != null && rightMaximal == null) {
+      maximal = leftMaximal;
+    } else if (leftMaximal == null && rightMaximal != null) {
+      maximal = rightMaximal;
+    } else {
+      maximal = 0;
+    }
 
     int j = 0;
     for (int i = minimal; i <= maximal; i++) {
@@ -349,7 +342,6 @@ class SearchItemNotifier extends StateNotifier<SearchItem?> {
     required final int type
   }) async {
     isLoading = true;
-    log('message');
     final SearchItem? item = await ref.watch(futureSearchItemProvider((
       type: type,
       id: id,
