@@ -38,7 +38,7 @@ class DayScheduleParasWidget extends ConsumerWidget {
     final SearchItem? item = ref.watch(searchItemProvider);
     final bool isSaturday = daySchedule.date.weekday == 6;
 
-    if (daySchedule.holidays.isNotEmpty && (settings.sheduleViewMode == ScheduleViewMode.zamenas)) {
+    if (daySchedule.holidays.isNotEmpty && (settings.sheduleViewMode == ScheduleViewMode.schedule)) {
       return Column(
         children: daySchedule.holidays.map((final Holiday holiday) {
           return NoParasWidget(reason: holiday.name);
@@ -216,7 +216,7 @@ class NoParasWidget extends StatelessWidget {
         padding: const EdgeInsets.all(20),
         child: Center(
           child: Text(
-            '$reason 🎉',
+            reason,
             style: context.styles.ubuntuInversePrimary20,
           ),
         ),

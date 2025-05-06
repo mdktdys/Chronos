@@ -19,5 +19,8 @@ class TileLessonData extends TileData {
 class TileZamenaOnLesson extends TileData {
   final Lesson zamena;
 
-  TileZamenaOnLesson({required super.lesson, required this.zamena});
+  TileZamenaOnLesson({
+    required super.lesson,
+    required this.zamena
+  });
 }
