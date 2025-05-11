@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:url_launcher/url_launcher.dart';
 
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 
 class ZamenaLinksBottomSheet extends StatelessWidget {
@@ -62,7 +63,7 @@ class ZamenaLinksBottomSheet extends StatelessWidget {
                       ),
                     ),
                     Text(
-                      '${links.toList()[index].created}',
+                      links.toList()[index].created.toddmmyyhhmm(),
                       style: TextStyle(
                         fontFamily: 'Ubuntu',
                         fontSize: 10,

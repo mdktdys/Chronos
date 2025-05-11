@@ -54,6 +54,10 @@ extension DateTimeExtension on DateTime {
     return DateFormat('dd.MM.y HH.mm.ss').format(this);
   }
 
+  String toddmmyyhhmm() {
+    return DateFormat('dd.MM.y HH:mm').format(this);
+  }
+
   String toyyyymmdd() {
     return DateFormat('y-MM-dd').format(this);
   }
