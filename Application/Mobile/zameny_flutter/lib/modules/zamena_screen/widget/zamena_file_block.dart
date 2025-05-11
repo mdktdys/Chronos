@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_file_link_provider.dart';
@@ -61,7 +62,7 @@ class ZamenaFileBlock extends ConsumerWidget {
                                   style: context.styles.ubuntuInverseSurface12,
                                 ),
                                 Text(
-                                  '${link.created}',
+                                  link.created.toddmmyyhhmm(),
                                   style: context.styles.ubuntuInverseSurface10.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.6))
                                 ),
                               ],
