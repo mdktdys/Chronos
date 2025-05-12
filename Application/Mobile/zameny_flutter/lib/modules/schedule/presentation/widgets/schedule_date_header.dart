@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/svg.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/toggle_week_button.dart';
@@ -49,7 +53,7 @@ class DateHeaderDatePicker extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext ctx, final WidgetRef ref) {
-    final navigationDate = ref.watch(navigationDateProvider);
+    final DateTime navigationDate = ref.watch(navigationDateProvider);
 
     final int currentWeekNumber = ((navigationDate.difference(Constants.septemberFirst).inDays + Constants.septemberFirst.weekday) ~/ 7) + 1;
     final int todayWeekNumber = ((DateTime.now().difference(Constants.septemberFirst).inDays + Constants.septemberFirst.weekday) ~/ 7) + 1;
@@ -144,37 +148,62 @@ class DateHeaderDatePicker extends ConsumerWidget {
                 height: 32,
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 5,
                   children: [
                     Text(
                       'Неделя $currentWeekNumber',
                       style: ctx.styles.ubuntuInverseSurfaceBold16,
                     ),
-                    const SizedBox(width: 5),
-                    AnimatedSize(
-                      curve: Curves.easeOutCubic,
-                      duration: const Duration(milliseconds: 150),
-                      child: isCurrentWeek
-                        ? Container(
-                          decoration: BoxDecoration(
-                            color: Theme.of(ctx).colorScheme.primary,
-                            borderRadius: const BorderRadius.all(Radius.circular(20))
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(6.0),
-                            child: Text(
-                              'Текущая',
-                              style: ctx.styles.ubuntuCanvasColorBold14,
-                            ),
-                          ),
-                          )
-                        : const SizedBox.shrink(),
-                    ),
+                    CurrentNavigationWeekBadge(isCurrentWeek: isCurrentWeek),
                   ],
                 ),
               ),
             ],
           ),
         ),
+      ),
+    );
+  }
+}
+
+class CurrentNavigationWeekBadge extends ConsumerWidget {
+  final bool isCurrentWeek;
+
+  const CurrentNavigationWeekBadge({
+    required this.isCurrentWeek,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    TextStyle textStyle = context.styles.ubuntuCanvasColorBold14;
+
+    if (!isCurrentWeek) {
+      textStyle = textStyle.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), fontSize: 14);
+    }
+
+    return Bounceable(
+      onTap: !isCurrentWeek
+        ? ref.read(navigationDateProvider.notifier).reset
+        : null,
+      child: AnimatedContainer(
+        duration: Delays.morphDuration,
+        padding: const EdgeInsets.all(6),
+        decoration: BoxDecoration(
+          borderRadius: const BorderRadius.all(Radius.circular(20)),
+          color: isCurrentWeek
+            ? Theme.of(context).colorScheme.primary
+            : Colors.transparent,
+        ),
+        child: isCurrentWeek
+          ? Text(
+            'Текущая',
+            style: textStyle,
+          )
+          : SvgPicture.asset(
+            Images.reverse,
+            colorFilter: ColorFilter.mode(textStyle.color!, BlendMode.srcIn),
+          ),
       ),
     );
   }
