@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
+import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:go_router/go_router.dart';
@@ -35,6 +36,14 @@ class App extends ConsumerWidget {
           theme: themeProvider.theme,
           title: 'Замены уксивтика',
           routerConfig: router,
+          locale: const Locale('ru', 'RU'),
+          supportedLocales: const [
+            Locale('ru',)
+          ],
+          localizationsDelegates: const [
+            GlobalMaterialLocalizations.delegate,
+            GlobalWidgetsLocalizations.delegate,
+          ],
         )
       ),
     );

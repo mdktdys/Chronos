@@ -76,64 +76,53 @@ class DateHeaderDatePicker extends ConsumerWidget {
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          // onTap: () {
-          //   showDialog(
-          //     context: ctx,
-          //     builder: (final BuildContext context) {
-          //       return Center(
-          //           child: Container(
-          //         width: 380,
-          //         height: 450,
-          //         padding: const EdgeInsets.all(8),
-          //         decoration: BoxDecoration(
-          //             color: Theme.of(context).colorScheme.surface,
-          //             borderRadius: BorderRadius.circular(20),),
-          //         child: sf.SfDateRangePicker(
-          //           selectionColor: Theme.of(context)
-          //               .colorScheme
-          //               .primary
-          //               .withValues(alpha: 0.6),
-          //           backgroundColor: Colors.transparent,
-          //           selectionRadius: 10,
-          //           initialDisplayDate: DateTime.now(),
-          //           showActionButtons: true,
-          //           allowViewNavigation: false,
-          //           onCancel: () => Navigator.of(context).pop(),
-          //           onSubmit: (final p0) {
-          //             if (p0 == null) {
-          //               Navigator.of(context).pop();
-          //               return;
-          //             }
-          //             final DateTime time = (p0 as DateTime);
-          //             provider.navigationDate = time;
-          //             provider.currentWeek = provider.getWeekNumber(time);
-          //             provider.dateSwitched(ctx);
-          //             Navigator.of(context).pop();
-          //           },
-          //           monthViewSettings:
-          //               sf.DateRangePickerMonthViewSettings(
-          //                   firstDayOfWeek: DateTime.monday,
-          //                   blackoutDates: GetIt.I
-          //                       .get<Data>()
-          //                       .holidays
-          //                       .map((final e) => e.date)
-          //                       .toList(),),
-          //           showTodayButton: true,
-          //           showNavigationArrow: true,
-          //           navigationDirection:
-          //               sf.DateRangePickerNavigationDirection.vertical,
-          //           navigationMode:
-          //               sf.DateRangePickerNavigationMode.scroll,
-          //           headerStyle: const sf.DateRangePickerHeaderStyle(
-          //               backgroundColor: Colors.transparent,),
-          //           cellBuilder: (final context, final cellDetails) {
-          //             return MonthCell(details: cellDetails);
-          //           },
-          //         ),
-          //       ),);
-          //     },
-          //   );
-          // },
+          onTap: () {
+            showDialog(
+              context: ctx,
+              builder: (final BuildContext context) {
+                return Center(
+                    child: Container(
+                  width: 380,
+                  height: 450,
+                  padding: const EdgeInsets.all(8),
+                  decoration: BoxDecoration(
+                    color: Theme.of(context).colorScheme.surface,
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: sf.SfDateRangePicker(
+                    cancelText: 'Закрыть',
+                    confirmText: 'Ок',
+                    selectionColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                    backgroundColor: Colors.transparent,
+                    initialDisplayDate: DateTime.now(),
+                    showActionButtons: true,
+                    allowViewNavigation: false,
+                    onCancel: () => Navigator.of(context).pop(),
+                    onSubmit: (final p0) {
+                      if (p0 == null) {
+                        Navigator.of(context).pop();
+                        return;
+                      }
+
+                      final DateTime time = (p0 as DateTime);
+                      ref.watch(navigationDateProvider.notifier).state = time;
+                      Navigator.of(context).pop();
+                    },
+                    selectionRadius: -10,
+                    selectionShape: sf.DateRangePickerSelectionShape.rectangle,
+                    monthViewSettings: const sf.DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
+                    showNavigationArrow: true,
+                    navigationDirection: sf.DateRangePickerNavigationDirection.vertical,
+                    navigationMode: sf.DateRangePickerNavigationMode.scroll,
+                    headerStyle: const sf.DateRangePickerHeaderStyle(backgroundColor: Colors.transparent,),
+                    cellBuilder: (final context, final cellDetails) {
+                      return MonthCell(details: cellDetails);
+                    },
+                  ),
+                ),);
+              },
+            );
+          },
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
