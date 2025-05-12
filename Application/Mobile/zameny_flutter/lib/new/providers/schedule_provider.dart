@@ -377,4 +377,8 @@ class NavigationDateNotifier extends StateNotifier<DateTime> {
     }
     return date;
   }
+
+  void reset() {
+    state = _initializeDate();
+  }
 }
