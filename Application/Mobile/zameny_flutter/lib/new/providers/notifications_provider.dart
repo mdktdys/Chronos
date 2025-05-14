@@ -71,6 +71,14 @@ class NotificationsNotifier extends ChangeNotifier {
 
   NotificationsNotifier({required this.ref}){
     fCMToken = GetIt.I.get<SharedPreferences>().getString('FCM');
+
+    _firebaseMessaging.onTokenRefresh.listen((final String token) async {
+      if (fCMToken != null) {
+        await GetIt.I.get<SupabaseClient>().from('MessagingClients').update({'token': token}).eq('token', fCMToken!);
+      }
+      fCMToken = token;
+      await GetIt.I.get<SharedPreferences>().setString('FCM', token);
+    });
   }
 
   Future<void> subscribeForNotifciations(final int targetId, final int targetTypeId) async {
