@@ -15,7 +15,7 @@ class MapProviderNotifier extends ChangeNotifier {
   List<Floor> floors = [
     const Floor(
       url:'https://ojbsikxdqcbuvamygezd.supabase.co/storage/v1/object/sign/zamenas/2floor.glb?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJ6YW1lbmFzLzJmbG9vci5nbGIiLCJpYXQiOjE3NDczMTA4OTgsImV4cCI6MTc3ODg0Njg5OH0.XO4M_sWJNimeNZEOtLFkCuKPKlQri6p4XcoF8MdgS7I',
-      name: '2',
+      name: '2 Этаж',
     ),
   ];
   late Floor selectedFloor;
