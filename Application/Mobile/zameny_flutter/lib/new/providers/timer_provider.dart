@@ -5,6 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
@@ -112,6 +113,15 @@ class TodayDayScheduleNotifier extends AsyncNotifier<DaySchedule?> {
       return schedule.firstOrNull;
     } else if (searchItem is Teacher) {
       List<DaySchedule> schedule = await daySchedulesProvider.teacherSchedule(
+        searchItem: searchItem,
+        startdate: startdate,
+        timings: timings,
+        endDate: endDate,
+      );
+
+      return schedule.firstOrNull;
+    } else if (searchItem is Cabinet) {
+      List<DaySchedule> schedule = await daySchedulesProvider.cabinetSchedule(
         searchItem: searchItem,
         startdate: startdate,
         timings: timings,

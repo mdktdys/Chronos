@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:sliding_up_panel2/sliding_up_panel2.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/spacing.dart';
-import 'package:zameny_flutter/modules/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_date_navigation.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_file_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';

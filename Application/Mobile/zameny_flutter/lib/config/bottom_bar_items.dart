@@ -42,12 +42,14 @@ List<BottomBarModel> model = [
     path: 'zamenas',
     enabled: true,
   ),
-  // BottomBarModel(
-  //     index: 4,
-  //     activeicon: 'assets/icon/vuesax_linear_location.svg',
-  //     icon: 'assets/icon/vuesax_linear_location.svg',
-  //     title: 'Карта',
-  //     enabled: true,),
+  BottomBarModel(
+      index: 4,
+      activeicon: 'assets/icon/vuesax_linear_location.svg',
+      icon: 'assets/icon/vuesax_linear_location.svg',
+      title: 'Карта',
+      path: 'map',
+      enabled: true,
+    ),
   BottomBarModel(
     index: 3,
     activeicon: 'assets/icon/setting-2.svg',

@@ -7,7 +7,7 @@ import 'package:zameny_flutter/new/providers/groups_provider.dart';
 final searchItemsProvider = FutureProvider<List<SearchItem>>((final ref) async {
   return [
     ...ref.watch(groupsProvider).valueOrNull ?? [],
-    ...ref.watch(cabinetsProvider).valueOrNull ?? [],
+    // ...ref.watch(cabinetsProvider).valueOrNull ?? [],
     ...ref.watch(teachersProvider).valueOrNull ?? [],
   ];
 });
