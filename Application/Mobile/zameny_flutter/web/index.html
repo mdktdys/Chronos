@@ -43,10 +43,40 @@
   <!-- /Yandex.Metrika counter -->
 
   <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
-  
+
   <style id="splash-screen-style">
-    @import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap');
-    
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap');
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #ffffff;
+      }
+
+      .loading-text {
+        color: #ffffff;
+      }
+
+      .loading-indicator {
+        background-color: #1e1e1e;
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body {
+        background-color: #ffffff;
+        color: #000000;
+      }
+
+      .loading-text {
+        color: #000000;
+      }
+
+      .loading-indicator {
+        background-color: #adadad;
+      }
+    }
+
     html {
       height: 100%
     }
@@ -54,7 +84,7 @@
     body {
       margin: 0;
       min-height: 100%;
-      background-color: #121212;
+      /* background-color: #121212; */
       background-size: 100% 100%;
     }
 
@@ -120,12 +150,25 @@
     .splash-content.fade-out {
       opacity: 0;
       pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .splash-content.fade-out img,
+    .splash-content.fade-out .loading-indicator,
+    .splash-content.fade-out .loading-text {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+
+
+    .splash-content.fade-out {
+      opacity: 0;
+      pointer-events: none;
     }
 
     .loading-indicator {
       width: 200px;
       height: 4px;
-      background-color: #1e1e1e;
       border-radius: 2px;
       overflow: hidden;
       position: relative;
@@ -143,8 +186,7 @@
     }
 
     .loading-text {
-      color: #ffffff;
-      font-family: 'Roboto', sans-serif;
+      font-family: 'Ubuntu', sans-serif;
       font-size: 16px;
       min-width: 200px;
       text-align: center;

@@ -76,7 +76,7 @@ class MapScreen extends ConsumerWidget {
 
 class MapBody extends ConsumerWidget {
   final Floor url;
-  
+
   const MapBody({
     required this.url,
     super.key,
