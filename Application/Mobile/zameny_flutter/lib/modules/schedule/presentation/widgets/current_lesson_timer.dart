@@ -15,8 +15,8 @@ import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
-import 'package:zameny_flutter/new/providers/timer_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
 
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
@@ -164,7 +164,6 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     return Column(
       children: tiles.map((final Widget tile) {
         Widget wrappedTile = tile;
-        
         if (tile is CourseTileRework) {
           wrappedTile = Padding(
             padding: const EdgeInsets.only(top: 8),

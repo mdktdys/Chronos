@@ -1,4 +1,3 @@
-import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -13,9 +12,9 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/enums/export_schedule_type_exnum.dart';
 import 'package:zameny_flutter/config/extensions/color_extension.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
@@ -29,28 +28,7 @@ import 'package:zameny_flutter/widgets/button.dart';
 
 part 'export_schedule_provider.g.dart';
 
-enum ExportScheduleType {
-  current(
-    'Как тут',
-    null,
-    Images.export,
-  ),
-  excel(
-    'Excel',
-    null,
-    Images.excel,
-  );
 
-  final String title;
-  final String? description;
-  final String image;
-
-  const ExportScheduleType(
-    this.title,
-    this.description,
-    this.image,
-  );
-}
 
 @Riverpod()
 ScheduleExport scheduleExport (final Ref ref) {
@@ -102,11 +80,6 @@ class ScheduleExport {
       context: context,
       builder: (final context) => ExportTeacherStatsBottomSheet(teacher: teacher)
     );
-
-    // await _exportTeacherStats(
-    //   theme: Theme.of(context),
-    //   teacher: teacher
-    // );
   }
 
   Future<void> _exportTeacherStats({
@@ -129,7 +102,7 @@ class ScheduleExport {
     final String surface = theme.colorScheme.primary.getShadeColor(shadeValue: 20).colorToHex();
 
     sheet.getRangeByName('A1').setText('Часы преподавателя ${teacher.name}');
-    
+
     DateTime currentMonth = DateTime(startDate.year, startDate.month);
     int index = 1;
     while (currentMonth.isBefore(DateTime(endDate.year, endDate.month + 1))) {

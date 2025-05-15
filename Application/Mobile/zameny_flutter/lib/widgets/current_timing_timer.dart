@@ -7,6 +7,7 @@ import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/providers/timer_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
 
 class CurrentTimingTimer extends ConsumerWidget {
   const CurrentTimingTimer({super.key});
@@ -20,7 +21,7 @@ class CurrentTimingTimer extends ConsumerWidget {
     final now = DateTime.now();
 
     if (now.weekday == DateTime.sunday) {
-       return const SizedBox();
+      return const SizedBox();
     }
 
     if (schedule?.holidays.isNotEmpty ?? false) {

@@ -63,6 +63,7 @@ dependencies:
   flutterfall: ^1.0.5
   hidable: ^1.0.6
   o3d: ^3.1.0
+  permission_handler: ^12.0.0+1
 
 dev_dependencies:
   test: ^1.25.15

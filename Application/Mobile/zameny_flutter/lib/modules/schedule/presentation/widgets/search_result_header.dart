@@ -2,9 +2,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
-import 'package:flutter_portal/flutter_portal.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -13,85 +11,11 @@ import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_item_notification_button.dart';
 import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
-import 'package:zameny_flutter/new/providers/notifications_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
-import 'package:zameny_flutter/widgets/barrier_widget.dart';
-
-class SearchItemNotificationButton extends ConsumerWidget {
-  final SearchItem? item;
-
-  const SearchItemNotificationButton({
-    required this.item,
-    super.key
-  });
-
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    final ThemeData theme = Theme.of(context);
-
-    if (item == null) {
-      return const SizedBox.shrink();
-    }
-
-    final AsyncValue<SubscribtionState> subscription = ref.watch(subsribtionProvider(item!));
-    final provider = ref.read(subsribtionProvider(item!).notifier);
-
-    return Bounceable(
-      hitTestBehavior: HitTestBehavior.translucent,
-      onTap: () async {
-        if (subscription.isLoading) {
-          return;
-        }
-
-        if (subscription.value is SubscribtionSubscribed) {
-          await provider.onsubscribe();
-        } else {
-          await provider.subscribe();
-        }
-      },
-      child: Builder(
-        builder: (final context) {
-          final bool isNotificationSubscribed = subscription.value is SubscribtionSubscribed;
-
-          return AnimatedSwitcher(
-            duration: Delays.morphDuration,
-            child: Row(
-              key: ValueKey(subscription.value),
-              spacing: 8,
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                if (subscription.isLoading)
-                  const SizedBox(
-                    height: 24,
-                    width: 24,
-                    child: FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: RefreshProgressIndicator(
-                      ),
-                    ),
-                  ),
-                if (subscription.hasValue)
-                  SvgPicture.asset(
-                    isNotificationSubscribed ? Images.notificationBold : Images.notification,
-                    colorFilter: ColorFilter.mode(theme.colorScheme.primary, BlendMode.srcIn),
-                    width: 24,
-                  ),
-                Text(
-                  subscription.isLoading ? 'Загружаю...' :
-                  (isNotificationSubscribed ? 'Отписаться от уведомлений' : 'Подписаться на уведомления'),
-                  textAlign: TextAlign.left,
-                  style: context.styles.ubuntuInverseSurface14,
-                )
-              ],
-            ),
-          );
-        }
-      ),
-    );
-  }
-}
+import 'package:zameny_flutter/widgets/blur_dialog.dart';
 
 
 class SearchResultHeader extends ConsumerStatefulWidget {
@@ -193,7 +117,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                             width: 24,
                           ),
                           Text(
-                            'Экспорт расписание',
+                            'Экспорт расписания',
                             style: context.styles.ubuntuInverseSurface14,
                           )
                         ],
@@ -232,85 +156,6 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
           )
         )
       ],
-    );
-  }
-}
-
-class BlurDialog extends StatefulWidget {
-  final Widget Function(Function) popup;
-
-  const BlurDialog({
-    required this.popup,
-    super.key
-  });
-
-  @override
-  State<BlurDialog> createState() => _BlurDialogState();
-}
-
-class _BlurDialogState extends State<BlurDialog> with SingleTickerProviderStateMixin {
-  late final AnimationController controller;
-  bool opened = false;
-
-  @override
-  void initState() {
-    controller = AnimationController(vsync: this, value: 0, duration: Delays.morphDuration);
-    super.initState();
-  }
-
-  @override
-  void dispose() {
-    controller.dispose();
-    super.dispose();
-  }
-
-  Future<void> _onClose() async {
-    setState(() => opened = false);
-    controller.reverse();
-    opened = false;
-  }
-
-  @override
-  Widget build(final BuildContext context) {
-    return Barrier(
-      onClose: _onClose,
-      visible: opened,
-      child: PortalTarget(
-        visible: opened,
-        closeDuration: const Duration(seconds: 1),
-        anchor: const Aligned(
-          follower: Alignment.topRight,
-          target: Alignment.bottomLeft,
-        ),
-        portalFollower: Animate(
-          controller: controller,
-          value: 0.05,
-          effects: const [
-            FadeEffect(
-              duration: Duration(milliseconds: 250)
-            ),
-            ScaleEffect(
-              duration: Duration(milliseconds: 250),
-              alignment: Alignment.topRight,
-              curve: Curves.fastLinearToSlowEaseIn,
-            ),
-          ],
-          child: BackdropFilter(
-            filter: ImageFilter.blur(sigmaX: 5, sigmaY: 5),
-            child: widget.popup(_onClose)
-          ),
-        ),
-        child: IconButton(
-          icon: Icon(
-            Icons.more_vert,
-            color: Theme.of(context).colorScheme.inverseSurface,
-          ),
-          onPressed: () {
-            controller.forward().orCancel;
-            setState(() => opened = true);
-          },
-        ),
-      ),
     );
   }
 }
