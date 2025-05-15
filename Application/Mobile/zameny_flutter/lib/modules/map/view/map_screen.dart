@@ -82,6 +82,9 @@ class MapBody extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    return O3D.network(src:url.url);
+    return O3D.network(
+      src:url.url,
+      cameraOrbit: CameraOrbit(-45, 45, 15),
+    );
   }
 }

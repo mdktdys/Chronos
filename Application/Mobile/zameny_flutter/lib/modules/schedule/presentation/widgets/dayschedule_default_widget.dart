@@ -161,7 +161,7 @@ class _DayscheduleWidgetState extends ConsumerState<DayScheduleWidget> {
           date: widget.daySchedule.date,
           links: widget.daySchedule.zamenaLinks ?? [],
           telegramLink: widget.daySchedule.telegramLink,
-          fullSwap: (widget.daySchedule.zamenaFull != null && (provider.sheduleViewMode == ScheduleViewMode.zamenas || provider.sheduleViewMode == ScheduleViewMode.standart)),
+          fullSwap: (widget.daySchedule.zamenaFull != null && (provider.sheduleViewMode == ScheduleViewMode.zamenas || provider.sheduleViewMode == ScheduleViewMode.schedule)),
           toggleObed: _toggleObed,
           needObedSwitch: needObedSwitch,
           obed: obed,

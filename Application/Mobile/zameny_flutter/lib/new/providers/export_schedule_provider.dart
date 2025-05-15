@@ -413,7 +413,7 @@ class _ExportTeacherStatsBottomSheetState extends ConsumerState<ExportTeacherSta
                 }
                 ref.read(scheduleExportProvider)._exportTeacherStats(
                   startDate: selectedDate.startDate!,
-                  endDate: selectedDate.endDate!,
+                  endDate: selectedDate.endDate!.add(const Duration(days: 1)),
                   theme: Theme.of(context),
                   teacher: widget.teacher,
                 );
