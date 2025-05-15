@@ -1,3 +1,4 @@
+import 'dart:developer';
 import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
@@ -7,6 +8,7 @@ import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel;
 
 import 'package:zameny_flutter/config/constants.dart';
@@ -94,20 +96,26 @@ class ScheduleExport {
     required final BuildContext context,
     required final Teacher teacher,
   }) async {
-    await _exportTeacherStats(
-      theme: Theme.of(context),
-      teacher: teacher
+    showModalBottomSheet(
+      barrierColor: Colors.black.withValues(alpha: 0.3),
+      backgroundColor: Theme.of(context).colorScheme.surface,
+      context: context,
+      builder: (final context) => ExportTeacherStatsBottomSheet(teacher: teacher)
     );
+
+    // await _exportTeacherStats(
+    //   theme: Theme.of(context),
+    //   teacher: teacher
+    // );
   }
 
   Future<void> _exportTeacherStats({
     required final Teacher teacher,
     required final ThemeData theme,
+    required final DateTime startDate,
+    required final DateTime endDate,
   }) async {
     final List<LessonTimings> timings = ref.watch(timingsProvider).value!;
-    final DateTime startDate = Constants.septemberFirst;
-    final DateTime endDate = DateTime.now().add(const Duration(days: 1));
-    
     final TeacherStatsData stats = await ref.watch(teacherStatsProvider).getStats(
       startDate: startDate.toStartOfDay(),
       endDate: endDate.toEndOfDay(),
@@ -335,6 +343,87 @@ class ScheduleExport {
         sheet.getRangeByIndex(rowOffset + i, offset).cellStyle.fontColor = '#C67878';
       }
     }
+  }
+}
+
+class ExportTeacherStatsBottomSheet extends ConsumerStatefulWidget {
+  final Teacher teacher;
+
+  const ExportTeacherStatsBottomSheet({
+    required this.teacher,
+    super.key
+  });
+
+  @override
+  ConsumerState<ExportTeacherStatsBottomSheet> createState() => _ExportTeacherStatsBottomSheetState();
+}
+
+class _ExportTeacherStatsBottomSheetState extends ConsumerState<ExportTeacherStatsBottomSheet> {
+  PickerDateRange selectedDate = PickerDateRange(Constants.septemberFirst, DateTime.now().add(const Duration(days: 1)));
+
+  @override
+  Widget build(final BuildContext context) {
+    return SafeArea(
+      child: Padding(
+        padding: const EdgeInsets.all(14),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          mainAxisSize: MainAxisSize.min,
+          spacing: 12,
+          children: [
+            Text(
+              'Экспорт часов преподавателя',
+              textAlign: TextAlign.center,
+              style: context.styles.ubuntuPrimaryBold20,
+            ),
+            AnimatedSwitcher(
+              duration: Delays.morphDuration,
+              child: Text(
+                key: ValueKey(selectedDate),
+                selectedDate.endDate != null && selectedDate.startDate != null
+                ? 'Готово! Жми скачать'
+                : 'Выбери даты для экспорта',
+                textAlign: TextAlign.center,
+                style: context.styles.ubuntuInverseSurface40014,
+              ),
+            ),
+            Flexible(
+              child: AspectRatio(
+                aspectRatio: 1/1,
+                child: SfDateRangePicker(
+                  headerStyle: const DateRangePickerHeaderStyle(backgroundColor: Colors.transparent),
+                  backgroundColor: Colors.transparent,
+                  initialSelectedRange: PickerDateRange(Constants.septemberFirst, DateTime.now().add(const Duration(days: 1))),
+                  selectionShape: DateRangePickerSelectionShape.rectangle,
+                  selectionMode: DateRangePickerSelectionMode.range,
+                  monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
+                  maxDate: DateTime.now().add(const Duration(days: 1)),
+                  onSelectionChanged: (final dateRangePickerSelectionChangedArgs) {
+                    selectedDate = dateRangePickerSelectionChangedArgs.value;
+                    setState(() {});
+                  },
+                ),
+              ),
+            ),
+            Button.primary(
+              context: context,
+              onClicked: () {
+                if (selectedDate.endDate == null || selectedDate.startDate == null) {
+                  return;
+                }
+                ref.read(scheduleExportProvider)._exportTeacherStats(
+                  startDate: selectedDate.startDate!,
+                  endDate: selectedDate.endDate!,
+                  theme: Theme.of(context),
+                  teacher: widget.teacher,
+                );
+              },
+              text: 'Скачать'
+            )
+          ],
+        ),
+      ),
+    );
   }
 }
 

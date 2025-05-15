@@ -34,7 +34,7 @@ List<BottomBarModel> model = [
     path: 'schedule',
     enabled: true,
   ),
-  BottomBarModel( 
+  BottomBarModel(
     index: 2,
     activeicon: 'assets/icon/zamena_bold.svg',
     icon: 'assets/icon/zamena.svg',

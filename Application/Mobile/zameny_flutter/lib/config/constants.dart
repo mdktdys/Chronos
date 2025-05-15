@@ -1,5 +1,5 @@
 abstract class Constants {
-   // 1 Сентября 
+   // 1 Сентября
   static final DateTime septemberFirst = DateTime(2024, 9, 2);
 
   static double sideBarWidth = 64;
@@ -10,5 +10,5 @@ abstract class Constants {
   static String telegramChannel = 'https://t.me/mdktdys';
   static String telegramBot = 'https://t.me/bot_uksivt';
 
-  static String version = 'v15.05.25';
-} 
+  static String version = 'v16.05.25';
+}
