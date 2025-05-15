@@ -5,6 +5,7 @@ import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:o3d/o3d.dart';
 
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/map/providers/map_provider.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
 
@@ -20,7 +21,7 @@ class MapScreen extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final provider = ref.watch(mapProvider);
     WidgetsBinding.instance.addPostFrameCallback((final _){
-        ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);
+      ref.read(mainProvider).updateScrollDirection(ScrollDirection.forward);
     });
     return Scaffold(
       body: Stack(
@@ -56,10 +57,7 @@ class MapScreen extends ConsumerWidget {
                         padding: const EdgeInsets.all(8.0),
                         child: Text(
                           floor.name,
-                          // style: Fa.ubuntu14.copyWith(
-                          //   fontWeight: FontWeight.bold,
-                          //   fontSize: 20,
-                          // ),
+                          style: context.styles.ubuntuInverseSurface16,
                         ),
                       ),
                     ),

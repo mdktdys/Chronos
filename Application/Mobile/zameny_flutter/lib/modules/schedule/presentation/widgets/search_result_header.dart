@@ -203,7 +203,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                       Bounceable(
                         hitTestBehavior: HitTestBehavior.translucent,
                         onTap: () {
-                          // close();
+                          close();
                           ref.read(scheduleExportProvider).exportTeacherStats(
                             teacher: searchItem,
                             context: context

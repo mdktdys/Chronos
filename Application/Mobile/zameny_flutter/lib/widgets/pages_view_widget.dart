@@ -26,7 +26,7 @@ class PagesViewWidget extends ConsumerWidget {
         TimeTableScreen(),
         ScheduleScreen(),
         ZamenaScreen(),
-        // MapScreen(),
+        MapScreen(),
         SettingsScreen(),
         // PixelBattleScreen(),
       ],
