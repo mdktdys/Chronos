@@ -55,6 +55,17 @@ class SearchItemNotificationButton extends ConsumerWidget {
         builder: (final context) {
           final bool isNotificationSubscribed = subscription.value is SubscribtionSubscribed;
 
+          String text = '';
+          if (subscription.isLoading) {
+            text = 'Загружаю...';
+          } else if (subscription.value is SubscribtionSubscribed) {
+            text = 'Отписаться от уведомлений';
+          } else if (subscription.value is SubscribtionNonSubscribed) {
+            text = 'Подписаться на уведомления';
+          } else if (subscription.value is SubscribtionRestricted) {
+            text = 'Разрешить уведомления';
+          }
+
           return AnimatedSwitcher(
             duration: Delays.morphDuration,
             child: Row(
@@ -79,8 +90,7 @@ class SearchItemNotificationButton extends ConsumerWidget {
                     width: 24,
                   ),
                 Text(
-                  subscription.isLoading ? 'Загружаю...' :
-                  (isNotificationSubscribed ? 'Отписаться от уведомлений' : 'Подписаться на уведомления'),
+                  text,
                   textAlign: TextAlign.left,
                   style: context.styles.ubuntuInverseSurface14,
                 )
@@ -193,7 +203,7 @@ class _SearchResultHeaderState extends ConsumerState<SearchResultHeader> {
                             width: 24,
                           ),
                           Text(
-                            'Экспорт расписание',
+                            'Экспорт расписания',
                             style: context.styles.ubuntuInverseSurface14,
                           )
                         ],

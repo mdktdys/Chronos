@@ -5,6 +5,7 @@ import 'package:flutter/foundation.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -18,12 +19,9 @@ final norificationsProvider = ChangeNotifierProvider<NotificationsNotifier>((fin
 sealed class SubscribtionState {}
 class SubscribtionNonSubscribed extends SubscribtionState {}
 class SubscribtionSubscribed extends SubscribtionState {}
+class SubscribtionRestricted extends SubscribtionState {}
 
-final subsribtionProvider = NotifierProviderFamily<
-  SubsribtionNotifier,
-  AsyncValue<SubscribtionState>,
-  SearchItem
->(SubsribtionNotifier.new);
+final subsribtionProvider = NotifierProviderFamily<SubsribtionNotifier, AsyncValue<SubscribtionState>, SearchItem>(SubsribtionNotifier.new);
 
 class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, SearchItem> {
   SearchItem? item;
@@ -37,15 +35,42 @@ class SubsribtionNotifier extends FamilyNotifier<AsyncValue<SubscribtionState>, 
 
   Future<void> _load() async {
     final subs = await ref.read(subsriptionProvider.future);
-   
+
     if (subs.any((final sub) => sub.targetId == item?.id && sub.targetTypeId == item?.typeId)) {
+      final enabled = await isNotificationEnabled();
+
+      if (!enabled) {
+        state = AsyncValue.data(SubscribtionRestricted());
+        return;
+      }
+
       state = AsyncValue.data(SubscribtionSubscribed());
     } else {
       state = AsyncValue.data(SubscribtionNonSubscribed());
     }
   }
 
+  Future<bool> isNotificationEnabled() async {
+  final status = await Permission.notification.status;
+
+    if (status.isGranted) {
+      return true;
+    }
+
+    final result = await Permission.notification.request();
+
+    return result.isGranted;
+  }
+
+
   Future<void> subscribe() async {
+    final enabled = await isNotificationEnabled();
+
+    if (!enabled) {
+      state = AsyncValue.data(SubscribtionRestricted());
+      return;
+    }
+
     state = const AsyncValue.loading();
     await ref.read(norificationsProvider).subscribeForNotifciations(item!.id, item!.typeId);
     state = AsyncValue.data(SubscribtionSubscribed());
