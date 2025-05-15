@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -7,6 +9,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
@@ -48,11 +51,18 @@ class DateHeader extends ConsumerWidget {
   }
 }
 
-class DateHeaderDatePicker extends ConsumerWidget {
+class DateHeaderDatePicker extends ConsumerStatefulWidget {
   const DateHeaderDatePicker({super.key});
 
   @override
-  Widget build(final BuildContext ctx, final WidgetRef ref) {
+  ConsumerState<DateHeaderDatePicker> createState() => _DateHeaderDatePickerState();
+}
+
+class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
+  DateTime? selectedDate = DateTime.now();
+
+  @override
+  Widget build(final BuildContext ctx) {
     final DateTime navigationDate = ref.watch(navigationDateProvider);
 
     final int currentWeekNumber = ((navigationDate.difference(Constants.septemberFirst).inDays + Constants.septemberFirst.weekday) ~/ 7) + 1;
@@ -81,45 +91,52 @@ class DateHeaderDatePicker extends ConsumerWidget {
               context: ctx,
               builder: (final BuildContext context) {
                 return Center(
-                    child: Container(
-                  width: 380,
-                  height: 450,
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Theme.of(context).colorScheme.surface,
-                    borderRadius: BorderRadius.circular(20),
-                  ),
-                  child: sf.SfDateRangePicker(
-                    cancelText: 'Закрыть',
-                    confirmText: 'Ок',
-                    selectionColor: Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
-                    backgroundColor: Colors.transparent,
-                    initialDisplayDate: DateTime.now(),
-                    showActionButtons: true,
-                    allowViewNavigation: false,
-                    onCancel: () => Navigator.of(context).pop(),
-                    onSubmit: (final p0) {
-                      if (p0 == null) {
-                        Navigator.of(context).pop();
-                        return;
-                      }
+                  child: Container(
+                    width: 380,
+                    height: 450,
+                    padding: const EdgeInsets.all(8),
+                    decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.surface,
+                      borderRadius: BorderRadius.circular(20),
+                    ),
+                    child: sf.SfDateRangePicker(
+                      initialSelectedDate: selectedDate,
+                      cancelText: 'Закрыть',
+                      confirmText: 'Ок',
+                      selectionColor: Colors.transparent,
+                      backgroundColor: Colors.transparent,
+                      initialDisplayDate: DateTime.now(),
+                      showActionButtons: true,
+                      allowViewNavigation: false,
+                      onCancel: () => Navigator.of(context).pop(),
+                      onSubmit: (final p0) {
+                        if (p0 == null) {
+                          Navigator.of(context).pop();
+                          return;
+                        }
 
-                      final DateTime time = (p0 as DateTime);
-                      ref.watch(navigationDateProvider.notifier).state = time;
-                      Navigator.of(context).pop();
-                    },
-                    selectionRadius: -10,
-                    selectionShape: sf.DateRangePickerSelectionShape.rectangle,
-                    monthViewSettings: const sf.DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
-                    showNavigationArrow: true,
-                    navigationDirection: sf.DateRangePickerNavigationDirection.vertical,
-                    navigationMode: sf.DateRangePickerNavigationMode.scroll,
-                    headerStyle: const sf.DateRangePickerHeaderStyle(backgroundColor: Colors.transparent,),
-                    cellBuilder: (final context, final cellDetails) {
-                      return MonthCell(details: cellDetails);
-                    },
+                        final DateTime time = (p0 as DateTime);
+                        ref.watch(navigationDateProvider.notifier).state = time;
+                        Navigator.of(context).pop();
+                      },
+                      monthViewSettings: const sf.DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
+                      showNavigationArrow: true,
+                      navigationDirection: sf.DateRangePickerNavigationDirection.vertical,
+                      navigationMode: sf.DateRangePickerNavigationMode.scroll,
+                      headerStyle: const sf.DateRangePickerHeaderStyle(backgroundColor: Colors.transparent,),
+                      onSelectionChanged: (final dateRangePickerSelectionChangedArgs) {
+                        selectedDate = dateRangePickerSelectionChangedArgs.value;
+                        setState(() {});
+                      },
+                      cellBuilder: (final context, final cellDetails) {
+                        return MonthCell(
+                          selectedDate: selectedDate,
+                          details: cellDetails,
+                        );
+                      },
+                    ),
                   ),
-                ),);
+                );
               },
             );
           },
@@ -199,8 +216,14 @@ class CurrentNavigationWeekBadge extends ConsumerWidget {
 }
 
 class MonthCell extends ConsumerWidget {
-  const MonthCell({required this.details, super.key});
   final sf.DateRangePickerCellDetails details;
+  final DateTime? selectedDate;
+
+  const MonthCell({
+    required this.details,
+    required this.selectedDate,
+    super.key,
+  });
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
@@ -209,7 +232,12 @@ class MonthCell extends ConsumerWidget {
     //         .get<Data>()
     //         .holidays
     //         .any((final element) => element.date == details.date);
+
     const bool chillday = false;
+    final bool isSelected = selectedDate != null
+      ? details.date.sameDate(selectedDate!)
+      : false;
+
     final bool isToday = details.date.day == DateTime.now().day &&
         details.date.month == DateTime.now().month &&
         DateTime.now().year == details.date.year;
@@ -220,12 +248,16 @@ class MonthCell extends ConsumerWidget {
       children: [
         Padding(
           padding: const EdgeInsets.all(4.0),
-          child: Container(
+          child: AnimatedContainer(
+            duration: Delays.morphDuration,
             padding: const EdgeInsets.all(8),
             decoration: !chillday
                 ? BoxDecoration(
                     borderRadius: BorderRadius.circular(4),
-                    color: Colors.white.withValues(alpha: 0.1),)
+                    color: !isSelected
+                      ? Colors.white.withValues(alpha: 0.1)
+                      : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                  )
                 : null,
             child: Center(child: Text(details.date.day.toString())),
           ),

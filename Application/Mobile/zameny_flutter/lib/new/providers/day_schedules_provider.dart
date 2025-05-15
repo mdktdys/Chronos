@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -38,7 +39,7 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
     DateTime startdate = ref.watch(navigationDateProvider);
     startdate = startdate.subtract(Duration(days: startdate.weekday - 1));
     final DateTime endDate = startdate.add(const Duration(days: 6));
-    
+
     if (searchItem == null) {
       return [];
     }
@@ -50,9 +51,15 @@ class ScheduleNotifier extends AsyncNotifier<List<DaySchedule>> {
         searchItem: searchItem,
         endDate: endDate,
       );
-
     } else if (searchItem is Teacher) {
       return daySchedulesProvider.teacherSchedule(
+        timings: timings,
+        startdate: startdate,
+        searchItem: searchItem,
+        endDate: endDate,
+      );
+    } else if (searchItem is Cabinet) {
+      return daySchedulesProvider.cabinetSchedule(
         timings: timings,
         startdate: startdate,
         searchItem: searchItem,
@@ -147,7 +154,85 @@ class DaySchedulesProvider {
 
       schedule.add(daySchedule);
     }
+
+    return schedule;
+  }
+
+  Future<List<DaySchedule>> cabinetSchedule({
+    required final List<LessonTimings> timings,
+    required final DateTime startdate,
+    required final Cabinet searchItem,
+    required final DateTime endDate,
+  }) async {
+
+    final List<Lesson> lessons = (await Api.loadWeekCabinetSchedule(
+      cabinetID: searchItem.id,
+      start: startdate,
+      end: endDate,
+    ))..sort((final a, final b) => a.date.compareTo(b.date));
+
+    final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
     
+    final result = await Future.wait([
+      Api.getZamenasFull(groups, startdate, endDate),
+      Api.getLiquidation(groups, startdate, endDate),
+      Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
+      Api.getZamenaFileLinks(start: startdate, end: endDate),
+      Api.getAlreadyFoundLinks(start: startdate, end: endDate),
+      Api.getHolidays(startdate, endDate)
+    ].toList());
+
+    final List<ZamenaFull> zamenasFull = result[0] as List<ZamenaFull>;
+    // final List<Liquidation> liquidations = result[1] as List<Liquidation>;
+    final List<Zamena> groupsLessons = result[2] as List<Zamena>;
+    final List<ZamenaFileLink> links = result[3] as List<ZamenaFileLink>;
+    final List<TelegramZamenaLinks> telegramLinks = result[4] as List<TelegramZamenaLinks>;
+    final List<Holiday> holidays = result[5] as List<Holiday>;
+
+    List<DaySchedule> schedule = [];
+    for (DateTime date in List.generate(math.max(endDate.difference(startdate).inDays, 1), (final int index) => startdate.add(Duration(days: index)))) {
+      List<Paras> dayParas = [];
+
+      final List<Lesson> teacherDayLessons = lessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+      final List<Zamena> dayGroupsLessons = groupsLessons.where((final lesson) => lesson.date.sameDate(date)).toList();
+
+      for (LessonTimings timing in timings) {
+        final Paras paras = Paras();
+
+        final List<Lesson> teacherLesson = teacherDayLessons.where((final Lesson lesson) => lesson.number == timing.number).toList();
+        final List<Zamena> groupLessonZamena = dayGroupsLessons.where((final Zamena lesson) => lesson.lessonTimingsID == timing.number).toList();
+        final List<ZamenaFull> paraZamenaFull = zamenasFull.where((final zamena) => zamena.date.sameDate(date)).toList();
+
+        paras.lesson = teacherLesson;
+        paras.zamena = groupLessonZamena;
+        paras.zamenaFull = paraZamenaFull;
+
+        if (
+          paras.lesson!.isEmpty
+          && paras.zamena!.isEmpty
+        ) {
+          continue;
+        }
+
+        paras.number = timing.number;
+        dayParas.add(paras);
+      }
+
+      final DaySchedule daySchedule = DaySchedule(
+        zamenaFull: null,
+        holidays: holidays.where((final holiday) => holiday.date.sameDate(date)).toList(),
+        telegramLink: telegramLinks.where((final link) => link.date.sameDate(date)).firstOrNull,
+        zamenaLinks: links.where((final link) => link.date.sameDate(date)).toList(),
+        paras: dayParas,
+        date: date,
+      );
+
+      schedule.add(daySchedule);
+    }
+
+    for (DaySchedule element in schedule) {
+      log(element.paras.toString());
+    }
     return schedule;
   }
 

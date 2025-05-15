@@ -6,6 +6,7 @@ import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/bottom_bar_items.dart';
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
@@ -106,9 +107,15 @@ class _DesktopSideBarState extends ConsumerState<DesktopSideBar> {
                           padding: const EdgeInsets.symmetric(horizontal: 13, vertical: 8),
                           child: Row(
                             children: [
-                              SvgPicture.asset(
-                                tile.icon,
-                                colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                              AnimatedSwitcher(
+                                duration: Delays.morphDuration,
+                                child: SvgPicture.asset(
+                                  key: ValueKey<bool>(isCurrent),
+                                  isCurrent
+                                    ? tile.activeicon
+                                    : tile.icon,
+                                  colorFilter: ColorFilter.mode(color, BlendMode.srcIn),
+                                ),
                               ),
                               if (hover)
                                 Expanded(

@@ -84,9 +84,6 @@ class MapBody extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    return O3D.network(
-      debugLogging: true,
-      src:url.url,
-    );
+    return O3D.network(src:url.url);
   }
 }

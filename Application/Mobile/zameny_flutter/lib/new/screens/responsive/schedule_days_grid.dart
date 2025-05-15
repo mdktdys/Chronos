@@ -9,6 +9,7 @@ import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
+import 'package:zameny_flutter/models/zamena_type_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
@@ -55,6 +56,16 @@ class _ScheduleViewGridState extends ConsumerState<ScheduleViewGrid> {
           if (item is Teacher) {
             tiles = builder.buildTeacherTiles(
               teacherId: item.id,
+              isSaturday: isSaturday,
+              viewMode: scheduleSettings.sheduleViewMode,
+              obed: obedSwitch,
+              para: para,
+            );
+          }
+
+          if (item is Cabinet) {
+            tiles = builder.buildCabinetTiles(
+              cabinetId: item.id,
               isSaturday: isSaturday,
               viewMode: scheduleSettings.sheduleViewMode,
               obed: obedSwitch,

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/modules/map/view/map_screen.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/views/schedule_screen.dart';
 import 'package:zameny_flutter/modules/settings/settings_screen.dart';
 import 'package:zameny_flutter/modules/timetable/time_table_screen.dart';
@@ -25,7 +26,7 @@ class PagesViewWidget extends ConsumerWidget {
         TimeTableScreen(),
         ScheduleScreen(),
         ZamenaScreen(),
-        // MapScreen(),
+        MapScreen(),
         SettingsScreen(),
         // PixelBattleScreen(),
       ],
