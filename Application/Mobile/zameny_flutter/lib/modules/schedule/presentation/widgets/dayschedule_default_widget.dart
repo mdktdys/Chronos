@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -422,6 +424,10 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
     setState(() {});
   }
 
+  Future<void> onLongPress() async {
+    
+  }
+
   @override
   Widget build(final BuildContext context) {
     course = ref.watch(courseProvider(widget.lesson.course));
@@ -468,6 +474,7 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
       onTap: (widget.swapedLesson != null)
         ? _onClicked
         : null,
+      onLongPress: onLongPress,
       child: Column(
         children: [
           IntrinsicHeight(
