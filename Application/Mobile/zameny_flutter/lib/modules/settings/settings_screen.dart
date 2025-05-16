@@ -67,6 +67,7 @@ class SettingsScreen extends ConsumerWidget {
                           mode: LaunchMode.externalApplication
                         )
                       ),
+                      //TODO REWORK
                       SettingsCategoryTile(
                         title: 'Хочется натива?',
                         description: 'Есть мобилка, ток андроеды',
