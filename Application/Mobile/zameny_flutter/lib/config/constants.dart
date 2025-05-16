@@ -9,6 +9,7 @@ abstract class Constants {
   static String site = 'https://www.uksivt.ru/';
   static String telegramChannel = 'https://t.me/mdktdys';
   static String telegramBot = 'https://t.me/bot_uksivt';
+  static String rustore = 'https://www.rustore.ru/catalog/app/com.mdktdys.zameny_flutter';
 
   static String version = 'v18.05.25';
 }

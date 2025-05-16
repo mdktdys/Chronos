@@ -66,6 +66,15 @@ class SettingsScreen extends ConsumerWidget {
                           Uri.parse(Constants.telegramBot),
                           mode: LaunchMode.externalApplication
                         )
+                      ),
+                      SettingsCategoryTile(
+                        title: 'Хочется натива?',
+                        description: 'Есть мобилка, ток андроеды',
+                        icon: Images.rustore,
+                        onClicked: () async =>  await launchUrl(
+                          Uri.parse(Constants.rustore),
+                          mode: LaunchMode.externalApplication
+                        )
                       )
                     ],
                   ),

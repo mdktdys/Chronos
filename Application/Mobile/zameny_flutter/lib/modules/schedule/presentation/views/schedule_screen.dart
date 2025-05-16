@@ -110,7 +110,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                     ),
                   ),
                 ),
-                SizedBox(height: Constants.bottomSpacing,)
+                SizedBox(height: Constants.bottomSpacing)
               ],
             ),
           ),

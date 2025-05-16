@@ -24,4 +24,5 @@ abstract class Images{
   static const String excel = 'assets/icon/excel.svg';
   static const String stats = 'assets/icon/stats.svg';
   static const String reverse = 'assets/icon/reverse.svg';
+  static const String rustore = 'assets/icon/rustore.svg';
 }
