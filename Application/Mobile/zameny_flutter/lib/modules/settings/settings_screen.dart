@@ -67,10 +67,9 @@ class SettingsScreen extends ConsumerWidget {
                           mode: LaunchMode.externalApplication
                         )
                       ),
-                      //TODO REWORK
                       SettingsCategoryTile(
-                        title: 'Хочется натива?',
-                        description: 'Есть мобилка, ток андроеды',
+                        title: 'Мобильное приложение',
+                        description: 'ток андроеды',
                         icon: Images.rustore,
                         onClicked: () async =>  await launchUrl(
                           Uri.parse(Constants.rustore),
