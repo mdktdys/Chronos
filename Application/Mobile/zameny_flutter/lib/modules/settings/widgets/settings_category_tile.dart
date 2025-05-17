@@ -58,6 +58,8 @@ class SettingsCategoryTile extends StatelessWidget {
                   alignment: Alignment.center,
                   child: SvgPicture.asset(
                     icon,
+                    width: 24,
+                    height: 24,
                     colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface, BlendMode.srcIn),
                   ),
                 ),

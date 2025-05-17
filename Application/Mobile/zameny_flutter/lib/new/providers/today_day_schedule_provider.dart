@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
@@ -26,8 +27,8 @@ class TodayDayScheduleNotifier extends AsyncNotifier<DaySchedule?> {
     final DaySchedulesProvider daySchedulesProvider = ref.watch(dayScheduleProvider);
     final List<LessonTimings> timings = await ref.watch(timingsProvider.future);
 
-    final DateTime startdate = DateTime.now();
-    final DateTime endDate = DateTime.now();
+    final DateTime startdate = DateTime.now().toStartOfDay();
+    final DateTime endDate = DateTime.now().toEndOfDay();
 
     if (searchItem is Group) {
       List<DaySchedule> schedule = await daySchedulesProvider.groupSchedule(
