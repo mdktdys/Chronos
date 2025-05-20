@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -136,6 +138,14 @@ abstract class Api {
       res.add(zamenaLink);
     }
     return res;
+  }
+
+  static Future<List<int>> loadPracticeGroupsByDate({required final DateTime date}) async {
+    final SupabaseClient client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> groupIds = await client.from('Practices').select('group').eq('date', date);
+    log(groupIds.toString());
+    return groupIds.map((final json) => json['group'] as int).toList();
   }
 
   static Future<List<ZamenaFileLink>> getZamenaFileLinks({

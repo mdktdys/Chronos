@@ -7,11 +7,11 @@ import 'package:zameny_flutter/models/search_item_model.dart';
 
 class SearchItemChip extends ConsumerWidget {
   final SearchItem searchItem;
-  final VoidCallback onTap;
+  final VoidCallback? onTap;
 
   const SearchItemChip({
     required this.searchItem,
-    required this.onTap,
+    this.onTap,
     super.key
   });
 

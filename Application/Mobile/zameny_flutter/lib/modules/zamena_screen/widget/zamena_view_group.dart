@@ -21,8 +21,8 @@ class ZamenaViewGroup extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> groupsList = zamenas.map((final Zamena zamena) => zamena.groupID).toSet();
 
-    return Column(
-      mainAxisSize: MainAxisSize.min,
+    return ListView(
+      shrinkWrap: true,
       children: groupsList.map((final int groupId) {
         final List<Zamena> groupZamenas = zamenas.where((final Zamena zamena) => zamena.groupID == groupId).toList();
         final bool isFullZamena = fullZamenas.any((final ZamenaFull fullzamena) => fullzamena.group == groupId);

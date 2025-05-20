@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 
+import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_date_navigation.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_file_block.dart';
+import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_chooser.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_header.dart';
@@ -146,18 +150,21 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
-              const SizedBox(height: 10),
               const ZamenaScreenHeader(),
+              // const SizedBox(height: 10),
+              // const ZamenaScreenHeader(),
               // const DateHeader(),
-              const SizedBox(height: 10),
-              const ZamenaDateNavigation(),
-              const SizedBox(height: 8),
-              const ZamenaViewChooser(),
-              const SizedBox(height: 8),
+              // const SizedBox(height: 10),
+              // const ZamenaDateNavigation(),
+              // const SizedBox(height: 8),
               // const WarningDevBlank(),
               // const SizedBox(height: 10),
-              const ZamenaFileBlock(),
+              // const ZamenaFileBlock(),
+              const SizedBox(height: 8),
+              const ZamenaPracticeGroupsBlock(),
               const SizedBox(height: 10),
+              const ZamenaViewChooser(),
+              const SizedBox(height: 8),
               const ZamenaView(),
               SizedBox(height: Constants.bottomSpacing),
             ],
@@ -167,3 +174,80 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
     );
   }
 }
+
+class ZamenaScreenHeader extends ConsumerStatefulWidget {
+  const ZamenaScreenHeader({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _ZamenaScreenHeaderState();
+}
+
+class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
+  bool isExpanded = false;
+
+  @override
+  Widget build(final BuildContext context) {
+    return AnimatedContainer(
+      duration: Delays.morphDuration,
+      decoration: BoxDecoration(
+        color: Theme.of(context).colorScheme.primary,
+        borderRadius: const BorderRadius.only(
+          bottomLeft: Radius.circular(24),
+          bottomRight: Radius.circular(24),
+        ),
+      ),
+      padding: const EdgeInsets.all(10),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text('Май, 2025', style: TextStyle(color: Colors.white)),
+              GestureDetector(
+                onTap: () {
+                  isExpanded = !isExpanded;
+                  setState(() {
+                    
+                  });
+                },
+                child: const Icon(Icons.more_vert, color: Colors.white),
+              ),
+            ],
+          ),
+          Animate().toggle(
+            duration: 300.ms,
+            builder: (final _, final value, final __) => AnimatedSwitcher(
+              key: UniqueKey(),
+              duration: 1.seconds,
+              child: isExpanded
+                ? const Text('data')
+                : const Text('dasdata'),
+            ),
+          ),
+          // Row(
+          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+          //   children: days.map((final day) {
+          //     return Text(day, style: const TextStyle(color: Colors.white));
+          //   }).toList(),
+          // ),
+          SizedBox(
+            child: SfDateRangePicker(
+              backgroundColor: Colors.transparent,
+              headerHeight: 0,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+List<String> days = [
+  'ПН',
+  'ВТ',
+  'СР',
+  'ЧТ',
+  'ПТ',
+  'СБ',
+  'ВС'
+];

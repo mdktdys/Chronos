@@ -21,7 +21,6 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
     final ThemeData theme = Theme.of(context);
     final bool isDark = theme.colorScheme.brightness == Brightness.dark;
 
-    
     return Column(
       children: [
         Container(
