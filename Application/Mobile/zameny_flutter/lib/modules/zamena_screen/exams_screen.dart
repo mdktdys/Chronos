@@ -1,19 +1,17 @@
 import 'package:flutter/material.dart';
 
-import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/spacing.dart';
-import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_date_navigation.dart';
-import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_file_block.dart';
+import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_header.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/screen_appear_builder.dart.dart';
 
 
@@ -187,60 +185,150 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
 
   @override
   Widget build(final BuildContext context) {
-    return AnimatedContainer(
+    return AnimatedSize(
       duration: Delays.morphDuration,
-      decoration: BoxDecoration(
-        color: Theme.of(context).colorScheme.primary,
-        borderRadius: const BorderRadius.only(
-          bottomLeft: Radius.circular(24),
-          bottomRight: Radius.circular(24),
+      alignment: Alignment.topCenter,
+      curve: Curves.easeOut,
+      child: AnimatedContainer(
+        duration: Delays.morphDuration,
+        decoration: BoxDecoration(
+          color: Theme.of(context).colorScheme.surfaceContainer,
+          borderRadius: const BorderRadius.only(
+            bottomLeft: Radius.circular(24),
+            bottomRight: Radius.circular(24),
+          ),
         ),
-      ),
-      padding: const EdgeInsets.all(10),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              const Text('Май, 2025', style: TextStyle(color: Colors.white)),
-              GestureDetector(
-                onTap: () {
-                  isExpanded = !isExpanded;
-                  setState(() {
-                    
-                  });
-                },
-                child: const Icon(Icons.more_vert, color: Colors.white),
+        padding: const EdgeInsets.all(10),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'Замены',
+              style: context.styles.ubuntuPrimaryBold24,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                const Text('Май, 2025', style: TextStyle(color: Colors.white)),
+                GestureDetector(
+                  onTap: () {
+                    isExpanded = !isExpanded;
+                    setState(() {
+                      
+                    });
+                  },
+                  child: const Icon(Icons.more_vert, color: Colors.white),
+                ),
+              ],
+            ),
+            AnimatedSize(
+              alignment: Alignment.topCenter,
+              duration: Delays.morphDuration,
+              curve: Curves.easeOut,
+              child: AnimatedSwitcher(
+                duration: Delays.morphDuration,
+                child: isExpanded
+                ? SizedBox(
+                  child: SfDateRangePicker(
+                    backgroundColor: Colors.transparent,
+                    monthViewSettings: const DateRangePickerMonthViewSettings(
+                      firstDayOfWeek: 1
+                    ),
+                    headerHeight: 0,
+                  ),
+                )
+                : WeekNavigationStrip(
+                    initialDate: ref.watch(navigationDateProvider),
+                ),
               ),
-            ],
-          ),
-          Animate().toggle(
-            duration: 300.ms,
-            builder: (final _, final value, final __) => AnimatedSwitcher(
-              key: UniqueKey(),
-              duration: 1.seconds,
-              child: isExpanded
-                ? const Text('data')
-                : const Text('dasdata'),
             ),
-          ),
-          // Row(
-          //   mainAxisAlignment: MainAxisAlignment.spaceAround,
-          //   children: days.map((final day) {
-          //     return Text(day, style: const TextStyle(color: Colors.white));
-          //   }).toList(),
-          // ),
-          SizedBox(
-            child: SfDateRangePicker(
-              backgroundColor: Colors.transparent,
-              headerHeight: 0,
-            ),
-          )
-        ],
+          ],
+        ),
       ),
     );
   }
 }
+
+class WeekNavigationStrip extends ConsumerStatefulWidget {
+  final DateTime initialDate;
+
+  const WeekNavigationStrip({
+    required this.initialDate,
+    super.key,
+  });
+
+  @override
+  ConsumerState<WeekNavigationStrip> createState() => _WeekNavigationStripState();
+}
+
+class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
+  late PageController _pageController;
+  late DateTime _baseDate;
+  static const int _initialPage = 1000;
+
+  @override
+  void initState() {
+    super.initState();
+    _baseDate = widget.initialDate;
+    _pageController = PageController(initialPage: _initialPage);
+  }
+
+  // Получает начало недели для заданного сдвига от базовой даты
+  DateTime _getStartOfWeek(final int weekOffset) {
+    final current = _baseDate.add(Duration(days: weekOffset * 7));
+    return current.subtract(Duration(days: current.weekday - 1)); // Monday
+  }
+
+  List<DateTime> _getWeekDates(final DateTime startOfWeek) {
+    return List.generate(7, (final index) => startOfWeek.add(Duration(days: index)));
+  }
+
+  static const List<String> days = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+
+  @override
+  Widget build(final BuildContext context) {
+    return SizedBox(
+      height: 80,
+      child: PageView.builder(
+        controller: _pageController,
+        itemBuilder: (final context, final index) {
+          final weekOffset = index - _initialPage;
+          final startOfWeek = _getStartOfWeek(weekOffset);
+          final dates = _getWeekDates(startOfWeek);
+
+          return Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: dates.map((final day) {
+              return Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    days[day.weekday - 1],
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                  Text(
+                    day.day.toString(),
+                    style: const TextStyle(color: Colors.white),
+                  ),
+                ],
+              );
+            }).toList(),
+          );
+        },
+      ),
+    );
+  }
+}
+
+List<DateTime> dates = [
+  DateTime(2025, 5, 19),
+  DateTime(2025, 5, 20),
+  DateTime(2025, 5, 21),
+  DateTime(2025, 5, 22),
+  DateTime(2025, 5, 23),
+  DateTime(2025, 5, 24),
+];
+
 
 List<String> days = [
   'ПН',
@@ -249,5 +337,5 @@ List<String> days = [
   'ЧТ',
   'ПТ',
   'СБ',
-  'ВС'
+  'ВС',
 ];

@@ -26,7 +26,7 @@ dependencies:
   go_router: ^14.6.2
   dio: ^5.8.0+1
   get_it: ^7.7.0
-  intl: ^0.19.0
+  intl: ^0.20.2
   web: ^1.1.0
  
   # Firebase
@@ -52,14 +52,14 @@ dependencies:
   mobkit_dashed_border: ^0.0.6
   sliding_up_panel2: ^3.2.0+2
   animated_list_plus: ^0.5.2
-  flex_color_scheme: ^7.3.1
+  flex_color_scheme: ^8.2.0
   cupertino_icons: ^1.0.8
   flutter_animate: ^4.5.0
   # dotted_border: ^2.1.0
   flutter_portal: ^1.1.4
   flutter_svg: ^2.0.10+1
   google_fonts: ^6.2.1
-  skeletonizer: ^1.4.3
+  skeletonizer: ^2.0.1
   flutterfall: ^1.0.5
   hidable: ^1.0.6
   o3d: ^3.1.0
