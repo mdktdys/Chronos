@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
@@ -209,7 +211,10 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                const Text('Май, 2025', style: TextStyle(color: Colors.white)),
+                Text(
+                  'Май, 2025',
+                  style: context.styles.ubuntu14
+                ),
                 GestureDetector(
                   onTap: () {
                     isExpanded = !isExpanded;
@@ -217,7 +222,16 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
                       
                     });
                   },
-                  child: const Icon(Icons.more_vert, color: Colors.white),
+                  child: AnimatedRotation(
+                    duration: const Duration(milliseconds: 150),
+                    turns: isExpanded
+                      ? 0.5
+                      : 0,
+                    child: SvgPicture.asset(
+                      Images.chevron,
+                      colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -279,10 +293,6 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
     return current.subtract(Duration(days: current.weekday - 1)); // Monday
   }
 
-  List<DateTime> _getWeekDates(final DateTime startOfWeek) {
-    return List.generate(7, (final index) => startOfWeek.add(Duration(days: index)));
-  }
-
   static const List<String> days = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
 
   @override
@@ -292,23 +302,23 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
       child: PageView.builder(
         controller: _pageController,
         itemBuilder: (final context, final index) {
-          final weekOffset = index - _initialPage;
-          final startOfWeek = _getStartOfWeek(weekOffset);
-          final dates = _getWeekDates(startOfWeek);
+          final int weekOffset = index - _initialPage;
+          final DateTime startOfWeek = _getStartOfWeek(weekOffset);
+          final List<DateTime> dates = List.generate(7, (final index) => startOfWeek.add(Duration(days: index)));
 
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: dates.map((final day) {
+            children: dates.map((final DateTime day) {
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     days[day.weekday - 1],
-                    style: const TextStyle(color: Colors.white),
+                    style: context.styles.ubuntu14,
                   ),
                   Text(
                     day.day.toString(),
-                    style: const TextStyle(color: Colors.white),
+                    style: context.styles.ubuntu14,
                   ),
                 ],
               );

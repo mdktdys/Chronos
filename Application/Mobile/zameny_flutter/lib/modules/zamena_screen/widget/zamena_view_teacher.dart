@@ -25,6 +25,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
 
     return ListView(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: teachersList.map((final teacherId) {
         final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
         groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);

@@ -23,6 +23,7 @@ class ZamenaViewGroup extends ConsumerWidget {
 
     return ListView(
       shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
       children: groupsList.map((final int groupId) {
         final List<Zamena> groupZamenas = zamenas.where((final Zamena zamena) => zamena.groupID == groupId).toList();
         final bool isFullZamena = fullZamenas.any((final ZamenaFull fullzamena) => fullzamena.group == groupId);

@@ -40,6 +40,7 @@ class App extends ConsumerWidget {
             Locale('ru',)
           ],
           localizationsDelegates: const [
+            GlobalCupertinoLocalizations.delegate,
             GlobalMaterialLocalizations.delegate,
             GlobalWidgetsLocalizations.delegate,
           ],
