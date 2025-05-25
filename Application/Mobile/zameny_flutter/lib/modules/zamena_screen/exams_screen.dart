@@ -1,14 +1,21 @@
+import 'dart:developer';
+
 import 'package:flutter/material.dart';
 
+import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/modules/schedule/presentation/widgets/schedule_date_header.dart';
+import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_chooser.dart';
@@ -144,7 +151,7 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
         //   },
         // ),
         body: SingleChildScrollView(
-          padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
+          // padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
           controller: controller,
           physics: const BouncingScrollPhysics(),
           child: Column(
@@ -160,12 +167,19 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
               // const WarningDevBlank(),
               // const SizedBox(height: 10),
               // const ZamenaFileBlock(),
-              const SizedBox(height: 8),
-              const ZamenaPracticeGroupsBlock(),
-              const SizedBox(height: 10),
-              const ZamenaViewChooser(),
-              const SizedBox(height: 8),
-              const ZamenaView(),
+              ListView(
+                physics: const NeverScrollableScrollPhysics(),
+                shrinkWrap: true,
+                padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
+                children: const [
+                  SizedBox(height: 8),
+                  ZamenaPracticeGroupsBlock(),
+                  SizedBox(height: 10),
+                  ZamenaViewChooser(),
+                  SizedBox(height: 8),
+                  ZamenaView(),
+                ],
+              ),
               SizedBox(height: Constants.bottomSpacing),
             ],
           ),
@@ -183,7 +197,7 @@ class ZamenaScreenHeader extends ConsumerStatefulWidget {
 }
 
 class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
-  bool isExpanded = false;
+  
 
   @override
   Widget build(final BuildContext context) {
@@ -208,51 +222,16 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
               'Замены',
               style: context.styles.ubuntuPrimaryBold24,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  'Май, 2025',
-                  style: context.styles.ubuntu14
-                ),
-                GestureDetector(
-                  onTap: () {
-                    isExpanded = !isExpanded;
-                    setState(() {
-                      
-                    });
-                  },
-                  child: AnimatedRotation(
-                    duration: const Duration(milliseconds: 150),
-                    turns: isExpanded
-                      ? 0.5
-                      : 0,
-                    child: SvgPicture.asset(
-                      Images.chevron,
-                      colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),
-                    ),
-                  ),
-                ),
-              ],
-            ),
+            const NavigationDatePanel(),
             AnimatedSize(
               alignment: Alignment.topCenter,
               duration: Delays.morphDuration,
               curve: Curves.easeOut,
               child: AnimatedSwitcher(
                 duration: Delays.morphDuration,
-                child: isExpanded
-                ? SizedBox(
-                  child: SfDateRangePicker(
-                    backgroundColor: Colors.transparent,
-                    monthViewSettings: const DateRangePickerMonthViewSettings(
-                      firstDayOfWeek: 1
-                    ),
-                    headerHeight: 0,
-                  ),
-                )
-                : WeekNavigationStrip(
-                    initialDate: ref.watch(navigationDateProvider),
+                child: ref.watch(zamenaScreenProvider).isPanelExpanded
+                    ? const MonthNavigationPanel()
+                    : WeekNavigationStrip(initialDate: ref.watch(zamenaScreenProvider).currentDate,
                 ),
               ),
             ),
@@ -260,6 +239,115 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
         ),
       ),
     );
+  }
+}
+
+class NavigationDatePanel extends ConsumerWidget {
+  const NavigationDatePanel({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final bool isExpanded = ref.watch(zamenaScreenProvider).isPanelExpanded;
+    final DateTimeRange visible = ref.watch(zamenaScreenProvider).visibleDateRange;
+    final String title = '${visible.start.toMonth()} ${visible.start.year}';
+    final bool isCurrentWeek = DateTime.now().isSameWeekAs(visible.start);
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text(
+            title,
+            style: context.styles.ubuntu14,
+          ),
+          Row(
+            spacing: Spacing.list,
+            children: [
+              CurrentNavigationWeekBadge(
+                isCurrentWeek: isCurrentWeek,
+                onClicked: () {
+                  ref.read(zamenaScreenProvider.notifier).setDate(DateTime.now());
+                  ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(DateTimeRange(
+                    start: DateTime.now().toStartOfWeek(),
+                    end: DateTime.now().toEndOfWeek(),
+                  ));
+                },
+              ),
+              GestureDetector(
+                onTap: () {
+                  ref.read(zamenaScreenProvider.notifier).togglePanel();
+                },
+                child: AnimatedRotation(
+                  duration: const Duration(milliseconds: 150),
+                  turns: isExpanded
+                    ? 0.5
+                    : 0,
+                  child: SvgPicture.asset(
+                    Images.chevron,
+                    colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class MonthNavigationPanel extends ConsumerStatefulWidget {
+  const MonthNavigationPanel({super.key});
+
+  @override
+  ConsumerState<ConsumerStatefulWidget> createState() => _MonthState();
+}
+
+class _MonthState extends ConsumerState<MonthNavigationPanel> {
+
+  @override
+  Widget build(final BuildContext context) {
+    return Container(
+      padding: const EdgeInsets.only(top: 6),
+      child: SfDateRangePicker(
+        backgroundColor: Colors.transparent,
+        initialDisplayDate: ref.watch(zamenaScreenProvider).currentDate,
+        headerHeight: 0,
+        monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
+        onSelectionChanged: (final dateRangePickerSelectionChangedArgs) {
+          final DateTime date = dateRangePickerSelectionChangedArgs.value;
+          ref.read(zamenaScreenProvider.notifier).setDate(date);
+        },
+        onViewChanged: _onViewChanged,
+        cellBuilder: (final context, final cellDetails) {
+          return MonthCell(
+            selectedDate: ref.watch(zamenaScreenProvider).currentDate,
+            details: cellDetails,
+          );
+        },
+      ),
+    );
+  }
+
+  void _onViewChanged(final DateRangePickerViewChangedArgs dateRangePickerViewChangedArgs) {
+    WidgetsBinding.instance.addPostFrameCallback((final _) {
+      final PickerDateRange visibleDateRange = dateRangePickerViewChangedArgs.visibleDateRange;
+
+      if (
+        visibleDateRange.endDate == null
+        || visibleDateRange.startDate == null
+      ) {
+        return;
+      }
+
+      final DateTimeRange range = DateTimeRange(
+        start: visibleDateRange.startDate!,
+        end: visibleDateRange.endDate!,
+      );
+
+      ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(range);
+    });
   }
 }
 
@@ -293,32 +381,64 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
     return current.subtract(Duration(days: current.weekday - 1)); // Monday
   }
 
-  static const List<String> days = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ', 'ВС'];
+  static const List<String> days = ['ПН', 'ВТ', 'СР', 'ЧТ', 'ПТ', 'СБ'];
 
   @override
   Widget build(final BuildContext context) {
+    ref.watch(zamenaScreenProvider).visibleDateRange;
     return SizedBox(
       height: 80,
       child: PageView.builder(
         controller: _pageController,
+        onPageChanged: (final int value) {
+          final DateTime newStartOfWeek = _getStartOfWeek(value - _initialPage);
+          ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(
+            DateTimeRange(
+              start: newStartOfWeek,
+              end: newStartOfWeek.add(const Duration(days: 6)),
+            ),
+          );
+        },
         itemBuilder: (final context, final index) {
           final int weekOffset = index - _initialPage;
           final DateTime startOfWeek = _getStartOfWeek(weekOffset);
-          final List<DateTime> dates = List.generate(7, (final index) => startOfWeek.add(Duration(days: index)));
+          final List<DateTime> dates = List.generate(6, (final index) => startOfWeek.add(Duration(days: index)));
 
           return Row(
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             children: dates.map((final DateTime day) {
+              final bool current = day.sameDate(DateTime.now());
+              final bool selected = day.sameDate(ref.watch(zamenaScreenProvider).currentDate);
+
               return Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 6,
                 children: [
                   Text(
                     days[day.weekday - 1],
                     style: context.styles.ubuntu14,
                   ),
-                  Text(
-                    day.day.toString(),
-                    style: context.styles.ubuntu14,
+                  Bounceable(
+                    onTap: () {
+                      ref.read(zamenaScreenProvider.notifier).setDate(day);
+                    },
+                    child: AnimatedContainer(
+                      duration: Delays.morphDuration,
+                      decoration: BoxDecoration(
+                        border: current
+                          ? Border.all(color: Theme.of(context).colorScheme.primary)
+                          : null,
+                        color: selected
+                          ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)
+                          : null,
+                        shape: BoxShape.circle
+                      ),
+                      padding: const EdgeInsets.all(6),
+                      child: Text(
+                        day.day.toString(),
+                        style: context.styles.ubuntu14,
+                      ),
+                    ),
                   ),
                 ],
               );
@@ -329,23 +449,3 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
     );
   }
 }
-
-List<DateTime> dates = [
-  DateTime(2025, 5, 19),
-  DateTime(2025, 5, 20),
-  DateTime(2025, 5, 21),
-  DateTime(2025, 5, 22),
-  DateTime(2025, 5, 23),
-  DateTime(2025, 5, 24),
-];
-
-
-List<String> days = [
-  'ПН',
-  'ВТ',
-  'СР',
-  'ЧТ',
-  'ПТ',
-  'СБ',
-  'ВС',
-];

@@ -158,7 +158,12 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
                       'Неделя $currentWeekNumber',
                       style: ctx.styles.ubuntuInverseSurfaceBold16,
                     ),
-                    CurrentNavigationWeekBadge(isCurrentWeek: isCurrentWeek),
+                    CurrentNavigationWeekBadge(
+                      onClicked: () {
+                        ref.read(navigationDateProvider.notifier).reset();
+                      },
+                      isCurrentWeek: isCurrentWeek
+                    ),
                   ],
                 ),
               ),
@@ -171,10 +176,12 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
 }
 
 class CurrentNavigationWeekBadge extends ConsumerWidget {
+  final VoidCallback onClicked;
   final bool isCurrentWeek;
 
   const CurrentNavigationWeekBadge({
     required this.isCurrentWeek,
+    required this.onClicked,
     super.key
   });
 
@@ -188,7 +195,7 @@ class CurrentNavigationWeekBadge extends ConsumerWidget {
 
     return Bounceable(
       onTap: !isCurrentWeek
-        ? ref.read(navigationDateProvider.notifier).reset
+        ? onClicked
         : null,
       child: AnimatedContainer(
         duration: Delays.morphDuration,

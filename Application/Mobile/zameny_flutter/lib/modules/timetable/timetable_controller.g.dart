@@ -13,14 +13,14 @@ String _$timetableControllerHash() =>
 @ProviderFor(timetableController)
 final timetableControllerProvider =
     AutoDisposeProvider<TimetableController>.internal(
-  timetableController,
-  name: r'timetableControllerProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$timetableControllerHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      timetableController,
+      name: r'timetableControllerProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$timetableControllerHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

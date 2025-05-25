@@ -2,9 +2,13 @@
 import 'dart:async';
 import 'dart:math';
 
+import 'package:flutter/material.dart';
+
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 
@@ -16,6 +20,8 @@ sealed class ZamenaScreenState with _$ZamenaScreenState {
   factory ZamenaScreenState({
     required final DateTime currentDate,
     required final ZamenaViewType view,
+    required final DateTimeRange visibleDateRange,
+    required final bool isPanelExpanded,
   }) = _ZamenaScreenState;
 }
 
@@ -23,10 +29,21 @@ sealed class ZamenaScreenState with _$ZamenaScreenState {
 class ZamenaScreen extends _$ZamenaScreen {
   @override
   ZamenaScreenState build() {
+    final DateTime now = DateTime.now();
+
     return ZamenaScreenState(
       currentDate: DateTime.now(),
-      view: ZamenaViewType.teacher
+      view: ZamenaViewType.group,
+      isPanelExpanded: false,
+      visibleDateRange: DateTimeRange(
+        start: now.toStartOfWeek(),
+        end: now.toEndOfWeek(),
+      ),
     );
+  }
+
+  void setDate(final DateTime date) {
+    state = state.copyWith(currentDate: date);
   }
 
   void toggleWeek(final int days) {
@@ -39,6 +56,14 @@ class ZamenaScreen extends _$ZamenaScreen {
 
   void changeView(final ZamenaViewType view) {
     state = state.copyWith(view: view);
+  }
+
+  void setVisibleDateRange(final DateTimeRange range) {
+    state = state.copyWith(visibleDateRange: range);
+  }
+
+  void togglePanel() {
+    state = state.copyWith(isPanelExpanded: !state.isPanelExpanded);
   }
 }
 

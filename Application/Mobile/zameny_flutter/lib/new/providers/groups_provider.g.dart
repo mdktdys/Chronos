@@ -39,21 +39,13 @@ class CourseFamily extends Family<Course?> {
   const CourseFamily();
 
   /// See also [course].
-  CourseProvider call(
-    int id,
-  ) {
-    return CourseProvider(
-      id,
-    );
+  CourseProvider call(int id) {
+    return CourseProvider(id);
   }
 
   @override
-  CourseProvider getProviderOverride(
-    covariant CourseProvider provider,
-  ) {
-    return call(
-      provider.id,
-    );
+  CourseProvider getProviderOverride(covariant CourseProvider provider) {
+    return call(provider.id);
   }
 
   static const Iterable<ProviderOrFamily>? _dependencies = null;
@@ -74,23 +66,18 @@ class CourseFamily extends Family<Course?> {
 /// See also [course].
 class CourseProvider extends AutoDisposeProvider<Course?> {
   /// See also [course].
-  CourseProvider(
-    int id,
-  ) : this._internal(
-          (ref) => course(
-            ref as CourseRef,
-            id,
-          ),
-          from: courseProvider,
-          name: r'courseProvider',
-          debugGetCreateSourceHash:
-              const bool.fromEnvironment('dart.vm.product')
-                  ? null
-                  : _$courseHash,
-          dependencies: CourseFamily._dependencies,
-          allTransitiveDependencies: CourseFamily._allTransitiveDependencies,
-          id: id,
-        );
+  CourseProvider(int id)
+    : this._internal(
+        (ref) => course(ref as CourseRef, id),
+        from: courseProvider,
+        name: r'courseProvider',
+        debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+            ? null
+            : _$courseHash,
+        dependencies: CourseFamily._dependencies,
+        allTransitiveDependencies: CourseFamily._allTransitiveDependencies,
+        id: id,
+      );
 
   CourseProvider._internal(
     super._createNotifier, {
@@ -105,9 +92,7 @@ class CourseProvider extends AutoDisposeProvider<Course?> {
   final int id;
 
   @override
-  Override overrideWith(
-    Course? Function(CourseRef provider) create,
-  ) {
+  Override overrideWith(Course? Function(CourseRef provider) create) {
     return ProviderOverride(
       origin: this,
       override: CourseProvider._internal(
@@ -163,8 +148,9 @@ String _$coursesHash() => r'28fcf22cb65c3262c3a2e07d29244faec86fd80c';
 final coursesProvider = FutureProvider<List<Course>>.internal(
   courses,
   name: r'coursesProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$coursesHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$coursesHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );

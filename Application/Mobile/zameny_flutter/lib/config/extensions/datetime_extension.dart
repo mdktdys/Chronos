@@ -9,6 +9,14 @@ extension DateTimeExtension on DateTime {
     return DateFormat('HH:mm').format(this);
   }
 
+  DateTime toStartOfWeek() {
+    return subtract(Duration(days: weekday - 1));
+  }
+
+  DateTime toEndOfWeek() {
+    return add(Duration(days: 7 - weekday));
+  }
+
   bool betweenIgnoreYear(final DateTime start, final DateTime end) {
     // Convert to a uniform year (0) for comparison
     final DateTime thisDate = DateTime(0, month, day);
@@ -64,6 +72,12 @@ extension DateTimeExtension on DateTime {
 
   String toddMM() {
     return "${DateFormat('dd.MM').format(this)} (${weekdayName()})";
+  }
+
+  bool isSameWeekAs(final DateTime other) {
+    final thisWeekStart = toStartOfWeek();
+    final thisWeekEnd = toEndOfWeek();
+    return other.isAfter(thisWeekStart) && other.isBefore(thisWeekEnd);
   }
 
   String toMonth() {

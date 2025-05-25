@@ -13,8 +13,9 @@ String _$teacherStatsHash() => r'f568a030f31cd496453c8b89eb565de951c5bbff';
 final teacherStatsProvider = AutoDisposeProvider<TeacherStats>.internal(
   teacherStats,
   name: r'teacherStatsProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$teacherStatsHash,
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$teacherStatsHash,
   dependencies: null,
   allTransitiveDependencies: null,
 );
