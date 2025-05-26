@@ -31,15 +31,54 @@ class ZamenaPracticeGroupsBlock extends ConsumerWidget {
               spacing: 8,
               runSpacing: 8,
               children: data.map((final Group group) {
-                return SearchItemChip(searchItem: group);
+                return SearchItemChip(title: group.name);
               }).toList(),
             )
           ],
         );
-    }, error: (final error, final obj) {
-      return const SizedBox();
-    }, loading: () {
-      return const SizedBox();
-    },);
+      }, error: (final error, final obj) {
+        return const SizedBox();
+      }, loading: () {
+        return const SizedBox();
+      },
+    );
+  }
+}
+
+class ZamenaTeacherCabinetSwaps extends ConsumerWidget {
+  const ZamenaTeacherCabinetSwaps({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    return ref.watch(fetchTeacherCabinetSwapsProvider).when(
+      data: (final data) {
+        if (data.isEmpty) {
+          return const SizedBox();
+        }
+
+        return Column(
+          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          spacing: 10,
+          children: [
+            Text(
+              'Замены кабинетов',
+              style: context.styles.ubuntuInverseSurface20,
+            ),
+            Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: data.map((final (Teacher, Cabinet) pair) {
+                return SearchItemChip(title: '${pair.$1.name} -> ${pair.$2.name}');
+              }).toList(),
+            )
+          ],
+        );
+      }, error: (final error, final obj) {
+        return const SizedBox();
+      }, loading: () {
+        return const SizedBox();
+      },
+    );
   }
 }

@@ -23,6 +23,21 @@ abstract class Api {
     return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
   }
 
+  static Future<List<(int, int)>> loadTeacherCabinetSwaps({
+    required final DateTime date,
+  }) async {
+    log('request');
+    final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
+      .from('teacher_cabinet_swaps')
+      .select('teacher,cabinet').eq('date', date);
+
+    final List<(int, int)> swaps = data.map((final Map<String, dynamic> json) {
+      return (json['teacher'] as int, json['cabinet'] as int);
+    }).toList();
+
+    return swaps;
+  }
+
   static Future<List<Lesson>> getCabinetLessons({
     required final int cabinetID,
     required final DateTime start,

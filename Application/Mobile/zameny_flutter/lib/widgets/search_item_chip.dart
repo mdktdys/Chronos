@@ -3,14 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/models/search_item_model.dart';
 
 class SearchItemChip extends ConsumerWidget {
-  final SearchItem searchItem;
+  final String title;
   final VoidCallback? onTap;
 
   const SearchItemChip({
-    required this.searchItem,
+    required this.title,
     this.onTap,
     super.key
   });
@@ -29,7 +28,7 @@ class SearchItemChip extends ConsumerWidget {
             vertical: 4,
           ),
           child: Text(
-            searchItem.name,
+            title,
             style: context.styles.ubuntuInverseSurface40014,
           )
         ),

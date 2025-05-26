@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$ZamenaScreenState {
 
- DateTime get currentDate; ZamenaViewType get view; DateTimeRange get visibleDateRange; bool get isPanelExpanded;
+ DateTime get currentDate; ZamenaViewType get view; DateTimeRange get visibleDateRange;
 /// Create a copy of ZamenaScreenState
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $ZamenaScreenStateCopyWith<ZamenaScreenState> get copyWith => _$ZamenaScreenStat
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange)&&(identical(other.isPanelExpanded, isPanelExpanded) || other.isPanelExpanded == isPanelExpanded));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange,isPanelExpanded);
+int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange);
 
 @override
 String toString() {
-  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange, isPanelExpanded: $isPanelExpanded)';
+  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $ZamenaScreenStateCopyWith<$Res>  {
   factory $ZamenaScreenStateCopyWith(ZamenaScreenState value, $Res Function(ZamenaScreenState) _then) = _$ZamenaScreenStateCopyWithImpl;
 @useResult
 $Res call({
- DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange, bool isPanelExpanded
+ DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange
 });
 
 
@@ -63,13 +63,12 @@ class _$ZamenaScreenStateCopyWithImpl<$Res>
 
 /// Create a copy of ZamenaScreenState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,Object? isPanelExpanded = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,}) {
   return _then(_self.copyWith(
 currentDate: null == currentDate ? _self.currentDate : currentDate // ignore: cast_nullable_to_non_nullable
 as DateTime,view: null == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
 as ZamenaViewType,visibleDateRange: null == visibleDateRange ? _self.visibleDateRange : visibleDateRange // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,isPanelExpanded: null == isPanelExpanded ? _self.isPanelExpanded : isPanelExpanded // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTimeRange,
   ));
 }
 
@@ -80,13 +79,12 @@ as bool,
 
 
 class _ZamenaScreenState implements ZamenaScreenState {
-   _ZamenaScreenState({required this.currentDate, required this.view, required this.visibleDateRange, required this.isPanelExpanded});
+   _ZamenaScreenState({required this.currentDate, required this.view, required this.visibleDateRange});
   
 
 @override final  DateTime currentDate;
 @override final  ZamenaViewType view;
 @override final  DateTimeRange visibleDateRange;
-@override final  bool isPanelExpanded;
 
 /// Create a copy of ZamenaScreenState
 /// with the given fields replaced by the non-null parameter values.
@@ -98,16 +96,16 @@ _$ZamenaScreenStateCopyWith<_ZamenaScreenState> get copyWith => __$ZamenaScreenS
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange)&&(identical(other.isPanelExpanded, isPanelExpanded) || other.isPanelExpanded == isPanelExpanded));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange,isPanelExpanded);
+int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange);
 
 @override
 String toString() {
-  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange, isPanelExpanded: $isPanelExpanded)';
+  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange)';
 }
 
 
@@ -118,7 +116,7 @@ abstract mixin class _$ZamenaScreenStateCopyWith<$Res> implements $ZamenaScreenS
   factory _$ZamenaScreenStateCopyWith(_ZamenaScreenState value, $Res Function(_ZamenaScreenState) _then) = __$ZamenaScreenStateCopyWithImpl;
 @override @useResult
 $Res call({
- DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange, bool isPanelExpanded
+ DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange
 });
 
 
@@ -135,13 +133,12 @@ class __$ZamenaScreenStateCopyWithImpl<$Res>
 
 /// Create a copy of ZamenaScreenState
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,Object? isPanelExpanded = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,}) {
   return _then(_ZamenaScreenState(
 currentDate: null == currentDate ? _self.currentDate : currentDate // ignore: cast_nullable_to_non_nullable
 as DateTime,view: null == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
 as ZamenaViewType,visibleDateRange: null == visibleDateRange ? _self.visibleDateRange : visibleDateRange // ignore: cast_nullable_to_non_nullable
-as DateTimeRange,isPanelExpanded: null == isPanelExpanded ? _self.isPanelExpanded : isPanelExpanded // ignore: cast_nullable_to_non_nullable
-as bool,
+as DateTimeRange,
   ));
 }
 

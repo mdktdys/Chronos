@@ -118,7 +118,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
                       runSpacing: 8,
                       children: items.map((final SearchItem searchItem) {
                         return SearchItemChip(
-                          searchItem: searchItem,
+                          title: searchItem.name,
                           onTap: () {
                             ref.read(searchItemProvider.notifier).setState(searchItem);
                             ref.read(filterSearchQueryProvider.notifier).state = '';

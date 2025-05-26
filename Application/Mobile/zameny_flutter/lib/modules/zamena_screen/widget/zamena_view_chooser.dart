@@ -13,7 +13,7 @@ class ZamenaViewChooser extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final ThemeData theme = Theme.of(context);
-    final ZamenaViewType viewType = ref.watch(zamenaScreenProvider).view;
+    final ZamenaViewType viewType = ref.watch(zamenaScreenProvider.select((final state) => state.view));
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceAround,

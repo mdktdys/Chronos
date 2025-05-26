@@ -60,7 +60,7 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                   AnimatedSize(
                     curve: Curves.easeOutCubic,
                     duration: Delays.fastMorphDuration,
-                    child: ref.watch(zamenaScreenProvider).currentDate.formatyyyymmdd() == DateTime.now().formatyyyymmdd()
+                    child: ref.watch(zamenaScreenProvider).currentDate.sameDate(DateTime.now())
                       ? Container(
                           margin: const EdgeInsets.only(left: 5),
                           decoration: BoxDecoration(

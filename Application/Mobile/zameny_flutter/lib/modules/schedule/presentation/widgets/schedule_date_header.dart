@@ -128,6 +128,7 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
                       },
                       cellBuilder: (final context, final cellDetails) {
                         return MonthCell(
+                          key: UniqueKey(),
                           selectedDate: selectedDate,
                           details: cellDetails,
                         );
@@ -159,6 +160,7 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
                       style: ctx.styles.ubuntuInverseSurfaceBold16,
                     ),
                     CurrentNavigationWeekBadge(
+                      title: 'Текущая',
                       onClicked: () {
                         ref.read(navigationDateProvider.notifier).reset();
                       },
@@ -176,10 +178,12 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
 }
 
 class CurrentNavigationWeekBadge extends ConsumerWidget {
+  final String title;
   final VoidCallback onClicked;
   final bool isCurrentWeek;
 
   const CurrentNavigationWeekBadge({
+    required this.title,
     required this.isCurrentWeek,
     required this.onClicked,
     super.key
@@ -208,7 +212,7 @@ class CurrentNavigationWeekBadge extends ConsumerWidget {
         ),
         child: isCurrentWeek
           ? Text(
-              'Текущая',
+              title,
               style: textStyle,
             )
           : SvgPicture.asset(

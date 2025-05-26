@@ -6,7 +6,7 @@ part of 'zamena_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$zamenaScreenHash() => r'cf966dee1bac17c1925e456c1973c5d3d49e85a8';
+String _$zamenaScreenHash() => r'2100501de08b1f04c9707954a7cd96fbe1934feb';
 
 /// See also [ZamenaScreen].
 @ProviderFor(ZamenaScreen)

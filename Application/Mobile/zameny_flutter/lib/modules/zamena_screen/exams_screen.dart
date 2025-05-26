@@ -73,6 +73,8 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
                 children: const [
                   SizedBox(height: 8),
                   ZamenaPracticeGroupsBlock(),
+                  SizedBox(height: 8),
+                  ZamenaTeacherCabinetSwaps(),
                   SizedBox(height: 10),
                   ZamenaViewChooser(),
                   SizedBox(height: 8),
@@ -100,6 +102,8 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
 
   @override
   Widget build(final BuildContext context) {
+    final DateTime date = ref.watch(zamenaScreenProvider).currentDate;
+
     return AnimatedSize(
       duration: Delays.morphDuration,
       alignment: Alignment.topCenter,
@@ -130,12 +134,16 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
                 curve: Curves.easeOut,
                 child: AnimatedSwitcher(
                   duration: Delays.morphDuration,
-                  child: ref.watch(zamenaScreenProvider).isPanelExpanded
-                      ? const MonthNavigationPanel()
-                      : WeekNavigationStrip(initialDate: ref.watch(zamenaScreenProvider).currentDate,
+                  child: ref.watch(panelExpandedProvider)
+                      ? MonthNavigationPanel(
+                          controller: ref.watch(zamenaScreenProvider.notifier).monthController,
+                        )
+                      : WeekNavigationStrip(
+                          pageController: ref.watch(zamenaScreenProvider.notifier).pageController,
+                          initialDate: date,
+                        )
                   ),
                 ),
-              ),
             ],
           ),
         ),
@@ -149,10 +157,10 @@ class NavigationDatePanel extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final bool isExpanded = ref.watch(zamenaScreenProvider).isPanelExpanded;
-    final DateTimeRange visible = ref.watch(zamenaScreenProvider).visibleDateRange;
+    final bool isExpanded = ref.watch(panelExpandedProvider);
+    final DateTimeRange visible = ref.watch(zamenaScreenProvider.select((final state) => state.visibleDateRange));
     final String title = '${visible.start.toMonth()} ${visible.start.year}';
-    final bool isCurrentWeek = DateTime.now().isSameWeekAs(visible.start);
+    final bool isCurrentWeek = DateTime.now().sameDate(ref.watch(zamenaScreenProvider.select((final state) => state.currentDate)));
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
@@ -167,6 +175,7 @@ class NavigationDatePanel extends ConsumerWidget {
             spacing: Spacing.list,
             children: [
               CurrentNavigationWeekBadge(
+                title: 'Сегодня',
                 isCurrentWeek: isCurrentWeek,
                 onClicked: () {
                   ref.read(zamenaScreenProvider.notifier).setDate(DateTime.now());
@@ -174,11 +183,18 @@ class NavigationDatePanel extends ConsumerWidget {
                     start: DateTime.now().toStartOfWeek(),
                     end: DateTime.now().toEndOfWeek(),
                   ));
+                  final pageController = ref.read(zamenaScreenProvider.notifier).pageController;
+
+                  if (true) {
+                    pageController.animateToPage(1000, duration: Delays.fastMorphDuration, curve: Curves.easeInOut);
+                  }
+
+                  ref.read(zamenaScreenProvider.notifier).monthController.displayDate = DateTime.now();
                 },
               ),
               GestureDetector(
                 onTap: () {
-                  ref.read(zamenaScreenProvider.notifier).togglePanel();
+                  ref.read(panelExpandedProvider.notifier).state = !isExpanded;
                 },
                 child: AnimatedRotation(
                   duration: Delays.fastMorphDuration,
@@ -200,7 +216,12 @@ class NavigationDatePanel extends ConsumerWidget {
 }
 
 class MonthNavigationPanel extends ConsumerStatefulWidget {
-  const MonthNavigationPanel({super.key});
+  final DateRangePickerController controller;
+
+  const MonthNavigationPanel({
+    required this.controller,
+    super.key,
+  });
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MonthState();
@@ -213,17 +234,26 @@ class _MonthState extends ConsumerState<MonthNavigationPanel> {
     return Container(
       padding: const EdgeInsets.only(top: 6),
       child: SfDateRangePicker(
+        controller: widget.controller,
+        headerHeight: 0,
         backgroundColor: Colors.transparent,
         initialDisplayDate: ref.watch(zamenaScreenProvider).currentDate,
-        headerHeight: 0,
+        initialSelectedDate: ref.watch(zamenaScreenProvider).currentDate,
+        selectionColor: Colors.transparent,
         monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
         onSelectionChanged: (final dateRangePickerSelectionChangedArgs) {
-          final DateTime date = dateRangePickerSelectionChangedArgs.value;
-          ref.read(zamenaScreenProvider.notifier).setDate(date);
+          final DateTime selected = dateRangePickerSelectionChangedArgs.value;
+
+          if (selected.sameDate(ref.watch(zamenaScreenProvider).currentDate)) {
+            return;
+          }
+
+          ref.read(zamenaScreenProvider.notifier).setDate(selected);
         },
         onViewChanged: _onViewChanged,
         cellBuilder: (final BuildContext context, final DateRangePickerCellDetails cellDetails) {
           return MonthCell(
+            key: UniqueKey(),
             selectedDate: ref.watch(zamenaScreenProvider).currentDate,
             details: cellDetails,
           );
@@ -254,9 +284,11 @@ class _MonthState extends ConsumerState<MonthNavigationPanel> {
 }
 
 class WeekNavigationStrip extends ConsumerStatefulWidget {
+  final PageController pageController;
   final DateTime initialDate;
 
   const WeekNavigationStrip({
+    required this.pageController,
     required this.initialDate,
     super.key,
   });
@@ -266,7 +298,6 @@ class WeekNavigationStrip extends ConsumerStatefulWidget {
 }
 
 class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
-  late PageController _pageController;
   late DateTime _baseDate;
   static const int _initialPage = 1000;
 
@@ -274,7 +305,6 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
   void initState() {
     super.initState();
     _baseDate = widget.initialDate;
-    _pageController = PageController(initialPage: _initialPage);
   }
 
   // Получает начало недели для заданного сдвига от базовой даты
@@ -287,11 +317,10 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
 
   @override
   Widget build(final BuildContext context) {
-    ref.watch(zamenaScreenProvider).visibleDateRange;
     return SizedBox(
       height: 80,
       child: PageView.builder(
-        controller: _pageController,
+        controller: widget.pageController,
         onPageChanged: (final int value) {
           final DateTime newStartOfWeek = _getStartOfWeek(value - _initialPage);
           ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(
