@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
@@ -15,6 +16,7 @@ import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
 
@@ -208,7 +210,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     return Column(
       children: [
         AnimatedSize(
-          duration: const Duration(milliseconds: 150),
+          duration: Delays.fastMorphDuration,
           curve: Curves.ease,
           alignment: Alignment.topCenter,
           child: timing == null || current.weekday == 7 || (schedule?.holidays.isNotEmpty ?? false)

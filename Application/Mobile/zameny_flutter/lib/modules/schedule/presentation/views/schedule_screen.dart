@@ -9,7 +9,7 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/current_les
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_result_header.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/widgets/adaptive_layout.dart';
 import 'package:zameny_flutter/widgets/current_timing_timer.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';

@@ -7,10 +7,10 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart' as sf;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
-import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
+import 'package:zameny_flutter/widgets/month_cell_widget.dart';
 import 'package:zameny_flutter/widgets/toggle_week_button.dart';
 
 
@@ -107,14 +107,14 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
                       showActionButtons: true,
                       allowViewNavigation: false,
                       onCancel: () => Navigator.of(context).pop(),
-                      onSubmit: (final p0) {
+                      onSubmit: (final Object? p0) {
                         if (p0 == null) {
                           Navigator.of(context).pop();
                           return;
                         }
 
                         final DateTime time = (p0 as DateTime);
-                        ref.watch(navigationDateProvider.notifier).state = time;
+                        ref.read(navigationDateProvider.notifier).setDate(time);
                         Navigator.of(context).pop();
                       },
                       monthViewSettings: const sf.DateRangePickerMonthViewSettings(firstDayOfWeek: DateTime.monday),
@@ -208,73 +208,14 @@ class CurrentNavigationWeekBadge extends ConsumerWidget {
         ),
         child: isCurrentWeek
           ? Text(
-            'Текущая',
-            style: textStyle,
-          )
+              'Текущая',
+              style: textStyle,
+            )
           : SvgPicture.asset(
-            Images.reverse,
-            colorFilter: ColorFilter.mode(textStyle.color!, BlendMode.srcIn),
-          ),
+              Images.reverse,
+              colorFilter: ColorFilter.mode(textStyle.color!, BlendMode.srcIn),
+            ),
       ),
-    );
-  }
-}
-
-class MonthCell extends ConsumerWidget {
-  final sf.DateRangePickerCellDetails details;
-  final DateTime? selectedDate;
-
-  const MonthCell({
-    required this.details,
-    required this.selectedDate,
-    super.key,
-  });
-
-  @override
-  Widget build(final BuildContext context, final WidgetRef ref) {
-    // final bool chillday = details.date.weekday == 7 ||
-    //     GetIt.I
-    //         .get<Data>()
-    //         .holidays
-    //         .any((final element) => element.date == details.date);
-
-    const bool chillday = false;
-    final bool isSelected = selectedDate != null
-      ? details.date.sameDate(selectedDate!)
-      : false;
-
-    final bool isToday = details.date.day == DateTime.now().day &&
-        details.date.month == DateTime.now().month &&
-        DateTime.now().year == details.date.year;
-    if (isToday) {
-      //GetIt.I.get<Talker>().good("da");
-    }
-    return Stack(
-      children: [
-        Padding(
-          padding: const EdgeInsets.all(4.0),
-          child: AnimatedContainer(
-            duration: Delays.morphDuration,
-            padding: const EdgeInsets.all(8),
-            decoration: !chillday
-                ? BoxDecoration(
-                    borderRadius: BorderRadius.circular(4),
-                    color: !isSelected
-                      ? Colors.white.withValues(alpha: 0.1)
-                      : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
-                  )
-                : null,
-            child: Center(child: Text(details.date.day.toString())),
-          ),
-        ),
-        isToday
-            ? Container(
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Theme.of(context).colorScheme.primary,),),
-              )
-            : const SizedBox.shrink(),
-      ],
     );
   }
 }

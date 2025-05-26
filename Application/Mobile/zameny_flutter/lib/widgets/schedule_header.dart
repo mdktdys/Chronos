@@ -5,7 +5,7 @@ import 'package:get_it/get_it.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/widgets/frame_less_button.dart';
 
 class ScheduleHeader extends ConsumerWidget {

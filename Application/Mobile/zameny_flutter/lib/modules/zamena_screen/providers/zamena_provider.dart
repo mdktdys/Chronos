@@ -6,7 +6,6 @@ import 'package:flutter/material.dart';
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';

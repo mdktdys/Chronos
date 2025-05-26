@@ -97,4 +97,10 @@ extension DateTimeExtension on DateTime {
     };
     return months[month] ?? '';
   }
+
+  String getTimeFromDateTime() {
+    final String hours = hour < 9 ? '0$hour' : '$hour';
+    final String minutes = minute < 9 ? '0$minute' : '$minute';
+    return '$hours:$minutes';
+  }
 }

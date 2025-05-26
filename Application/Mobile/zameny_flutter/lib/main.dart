@@ -42,5 +42,5 @@ Future<void> registerServices() async {
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
 
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }

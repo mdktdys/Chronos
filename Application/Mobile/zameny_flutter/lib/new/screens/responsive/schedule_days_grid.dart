@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
@@ -14,6 +15,7 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';
 

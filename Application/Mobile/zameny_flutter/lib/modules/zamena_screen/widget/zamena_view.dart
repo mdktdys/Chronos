@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
@@ -23,7 +24,7 @@ class _ZamenaViewState extends ConsumerState<ZamenaView> {
     final view = ref.watch(zamenaScreenProvider.select((final ZamenaScreenState value) => value.view));
 
     return AnimatedSwitcher(
-      duration: const Duration(milliseconds: 300),
+      duration: Delays.morphDuration,
       switchInCurve: Curves.easeIn,
       switchOutCurve: Curves.easeOut,
       child: SkeletonizedProvider<(List<Zamena>,List<ZamenaFull>)>(

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
@@ -40,7 +41,7 @@ class CurrentTimingTimer extends ConsumerWidget {
     }
 
     return AnimatedSize(
-      duration: const Duration(milliseconds: 150),
+      duration: Delays.fastMorphDuration,
       curve: Curves.ease,
       child: SizedBox(
         child: Padding(

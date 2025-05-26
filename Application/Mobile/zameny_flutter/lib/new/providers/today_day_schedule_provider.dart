@@ -7,7 +7,7 @@ import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 final todayDayScheduleProvider = AsyncNotifierProvider<TodayDayScheduleNotifier, DaySchedule?>(() {

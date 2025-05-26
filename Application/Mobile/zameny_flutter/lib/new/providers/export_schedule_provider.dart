@@ -15,20 +15,19 @@ import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/enums/export_schedule_type_exnum.dart';
 import 'package:zameny_flutter/config/extensions/color_extension.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
+import 'package:zameny_flutter/config/extensions/string_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/widgets/button.dart';
 
 part 'export_schedule_provider.g.dart';
-
-
 
 @Riverpod()
 ScheduleExport scheduleExport (final Ref ref) {
@@ -269,7 +268,7 @@ class ScheduleExport {
     for (var i = 0; i < mapped.length; i++) {
       final (Group, Course, int, List<int>) item = mapped[i];
       sheet.getRangeByIndex(2, rowOffset + i).setText('${item.$1.name}\n${item.$2.name}');
-      sheet.getRangeByIndex(2, rowOffset + i).cellStyle.backColor = getColorForText(item.$1.name).getShadeColor(shadeValue: 30).hexCode;
+      sheet.getRangeByIndex(2, rowOffset + i).cellStyle.backColor = item.$1.name.getColorForText().getShadeColor(shadeValue: 30).hexCode;
       sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).setText('${item.$3}');
       sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).cellStyle.backColor = primary;
       sheet.getRangeByIndex(monthLenght + 2, rowOffset + i).cellStyle.hAlign = excel.HAlignType.center;

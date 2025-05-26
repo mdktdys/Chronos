@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:flutter_portal/flutter_portal.dart';
@@ -19,32 +18,25 @@ class App extends ConsumerWidget {
 
     final GoRouter router = ref.watch(routerProvider);
     final ThemeSettings themeProvider = ref.watch(lightThemeProvider);
-    final Brightness brightness = themeProvider.brightness;
-    final ThemeData? theme = themeProvider.theme;
+    // final Brightness brightness = themeProvider.brightness;
+    // final ThemeData? theme = themeProvider.theme;
 
     return Portal(
-      child: AnnotatedRegion(
-        value: SystemUiOverlayStyle(
-          systemNavigationBarIconBrightness: brightness,
-          statusBarIconBrightness: brightness,
-          statusBarColor: theme?.canvasColor,
-        ),
-        child: MaterialApp.router(
-          themeMode: themeProvider.themeMode,
-          debugShowCheckedModeBanner: false,
-          theme: themeProvider.theme,
-          title: 'Замены уксивтика',
-          routerConfig: router,
-          locale: const Locale('ru', 'RU'),
-          supportedLocales: const [
-            Locale('ru',)
-          ],
-          localizationsDelegates: const [
-            GlobalCupertinoLocalizations.delegate,
-            GlobalMaterialLocalizations.delegate,
-            GlobalWidgetsLocalizations.delegate,
-          ],
-        )
+      child: MaterialApp.router(
+        themeMode: themeProvider.themeMode,
+        debugShowCheckedModeBanner: false,
+        theme: themeProvider.theme,
+        title: 'Замены уксивтика',
+        routerConfig: router,
+        locale: const Locale('ru', 'RU'),
+        supportedLocales: const [
+          Locale('ru',)
+        ],
+        localizationsDelegates: const [
+          GlobalCupertinoLocalizations.delegate,
+          GlobalMaterialLocalizations.delegate,
+          GlobalWidgetsLocalizations.delegate,
+        ],
       ),
     );
   }

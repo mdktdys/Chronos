@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
 
 class BottomNavigationItem extends ConsumerWidget {
@@ -44,7 +45,7 @@ class BottomNavigationItem extends ConsumerWidget {
         child: SizedBox(
           height: double.infinity,
           child: AnimatedSwitcher(
-            duration: const Duration(milliseconds: 150),
+            duration: Delays.fastMorphDuration,
             child: SvgPicture.asset(
               key: UniqueKey(),
               provider.currentPage == index
