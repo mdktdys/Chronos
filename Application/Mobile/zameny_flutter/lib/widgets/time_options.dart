@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/timetable/time_table_provider.dart';
 import 'package:zameny_flutter/modules/timetable/timetable_controller.dart';
@@ -37,7 +38,7 @@ class TimeOptions extends ConsumerWidget {
           ],
         ),
         AnimatedSwitcher(
-          duration: const Duration(milliseconds: 300),
+          duration: Delays.morphDuration,
           switchOutCurve: Easing.legacy,
           switchInCurve: Easing.legacy,
           child: viewModel.saturday

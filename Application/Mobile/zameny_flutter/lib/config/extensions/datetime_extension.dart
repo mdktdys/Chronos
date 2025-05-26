@@ -9,6 +9,14 @@ extension DateTimeExtension on DateTime {
     return DateFormat('HH:mm').format(this);
   }
 
+  DateTime toStartOfWeek() {
+    return subtract(Duration(days: weekday - 1));
+  }
+
+  DateTime toEndOfWeek() {
+    return add(Duration(days: 7 - weekday));
+  }
+
   bool betweenIgnoreYear(final DateTime start, final DateTime end) {
     // Convert to a uniform year (0) for comparison
     final DateTime thisDate = DateTime(0, month, day);
@@ -66,6 +74,12 @@ extension DateTimeExtension on DateTime {
     return "${DateFormat('dd.MM').format(this)} (${weekdayName()})";
   }
 
+  bool isSameWeekAs(final DateTime other) {
+    final thisWeekStart = toStartOfWeek();
+    final thisWeekEnd = toEndOfWeek();
+    return other.isAfter(thisWeekStart) && other.isBefore(thisWeekEnd);
+  }
+
   String toMonth() {
     const Map<int, String> months = {
       1: 'Январь',
@@ -82,5 +96,11 @@ extension DateTimeExtension on DateTime {
       12: 'Декабрь',
     };
     return months[month] ?? '';
+  }
+
+  String getTimeFromDateTime() {
+    final String hours = hour < 9 ? '0$hour' : '$hour';
+    final String minutes = minute < 9 ? '0$minute' : '$minute';
+    return '$hours:$minutes';
   }
 }

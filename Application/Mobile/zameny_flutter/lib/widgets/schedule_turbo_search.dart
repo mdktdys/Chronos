@@ -6,10 +6,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
@@ -93,7 +94,7 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
         if (widget.withFavorite)
           AnimatedSize(
             curve: Curves.easeInOut,
-            duration: const Duration(milliseconds: 300),
+            duration: Delays.morphDuration,
             alignment: Alignment.topCenter,
             child: shouldShow
               ? const FavoriteStripeWidget()
@@ -103,21 +104,21 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
           builder: (final BuildContext context) {
             final List<SearchItem> items = ref.watch(filteredSearchItemsProvider).valueOrNull ?? [];
             return AnimatedSize(
-              duration: const Duration(milliseconds: 300),
+              duration: Delays.morphDuration,
               alignment: Alignment.topCenter,
               curve: Curves.easeInOut,
               child: Column(
                 children: [
                   Padding(padding: EdgeInsets.only(top: (shouldShow && items.isNotEmpty) ? 8 : 0)),
                   AnimatedSwitcher(
-                    duration: const Duration(milliseconds: 300),
+                    duration: Delays.morphDuration,
                     child: Wrap(
                       key: Key(items.length.toString()),
                       spacing: 8,
                       runSpacing: 8,
                       children: items.map((final SearchItem searchItem) {
                         return SearchItemChip(
-                          searchItem: searchItem,
+                          title: searchItem.name,
                           onTap: () {
                             ref.read(searchItemProvider.notifier).setState(searchItem);
                             ref.read(filterSearchQueryProvider.notifier).state = '';

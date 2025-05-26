@@ -7,7 +7,9 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
+import 'package:zameny_flutter/config/extensions/string_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
@@ -19,8 +21,8 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
   final DaySchedule daySchedule;
@@ -484,7 +486,7 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                     width: 10,
                     decoration: BoxDecoration(
                       borderRadius: const BorderRadius.all(Radius.circular(20)),
-                      color: getColorForText((course?.name).toString()),
+                      color: ((course?.name).toString()).getColorForText(),
                     ),
                   ),
                 ),
@@ -501,7 +503,7 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                           width: 30,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: getColorForText(title)
+                            color: title.getColorForText()
                           ),
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
@@ -552,7 +554,7 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
             AnimatedSize(
               alignment: Alignment.topCenter,
               curve: Curves.easeOut,
-              duration: const Duration(milliseconds: 150),
+              duration: Delays.fastMorphDuration,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -578,7 +580,7 @@ class _CourseTileReworkedZamenaState extends ConsumerState<CourseTileRework> {
                       if (widget.swapedLesson != null)
                         Align(
                           child: AnimatedRotation(
-                            duration: const Duration(milliseconds: 150),
+                            duration: Delays.fastMorphDuration,
                             turns: isExpanded ? 0.5 : 0,
                             child: SvgPicture.asset(Images.chevron, colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),),
                           ),

@@ -12,48 +12,47 @@ part of 'zamena_provider.dart';
 
 // dart format off
 T _$identity<T>(T value) => value;
-
 /// @nodoc
 mixin _$ZamenaScreenState {
-  DateTime get currentDate;
-  ZamenaViewType get view;
 
-  /// Create a copy of ZamenaScreenState
-  /// with the given fields replaced by the non-null parameter values.
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  $ZamenaScreenStateCopyWith<ZamenaScreenState> get copyWith =>
-      _$ZamenaScreenStateCopyWithImpl<ZamenaScreenState>(
-          this as ZamenaScreenState, _$identity);
+ DateTime get currentDate; ZamenaViewType get view; DateTimeRange get visibleDateRange;
+/// Create a copy of ZamenaScreenState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$ZamenaScreenStateCopyWith<ZamenaScreenState> get copyWith => _$ZamenaScreenStateCopyWithImpl<ZamenaScreenState>(this as ZamenaScreenState, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is ZamenaScreenState &&
-            (identical(other.currentDate, currentDate) ||
-                other.currentDate == currentDate) &&
-            (identical(other.view, view) || other.view == view));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, currentDate, view);
 
-  @override
-  String toString() {
-    return 'ZamenaScreenState(currentDate: $currentDate, view: $view)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange);
+
+@override
+String toString() {
+  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class $ZamenaScreenStateCopyWith<$Res> {
-  factory $ZamenaScreenStateCopyWith(
-          ZamenaScreenState value, $Res Function(ZamenaScreenState) _then) =
-      _$ZamenaScreenStateCopyWithImpl;
-  @useResult
-  $Res call({DateTime currentDate, ZamenaViewType view});
-}
+abstract mixin class $ZamenaScreenStateCopyWith<$Res>  {
+  factory $ZamenaScreenStateCopyWith(ZamenaScreenState value, $Res Function(ZamenaScreenState) _then) = _$ZamenaScreenStateCopyWithImpl;
+@useResult
+$Res call({
+ DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange
+});
 
+
+
+
+}
 /// @nodoc
 class _$ZamenaScreenStateCopyWithImpl<$Res>
     implements $ZamenaScreenStateCopyWith<$Res> {
@@ -62,75 +61,68 @@ class _$ZamenaScreenStateCopyWithImpl<$Res>
   final ZamenaScreenState _self;
   final $Res Function(ZamenaScreenState) _then;
 
-  /// Create a copy of ZamenaScreenState
-  /// with the given fields replaced by the non-null parameter values.
-  @pragma('vm:prefer-inline')
-  @override
-  $Res call({
-    Object? currentDate = null,
-    Object? view = null,
-  }) {
-    return _then(_self.copyWith(
-      currentDate: null == currentDate
-          ? _self.currentDate
-          : currentDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      view: null == view
-          ? _self.view
-          : view // ignore: cast_nullable_to_non_nullable
-              as ZamenaViewType,
-    ));
-  }
+/// Create a copy of ZamenaScreenState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') @override $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,}) {
+  return _then(_self.copyWith(
+currentDate: null == currentDate ? _self.currentDate : currentDate // ignore: cast_nullable_to_non_nullable
+as DateTime,view: null == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
+as ZamenaViewType,visibleDateRange: null == visibleDateRange ? _self.visibleDateRange : visibleDateRange // ignore: cast_nullable_to_non_nullable
+as DateTimeRange,
+  ));
 }
 
+}
+
+
 /// @nodoc
+
 
 class _ZamenaScreenState implements ZamenaScreenState {
-  _ZamenaScreenState({required this.currentDate, required this.view});
+   _ZamenaScreenState({required this.currentDate, required this.view, required this.visibleDateRange});
+  
 
-  @override
-  final DateTime currentDate;
-  @override
-  final ZamenaViewType view;
+@override final  DateTime currentDate;
+@override final  ZamenaViewType view;
+@override final  DateTimeRange visibleDateRange;
 
-  /// Create a copy of ZamenaScreenState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @JsonKey(includeFromJson: false, includeToJson: false)
-  @pragma('vm:prefer-inline')
-  _$ZamenaScreenStateCopyWith<_ZamenaScreenState> get copyWith =>
-      __$ZamenaScreenStateCopyWithImpl<_ZamenaScreenState>(this, _$identity);
+/// Create a copy of ZamenaScreenState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$ZamenaScreenStateCopyWith<_ZamenaScreenState> get copyWith => __$ZamenaScreenStateCopyWithImpl<_ZamenaScreenState>(this, _$identity);
 
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _ZamenaScreenState &&
-            (identical(other.currentDate, currentDate) ||
-                other.currentDate == currentDate) &&
-            (identical(other.view, view) || other.view == view));
-  }
 
-  @override
-  int get hashCode => Object.hash(runtimeType, currentDate, view);
 
-  @override
-  String toString() {
-    return 'ZamenaScreenState(currentDate: $currentDate, view: $view)';
-  }
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ZamenaScreenState&&(identical(other.currentDate, currentDate) || other.currentDate == currentDate)&&(identical(other.view, view) || other.view == view)&&(identical(other.visibleDateRange, visibleDateRange) || other.visibleDateRange == visibleDateRange));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,currentDate,view,visibleDateRange);
+
+@override
+String toString() {
+  return 'ZamenaScreenState(currentDate: $currentDate, view: $view, visibleDateRange: $visibleDateRange)';
+}
+
+
 }
 
 /// @nodoc
-abstract mixin class _$ZamenaScreenStateCopyWith<$Res>
-    implements $ZamenaScreenStateCopyWith<$Res> {
-  factory _$ZamenaScreenStateCopyWith(
-          _ZamenaScreenState value, $Res Function(_ZamenaScreenState) _then) =
-      __$ZamenaScreenStateCopyWithImpl;
-  @override
-  @useResult
-  $Res call({DateTime currentDate, ZamenaViewType view});
-}
+abstract mixin class _$ZamenaScreenStateCopyWith<$Res> implements $ZamenaScreenStateCopyWith<$Res> {
+  factory _$ZamenaScreenStateCopyWith(_ZamenaScreenState value, $Res Function(_ZamenaScreenState) _then) = __$ZamenaScreenStateCopyWithImpl;
+@override @useResult
+$Res call({
+ DateTime currentDate, ZamenaViewType view, DateTimeRange visibleDateRange
+});
 
+
+
+
+}
 /// @nodoc
 class __$ZamenaScreenStateCopyWithImpl<$Res>
     implements _$ZamenaScreenStateCopyWith<$Res> {
@@ -139,25 +131,18 @@ class __$ZamenaScreenStateCopyWithImpl<$Res>
   final _ZamenaScreenState _self;
   final $Res Function(_ZamenaScreenState) _then;
 
-  /// Create a copy of ZamenaScreenState
-  /// with the given fields replaced by the non-null parameter values.
-  @override
-  @pragma('vm:prefer-inline')
-  $Res call({
-    Object? currentDate = null,
-    Object? view = null,
-  }) {
-    return _then(_ZamenaScreenState(
-      currentDate: null == currentDate
-          ? _self.currentDate
-          : currentDate // ignore: cast_nullable_to_non_nullable
-              as DateTime,
-      view: null == view
-          ? _self.view
-          : view // ignore: cast_nullable_to_non_nullable
-              as ZamenaViewType,
-    ));
-  }
+/// Create a copy of ZamenaScreenState
+/// with the given fields replaced by the non-null parameter values.
+@override @pragma('vm:prefer-inline') $Res call({Object? currentDate = null,Object? view = null,Object? visibleDateRange = null,}) {
+  return _then(_ZamenaScreenState(
+currentDate: null == currentDate ? _self.currentDate : currentDate // ignore: cast_nullable_to_non_nullable
+as DateTime,view: null == view ? _self.view : view // ignore: cast_nullable_to_non_nullable
+as ZamenaViewType,visibleDateRange: null == visibleDateRange ? _self.visibleDateRange : visibleDateRange // ignore: cast_nullable_to_non_nullable
+as DateTimeRange,
+  ));
+}
+
+
 }
 
 // dart format on

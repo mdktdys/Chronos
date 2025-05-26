@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
@@ -19,6 +21,21 @@ abstract class Api {
       .gte('date', start.toyyyymmdd());
 
     return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
+  }
+
+  static Future<List<(int, int)>> loadTeacherCabinetSwaps({
+    required final DateTime date,
+  }) async {
+    log('request');
+    final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
+      .from('teacher_cabinet_swaps')
+      .select('teacher,cabinet').eq('date', date);
+
+    final List<(int, int)> swaps = data.map((final Map<String, dynamic> json) {
+      return (json['teacher'] as int, json['cabinet'] as int);
+    }).toList();
+
+    return swaps;
   }
 
   static Future<List<Lesson>> getCabinetLessons({
@@ -136,6 +153,14 @@ abstract class Api {
       res.add(zamenaLink);
     }
     return res;
+  }
+
+  static Future<List<int>> loadPracticeGroupsByDate({required final DateTime date}) async {
+    final SupabaseClient client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> groupIds = await client.from('Practices').select('group').eq('date', date);
+    log(groupIds.toString());
+    return groupIds.map((final json) => json['group'] as int).toList();
   }
 
   static Future<List<ZamenaFileLink>> getZamenaFileLinks({

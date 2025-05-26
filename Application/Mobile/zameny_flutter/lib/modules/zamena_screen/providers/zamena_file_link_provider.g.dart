@@ -13,14 +13,14 @@ String _$fetchZamenaFileLinksByDateHash() =>
 @ProviderFor(fetchZamenaFileLinksByDate)
 final fetchZamenaFileLinksByDateProvider =
     FutureProvider<List<ZamenaFileLink>>.internal(
-  fetchZamenaFileLinksByDate,
-  name: r'fetchZamenaFileLinksByDateProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$fetchZamenaFileLinksByDateHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      fetchZamenaFileLinksByDate,
+      name: r'fetchZamenaFileLinksByDateProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$fetchZamenaFileLinksByDateHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 @Deprecated('Will be removed in 3.0. Use Ref instead')
 // ignore: unused_element

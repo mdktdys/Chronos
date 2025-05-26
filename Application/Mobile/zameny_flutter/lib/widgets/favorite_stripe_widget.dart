@@ -2,10 +2,11 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 
@@ -15,7 +16,7 @@ class FavoriteStripeWidget extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     return AnimatedSize(
-      duration: const Duration(milliseconds: 300),
+      duration: Delays.morphDuration,
       curve: Curves.easeOut,
       child: Builder(builder: (final BuildContext context) {
         final provider = ref.watch(favoriteSearchItemsProvider);

@@ -30,7 +30,7 @@ class ZamenaGroupWidget extends ConsumerWidget {
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(
-              group!.name,
+              group?.name ?? '',
               style: context.styles.ubuntuInverseSurface20
             ),
             isFullZamena

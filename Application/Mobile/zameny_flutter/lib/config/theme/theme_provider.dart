@@ -15,7 +15,9 @@ final lightThemeProvider = ChangeNotifierProvider<ThemeSettings>((final ref) {
 class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
   FlexScheme scheme = FlexScheme.material;
   ThemeMode themeMode = ThemeMode.system;
+  FlexSurfaceMode blendMode = FlexSurfaceMode.level;
   int themeModeIndex = 3;
+  int blendModeIndex = 0;
   ThemeData? theme;
   final Ref ref;
 
@@ -53,6 +55,15 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
     }
   }
 
+  void setBlendMode(final int index) {
+    blendModeIndex = index;
+
+    blendMode = FlexSurfaceMode.values[index];
+
+    _updateTheme();
+    saveSettings();
+  }
+
   void setThemeMode(final int index) {
     themeModeIndex = index;
     switch (index) {
@@ -77,16 +88,16 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
 
     if (themeMode == ThemeMode.dark || (ThemeMode.system == themeMode && isSystemDarkMode)) {
       theme = FlexThemeData.dark(
+        surfaceMode: blendMode,
         appBarStyle: FlexAppBarStyle.surface,
-        useMaterial3: true,
         scheme: scheme,
       ).applyCustomTextTheme();
     }
 
     if (themeMode == ThemeMode.light || (ThemeMode.system == themeMode && !isSystemDarkMode)) {
       theme = FlexThemeData.light(
+        surfaceMode: blendMode,
         appBarStyle: FlexAppBarStyle.surface,
-        useMaterial3: true,
         scheme: scheme,
       ).applyCustomTextTheme();
     }

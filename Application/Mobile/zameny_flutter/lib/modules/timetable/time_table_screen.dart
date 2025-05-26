@@ -16,27 +16,29 @@ class TimeTableScreen extends StatelessWidget {
     return ScreenAppearBuilder(
       showNavbar: true,
       child: Scaffold(
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Align(
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
-              child: const Padding(
-                padding: EdgeInsets.symmetric(horizontal: 20),
-                child: Column(
-                  children: [
-                    SizedBox(height: 10),
-                    TimeTableHeader(),
-                    SizedBox(height: 10),
-                    CurrentTimingTimer(),
-                    TimeOptions(),
-                    SizedBox(height: 10),
-                    TimeTable(),
-                    SizedBox(height: 8),
-                    CovorkingTimeTableBlock(),
-                    SizedBox(height: 100),
-                  ],
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Align(
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
+                child: const Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: Column(
+                    children: [
+                      SizedBox(height: 10),
+                      TimeTableHeader(),
+                      SizedBox(height: 10),
+                      CurrentTimingTimer(),
+                      TimeOptions(),
+                      SizedBox(height: 10),
+                      TimeTable(),
+                      SizedBox(height: 8),
+                      CovorkingTimeTableBlock(),
+                      SizedBox(height: 100),
+                    ],
+                  ),
                 ),
               ),
             ),

@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
 import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
@@ -75,7 +76,7 @@ class _CustomSwitchState<T> extends State<CustomSwitch<T>> {
                 -1.0 + (2.0 * index) / (widget.values.length - 1),
                 0,
               ),
-            duration: const Duration(milliseconds: 150),
+            duration: Delays.fastMorphDuration,
             curve: Curves.easeInOut,
             child: AnimatedContainer(
               duration: Delays.morphDuration,

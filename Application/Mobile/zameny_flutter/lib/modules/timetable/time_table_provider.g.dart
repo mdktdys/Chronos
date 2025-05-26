@@ -12,14 +12,14 @@ String _$timeTableNotifierHash() => r'c178e7ffe9869de371156eb51c88e8c6ae43af1d';
 @ProviderFor(TimeTableNotifier)
 final timeTableNotifierProvider =
     AutoDisposeNotifierProvider<TimeTableNotifier, TimeTableState>.internal(
-  TimeTableNotifier.new,
-  name: r'timeTableNotifierProvider',
-  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
-      ? null
-      : _$timeTableNotifierHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      TimeTableNotifier.new,
+      name: r'timeTableNotifierProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$timeTableNotifierHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$TimeTableNotifier = AutoDisposeNotifier<TimeTableState>;
 // ignore_for_file: type=lint

@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -14,7 +12,7 @@ import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_item_notification_button.dart';
 import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/widgets/blur_dialog.dart';
 
 

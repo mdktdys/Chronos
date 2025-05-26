@@ -9,7 +9,7 @@ import 'package:zameny_flutter/config/bottom_bar_items.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/main_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 
 class DesktopSideBar extends ConsumerStatefulWidget {
   const DesktopSideBar({super.key});

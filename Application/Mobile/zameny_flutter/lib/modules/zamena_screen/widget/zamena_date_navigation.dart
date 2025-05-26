@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
@@ -58,8 +59,8 @@ class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
                   ),
                   AnimatedSize(
                     curve: Curves.easeOutCubic,
-                    duration: const Duration(milliseconds: 150),
-                    child: ref.watch(zamenaScreenProvider).currentDate.formatyyyymmdd() == DateTime.now().formatyyyymmdd()
+                    duration: Delays.fastMorphDuration,
+                    child: ref.watch(zamenaScreenProvider).currentDate.sameDate(DateTime.now())
                       ? Container(
                           margin: const EdgeInsets.only(left: 5),
                           decoration: BoxDecoration(

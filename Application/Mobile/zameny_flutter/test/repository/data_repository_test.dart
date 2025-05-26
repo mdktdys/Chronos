@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:test/test.dart';
 
 import 'package:zameny_flutter/new/repository/fastapi_repository.dart';
@@ -12,7 +14,7 @@ void main() {
     await repository.getGroups();
 
     stopwatch.stop();
-    print('FastAPI getGroups() executed in ${stopwatch.elapsedMilliseconds} ms');
+    log('FastAPI getGroups() executed in ${stopwatch.elapsedMilliseconds} ms');
 
     expect(true, true);
   });
@@ -24,7 +26,7 @@ void main() {
     await repository.getGroups();
 
     stopwatch.stop();
-    print('Supabase getGroups() executed in ${stopwatch.elapsedMilliseconds} ms');
+    log('Supabase getGroups() executed in ${stopwatch.elapsedMilliseconds} ms');
 
     expect(true, true);
   });

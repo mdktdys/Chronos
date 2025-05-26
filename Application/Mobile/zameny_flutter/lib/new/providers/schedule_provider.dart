@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 
+import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
 import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/config/extensions/color_extension.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
@@ -17,20 +18,10 @@ import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/models/tile_data.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
-
-enum ScheduleViewMode {
-  schedule(name: 'Расписание'),
-  standart(name: 'Без замен'),
-  zamenas(name: 'Только замены');
-
-  const ScheduleViewMode({required this.name});
-
-  final String name;
-}
-
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier(ref: ref);
@@ -324,61 +315,5 @@ class ScheduleSettingsNotifier extends ChangeNotifier {
 
   void notify() {
     notifyListeners();
-  }
-}
-
-final searchItemProvider = StateNotifierProvider<SearchItemNotifier, SearchItem?>((final Ref ref) {
-  return SearchItemNotifier(ref: ref);
-});
-
-class SearchItemNotifier extends StateNotifier<SearchItem?> {
-  bool isLoading = false;
-  final Ref ref;
-
-  SearchItemNotifier({required this.ref}): super(null);
-  
-  Future<void> getSearchItem({
-    required final int id,
-    required final int type
-  }) async {
-    isLoading = true;
-    final SearchItem? item = await ref.watch(futureSearchItemProvider((
-      type: type,
-      id: id,
-    )).future);
-
-    if (item != null) {
-      state = item;
-    }
-
-    isLoading = false;
-  }
-
-  void setState(final SearchItem? value) {
-    state = value;
-  }
-}
-
-final navigationDateProvider = StateNotifierProvider<NavigationDateNotifier, DateTime>(
-  (final ref) => NavigationDateNotifier(),
-);
-
-class NavigationDateNotifier extends StateNotifier<DateTime> {
-  NavigationDateNotifier() : super(_initializeDate());
-
-  void toggleWeek(final int days) {
-    state = state.add(Duration(days: days));
-  }
-
-  static DateTime _initializeDate() {
-    final DateTime date = DateTime.now();
-    if (date.weekday == 7) {
-      return date.add(const Duration(days: 1));
-    }
-    return date;
-  }
-
-  void reset() {
-    state = _initializeDate();
   }
 }

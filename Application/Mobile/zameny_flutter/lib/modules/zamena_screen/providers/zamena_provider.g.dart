@@ -6,19 +6,20 @@ part of 'zamena_provider.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$zamenaScreenHash() => r'4562064218bcb3fbdafd8a1bf0421510ac88edcc';
+String _$zamenaScreenHash() => r'2100501de08b1f04c9707954a7cd96fbe1934feb';
 
 /// See also [ZamenaScreen].
 @ProviderFor(ZamenaScreen)
 final zamenaScreenProvider =
     AutoDisposeNotifierProvider<ZamenaScreen, ZamenaScreenState>.internal(
-  ZamenaScreen.new,
-  name: r'zamenaScreenProvider',
-  debugGetCreateSourceHash:
-      const bool.fromEnvironment('dart.vm.product') ? null : _$zamenaScreenHash,
-  dependencies: null,
-  allTransitiveDependencies: null,
-);
+      ZamenaScreen.new,
+      name: r'zamenaScreenProvider',
+      debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+          ? null
+          : _$zamenaScreenHash,
+      dependencies: null,
+      allTransitiveDependencies: null,
+    );
 
 typedef _$ZamenaScreen = AutoDisposeNotifier<ZamenaScreenState>;
 // ignore_for_file: type=lint

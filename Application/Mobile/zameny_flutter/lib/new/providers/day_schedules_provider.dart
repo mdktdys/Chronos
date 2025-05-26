@@ -11,7 +11,8 @@ import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/new/notapi.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
+import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 

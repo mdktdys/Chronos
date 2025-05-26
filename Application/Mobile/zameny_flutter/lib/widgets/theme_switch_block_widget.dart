@@ -21,7 +21,6 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
     final ThemeData theme = Theme.of(context);
     final bool isDark = theme.colorScheme.brightness == Brightness.dark;
 
-    
     return Column(
       children: [
         Container(
@@ -67,7 +66,7 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
           child: SingleChildScrollView(
             scrollDirection: Axis.horizontal,
             child: Row(
-              children: themes.map((final (FlexScheme, FlexSchemeData) theme) {    
+              children: themes.map((final (FlexScheme, FlexSchemeData) theme) {
                 return Row(
                   children: [
                     ThemeTile(
@@ -82,6 +81,32 @@ class _ThemeSwitchBlockState extends ConsumerState<ThemeSwitchBlock> {
             ),
           ),
         ),
+        const SizedBox(height: 8),
+        // Container(
+        //   width: double.infinity,
+        //   padding: const EdgeInsets.all(10),
+        //   decoration: BoxDecoration(
+        //     color: theme.colorScheme.onSurface.withValues(alpha: 0.1),
+        //     borderRadius: const BorderRadius.all(Radius.circular(20)),
+        //   ),
+        //   child: SegmentedButtonTheme(
+        //     data: theme.segmentedButtonTheme,
+        //     child: SegmentedButton(
+        //       onSelectionChanged: (final p0) {
+        //         ref.read(lightThemeProvider).setBlendMode(p0.first);
+        //       },
+        //       segments: const [
+        //         ButtonSegment(value: 0, icon: Icon(Icons.dark_mode)),
+        //         ButtonSegment(value: 1, icon: Icon(Icons.light_mode)),
+        //         ButtonSegment(value: 2, icon: Icon(Icons.phone_android)),
+        //       ],
+        //       selected: {
+        //         ref.watch(lightThemeProvider).blendModeIndex,
+        //       },
+        //     ),
+        //   ),
+        // ),
+
       ],
     );
   }

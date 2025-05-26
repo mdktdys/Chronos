@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-
-
 extension TextThemeTools on ThemeData{
   ThemeData applyCustomTextTheme() {
     return copyWith(extensions: [CustomTextStyles(theme: this)]);
