@@ -272,19 +272,19 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
               final bool current = day.sameDate(DateTime.now());
               final bool selected = day.sameDate(ref.watch(zamenaScreenProvider).currentDate);
 
-              return Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                spacing: 6,
-                children: [
-                  Text(
-                    days[day.weekday - 1],
-                    style: context.styles.ubuntu14,
-                  ),
-                  Bounceable(
-                    onTap: () {
-                      ref.read(zamenaScreenProvider.notifier).setDate(day);
-                    },
-                    child: AnimatedContainer(
+              return Bounceable(
+                onTap: () {
+                  ref.read(zamenaScreenProvider.notifier).setDate(day);
+                },
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  spacing: 6,
+                  children: [
+                    Text(
+                      days[day.weekday - 1],
+                      style: context.styles.ubuntu14,
+                    ),
+                    AnimatedContainer(
                       duration: Delays.morphDuration,
                       decoration: BoxDecoration(
                         border: current
@@ -301,8 +301,8 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
                         style: context.styles.ubuntu14,
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               );
             }).toList(),
           );
