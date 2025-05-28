@@ -4,8 +4,8 @@ import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/shared/domain/models/telegram_zamena_link_model.dart';
 
 abstract class Api {
   static Future<List<Lesson>> getGroupLessons({

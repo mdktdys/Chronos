@@ -24,70 +24,72 @@ class SettingsScreen extends ConsumerWidget {
       showNavbar: true,
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: SingleChildScrollView(
-          physics: const BouncingScrollPhysics(),
-          child: Container(
-            padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
-            alignment: Alignment.topCenter,
-            child: ConstrainedBox(
-              constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
-              child: Column(
-                spacing: Spacing.list,
-                children: [
-                  const SizedBox.shrink(),
-                  const SettingsHeader(),
-                  // const SettingsLogoBlock(),
-                  SettingsCategory(
-                    category: 'Контакты',
-                    tiles: [
-                      SettingsCategoryTile(
-                        title: 'Сайтик колледжа',
-                        description: 'Ну тут понятно',
-                        icon: Images.teacherHat,
-                        onClicked: () async =>  await launchUrl(
-                          Uri.parse(Constants.site),
-                          mode: LaunchMode.externalApplication
+        body: SafeArea(
+          child: SingleChildScrollView(
+            physics: const BouncingScrollPhysics(),
+            child: Container(
+              padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
+              alignment: Alignment.topCenter,
+              child: ConstrainedBox(
+                constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
+                child: Column(
+                  spacing: Spacing.list,
+                  children: [
+                    const SizedBox.shrink(),
+                    const SettingsHeader(),
+                    // const SettingsLogoBlock(),
+                    SettingsCategory(
+                      category: 'Контакты',
+                      tiles: [
+                        SettingsCategoryTile(
+                          title: 'Сайтик колледжа',
+                          description: 'Ну тут понятно',
+                          icon: Images.teacherHat,
+                          onClicked: () async =>  await launchUrl(
+                            Uri.parse(Constants.site),
+                            mode: LaunchMode.externalApplication
+                          )
+                        ),
+                        SettingsCategoryTile(
+                          title: 'Есть идеи или предложения?',
+                          description: 'Отпишите мне в телеграмчике',
+                          icon: Images.send,
+                          onClicked: () async =>  await launchUrl(
+                            Uri.parse(Constants.telegramChannel),
+                            mode: LaunchMode.externalApplication
+                          )
+                        ),
+                        SettingsCategoryTile(
+                          title: 'Актуальные замены!',
+                          description: 'Получайте уведомления о заменах\nв тг канальчике ;)',
+                          icon: Images.code,
+                          onClicked: () async =>  await launchUrl(
+                            Uri.parse(Constants.telegramBot),
+                            mode: LaunchMode.externalApplication
+                          )
+                        ),
+                        SettingsCategoryTile(
+                          title: 'Мобильное приложение',
+                          description: 'ток андроеды',
+                          icon: Images.rustore,
+                          onClicked: () async =>  await launchUrl(
+                            Uri.parse(Constants.rustore),
+                            mode: LaunchMode.externalApplication
+                          )
                         )
-                      ),
-                      SettingsCategoryTile(
-                        title: 'Есть идеи или предложения?',
-                        description: 'Отпишите мне в телеграмчике',
-                        icon: Images.send,
-                        onClicked: () async =>  await launchUrl(
-                          Uri.parse(Constants.telegramChannel),
-                          mode: LaunchMode.externalApplication
-                        )
-                      ),
-                      SettingsCategoryTile(
-                        title: 'Актуальные замены!',
-                        description: 'Получайте уведомления о заменах\nв тг канальчике ;)',
-                        icon: Images.code,
-                        onClicked: () async =>  await launchUrl(
-                          Uri.parse(Constants.telegramBot),
-                          mode: LaunchMode.externalApplication
-                        )
-                      ),
-                      SettingsCategoryTile(
-                        title: 'Мобильное приложение',
-                        description: 'ток андроеды',
-                        icon: Images.rustore,
-                        onClicked: () async =>  await launchUrl(
-                          Uri.parse(Constants.rustore),
-                          mode: LaunchMode.externalApplication
-                        )
-                      )
-                    ],
-                  ),
-                  const SettingsDepartmentsBlock(),
-                  const ThemeSwitchBlock(),
-                  const DevTools(),
-                  Text(
-                    Constants.version,
-                    textAlign: TextAlign.center,
-                    style: context.styles.monospace12
-                  ),
-                  SizedBox(height: Constants.bottomSpacing),
-                ],
+                      ],
+                    ),
+                    const SettingsDepartmentsBlock(),
+                    const ThemeSwitchBlock(),
+                    const DevTools(),
+                    Text(
+                      Constants.version,
+                      textAlign: TextAlign.center,
+                      style: context.styles.monospace12
+                    ),
+                    SizedBox(height: Constants.bottomSpacing),
+                  ],
+                ),
               ),
             ),
           ),

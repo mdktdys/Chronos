@@ -2,8 +2,8 @@ import 'dart:convert';
 
 import 'package:skeletonizer/skeletonizer.dart';
 
-import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 
 class ZamenasType {
   int id;
@@ -14,7 +14,7 @@ class ZamenasType {
     required this.id,
     required this.group,
     required this.date,
-    
+
     required this.full,
   });
 

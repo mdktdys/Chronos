@@ -13,6 +13,7 @@ import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/schedule_date_header.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
+import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_header.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_chooser.dart';
@@ -59,98 +60,28 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
     return ScreenAppearBuilder(
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
-        body: SingleChildScrollView(
+        body: ListView(
+          padding: EdgeInsets.zero,
           controller: controller,
           physics: const BouncingScrollPhysics(),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              const ZamenaScreenHeader(),
-              ListView(
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
-                children: const [
-                  SizedBox(height: 8),
-                  ZamenaPracticeGroupsBlock(),
-                  SizedBox(height: 8),
-                  ZamenaTeacherCabinetSwaps(),
-                  SizedBox(height: 10),
-                  ZamenaViewChooser(),
-                  SizedBox(height: 8),
-                  ZamenaView(),
-                ],
-              ),
-              SizedBox(height: Constants.bottomSpacing),
-            ],
-          ),
+          children: [
+            const ZamenaScreenHeader(),
+            const SizedBox(height: 8),
+            const ZamenaPracticeGroupsBlock(),
+            const SizedBox(height: 8),
+            const ZamenaTeacherCabinetSwaps(),
+            const SizedBox(height: 10),
+            const ZamenaViewChooser(),
+            const SizedBox(height: 8),
+            const ZamenaView(),
+            SizedBox(height: Constants.bottomSpacing),
+          ],
         ),
       ),
     );
   }
 }
 
-class ZamenaScreenHeader extends ConsumerStatefulWidget {
-  const ZamenaScreenHeader({super.key});
-
-  @override
-  ConsumerState<ConsumerStatefulWidget> createState() => _ZamenaScreenHeaderState();
-}
-
-class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
-  
-
-  @override
-  Widget build(final BuildContext context) {
-    final DateTime date = ref.watch(zamenaScreenProvider).currentDate;
-
-    return AnimatedSize(
-      duration: Delays.morphDuration,
-      alignment: Alignment.topCenter,
-      curve: Curves.easeOut,
-      child: AnimatedContainer(
-        duration: Delays.morphDuration,
-        decoration: BoxDecoration(
-          color: Theme.of(context).colorScheme.surfaceContainer,
-          borderRadius: const BorderRadius.only(
-            bottomLeft: Radius.circular(24),
-            bottomRight: Radius.circular(24),
-          ),
-        ),
-        padding: const EdgeInsets.all(10),
-        child: SafeArea(
-          bottom: false,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              Text(
-                'Замены',
-                style: context.styles.ubuntuPrimaryBold24,
-              ),
-              const NavigationDatePanel(),
-              AnimatedSize(
-                alignment: Alignment.topCenter,
-                duration: Delays.morphDuration,
-                curve: Curves.easeOut,
-                child: AnimatedSwitcher(
-                  duration: Delays.morphDuration,
-                  child: ref.watch(panelExpandedProvider)
-                      ? MonthNavigationPanel(
-                          controller: ref.watch(zamenaScreenProvider.notifier).monthController,
-                        )
-                      : WeekNavigationStrip(
-                          pageController: ref.watch(zamenaScreenProvider.notifier).pageController,
-                          initialDate: date,
-                        )
-                  ),
-                ),
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-}
 
 class NavigationDatePanel extends ConsumerWidget {
   const NavigationDatePanel({super.key});

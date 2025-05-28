@@ -1,6 +1,6 @@
 import 'package:dio/dio.dart';
 
-import 'package:zameny_flutter/models/group_model.dart';
+import 'package:zameny_flutter/shared/domain/models/group_model.dart';
 import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 class FastAPIDataRepository implements DataRepository {

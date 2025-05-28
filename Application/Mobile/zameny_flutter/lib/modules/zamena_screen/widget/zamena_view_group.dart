@@ -2,9 +2,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_group_widget.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 
 
 class ZamenaViewGroup extends ConsumerWidget {
@@ -21,10 +22,13 @@ class ZamenaViewGroup extends ConsumerWidget {
   Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> groupsList = zamenas.map((final Zamena zamena) => zamena.groupID).toSet();
 
-    return ListView(
+    return ListView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.only(left: Spacing.listHorizontalPadding, right: Spacing.listHorizontalPadding),
       physics: const NeverScrollableScrollPhysics(),
-      children: groupsList.map((final int groupId) {
+      itemCount: groupsList.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        final int groupId = groupsList.elementAt(index);
         final List<Zamena> groupZamenas = zamenas.where((final Zamena zamena) => zamena.groupID == groupId).toList();
         final bool isFullZamena = fullZamenas.any((final ZamenaFull fullzamena) => fullzamena.group == groupId);
         final Group? group = ref.watch(groupProvider(groupId));
@@ -34,7 +38,7 @@ class ZamenaViewGroup extends ConsumerWidget {
           isFullZamena: isFullZamena,
           group: group,
         );
-      }).toList(),
+      },
     );
   }
 }

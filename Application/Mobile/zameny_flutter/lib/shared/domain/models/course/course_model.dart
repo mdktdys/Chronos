@@ -8,7 +8,12 @@ class Course {
   String color;
   String? fullname;
 
-  Course({required this.id, required this.name, required this.color, this.fullname});
+  Course({
+    required this.id,
+    required this.name,
+    required this.color,
+    this.fullname,
+  });
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
@@ -21,7 +26,6 @@ class Course {
   factory Course.fromMap(final Map<String, dynamic> map) {
     return Course(
       id: map['id'] as int,
-      //костылище
       name: (map['fullname'] ?? map['name']) as String,
       color: map['color'] as String,
       fullname: map['fullname'] as String?,

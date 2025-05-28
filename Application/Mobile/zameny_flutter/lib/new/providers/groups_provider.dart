@@ -3,8 +3,8 @@ import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:zameny_flutter/models/models.dart';
-import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 part 'groups_provider.g.dart';

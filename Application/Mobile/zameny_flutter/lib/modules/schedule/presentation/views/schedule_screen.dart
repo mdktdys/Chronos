@@ -120,61 +120,25 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       child = Scaffold(
         resizeToAvoidBottomInset: false,
         key: myGlobals.scaffoldKey,
-        body: AdaptiveLayout(
-          desktop: () => () {
-            return CustomScrollView(
-              slivers: [
-                SliverPadding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20),
-                  sliver: SliverList.list(
-                    children: [
-                      const ScheduleHeader(),
-                      const SizedBox(height: 10),
-                      ScheduleTurboSearch(focusNode: focusNode),
-                      const SizedBox(height: 10),
-                      const DateHeader(),
-                      const SizedBox(height: 10),
-                      const CurrentLessonTimer(),
-                      const SearchResultHeader(),
-                      const SizedBox(height: 5),
-                      // LessonView(scrollController: scrollController),
-                      const ScheduleViewSettingsWidget(),
-                      const SizedBox(height: 10),
-                      ScheduleView(scrollController: scrollController),
-                    ]
-                  ),
-                ),
-                const Test()
-              ]
-            );
-          }(),
-          mobile: () => () {
-            return Scaffold(
-              resizeToAvoidBottomInset: false,
-              backgroundColor: Theme.of(context).colorScheme.surface,
-              body: CustomScrollView(
-                controller: scrollController,
-                physics: const BouncingScrollPhysics(),
+        body: SafeArea(
+          child: AdaptiveLayout(
+            desktop: () => () {
+              return CustomScrollView(
                 slivers: [
                   SliverPadding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                    padding: const EdgeInsets.symmetric(horizontal: 20),
                     sliver: SliverList.list(
                       children: [
-                        // const TopBanner(),
-                        // const SizedBox(height: 10),
                         const ScheduleHeader(),
                         const SizedBox(height: 10),
-                        ScheduleTurboSearch(
-                          focusNode: focusNode,
-                        ),
+                        ScheduleTurboSearch(focusNode: focusNode),
                         const SizedBox(height: 10),
                         const DateHeader(),
                         const SizedBox(height: 10),
                         const CurrentLessonTimer(),
-                        const SizedBox(height: 10),
-                        // LessonView(scrollController: scrollController),
                         const SearchResultHeader(),
-                        const SizedBox(height: 10),
+                        const SizedBox(height: 5),
+                        // LessonView(scrollController: scrollController),
                         const ScheduleViewSettingsWidget(),
                         const SizedBox(height: 10),
                         ScheduleView(scrollController: scrollController),
@@ -183,9 +147,47 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                   ),
                   const Test()
                 ]
-              ),
-            );
-          }()
+              );
+            }(),
+            mobile: () => () {
+              return Scaffold(
+                resizeToAvoidBottomInset: false,
+                backgroundColor: Theme.of(context).colorScheme.surface,
+                body: CustomScrollView(
+                  controller: scrollController,
+                  physics: const BouncingScrollPhysics(),
+                  slivers: [
+                    SliverPadding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                      sliver: SliverList.list(
+                        children: [
+                          // const TopBanner(),
+                          // const SizedBox(height: 10),
+                          const ScheduleHeader(),
+                          const SizedBox(height: 10),
+                          ScheduleTurboSearch(
+                            focusNode: focusNode,
+                          ),
+                          const SizedBox(height: 10),
+                          const DateHeader(),
+                          const SizedBox(height: 10),
+                          const CurrentLessonTimer(),
+                          const SizedBox(height: 10),
+                          // LessonView(scrollController: scrollController),
+                          const SearchResultHeader(),
+                          const SizedBox(height: 10),
+                          const ScheduleViewSettingsWidget(),
+                          const SizedBox(height: 10),
+                          ScheduleView(scrollController: scrollController),
+                        ]
+                      ),
+                    ),
+                    const Test()
+                  ]
+                ),
+              );
+            }()
+          ),
         ),
       );
     }

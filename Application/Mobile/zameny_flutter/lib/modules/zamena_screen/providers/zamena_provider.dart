@@ -10,8 +10,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/notapi.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 
 part 'zamena_provider.freezed.dart';
 part 'zamena_provider.g.dart';
@@ -82,7 +82,7 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>)> {
 
   @override
   FutureOr<(List<Zamena>,List<ZamenaFull>)> build() async {
-    final DateTime date = ref.watch(zamenaScreenProvider).currentDate;
+    final DateTime date = ref.watch(zamenaScreenProvider.select((final state) => state.currentDate));
     try {
       final result = await Future.wait([
         Api.getZamenasByDate(date: date),

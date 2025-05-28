@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
