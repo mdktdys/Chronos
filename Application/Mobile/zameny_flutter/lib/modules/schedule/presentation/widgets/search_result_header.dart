@@ -7,12 +7,11 @@ import 'package:flutter_svg/svg.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_item_notification_button.dart';
 import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 import 'package:zameny_flutter/widgets/blur_dialog.dart';
 
 

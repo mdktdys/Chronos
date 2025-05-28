@@ -11,17 +11,13 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart';
 import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
 import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
 import 'package:zameny_flutter/config/extensions/color_extension.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
-import 'package:zameny_flutter/shared/domain/models/paras_model.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/domain/models/tile_data.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier(ref: ref);

@@ -1,6 +1,7 @@
 
 import 'dart:async';
-import 'dart:math';
+import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
@@ -66,6 +67,7 @@ class ZamenaScreen extends _$ZamenaScreen {
 
   void setVisibleDateRange(final DateTimeRange range) {
     state = state.copyWith(visibleDateRange: range);
+    ref.read(zamenaDataLoaderProvider.notifier).loadIfNotCached(range);
   }
 }
 
@@ -96,7 +98,7 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>)> {
   }
 
   static (List<Zamena>,List<ZamenaFull>) fake() {
-    final Random random = Random();
+    final math.Random random = math.Random();
     final DateTime date = DateTime.now();
 
     final List<Zamena> zamena = List.generate(random.nextInt(6), (final int index) {
@@ -110,5 +112,50 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>)> {
       zamena,
       []
     );
+  }
+}
+
+class DateRangeCache {
+  final List<DateTimeRange> _loadedRanges = [];
+
+  bool isCovered(final DateTimeRange newRange) {
+    return _loadedRanges.any((final cached) =>
+      !newRange.start.isBefore(cached.start) &&
+      !newRange.end.isAfter(cached.end));
+  }
+
+  void add(final DateTimeRange newRange) {
+    _loadedRanges.add(newRange);
+  }
+}
+
+@riverpod
+class ZamenaDataLoader extends _$ZamenaDataLoader {
+  final DateRangeCache _cache = DateRangeCache();
+
+  @override
+  List<ZamenaFileLink> build() {
+    return []; // начальное состояние — пустой список
+  }
+
+  Future<void> loadIfNotCached(final DateTimeRange range) async {
+    log('x');
+    if (_cache.isCovered(range)) {
+      print('✅ Диапазон уже покрыт: ${range.start} — ${range.end}');
+      return;
+    }
+
+    final newLinks = await _load(range);
+    _cache.add(range);
+
+    // Добавляем без дубликатов
+    final updated = {...state, ...newLinks}.toList(); // Set — для устранения дублей
+    state = updated;
+  }
+
+  Future<List<ZamenaFileLink>> _load(final DateTimeRange range) async {
+    final result = await Api.loadZamenaFileLinksByDateRange(date: range);
+    print('📥 Загружено: ${result.length} файлов');
+    return result;
   }
 }

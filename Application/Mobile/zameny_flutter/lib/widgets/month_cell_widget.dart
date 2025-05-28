@@ -8,11 +8,13 @@ import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 
 class MonthCell extends ConsumerWidget {
   final DateRangePickerCellDetails details;
+  final bool hasZamena;
   final DateTime? selectedDate;
 
   const MonthCell({
     required this.selectedDate,
     required this.details,
+    required this.hasZamena,
     super.key,
   });
 
@@ -54,6 +56,18 @@ class MonthCell extends ConsumerWidget {
               ),
             )
           : const SizedBox.shrink(),
+        if (hasZamena)
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Container(
+              width: 5,
+              height: 5,
+              decoration: const BoxDecoration(
+                color: Colors.green,
+                shape: BoxShape.circle,
+              ),
+            ),
+          )
       ],
     );
   }

@@ -185,6 +185,7 @@ class _MonthState extends ConsumerState<MonthNavigationPanel> {
         cellBuilder: (final BuildContext context, final DateRangePickerCellDetails cellDetails) {
           return MonthCell(
             key: UniqueKey(),
+            hasZamena: ref.watch(zamenaDataLoaderProvider).any((final link) => link.date.sameDate(cellDetails.date)),
             selectedDate: ref.watch(zamenaScreenProvider).currentDate,
             details: cellDetails,
           );
@@ -271,6 +272,14 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
             children: dates.map((final DateTime day) {
               final bool current = day.sameDate(DateTime.now());
               final bool selected = day.sameDate(ref.watch(zamenaScreenProvider).currentDate);
+              final bool hasZamena = ref.watch(zamenaDataLoaderProvider).any((final link) => link.date.sameDate(day));
+
+              Color? borderColor;
+              if (current) {
+                borderColor = Theme.of(context).colorScheme.primary;
+              } else if (hasZamena) {
+                borderColor = Colors.green.withValues(alpha: 0.6);
+              }
 
               return Bounceable(
                 onTap: () {
@@ -287,8 +296,8 @@ class _WeekNavigationStripState extends ConsumerState<WeekNavigationStrip> {
                     AnimatedContainer(
                       duration: Delays.morphDuration,
                       decoration: BoxDecoration(
-                        border: current
-                          ? Border.all(color: Theme.of(context).colorScheme.primary)
+                        border: borderColor != null
+                          ? Border.all(color: borderColor)
                           : null,
                         color: selected
                           ? Theme.of(context).colorScheme.primary.withValues(alpha: 0.3)

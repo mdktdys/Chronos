@@ -5,15 +5,11 @@ import 'dart:math' as math;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
-import 'package:zameny_flutter/shared/domain/models/paras_model.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/domain/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 
 
 final scheduleProvider = AsyncNotifierProvider<ScheduleNotifier, List<DaySchedule>>(() {
