@@ -21,34 +21,7 @@ class ZamenaView extends ConsumerWidget {
       provider: zamenasListProvider,
       fakeData: ZamenasNotifier.fake,
       data: (final (List<Zamena>, List<ZamenaFull>) data) {
-        if (data.$1.isEmpty) {
-          return Center(
-            key: const ValueKey('noData'),
-            child: Text(
-              'Нет замен',
-              style: context.styles.ubuntu14,
-            ),
-          );
-        }
-        final view = ref.watch(zamenaScreenProvider.select((final ZamenaScreenState value) => value.view));
-
-        Widget? child;
-        if (view == ZamenaViewType.group) {
-          child = ZamenaViewGroup(
-            zamenas: data.$1,
-            fullZamenas: data.$2,
-          );
-        } else if (view == ZamenaViewType.teacher) {
-           child = ZamenaViewTeacher(
-            zamenas: data.$1,
-            fullZamenas: data.$2,
-          );
-        }
-    
-        return AnimatedSwitcher(
-          duration: Delays.morphDuration,
-          child: child ?? const SizedBox(),
-        );
+        return ZamenaViewMode(data: data);
       },
       error: (final error, final trace) {
         return Center(
@@ -59,6 +32,50 @@ class ZamenaView extends ConsumerWidget {
           ),
         );
       },
+    );
+  }
+}
+
+class ZamenaViewMode extends ConsumerWidget {
+  final (List<Zamena>, List<ZamenaFull>) data;
+
+  const ZamenaViewMode({
+    required this.data,
+    super.key
+  });
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    if (data.$1.isEmpty) {
+      return Center(
+        key: const ValueKey('noData'),
+        child: Text(
+          'Нет замен',
+          style: context.styles.ubuntu14,
+        ),
+      );
+    }
+
+    final view = ref.watch(zamenaScreenProvider.select((final ZamenaScreenState value) => value.view));
+
+    Widget? child;
+    if (view == ZamenaViewType.group) {
+      child = ZamenaViewGroup(
+        key: const ValueKey('groupView'),
+        zamenas: data.$1,
+        fullZamenas: data.$2,
+      );
+    } else if (view == ZamenaViewType.teacher) {
+      child = ZamenaViewTeacher(
+        key: const ValueKey('teacherView'),
+        zamenas: data.$1,
+        fullZamenas: data.$2,
+      );
+    }
+
+    return AnimatedSwitcher(
+      duration: Delays.morphDuration,
+      child: child ?? const SizedBox(),
     );
   }
 }

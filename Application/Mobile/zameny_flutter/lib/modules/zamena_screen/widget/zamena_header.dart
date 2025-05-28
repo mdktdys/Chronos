@@ -33,9 +33,6 @@ class _ZamenaScreenHeaderState extends ConsumerState<ZamenaScreenHeader> {
 
   @override
   Widget build(final BuildContext context) {
-    // final DateTime date = ref.watch(zamenaScreenProvider.select((final state) => state.currentDate));
-    // final notifier = ref.watch(zamenaScreenProvider.notifier);
-
     return AnimatedSize(
       duration: Delays.morphDuration,
       alignment: Alignment.topCenter,

@@ -102,7 +102,7 @@ class ThemeSettings extends ChangeNotifier with WidgetsBindingObserver {
       ).applyCustomTextTheme();
     }
 
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(statusBarColor: theme!.colorScheme.surface));
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     notifyListeners();
   }
 

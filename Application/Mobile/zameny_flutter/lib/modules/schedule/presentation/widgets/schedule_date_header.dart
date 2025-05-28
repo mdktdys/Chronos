@@ -9,6 +9,7 @@ import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/widgets/month_cell_widget.dart';
 import 'package:zameny_flutter/widgets/toggle_week_button.dart';
@@ -129,6 +130,7 @@ class _DateHeaderDatePickerState extends ConsumerState<DateHeaderDatePicker> {
                       cellBuilder: (final context, final cellDetails) {
                         return MonthCell(
                           key: UniqueKey(),
+                          hasZamena: ref.watch(zamenaDataLoaderProvider).any((final link) => link.date == cellDetails.date),
                           selectedDate: selectedDate,
                           details: cellDetails,
                         );

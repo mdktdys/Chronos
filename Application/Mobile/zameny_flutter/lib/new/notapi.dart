@@ -1,11 +1,12 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+
 import 'package:get_it/get_it.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/shared/domain/models/models.dart';
-import 'package:zameny_flutter/shared/domain/models/telegram_zamena_link_model.dart';
 
 abstract class Api {
   static Future<List<Lesson>> getGroupLessons({
@@ -146,6 +147,25 @@ abstract class Api {
         .from('ZamenaFileLinks')
         .select('id,link,date,created_at')
         .eq('date',date);
+
+    final List<ZamenaFileLink> res = [];
+    for (final element in data) {
+      final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+      res.add(zamenaLink);
+    }
+    return res;
+  }
+
+  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDateRange({
+    required final DateTimeRange date,
+  }) async {
+    final client = GetIt.I.get<SupabaseClient>();
+
+    final List<dynamic> data = await client
+        .from('ZamenaFileLinks')
+        .select('id,link,date,created_at')
+        .gte('date', date.start.toyyyymmdd())
+        .lte('date', date.end.toyyyymmdd());
 
     final List<ZamenaFileLink> res = [];
     for (final element in data) {
