@@ -6,7 +6,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
 
 final favoriteSearchItemsProvider = ChangeNotifierProvider<FavoriteSearchItemsNotifier>((final ref) {

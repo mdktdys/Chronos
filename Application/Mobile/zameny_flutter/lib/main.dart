@@ -9,8 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
-import 'package:zameny_flutter/config/app/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
+import 'package:zameny_flutter/main/app.dart';
 import 'package:zameny_flutter/secrets.dart';
 
 void main() async {
@@ -19,10 +19,7 @@ void main() async {
 
   await registerServices();
 
-  runApp(const ProviderScope(
-    observers: [],
-    child: App()
-  ));
+  runApp(const ProviderScope(child: App()));
 }
 
 Future<void> registerServices() async {

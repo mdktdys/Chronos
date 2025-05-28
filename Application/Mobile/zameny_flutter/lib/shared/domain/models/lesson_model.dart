@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/models/zamena_model.dart';
+import 'package:zameny_flutter/shared/domain/models/zamena_model.dart';
 
 class Lesson {
   int id;

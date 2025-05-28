@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/models.dart';
 
 class ZamenaViewTeacher extends ConsumerWidget {
   final List<ZamenaFull> fullZamenas;
@@ -23,21 +23,24 @@ class ZamenaViewTeacher extends ConsumerWidget {
     final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
     final date = DateTime.now();
 
-    return ListView(
+    return ListView.builder(
       shrinkWrap: true,
       physics: const NeverScrollableScrollPhysics(),
-      children: teachersList.map((final teacherId) {
-        final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacherId).toList();
-        groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
-        final Teacher? teacher = ref.watch(teacherProvider(teacherId));
+      itemCount: teachersList.length,
+      itemBuilder: (final BuildContext context, final int index) {
+        final Teacher? teacher = ref.watch(teacherProvider(teachersList.elementAt(index)));
 
         if (teacher == null) {
           return const SizedBox();
         }
 
-        if(teacher.name.replaceAll(' ', '') == ''){
+        if (teacher.name.replaceAll(' ', '') == ''){
           return const SizedBox();
         }
+
+        final groupZamenas = zamenas.where((final zamena) => zamena.teacherID == teacher.id).toList();
+        groupZamenas.sort((final a,final b) => a.lessonTimingsID > b.lessonTimingsID ? 1 : -1);
+
         return Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -83,7 +86,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
             ),
           ],
         );
-      }).toList(),
+      },
     );
   }
 }
