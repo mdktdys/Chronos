@@ -1,9 +1,8 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_group.dart';
@@ -17,7 +16,6 @@ class ZamenaView extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final view = ref.watch(zamenaScreenProvider.select((final ZamenaScreenState value) => value.view));
 
     return SkeletonizedProvider<(List<Zamena>,List<ZamenaFull>)>(
       provider: zamenasListProvider,
@@ -32,19 +30,25 @@ class ZamenaView extends ConsumerWidget {
             ),
           );
         }
+        final view = ref.watch(zamenaScreenProvider.select((final ZamenaScreenState value) => value.view));
 
-        switch (view) {
-          case ZamenaViewType.group:
-            return ZamenaViewGroup(
-              zamenas: data.$1,
-              fullZamenas: data.$2,
-            );
-          case ZamenaViewType.teacher:
-            return ZamenaViewTeacher(
-              zamenas: data.$1,
-              fullZamenas: data.$2,
-            );
+        Widget? child;
+        if (view == ZamenaViewType.group) {
+          child = ZamenaViewGroup(
+            zamenas: data.$1,
+            fullZamenas: data.$2,
+          );
+        } else if (view == ZamenaViewType.teacher) {
+           child = ZamenaViewTeacher(
+            zamenas: data.$1,
+            fullZamenas: data.$2,
+          );
         }
+    
+        return AnimatedSwitcher(
+          duration: Delays.morphDuration,
+          child: child ?? const SizedBox(),
+        );
       },
       error: (final error, final trace) {
         return Center(

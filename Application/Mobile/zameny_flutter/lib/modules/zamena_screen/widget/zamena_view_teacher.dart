@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
+import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
@@ -25,6 +26,7 @@ class ZamenaViewTeacher extends ConsumerWidget {
 
     return ListView.builder(
       shrinkWrap: true,
+      padding: EdgeInsets.only(left: Spacing.listHorizontalPadding, right: Spacing.listHorizontalPadding),
       physics: const NeverScrollableScrollPhysics(),
       itemCount: teachersList.length,
       itemBuilder: (final BuildContext context, final int index) {

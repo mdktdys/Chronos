@@ -61,6 +61,7 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
       child: Scaffold(
         backgroundColor: Theme.of(context).colorScheme.surface,
         body: ListView(
+          padding: EdgeInsets.zero,
           controller: controller,
           physics: const BouncingScrollPhysics(),
           children: [

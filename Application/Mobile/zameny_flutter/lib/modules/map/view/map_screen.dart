@@ -20,28 +20,30 @@ class MapScreen extends ConsumerWidget {
     });
 
     return Scaffold(
-      body: Stack(
-        children: [
-          MapBody(
-            url: provider.selectedFloor,
-          ).animate(
-            effects: [
-              const FadeEffect(
-                begin: 0,
-                end: 1,
-              ),
-              const MoveEffect(
-                curve: Curves.easeOutCubic,
-                begin: Offset(0, 40),
-                end: Offset(0, 0),
-              ),
-            ],
-          ),
-          const Padding(
-            padding: EdgeInsets.all(20),
-            child: MapFloorSelector()
-          ),
-        ],
+      body: SafeArea(
+        child: Stack(
+          children: [
+            MapBody(
+              url: provider.selectedFloor,
+            ).animate(
+              effects: [
+                const FadeEffect(
+                  begin: 0,
+                  end: 1,
+                ),
+                const MoveEffect(
+                  curve: Curves.easeOutCubic,
+                  begin: Offset(0, 40),
+                  end: Offset(0, 0),
+                ),
+              ],
+            ),
+            const Padding(
+              padding: EdgeInsets.all(20),
+              child: MapFloorSelector()
+            ),
+          ],
+        ),
       ),
     );
   }
