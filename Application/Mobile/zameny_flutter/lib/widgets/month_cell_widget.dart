@@ -57,18 +57,18 @@ class MonthCell extends ConsumerWidget {
               ),
             )
           : const SizedBox.shrink(),
-        if (hasZamena)
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Container(
-              width: 5,
-              height: 5,
-              decoration: const BoxDecoration(
-                color: Colors.green,
-                shape: BoxShape.circle,
-              ),
-            ),
-          )
+        Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: AnimatedContainer(
+            duration: Delays.morphDuration,
+            width: 5,
+            height: 5,
+            decoration: BoxDecoration(
+              color: hasZamena ? Colors.green : Colors.transparent,
+              shape: BoxShape.circle,
+            )
+          ),
+        )
       ],
     );
   }
