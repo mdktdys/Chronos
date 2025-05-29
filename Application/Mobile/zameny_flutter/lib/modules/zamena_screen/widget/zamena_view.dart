@@ -11,6 +11,10 @@ import 'package:zameny_flutter/shared/domain/models/models.dart';
 import 'package:zameny_flutter/widgets/failed_load_widget.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';
 
+final zamenaSearchStringProvider = StateProvider<String>((final ref) {
+  return '';
+});
+
 class ZamenaView extends ConsumerWidget {
   const ZamenaView({super.key});
 

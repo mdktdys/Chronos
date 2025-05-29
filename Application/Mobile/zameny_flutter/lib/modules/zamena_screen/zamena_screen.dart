@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import 'package:flutter_bounceable/flutter_bounceable.dart';
@@ -75,10 +76,40 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
             const SizedBox(height: 10),
             const ZamenaViewChooser(),
             const SizedBox(height: 8),
+            const ZamenaSearchBar(),
+            const SizedBox(height: 8),
             const ZamenaView(),
             SizedBox(height: Constants.bottomSpacing),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ZamenaSearchBar extends ConsumerWidget {
+  const ZamenaSearchBar({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final ZamenaViewType viewType = ref.watch(zamenaScreenProvider.select((final state) => state.view));
+    
+    String placeholder = '';
+    if (viewType == ZamenaViewType.group) {
+      placeholder = 'Я ищу группу...';
+    } else if (viewType == ZamenaViewType.teacher) {
+      placeholder = 'Я ищу преподавателя...';
+    }
+
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
+      child: CupertinoSearchTextField(
+        onSubmitted: (final _) => FocusScope.of(context).unfocus(),
+        style: context.styles.ubuntuInverseSurface,
+        onChanged: (final String text) {
+          ref.read(zamenaSearchStringProvider.notifier).state = text.toLowerCase();
+        },
+        placeholder: placeholder,
       ),
     );
   }
@@ -120,52 +151,55 @@ class NavigationDatePanel extends ConsumerWidget {
 
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: Spacing.listHorizontalPadding),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            title,
-            style: context.styles.ubuntu14,
-          ),
-          Row(
-            spacing: Spacing.list,
-            children: [
-              CurrentNavigationWeekBadge(
-                title: 'Сегодня',
-                isCurrentWeek: isCurrentWeek,
-                onClicked: () {
-                  ref.read(zamenaScreenProvider.notifier).setDate(DateTime.now());
-                  ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(DateTimeRange(
-                    start: DateTime.now().toStartOfWeek(),
-                    end: DateTime.now().toEndOfWeek(),
-                  ));
-                  final pageController = ref.read(zamenaScreenProvider.notifier).pageController;
-
-                  if (true) {
-                    pageController.animateToPage(1000, duration: Delays.fastMorphDuration, curve: Curves.easeInOut);
-                  }
-
-                  ref.read(zamenaScreenProvider.notifier).monthController.displayDate = DateTime.now();
-                },
-              ),
-              GestureDetector(
-                onTap: () {
-                  ref.read(panelExpandedProvider.notifier).state = !isExpanded;
-                },
-                child: AnimatedRotation(
-                  duration: Delays.fastMorphDuration,
-                  turns: isExpanded
-                    ? 0.5
-                    : 0,
-                  child: SvgPicture.asset(
-                    Images.chevron,
-                    colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),
+      child: SizedBox(
+        height: 40,
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: context.styles.ubuntu14,
+            ),
+            Row(
+              spacing: Spacing.list,
+              children: [
+                CurrentNavigationWeekBadge(
+                  title: 'Сегодня',
+                  isCurrentWeek: isCurrentWeek,
+                  onClicked: () {
+                    ref.read(zamenaScreenProvider.notifier).setDate(DateTime.now());
+                    ref.read(zamenaScreenProvider.notifier).setVisibleDateRange(DateTimeRange(
+                      start: DateTime.now().toStartOfWeek(),
+                      end: DateTime.now().toEndOfWeek(),
+                    ));
+                    final pageController = ref.read(zamenaScreenProvider.notifier).pageController;
+        
+                    if (true) {
+                      pageController.animateToPage(1000, duration: Delays.fastMorphDuration, curve: Curves.easeInOut);
+                    }
+        
+                    ref.read(zamenaScreenProvider.notifier).monthController.displayDate = DateTime.now();
+                  },
+                ),
+                GestureDetector(
+                  onTap: () {
+                    ref.read(panelExpandedProvider.notifier).state = !isExpanded;
+                  },
+                  child: AnimatedRotation(
+                    duration: Delays.fastMorphDuration,
+                    turns: isExpanded
+                      ? 0.5
+                      : 0,
+                    child: SvgPicture.asset(
+                      Images.chevron,
+                      colorFilter: ColorFilter.mode(Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.4), BlendMode.srcIn),
+                    ),
                   ),
                 ),
-              ),
-            ],
-          )
-        ],
+              ],
+            )
+          ],
+        ),
       ),
     );
   }

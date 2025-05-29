@@ -6,6 +6,7 @@ import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
+import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/shared/domain/models/models.dart';
 
@@ -22,19 +23,26 @@ class ZamenaViewTeacher extends ConsumerWidget {
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
     final Set<int> teachersList = zamenas.map((final zamena) => zamena.teacherID).toSet();
-    final date = DateTime.now();
+    final DateTime date = DateTime.now();
+
+    final List<Teacher> teachers = teachersList.map((final teacherId) {
+      return ref.watch(teacherProvider(teacherId))!;
+    }).toList();
+    teachers.sort((final a,final b) => a.name.compareTo(b.name));
+    final String filter = ref.watch(zamenaSearchStringProvider);
+    final List<Teacher> filtered = teachers.where((final Teacher teacher) => teacher.name.toLowerCase().contains(filter)).toList();
+
+    if (filtered.isEmpty) {
+      return const Text('Пусто');
+    }
 
     return ListView.builder(
       shrinkWrap: true,
       padding: EdgeInsets.only(left: Spacing.listHorizontalPadding, right: Spacing.listHorizontalPadding),
       physics: const NeverScrollableScrollPhysics(),
-      itemCount: teachersList.length,
+      itemCount: filtered.length,
       itemBuilder: (final BuildContext context, final int index) {
-        final Teacher? teacher = ref.watch(teacherProvider(teachersList.elementAt(index)));
-
-        if (teacher == null) {
-          return const SizedBox();
-        }
+        final Teacher teacher = filtered.elementAt(index);
 
         if (teacher.name.replaceAll(' ', '') == ''){
           return const SizedBox();
