@@ -14,11 +14,12 @@ class PagesViewWidget extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
-    final provider = ref.watch(mainProvider);
+    final bool pageViewScrollEnabled = ref.watch(mainProvider.select((final state) => state.pageViewScrollEnabled));
+    final provider = ref.read(mainProvider.notifier);
 
     return PageView(
       onPageChanged: (final int value) => provider.pageChanged(value, context),
-      physics: !provider.pageViewScrollEnabled
+      physics: !pageViewScrollEnabled
         ? const NeverScrollableScrollPhysics()
         : null,
       controller: provider.pageController,

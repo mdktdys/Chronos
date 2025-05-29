@@ -187,20 +187,21 @@ class _MonthState extends ConsumerState<MonthNavigationPanel> {
 
   @override
   Widget build(final BuildContext context) {
+    final DateTime currentDate = ref.watch(zamenaScreenProvider.select((final state) => state.currentDate));
     return Container(
       padding: const EdgeInsets.only(top: 6),
       child: SfDateRangePicker(
         controller: widget.controller,
         headerHeight: 0,
         backgroundColor: Colors.transparent,
-        initialDisplayDate: ref.watch(zamenaScreenProvider).currentDate,
-        initialSelectedDate: ref.watch(zamenaScreenProvider).currentDate,
+        initialDisplayDate: currentDate,
+        initialSelectedDate: currentDate,
         selectionColor: Colors.transparent,
         monthViewSettings: const DateRangePickerMonthViewSettings(firstDayOfWeek: 1),
         onSelectionChanged: (final dateRangePickerSelectionChangedArgs) {
           final DateTime selected = dateRangePickerSelectionChangedArgs.value;
 
-          if (selected.sameDate(ref.watch(zamenaScreenProvider).currentDate)) {
+          if (selected.sameDate(currentDate)) {
             return;
           }
 
@@ -211,7 +212,7 @@ class _MonthState extends ConsumerState<MonthNavigationPanel> {
           return MonthCell(
             key: UniqueKey(),
             hasZamena: ref.watch(zamenaDataLoaderProvider).any((final link) => link.date.sameDate(cellDetails.date)),
-            selectedDate: ref.watch(zamenaScreenProvider).currentDate,
+            selectedDate: currentDate,
             details: cellDetails,
           );
         },
