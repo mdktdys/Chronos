@@ -120,6 +120,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       child = Scaffold(
         resizeToAvoidBottomInset: false,
         key: myGlobals.scaffoldKey,
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           child: AdaptiveLayout(
             desktop: () => () {

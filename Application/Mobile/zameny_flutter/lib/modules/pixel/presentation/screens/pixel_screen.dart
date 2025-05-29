@@ -37,6 +37,7 @@ class _PixelBattleScreenState extends ConsumerState<PixelBattleScreen> {
     final notifier = ref.read(pixelProvider.notifier);
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: Stack(
         children: [
           InteractiveViewer(

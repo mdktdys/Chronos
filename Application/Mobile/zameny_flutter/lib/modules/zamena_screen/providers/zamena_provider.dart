@@ -38,14 +38,19 @@ class ZamenaScreen extends _$ZamenaScreen {
   @override
   ZamenaScreenState build() {
     final DateTime now = DateTime.now();
+    final visibleRange = DateTimeRange(
+      start: now.toStartOfWeek(),
+      end: now.toEndOfWeek(),
+    );
+
+    Future.microtask(() {
+      ref.read(zamenaDataLoaderProvider.notifier).loadIfNotCached(visibleRange);
+    });
 
     return ZamenaScreenState(
-      currentDate: DateTime.now(),
+      currentDate: now,
       view: ZamenaViewType.group,
-      visibleDateRange: DateTimeRange(
-        start: now.toStartOfWeek(),
-        end: now.toEndOfWeek(),
-      ),
+      visibleDateRange: visibleRange,
     );
   }
 
@@ -135,27 +140,24 @@ class ZamenaDataLoader extends _$ZamenaDataLoader {
 
   @override
   List<ZamenaFileLink> build() {
-    return []; // начальное состояние — пустой список
+    return [];
   }
 
   Future<void> loadIfNotCached(final DateTimeRange range) async {
     log('x');
     if (_cache.isCovered(range)) {
-      print('✅ Диапазон уже покрыт: ${range.start} — ${range.end}');
       return;
     }
 
     final newLinks = await _load(range);
     _cache.add(range);
 
-    // Добавляем без дубликатов
-    final updated = {...state, ...newLinks}.toList(); // Set — для устранения дублей
+    final updated = {...state, ...newLinks}.toList();
     state = updated;
   }
 
   Future<List<ZamenaFileLink>> _load(final DateTimeRange range) async {
     final result = await Api.loadZamenaFileLinksByDateRange(date: range);
-    print('📥 Загружено: ${result.length} файлов');
     return result;
   }
 }

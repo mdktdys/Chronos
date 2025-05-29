@@ -20,6 +20,7 @@ class MapScreen extends ConsumerWidget {
     });
 
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       body: SafeArea(
         child: Stack(
           children: [

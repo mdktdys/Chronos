@@ -28,6 +28,7 @@ class MainScreen extends ConsumerWidget {
 
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     return Scaffold(
+      backgroundColor: Theme.of(context).colorScheme.surface,
       resizeToAvoidBottomInset: false,
       body: AdaptiveLayout(
         desktop: () => const DesktopView(),

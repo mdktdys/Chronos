@@ -16,6 +16,7 @@ class TimeTableScreen extends StatelessWidget {
     return ScreenAppearBuilder(
       showNavbar: true,
       child: Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
         body: SafeArea(
           child: SingleChildScrollView(
             physics: const BouncingScrollPhysics(),

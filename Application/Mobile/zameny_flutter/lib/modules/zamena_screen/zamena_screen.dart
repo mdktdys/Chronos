@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bounceable/flutter_bounceable.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
@@ -67,6 +68,7 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
           children: [
             const ZamenaScreenHeader(),
             const SizedBox(height: 8),
+            const ZamenaDate(),
             const ZamenaPracticeGroupsBlock(),
             const SizedBox(height: 8),
             const ZamenaTeacherCabinetSwaps(),
@@ -77,6 +79,29 @@ class _ZamenaScreenState extends ConsumerState<ZamenaScreen> with AutomaticKeepA
             SizedBox(height: Constants.bottomSpacing),
           ],
         ),
+      ),
+    );
+  }
+}
+
+class ZamenaDate extends ConsumerWidget {
+  const ZamenaDate({super.key});
+
+  @override
+  Widget build(final BuildContext context, final WidgetRef ref) {
+    final DateTime date = ref.watch(zamenaScreenProvider.select((final state) => state.currentDate));
+    String title = 'Замены на ${date.day} ${date.toMonth()}';
+    return Padding(
+      padding: EdgeInsets.only(
+        left: Spacing.listHorizontalPadding,
+        top: Spacing.listHorizontalPadding,
+        bottom: Spacing.listHorizontalPadding,
+        right: Spacing.listHorizontalPadding
+      ),
+      child: Text(
+        title,
+        textAlign: TextAlign.center,
+        style: context.styles.ubuntu22,
       ),
     );
   }
