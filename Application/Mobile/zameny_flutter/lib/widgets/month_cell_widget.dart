@@ -20,6 +20,7 @@ class MonthCell extends ConsumerWidget {
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
+    final ThemeData theme = Theme.of(context);
     final bool chillday = details.date.weekday == 7;
 
     final bool isSelected = selectedDate != null
@@ -41,8 +42,8 @@ class MonthCell extends ConsumerWidget {
               ? BoxDecoration(
                   borderRadius: BorderRadius.circular(4),
                   color: !isSelected
-                    ? Colors.white.withValues(alpha: 0.1)
-                    : Theme.of(context).colorScheme.primary.withValues(alpha: 0.6),
+                    ? theme.colorScheme.surfaceContainerHighest
+                    : theme.colorScheme.primary.withValues(alpha: 0.6),
                 )
               : null,
             child: Center(child: Text(details.date.day.toString())),
@@ -52,7 +53,7 @@ class MonthCell extends ConsumerWidget {
           ? Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(8),
-                border: Border.all(color: Theme.of(context).colorScheme.primary,),
+                border: Border.all(color: theme.colorScheme.primary,),
               ),
             )
           : const SizedBox.shrink(),

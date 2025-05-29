@@ -74,44 +74,47 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
 
     Widget child;
     if (ref.watch(searchItemProvider) == null) {
-      child = Align(
-        child: ConstrainedBox(
-          constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
-          child: Container(
-            padding: const EdgeInsets.all(20),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              spacing: 20,
-              children: [
-                const Expanded(child: SizedBox()),
-                AnimatedSwitcher(
-                  duration: Delays.morphDuration,
-                  child: Text(
-                    key: ValueKey(focusNode.hasFocus),
-                    focusNode.hasFocus
-                      ? 'Введи имя группы, преподавателя или кабинета'
-                      : 'Расписание',
-                    textAlign: TextAlign.center,
-                    style: context.styles.ubuntuPrimaryBold24,
-                  ),
-                ),
-                const Row(
-                  children: [
-                    Expanded(child: CurrentTimingTimer()),
-                    ZamenaCheckTime(),
-                  ],
-                ),
-                const FavoriteStripeWidget(),
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: ScheduleTurboSearch(
-                      withFavorite: false,
-                      focusNode: focusNode,
+      child = Scaffold(
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        body: Align(
+          child: ConstrainedBox(
+            constraints: BoxConstraints(maxWidth: Constants.maxWidthDesktop),
+            child: Container(
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                spacing: 20,
+                children: [
+                  const Expanded(child: SizedBox()),
+                  AnimatedSwitcher(
+                    duration: Delays.morphDuration,
+                    child: Text(
+                      key: ValueKey(focusNode.hasFocus),
+                      focusNode.hasFocus
+                        ? 'Введи имя группы, преподавателя или кабинета'
+                        : 'Расписание',
+                      textAlign: TextAlign.center,
+                      style: context.styles.ubuntuPrimaryBold24,
                     ),
                   ),
-                ),
-                SizedBox(height: Constants.bottomSpacing)
-              ],
+                  const Row(
+                    children: [
+                      Expanded(child: CurrentTimingTimer()),
+                      ZamenaCheckTime(),
+                    ],
+                  ),
+                  const FavoriteStripeWidget(),
+                  Expanded(
+                    child: SingleChildScrollView(
+                      child: ScheduleTurboSearch(
+                        withFavorite: false,
+                        focusNode: focusNode,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: Constants.bottomSpacing)
+                ],
+              ),
             ),
           ),
         ),
