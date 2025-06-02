@@ -1,7 +1,7 @@
 name: zameny_flutter
 description: Че по заменам?
 publish_to: 'none' 
-version: 1.0.8+22
+version: 1.0.9+23
 
 environment:
   sdk: '>=3.8.0 <4.0.0'
