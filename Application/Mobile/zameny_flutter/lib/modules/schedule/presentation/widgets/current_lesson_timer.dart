@@ -1,5 +1,6 @@
 
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:flutter/material.dart';
 
@@ -7,18 +8,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
-import 'package:zameny_flutter/shared/domain/models/group_model.dart';
-import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/shared/domain/models/paras_model.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/domain/models/teacher_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
+import 'package:zameny_flutter/shared/domain/models/group_model.dart';
+import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/shared/domain/models/paras_model.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
+import 'package:zameny_flutter/shared/domain/models/teacher_model.dart';
 
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
@@ -162,10 +163,11 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
         para: para,
       );
     }
-
+  
     return Column(
       children: tiles.map((final Widget tile) {
         Widget wrappedTile = tile;
+
         if (tile is CourseTileRework) {
           wrappedTile = Padding(
             padding: const EdgeInsets.only(top: 8),
@@ -199,11 +201,12 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     if (
       schedule != null
       && timing != null
+      && item != null
     ) {
       child = _buildLessonTile(
         number: timing.number,
         daySchedule: schedule,
-        item: item!,
+        item: item,
       );
     }
 
@@ -213,7 +216,7 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
           duration: Delays.fastMorphDuration,
           curve: Curves.ease,
           alignment: Alignment.topCenter,
-          child: timing == null || current.weekday == 7 || (schedule?.holidays.isNotEmpty ?? false)
+          child:  timing == null || current.weekday == 7 || (schedule?.holidays.isNotEmpty ?? false)
             ? const SizedBox()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,

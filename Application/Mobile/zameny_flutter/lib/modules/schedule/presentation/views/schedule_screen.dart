@@ -36,6 +36,7 @@ class ScheduleScreen extends ConsumerStatefulWidget {
 
 class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticKeepAliveClientMixin {
   late final FocusNode focusNode;
+  late final SearchController searchController;
 
   @override
   bool get wantKeepAlive => true;
@@ -46,6 +47,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
     super.initState();
     focusNode = FocusNode()..addListener(_updateFocus);
     scrollController = ScrollController();
+    searchController = SearchController();
 
     scrollController.addListener((){
       ref.read(mainProvider).updateScrollDirection(scrollController.position.userScrollDirection);
@@ -103,16 +105,20 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                       ZamenaCheckTime(),
                     ],
                   ),
-                  const FavoriteStripeWidget(),
+                  FavoriteStripeWidget(
+                    searchController: searchController,
+                    focusNode: focusNode,
+                  ),
                   Expanded(
                     child: SingleChildScrollView(
                       child: ScheduleTurboSearch(
                         withFavorite: false,
                         focusNode: focusNode,
+                        searchController: searchController,
                       ),
                     ),
                   ),
-                  SizedBox(height: Constants.bottomSpacing)
+                  // SizedBox(height: Constants.bottomSpacing)
                 ],
               ),
             ),
@@ -135,7 +141,10 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                       children: [
                         const ScheduleHeader(),
                         const SizedBox(height: 10),
-                        ScheduleTurboSearch(focusNode: focusNode),
+                        ScheduleTurboSearch(
+                          focusNode: focusNode,
+                          searchController: searchController,
+                        ),
                         const SizedBox(height: 10),
                         const DateHeader(),
                         const SizedBox(height: 10),
@@ -171,6 +180,7 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
                           const SizedBox(height: 10),
                           ScheduleTurboSearch(
                             focusNode: focusNode,
+                            searchController: searchController,
                           ),
                           const SizedBox(height: 10),
                           const DateHeader(),
@@ -196,9 +206,14 @@ class _ScheduleScreenState extends ConsumerState<ScheduleScreen> with AutomaticK
       );
     }
 
-    return AnimatedSwitcher(
-      duration: Delays.morphDuration,
-      child: child,
+    return GestureDetector(
+      onTap: () {
+        FocusScope.of(context).unfocus();
+      },
+      child: AnimatedSwitcher(
+        duration: Delays.morphDuration,
+        child: child,
+      ),
     );
   }
 }

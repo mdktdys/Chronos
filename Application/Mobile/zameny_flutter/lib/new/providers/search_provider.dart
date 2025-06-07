@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 
 
 final searchItemsProvider = FutureProvider<List<SearchItem>>((final ref) async {
@@ -17,14 +17,14 @@ final filterSearchQueryProvider = StateProvider<String>((final ref) {
 });
 
 final filteredSearchItemsProvider = FutureProvider<List<SearchItem>>((final ref) async {
-  final query = ref.watch(filterSearchQueryProvider);
+  final query = ref.watch(filterSearchQueryProvider).toLowerCase();
 
   if (query.isEmpty) {
     return [];
   }
 
   final searchItems = ref.watch(searchItemsProvider).valueOrNull ?? [];
-  final res = searchItems.where((final element) => element.name.toLowerCase().contains(query.toLowerCase())).toList();
+  final res = searchItems.where((final element) => element.name.toLowerCase().contains(query)).toList();
   return res;
 });
 
