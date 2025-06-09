@@ -144,7 +144,6 @@ class ZamenaDataLoader extends _$ZamenaDataLoader {
   }
 
   Future<void> loadIfNotCached(final DateTimeRange range) async {
-    log('x');
     if (_cache.isCovered(range)) {
       return;
     }

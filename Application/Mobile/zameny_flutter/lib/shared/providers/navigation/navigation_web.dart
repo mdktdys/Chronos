@@ -14,7 +14,6 @@ class Navigation extends ChangeNotifier{
   }
 
   Future<void> setParams(final Map<String, dynamic> params) async {
-    // window.history.replaceState(null, '', '$currentPath?test=123');
     final String query = queryBuilder(params);
     window.history.replaceState(null, '', '$currentPath?$query');
   }

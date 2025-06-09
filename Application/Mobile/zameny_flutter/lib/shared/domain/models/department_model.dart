@@ -26,8 +26,7 @@ class Department {
 
   String toJson() => json.encode(toMap());
 
-  factory Department.fromJson(final String source) =>
-      Department.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory Department.fromJson(final String source) => Department.fromMap(json.decode(source) as Map<String, dynamic>);
 
   IconData getIcon() {
     if (id == 1) {

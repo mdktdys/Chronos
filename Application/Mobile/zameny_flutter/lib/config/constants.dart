@@ -11,5 +11,5 @@ abstract class Constants {
   static String telegramBot = 'https://t.me/bot_uksivt';
   static String rustore = 'https://www.rustore.ru/catalog/app/com.mdktdys.zameny_flutter';
 
-  static String version = 'v07.06.25';
+  static String version = 'v09.06.25';
 }
