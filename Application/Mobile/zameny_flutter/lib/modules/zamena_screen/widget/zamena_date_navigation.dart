@@ -13,8 +13,7 @@ class ZamenaDateNavigation extends ConsumerStatefulWidget {
   const ZamenaDateNavigation({super.key});
 
   @override
-  ConsumerState<ConsumerStatefulWidget> createState() =>
-      _ZamenaDateNavigationState();
+  ConsumerState<ConsumerStatefulWidget> createState() => _ZamenaDateNavigationState();
 }
 
 class _ZamenaDateNavigationState extends ConsumerState<ZamenaDateNavigation> {
