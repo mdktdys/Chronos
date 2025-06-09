@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:zameny_flutter/config/constants.dart';
+import 'package:zameny_flutter/modules/timetable/widgets/accounting_time_table_block.dart';
 import 'package:zameny_flutter/widgets/covorking_timetable_block.dart';
 import 'package:zameny_flutter/widgets/current_timing_timer.dart';
 import 'package:zameny_flutter/widgets/screen_appear_builder.dart.dart';
@@ -37,6 +38,8 @@ class TimeTableScreen extends StatelessWidget {
                       TimeTable(),
                       SizedBox(height: 8),
                       CovorkingTimeTableBlock(),
+                      SizedBox(height: 8),
+                      AccountingTimeTableBlock(),
                       SizedBox(height: 100),
                     ],
                   ),
