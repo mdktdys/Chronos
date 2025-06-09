@@ -1,0 +1,277 @@
+<!DOCTYPE html><html><head>
+  <base href="/">
+
+  <meta charset="UTF-8">
+  <link rel="manifest" href="manifest.json">
+  <meta content="IE=Edge" http-equiv="X-UA-Compatible">
+  <meta content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" name="viewport">
+
+  <title>Замены уксивтика</title>
+  <link rel="icon" type="image/png" href="icons/logo.png">
+  <meta name="description" content="🐋 Следите за актуальным расписание колледжа УКСИВТ в удобном месте">
+  <meta name="keywords" content="уксивт, расписание, замены, экзамены, Расписание занятий, Расписание звонков, уксивт расписание, уксивт замены, уфа уксивт, замены уксивт, уксивт расписание">
+  <meta name="tittle" content="Замены уксивтика">
+
+  <!-- iOS meta tags & icons -->
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black">
+  <meta name="apple-mobile-web-app-title" content="zameny_flutter">
+  <link rel="apple-touch-icon" href="icons/icon180ios.png">
+
+  <!-- Yandex.Metrika counter -->
+  <meta name="yandex-verification" content="447523e06eb8fe0d">
+  <script type="text/javascript">
+    (function (m, e, t, r, i, k, a) {
+      m[i] = m[i] || function () { (m[i].a = m[i].a || []).push(arguments) };
+      m[i].l = 1 * new Date();
+      for (var j = 0; j < document.scripts.length; j++) { if (document.scripts[j].src === r) { return; } }
+      k = e.createElement(t), a = e.getElementsByTagName(t)[0], k.async = 1, k.src = r, a.parentNode.insertBefore(k, a)
+    })
+      (window, document, "script", "https://mc.yandex.ru/metrika/tag.js", "ym");
+
+    ym(96571562, "init", {
+      clickmap: true,
+      trackLinks: true,
+      accurateTrackBounce: true,
+      webvisor: true
+    });
+
+  </script>
+  <noscript>
+    <div><img src="https://mc.yandex.ru/watch/96571562" style="position:absolute; left:-9999px;" alt="" /></div>
+  </noscript>
+  <!-- /Yandex.Metrika counter -->
+
+  <script type="module" src="./assets/packages/o3d/assets/model-viewer.min.js" defer></script>
+
+  <style id="splash-screen-style">
+    @import url('https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500&display=swap');
+
+    @media (prefers-color-scheme: dark) {
+      body {
+        background-color: #121212;
+        color: #ffffff;
+      }
+
+      .loading-text {
+        color: #ffffff;
+      }
+
+      .loading-indicator {
+        background-color: #1e1e1e;
+      }
+    }
+
+    @media (prefers-color-scheme: light) {
+      body {
+        background-color: #ffffff;
+        color: #000000;
+      }
+
+      .loading-text {
+        color: #000000;
+      }
+
+      .loading-indicator {
+        background-color: #adadad;
+      }
+    }
+
+    html {
+      height: 100%
+    }
+
+    body {
+      margin: 0;
+      min-height: 100%;
+      /* background-color: #121212; */
+      background-size: 100% 100%;
+    }
+
+    .center {
+      margin: 0;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      -ms-transform: translate(-50%, -50%);
+      transform: translate(-50%, -50%);
+    }
+
+    .contain {
+      display:block;
+      width:100%; height:100%;
+      object-fit: contain;
+    }
+
+    .stretch {
+      display:block;
+      width:100%; height:100%;
+    }
+
+    .cover {
+      display:block;
+      width:100%; height:100%;
+      object-fit: cover;
+    }
+
+    .bottom {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      -ms-transform: translate(-50%, 0);
+      transform: translate(-50%, 0);
+    }
+
+    .bottomLeft {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+    }
+
+    .bottomRight {
+      position: absolute;
+      bottom: 0;
+      right: 0;
+    }
+
+    .splash-content {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      opacity: 1;
+      transition: opacity 0.5s ease;
+    }
+
+    .splash-content.fade-out {
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+    }
+
+    .splash-content.fade-out img,
+    .splash-content.fade-out .loading-indicator,
+    .splash-content.fade-out .loading-text {
+      transition: opacity 0.5s ease;
+      opacity: 0;
+    }
+
+
+    .splash-content.fade-out {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-indicator {
+      width: 200px;
+      height: 4px;
+      border-radius: 2px;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .loading-indicator::after {
+      content: '';
+      position: absolute;
+      left: -50%;
+      width: 50%;
+      height: 100%;
+      background-color: #3498db;
+      animation: loading 1s linear infinite;
+      border-radius: 2px;
+    }
+
+    .loading-text {
+      font-family: 'Ubuntu', sans-serif;
+      font-size: 16px;
+      min-width: 200px;
+      text-align: center;
+      transition: opacity 0.5s ease;
+      opacity: 1;
+    }
+
+    .loading-text.fade {
+      opacity: 0;
+    }
+
+    @keyframes loading {
+      0% { left: -50%; }
+      100% { left: 100%; }
+    }
+  </style>
+  <script id="splash-screen-script">
+    function removeSplashFromWeb() {
+      const splash = document.querySelector('.splash-content');
+      if (splash) {
+        splash.classList.add('fade-out');
+        setTimeout(() => {
+          document.getElementById("splash")?.remove();
+          document.getElementById("splash-branding")?.remove();
+          splash.remove();
+          document.body.style.background = "transparent";
+        }, 500);
+      }
+    }
+
+    const loadingTexts = [
+      "Загрузка...",
+      "Идем за кофе...",
+      "Ищу 12 пару...",
+      "Подготовка данных...",
+      "Не питон, а пайтон!",
+      "Ищу 001 кабинет...",
+    ];
+
+    let currentIndex = 0;
+    
+    function changeLoadingText() {
+      const loadingText = document.querySelector('.loading-text');
+      if (loadingText) {
+        loadingText.classList.add('fade');
+        
+        setTimeout(() => {
+          currentIndex = (currentIndex + 1) % loadingTexts.length;
+          loadingText.textContent = loadingTexts[currentIndex];
+          loadingText.classList.remove('fade');
+        }, 500);
+      }
+    }
+
+    setInterval(changeLoadingText, 2000);
+  </script>
+</head>
+<body>
+  <div class="splash-content">
+    <picture id="splash">
+        <source srcset="splash/img/light-1x.png 1x, splash/img/light-2x.png 2x, splash/img/light-3x.png 3x, splash/img/light-4x.png 4x" media="(prefers-color-scheme: light)">
+        <source srcset="splash/img/dark-1x.png 1x, splash/img/dark-2x.png 2x, splash/img/dark-3x.png 3x, splash/img/dark-4x.png 4x" media="(prefers-color-scheme: dark)">
+        <img aria-hidden="true" src="splash/img/light-1x.png" alt="">
+    </picture>
+    <div class="loading-indicator"></div>
+    <div class="loading-text">Загрузка...</div>
+  </div>
+  
+  <script>
+    window.scroll(0, window.document.body.scrollHeight);
+  </script>
+  <script>
+    document.addEventListener("touchmove", function(event) {
+        event.preventDefault();
+    }, {
+        passive: false
+    });
+  </script>
+  <script src="flutter_bootstrap.js?v=19052034" async>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', function () {
+        navigator.serviceWorker.register('firebase-messaging-sw.js', {
+          scope: '/firebase-cloud-messaging-push-scope',
+        });
+      });
+    }
+  </script>
+</body></html>
