@@ -4,14 +4,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 
 class FavoriteStripeWidget extends ConsumerWidget {
-  const FavoriteStripeWidget({super.key});
+  final FocusNode focusNode;
+  final TextEditingController searchController;
+
+  const FavoriteStripeWidget({
+    required this.searchController,
+    required this.focusNode,
+    super.key
+  });
 
   @override
   Widget build(final BuildContext context, final WidgetRef ref) {
@@ -36,6 +43,9 @@ class FavoriteStripeWidget extends ConsumerWidget {
                 borderRadius: BorderRadius.circular(20),
                 child: InkWell(
                   onTap: () {
+                    focusNode.unfocus();
+                    searchController.clear();
+
                     ref.read(searchItemProvider.notifier).setState(item);
                     ref.read(filterSearchQueryProvider.notifier).state = '';
                     ref.read(navigationProvider.notifier).setParams({

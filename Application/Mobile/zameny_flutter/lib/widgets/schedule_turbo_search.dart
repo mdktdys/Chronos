@@ -8,19 +8,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/search_provider.dart';
+import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
 import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/widgets/search_item_chip.dart';
 
 class ScheduleTurboSearch extends ConsumerStatefulWidget {
+  final SearchController searchController;
   final FocusNode focusNode;
   final bool withFavorite;
 
   const ScheduleTurboSearch({
+    required this.searchController,
     required this.focusNode,
     this.withFavorite = true,
     super.key
@@ -39,13 +41,12 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
   @override
   void initState() {
     super.initState();
-    searchController = SearchController();
+    searchController = widget.searchController;
     widget.focusNode.addListener(_trackFocus);
   }
 
   @override
   void dispose() {
-    searchController.dispose();
     widget.focusNode.removeListener(_trackFocus);
     super.dispose();
   }
@@ -97,7 +98,10 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
             duration: Delays.morphDuration,
             alignment: Alignment.topCenter,
             child: shouldShow
-              ? const FavoriteStripeWidget()
+              ? FavoriteStripeWidget(
+                  searchController: searchController,
+                  focusNode: widget.focusNode,
+                )
               : const SizedBox(),
           ),
         Builder(
@@ -120,14 +124,15 @@ class _ScheduleTurboSearchState extends ConsumerState<ScheduleTurboSearch> {
                         return SearchItemChip(
                           title: searchItem.name,
                           onTap: () {
-                            ref.read(searchItemProvider.notifier).setState(searchItem);
+                            widget.focusNode.unfocus();
+                            searchController.clear();
                             ref.read(filterSearchQueryProvider.notifier).state = '';
+                            ref.read(searchItemProvider.notifier).setState(searchItem);
                             ref.read(navigationProvider.notifier).setParams({
                               'type': searchItem.typeId,
                               'id': searchItem.id,
                             });
 
-                            searchController.clear();
                           }
                         );
                       }).toList()

@@ -1,18 +1,29 @@
 {
-    "version": "2.0.0",
-    "tasks": [
-        {
-            "label": "🛠",
-            "type": "shell",
-            "command": "dart",
-            "args": [
-                "run",
-                "build_runner",
-                "build",
-                "-d"
-            ],
-            "problemMatcher": [],
-            "detail": "Билдим"
-        }
-    ]
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "🛠",
+      "type": "shell",
+      "command": "dart",
+      "args": [
+        "run",
+        "build_runner",
+        "build",
+        "-d"
+      ],
+      "problemMatcher": [],
+      "detail": "Билдим"
+    },
+    {
+      "label": "🧹 Очистка Flutter, Pod и Pub Get",
+      "type": "shell",
+      "command": "bash",
+      "args": [
+        "-c",
+        "flutter clean && rm -rf ios/Pods ios/Podfile.lock && pod install && flutter pub get"
+      ],
+      "problemMatcher": [],
+      "detail": "Очищаем Flutter build, Pods и запускаем pub get"
+    }
+  ]
 }
