@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:screenshot/screenshot.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/screens/schedule_days_screen.dart';

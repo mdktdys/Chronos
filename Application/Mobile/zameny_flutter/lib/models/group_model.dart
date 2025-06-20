@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 
 class Group extends SearchItem {

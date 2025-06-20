@@ -12,7 +12,7 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/new/notapi.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 part 'zamena_provider.freezed.dart';
 part 'zamena_provider.g.dart';

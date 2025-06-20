@@ -1,7 +1,7 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
-import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 
 part 'time_table_provider.freezed.dart';

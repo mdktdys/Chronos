@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
 
 
 final searchItemsProvider = FutureProvider<List<SearchItem>>((final ref) async {

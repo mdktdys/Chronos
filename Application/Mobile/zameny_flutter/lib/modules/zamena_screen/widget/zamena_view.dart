@@ -7,7 +7,7 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_group.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_teacher.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/widgets/failed_load_widget.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';
 

@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
-import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/providers/timer_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 
 final timeProvider = StateNotifierProvider<TimeNotifier, String?>((final ref) {

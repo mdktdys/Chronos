@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 class DaySchedule {
   final List<ZamenaFileLink>? zamenaLinks;

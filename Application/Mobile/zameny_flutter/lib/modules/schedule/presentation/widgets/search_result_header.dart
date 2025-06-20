@@ -11,7 +11,7 @@ import 'package:zameny_flutter/modules/schedule/presentation/widgets/search_item
 import 'package:zameny_flutter/new/providers/export_schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/favorite_search_items_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/widgets/blur_dialog.dart';
 
 

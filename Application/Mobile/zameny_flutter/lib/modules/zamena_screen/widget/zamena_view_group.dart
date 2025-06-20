@@ -6,7 +6,7 @@ import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_group_widget.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 
 class ZamenaViewGroup extends ConsumerWidget {

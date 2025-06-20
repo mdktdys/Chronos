@@ -14,12 +14,12 @@ import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/day_schedule_model.dart';
-import 'package:zameny_flutter/shared/domain/models/group_model.dart';
-import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/shared/domain/models/paras_model.dart';
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/domain/models/teacher_model.dart';
+import 'package:zameny_flutter/models/day_schedule_model.dart';
+import 'package:zameny_flutter/models/group_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/paras_model.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/teacher_model.dart';
 
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {

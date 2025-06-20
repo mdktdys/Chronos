@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/widgets/timings_tile.dart';
-import 'package:zameny_flutter/shared/domain/models/lesson_timings_model.dart';
+import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';
 import 'package:zameny_flutter/widgets/failed_load_widget.dart';

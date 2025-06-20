@@ -23,7 +23,7 @@ import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/widgets/button.dart';
 
 part 'export_schedule_provider.g.dart';

@@ -9,7 +9,7 @@ import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 
 final scheduleProvider = AsyncNotifierProvider<ScheduleNotifier, List<DaySchedule>>(() {

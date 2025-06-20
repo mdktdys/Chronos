@@ -5,8 +5,8 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/shared/domain/models/telegram_zamena_link_model.dart';
-import 'package:zameny_flutter/shared/domain/models/zamenaFileLink_model.dart';
+import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
+import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
 import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/widgets/base_container.dart';
 import 'package:zameny_flutter/widgets/bottom_sheets/zamena_links_bottom_sheet.dart';

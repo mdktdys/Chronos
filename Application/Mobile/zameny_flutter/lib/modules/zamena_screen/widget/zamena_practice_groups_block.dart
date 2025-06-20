@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/config/spacing.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_groups_practice_provider.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/widgets/search_item_chip.dart';
 
 class ZamenaPracticeGroupsBlock extends ConsumerWidget {

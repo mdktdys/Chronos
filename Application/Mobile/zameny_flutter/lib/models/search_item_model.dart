@@ -1,5 +1,5 @@
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 abstract class SearchItem {
   SearchType type;

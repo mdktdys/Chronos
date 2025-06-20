@@ -9,8 +9,8 @@ import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:zameny_flutter/shared/domain/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/domain/models/subscribtion.dart';
+import 'package:zameny_flutter/models/search_item_model.dart';
+import 'package:zameny_flutter/models/subscribtion.dart';
 
 final norificationsProvider = ChangeNotifierProvider<NotificationsNotifier>((final ref) {
   return NotificationsNotifier(ref: ref);

@@ -19,7 +19,7 @@ import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
   final DaySchedule daySchedule;

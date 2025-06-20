@@ -17,7 +17,7 @@ import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
-import 'package:zameny_flutter/shared/domain/models/models.dart';
+import 'package:zameny_flutter/models/models.dart';
 
 final scheduleSettingsProvider = ChangeNotifierProvider<ScheduleSettingsNotifier>((final ref) {
   return ScheduleSettingsNotifier(ref: ref);
