@@ -3,13 +3,15 @@ import 'dart:developer';
 import 'dart:math' as math;
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
-import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 
 final scheduleProvider = AsyncNotifierProvider<ScheduleNotifier, List<DaySchedule>>(() {
@@ -86,12 +88,16 @@ class DaySchedulesProvider {
     List<TelegramZamenaLinks> telegramLinks;
     List<Holiday> holidays;
 
+    final DataRepository repository = GetIt.I.get<DataRepository>();
+    final LessonFilter lessonFilters = LessonFilter(
+      group: searchItem.id,
+      startDate: startdate,
+      endDate: endDate,
+    );
+
     final result = await Future.wait([
-      Api.getGroupLessons(
-        groupID: searchItem.id,
-        start: startdate,
-        end: endDate,
-      ),
+      repository.getLessons(lessonFilters),
+      repository.getZamenas(lessonFilters),
       Api.loadZamenas(
         groupsID: [searchItem.id],
         start: startdate,

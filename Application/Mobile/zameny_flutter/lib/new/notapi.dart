@@ -9,25 +9,24 @@ import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
 
 abstract class Api {
-  static Future<List<Lesson>> getGroupLessons({
-    required final int groupID,
-    required final DateTime start,
-    required final DateTime end,
-  }) async {
-    final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
-      .from('Paras')
-      .select('id,group,number,course,teacher,cabinet,date')
-      .eq('group', groupID)
-      .lte('date', end.toyyyymmdd())
-      .gte('date', start.toyyyymmdd());
+  // static Future<List<Lesson>> getGroupLessons({
+  //   required final int groupID,
+  //   required final DateTime start,
+  //   required final DateTime end,
+  // }) async {
+  //   final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
+  //     .from('Paras')
+  //     .select('id,group,number,course,teacher,cabinet,date')
+  //     .eq('group', groupID)
+  //     .lte('date', end.toyyyymmdd())
+  //     .gte('date', start.toyyyymmdd());
 
-    return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
-  }
+  //   return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
+  // }
 
   static Future<List<(int, int)>> loadTeacherCabinetSwaps({
     required final DateTime date,
   }) async {
-    log('request');
     final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
       .from('teacher_cabinet_swaps')
       .select('teacher,cabinet').eq('date', date);
@@ -39,52 +38,52 @@ abstract class Api {
     return swaps;
   }
 
-  static Future<List<Lesson>> getCabinetLessons({
-    required final int cabinetID,
-    required final DateTime start,
-    required final DateTime end,
-  }) async {
-    final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
-      .from('Paras')
-      .select('id,group,number,course,teacher,cabinet,date')
-      .eq('cabinet', cabinetID)
-      .lte('date', end.toyyyymmdd())
-      .gte('date', start.toyyyymmdd());
+  // static Future<List<Lesson>> getCabinetLessons({
+  //   required final int cabinetID,
+  //   required final DateTime start,
+  //   required final DateTime end,
+  // }) async {
+  //   final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>()
+  //     .from('Paras')
+  //     .select('id,group,number,course,teacher,cabinet,date')
+  //     .eq('cabinet', cabinetID)
+  //     .lte('date', end.toyyyymmdd())
+  //     .gte('date', start.toyyyymmdd());
 
-    return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
-  }
+  //   return data.map((final Map<String, dynamic> json) => Lesson.fromMap(json)).toList();
+  // }
 
-  static Future<List<Lesson>> loadWeekTeacherSchedule({
-    required final int teacherID,
-    required final DateTime start,
-    required final DateTime end
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
+  // static Future<List<Lesson>> loadWeekTeacherSchedule({
+  //   required final int teacherID,
+  //   required final DateTime start,
+  //   required final DateTime end
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('teacher', teacherID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
 
-    final List<Lesson> weekLessons = [];
-    for (final element in data) {
-      final Lesson lesson = Lesson.fromMap(element);
-      weekLessons.add(lesson);
-    }
-    return weekLessons;
-  }
+  //   final List<Lesson> weekLessons = [];
+  //   for (final element in data) {
+  //     final Lesson lesson = Lesson.fromMap(element);
+  //     weekLessons.add(lesson);
+  //   }
+  //   return weekLessons;
+  // }
 
-  static Future<List<Lesson>> loadWeekCabinetSchedule({
-    required final int cabinetID,
-    required final DateTime start,
-    required final DateTime end
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('cabinet', cabinetID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
+  // static Future<List<Lesson>> loadWeekCabinetSchedule({
+  //   required final int cabinetID,
+  //   required final DateTime start,
+  //   required final DateTime end
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client.from('Paras').select('id,group,number,course,teacher,cabinet,date').eq('cabinet', cabinetID).lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
 
-    final List<Lesson> weekLessons = [];
-    for (final element in data) {
-      final Lesson lesson = Lesson.fromMap(element);
-      weekLessons.add(lesson);
-    }
-    return weekLessons;
-  }
+  //   final List<Lesson> weekLessons = [];
+  //   for (final element in data) {
+  //     final Lesson lesson = Lesson.fromMap(element);
+  //     weekLessons.add(lesson);
+  //   }
+  //   return weekLessons;
+  // }
 
   static Future<List<Liquidation>> getLiquidation(
     final List<int> groupsID,

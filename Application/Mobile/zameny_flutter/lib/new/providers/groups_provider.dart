@@ -1,10 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:supabase_flutter/supabase_flutter.dart';
 
-import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/new/providers/timings_provider.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 part 'groups_provider.g.dart';
 
@@ -28,20 +28,16 @@ final futureSearchItemProvider = FutureProvider.family<SearchItem?, ({int id, in
 });
 
 final groupsProvider = FutureProvider<List<Group>>((final Ref ref) async {
-  final response = await GetIt.I.get<SupabaseClient>().from('Groups').select();
-  return response.map((final group) => Group.fromMap(group)).toList();
+  return await GetIt.I.get<DataRepository>().getGroups();
 });
 
 final cabinetsProvider = FutureProvider<List<Cabinet>>((final Ref ref) async {
-  final response = await GetIt.I.get<SupabaseClient>().from('Cabinets').select();
-  return response.map((final group) => Cabinet.fromMap(group)).toList();
+  return await GetIt.I.get<DataRepository>().getCabinets();
 });
 
 final teachersProvider = FutureProvider<List<Teacher>>((final Ref ref) async {
-  final response = await GetIt.I.get<SupabaseClient>().from('Teachers').select();
-  return response.map((final group) => Teacher.fromMap(group)).toList();
+  return await GetIt.I.get<DataRepository>().getTeachers();
 });
-
 
 
 final groupProvider = StateProvider.family<Group?, int>((final Ref ref, final int id) {
@@ -71,6 +67,5 @@ Course? course(final Ref ref, final int id) {
 
 @Riverpod(keepAlive: true)
 Future<List<Course>> courses(final Ref ref) async {
-  final List<Map<String, dynamic>> data = await GetIt.I.get<SupabaseClient>().from('Courses').select();
-  return data.map((final json) => Course.fromMap(json)).toList();
+  return await GetIt.I.get<DataRepository>().getCourses();
 }

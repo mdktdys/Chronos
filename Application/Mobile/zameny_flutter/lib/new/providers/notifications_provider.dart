@@ -10,7 +10,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 
 import 'package:zameny_flutter/models/search_item_model.dart';
-import 'package:zameny_flutter/models/subscribtion.dart';
+import 'package:zameny_flutter/models/subscribtion_model.dart';
 
 final norificationsProvider = ChangeNotifierProvider<NotificationsNotifier>((final ref) {
   return NotificationsNotifier(ref: ref);
@@ -149,7 +149,7 @@ class NotificationsNotifier extends ChangeNotifier {
   }
 }
 
-final subsriptionProvider = FutureProvider<List<Subscription>>((final Ref ref) async {
+final subsriptionProvider = FutureProvider<List<MessagingClient>>((final Ref ref) async {
   String? token = ref.watch(norificationsProvider).fCMToken;
 
   if(token == null) {
@@ -158,5 +158,5 @@ final subsriptionProvider = FutureProvider<List<Subscription>>((final Ref ref) a
 
   final response = await GetIt.I.get<SupabaseClient>().from('MessagingClients').select().eq('token', token);
   log(response.toString());
-  return response.map((final sub){ return Subscription.fromMap(sub);}).toList();
+  return response.map((final sub){ return MessagingClient.fromMap(sub);}).toList();
 });

@@ -8,7 +8,7 @@ export 'lesson_timings_model.dart';
 export 'liquidation_model.dart';
 export 'paras_model.dart';
 export 'search_item_model.dart';
-export 'subscribtion.dart';
+export 'subscribtion_model.dart';
 export 'teacher_model.dart';
 export 'telegram_zamena_link_model.dart';
 export 'tile_data.dart';

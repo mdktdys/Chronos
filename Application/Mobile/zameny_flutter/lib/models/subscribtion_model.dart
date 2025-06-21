@@ -1,19 +1,21 @@
 import 'dart:convert';
 
-class Subscription {
+import 'package:zameny_flutter/core/model.dart';
+
+class MessagingClient extends Model {
   final int targetId;
   final int targetTypeId;
 
-  Subscription({
+  MessagingClient({
     required this.targetId,
     required this.targetTypeId
   });
 
-  Subscription copyWith({
+  MessagingClient copyWith({
     final int? targetId,
     final int? targetTypeId,
   }) {
-    return Subscription(
+    return MessagingClient(
       targetId: targetId ?? this.targetId,
       targetTypeId: targetTypeId ?? this.targetTypeId,
     );
@@ -26,8 +28,8 @@ class Subscription {
     };
   }
 
-  factory Subscription.fromMap(final Map<String, dynamic> map) {
-    return Subscription(
+  factory MessagingClient.fromMap(final Map<String, dynamic> map) {
+    return MessagingClient(
       targetId: map['subID'] as int,
       targetTypeId: map['subType'] as int,
     );
@@ -35,18 +37,15 @@ class Subscription {
 
   String toJson() => json.encode(toMap());
 
-  factory Subscription.fromJson(final String source) => Subscription.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory MessagingClient.fromJson(final String source) => MessagingClient.fromMap(json.decode(source) as Map<String, dynamic>);
 
   @override
-  String toString() => 'Subscription(targetId: $targetId, targetTypeId: $targetTypeId)';
-
-  @override
-  bool operator ==(covariant final Subscription other) {
+  bool operator ==(covariant final MessagingClient other) {
     if (identical(this, other)) {
       return true;
     }
-  
-    return 
+
+    return
       other.targetId == targetId &&
       other.targetTypeId == targetTypeId;
   }
