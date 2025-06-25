@@ -1,13 +1,14 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:convert';
 
+import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/core/model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 
 class LessonFilter extends Filter {
   int? id;
   int? number;
-  int? group;
+  List<int>? group;
   DateTime? startDate;
   DateTime? endDate;
   int? course;
@@ -25,17 +26,23 @@ class LessonFilter extends Filter {
     this.cabinet,
   });
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'number': number,
-      'group': group,
-      'start_date': startDate?.millisecondsSinceEpoch,
-      'end_date': endDate?.millisecondsSinceEpoch,
-      'course': course,
-      'teacher': teacher,
-      'cabinet': cabinet,
-    };
+  List<MapEntry<String, String>> toQueryParams() {
+    final params = <MapEntry<String, String>>[];
+
+    if (id != null) params.add(MapEntry('id', id.toString()));
+    if (number != null) params.add(MapEntry('number', number.toString()));
+    if (group != null) {
+      for (final g in group!) {
+        params.add(MapEntry('group', g.toString()));
+      }
+    }
+    if (startDate != null) params.add(MapEntry('start_date', startDate!.toyyyymmdd()));
+    if (endDate != null) params.add(MapEntry('end_date', endDate!.toyyyymmdd()));
+    if (course != null) params.add(MapEntry('course', course.toString()));
+    if (teacher != null) params.add(MapEntry('teacher', teacher.toString()));
+    if (cabinet != null) params.add(MapEntry('cabinet', cabinet.toString()));
+
+    return params;
   }
 }
 

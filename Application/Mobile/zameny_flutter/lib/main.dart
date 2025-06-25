@@ -11,6 +11,8 @@ import 'package:talker_flutter/talker_flutter.dart';
 
 import 'package:zameny_flutter/config/firebase_options.dart';
 import 'package:zameny_flutter/main/app.dart';
+import 'package:zameny_flutter/new/repository/fastapi_repository.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 import 'package:zameny_flutter/secrets.dart';
 
 void main() async {
@@ -38,6 +40,9 @@ Future<void> registerServices() async {
 
   final SharedPreferences prefs = await SharedPreferences.getInstance();
   GetIt.I.registerSingleton<SharedPreferences>(prefs);
+
+  final DataRepository repository = FastAPIDataRepository();
+  GetIt.I.registerSingleton<DataRepository>(repository);
 
   // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }

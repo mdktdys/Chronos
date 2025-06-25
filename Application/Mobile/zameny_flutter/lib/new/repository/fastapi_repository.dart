@@ -1,6 +1,5 @@
 import 'package:dio/dio.dart';
 
-import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/filters/paras_filter.dart';
 import 'package:zameny_flutter/models/course/course_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
@@ -20,27 +19,31 @@ class FastAPIDataRepository implements DataRepository {
   final String url = 'https://api.uksivt.xyz/api/v1';
   final Dio dio = Dio();
 
+  static String _buildQueryString(final List<MapEntry<String, String>> params) {
+    return params.map((final e) => '${Uri.encodeQueryComponent(e.key)}=${Uri.encodeQueryComponent(e.value)}').join('&');
+  }
+
   @override
   Future<List<Group>> getGroups() async {
-    final Response response = await dio.get('$url/groups');
+    final Response response = await dio.get('$url/groups/');
     return (response.data as List).map((final item) => Group.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<Cabinet>> getCabinets() async {
-    final Response response = await dio.get('$url/cabinets');
+    final Response response = await dio.get('$url/cabinets/');
     return (response.data as List).map((final item) => Cabinet.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<Course>> getCourses() async {
-    final Response response = await dio.get('$url/courses');
+    final Response response = await dio.get('$url/courses/');
     return (response.data as List).map((final item) => Course.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override
   Future<List<Teacher>> getTeachers() async {
-    final Response response = await dio.get('$url/teachers');
+    final Response response = await dio.get('$url/teachers/');
     return (response.data as List).map((final item) => Teacher.fromMap(item as Map<String, dynamic>)).toList();
   }
 
@@ -71,36 +74,11 @@ class FastAPIDataRepository implements DataRepository {
 
   @override
   Future<List<Lesson>> getLessons(final LessonFilter lessonsFilter) async {
-    final Map<String, dynamic> queryParams = {};
-
-    if (lessonsFilter.id != null) {
-      queryParams['id'] = lessonsFilter.id;
-    }
-    if (lessonsFilter.number != null) {
-      queryParams['number'] = lessonsFilter.number;
-    }
-    if (lessonsFilter.group != null) {
-      queryParams['group'] = lessonsFilter.group;
-    }
-    if (lessonsFilter.startDate != null) {
-      queryParams['start_date'] = lessonsFilter.startDate!.toyyyymmdd();
-    }
-    if (lessonsFilter.endDate != null) {
-      queryParams['end_date'] = lessonsFilter.endDate!.toyyyymmdd();
-    }
-    if (lessonsFilter.course != null) {
-      queryParams['course'] = lessonsFilter.course;
-    }
-    if (lessonsFilter.teacher != null) {
-      queryParams['teacher'] = lessonsFilter.teacher;
-    }
-    if (lessonsFilter.cabinet != null) {
-      queryParams['cabinet'] = lessonsFilter.cabinet;
-    }
+    final List<MapEntry<String, String>> queryParams = lessonsFilter.toQueryParams();
+    final String queryString = _buildQueryString(queryParams);
 
     final Response response = await dio.get(
-      '$url/lessons',
-      queryParameters: queryParams,
+      '$url/lessons/?$queryString',
     );
 
     return (response.data as List).map((final item) => Lesson.fromMap(item as Map<String, dynamic>)).toList();
@@ -123,8 +101,15 @@ class FastAPIDataRepository implements DataRepository {
   }
 
   @override
-  Future<List<Zamena>> getZamenas() {
-    throw UnimplementedError();
+  Future<List<Zamena>> getZamenas(final LessonFilter lessonsFilter) async {
+    final List<MapEntry<String, String>> queryParams = lessonsFilter.toQueryParams();
+    final String queryString = _buildQueryString(queryParams);
+
+    final Response response = await dio.get(
+      '$url/zamenas/?$queryString',
+    );
+
+    return (response.data as List).map((final item) => Zamena.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override

@@ -99,9 +99,12 @@ class SupabaseDataRepository implements DataRepository {
       query.eq('cabinet', lessonsFilter.cabinet!);
     }
 
-    if (lessonsFilter.date != null) {
-      final dateString = lessonsFilter.date!.toyyyymmdd();
-      query.eq('date', dateString);
+    if (lessonsFilter.startDate != null) {
+      query.eq('start_date', lessonsFilter.startDate!.toyyyymmdd());
+    }
+
+    if (lessonsFilter.endDate != null) {
+      query.eq('end_date', lessonsFilter.endDate!.toyyyymmdd());
     }
 
     final List<Map<String, dynamic>> data = await query;
@@ -125,7 +128,7 @@ class SupabaseDataRepository implements DataRepository {
   }
 
   @override
-  Future<List<Zamena>> getZamenas() {
+  Future<List<Zamena>> getZamenas(final LessonFilter lessonsFilter) {
     throw UnimplementedError();
   }
 

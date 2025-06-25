@@ -90,7 +90,7 @@ class DaySchedulesProvider {
 
     final DataRepository repository = GetIt.I.get<DataRepository>();
     final LessonFilter lessonFilters = LessonFilter(
-      group: searchItem.id,
+      group: [searchItem.id],
       startDate: startdate,
       endDate: endDate,
     );
@@ -98,11 +98,6 @@ class DaySchedulesProvider {
     final result = await Future.wait([
       repository.getLessons(lessonFilters),
       repository.getZamenas(lessonFilters),
-      Api.loadZamenas(
-        groupsID: [searchItem.id],
-        start: startdate,
-        end: endDate,
-      ),
       Api.getZamenaFileLinks(
         start: startdate,
         end: endDate
@@ -167,19 +162,24 @@ class DaySchedulesProvider {
     required final Cabinet searchItem,
     required final DateTime endDate,
   }) async {
+    final DataRepository repository = GetIt.I.get<DataRepository>();
 
-    final List<Lesson> lessons = (await Api.loadWeekCabinetSchedule(
-      cabinetID: searchItem.id,
-      start: startdate,
-      end: endDate,
-    ))..sort((final a, final b) => a.date.compareTo(b.date));
+    final LessonFilter lessonFilter = LessonFilter(
+      cabinet: searchItem.id,
+      startDate: startdate,
+      endDate: endDate,
+    );
+
+    final List<Lesson> lessons = await repository.getLessons(lessonFilter);
+    lessons.sort((final a, final b) => a.date.compareTo(b.date));
 
     final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
-    
+
+    final LessonFilter filters = LessonFilter(group:  groups,startDate: startdate, endDate: endDate);
     final result = await Future.wait([
       Api.getZamenasFull(groups, startdate, endDate),
       Api.getLiquidation(groups, startdate, endDate),
-      Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
+      repository.getZamenas(filters),
       Api.getZamenaFileLinks(start: startdate, end: endDate),
       Api.getAlreadyFoundLinks(start: startdate, end: endDate),
       Api.getHolidays(startdate, endDate)
@@ -245,19 +245,20 @@ class DaySchedulesProvider {
     required final Teacher searchItem,
     required final DateTime endDate,
   }) async {
+    final DataRepository repository = GetIt.I.get<DataRepository>();
 
-    final List<Lesson> lessons = (await Api.loadWeekTeacherSchedule(
-      teacherID: searchItem.id,
-      start: startdate,
-      end: endDate,
-    ))..sort((final a, final b) => a.date.compareTo(b.date));
+    final LessonFilter lessonFilter = LessonFilter(teacher: searchItem.id, startDate: startdate, endDate: endDate);
+    final List<Lesson> lessons = await repository.getLessons(lessonFilter);
+
+    lessons.sort((final a, final b) => a.date.compareTo(b.date));
 
     final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
-    
+    final LessonFilter filter = LessonFilter(group: groups, startDate: startdate, endDate: endDate);
+
     final result = await Future.wait([
       Api.getZamenasFull(groups, startdate, endDate),
       Api.getLiquidation(groups, startdate, endDate),
-      Api.loadZamenas(groupsID: groups, start: startdate, end: endDate),
+      repository.getZamenas(filter),
       Api.getZamenaFileLinks(start: startdate, end: endDate),
       Api.getAlreadyFoundLinks(start: startdate, end: endDate),
       Api.getHolidays(startdate, endDate)

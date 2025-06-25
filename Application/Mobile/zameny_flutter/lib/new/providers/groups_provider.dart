@@ -62,7 +62,7 @@ final timingProvider = StateProvider.family<LessonTimings?,int>((final Ref ref, 
 
 @Riverpod()
 Course? course(final Ref ref, final int id) {
-  return ref.watch(coursesProvider).value?.where((final cabinet) => cabinet.id == id).firstOrNull;
+  return ref.watch(coursesProvider).value?.where((final Course course) => course.id == id).firstOrNull;
 }
 
 @Riverpod(keepAlive: true)

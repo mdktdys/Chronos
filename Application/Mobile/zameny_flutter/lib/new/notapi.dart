@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:get_it/get_it.dart';
@@ -117,25 +115,25 @@ abstract class Api {
     return data.map((final json) => Holiday.fromMap(json)).toList();
   }
 
-  static Future<List<LessonTimings>> getTimings() async {
-    final List<LessonTimings> timings = (await GetIt.I.get<SupabaseClient>().from('timings').select()).map((final json) => LessonTimings.fromMap(json)).toList();
-    timings.sort(((final a, final b) => a.number - b.number));
-    return timings;
-  }
+  // static Future<List<LessonTimings>> getTimings() async {
+  //   final List<LessonTimings> timings = (await GetIt.I.get<SupabaseClient>().from('timings').select()).map((final json) => LessonTimings.fromMap(json)).toList();
+  //   timings.sort(((final a, final b) => a.number - b.number));
+  //   return timings;
+  // }
 
-  static Future<List<ZamenaFull>> getZamenasFull(
-    final List<int> groupsID, final DateTime start, final DateTime end,) async {
+  // static Future<List<ZamenaFull>> getZamenasFull(
+  //   final List<int> groupsID, final DateTime start, final DateTime end,) async {
 
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client
-        .from('ZamenasFull')
-        .select()
-        .inFilter('group', groupsID)
-        .lte('date', end.toyyyymmdd())
-        .gte('date', start.toyyyymmdd());
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client
+  //       .from('ZamenasFull')
+  //       .select()
+  //       .inFilter('group', groupsID)
+  //       .lte('date', end.toyyyymmdd())
+  //       .gte('date', start.toyyyymmdd());
 
-    return data.map((final json) => ZamenaFull.fromMap(json)).toList();
-  }
+  //   return data.map((final json) => ZamenaFull.fromMap(json)).toList();
+  // }
 
   static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate({
     required final DateTime date,
@@ -178,7 +176,6 @@ abstract class Api {
     final SupabaseClient client = GetIt.I.get<SupabaseClient>();
 
     final List<dynamic> groupIds = await client.from('Practices').select('group').eq('date', date);
-    log(groupIds.toString());
     return groupIds.map((final json) => json['group'] as int).toList();
   }
 
@@ -206,58 +203,57 @@ abstract class Api {
     return data.map((final json) => TelegramZamenaLinks.fromMap(json)).toList();
   }
 
-  static Future<List<ZamenaFull>> getFullZamenasByDate(final DateTime date) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data =
-        await client.from('ZamenasFull').select().eq('date', date);
-    final List<ZamenaFull> zamenaBuffer = [];
-    for (final element in data) {
-      final ZamenaFull zamena = ZamenaFull.fromMap(element);
-      zamenaBuffer.add(zamena);
-    }
-    return zamenaBuffer;
-  }
+  // static Future<List<ZamenaFull>> getFullZamenasByDate(final DateTime date) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client.from('ZamenasFull').select().eq('date', date);
+  //   final List<ZamenaFull> zamenaBuffer = [];
+  //   for (final element in data) {
+  //     final ZamenaFull zamena = ZamenaFull.fromMap(element);
+  //     zamenaBuffer.add(zamena);
+  //   }
+  //   return zamenaBuffer;
+  // }
 
-  static Future<List<Zamena>> getZamenasByDate({
-    required final DateTime date
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client
-        .from('Zamenas')
-        .select()
-        .eq('date', date.toyyyymmdd())
-        .order('id',ascending: true);
-    final List<Zamena> zamenaBuffer = [];
-    for (final element in data) {
-      final Zamena zamena = Zamena.fromMap(element);
-      zamenaBuffer.add(zamena);
-    }
-    return zamenaBuffer;
-  }
+  // static Future<List<Zamena>> getZamenasByDate({
+  //   required final DateTime date
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client
+  //       .from('Zamenas')
+  //       .select()
+  //       .eq('date', date.toyyyymmdd())
+  //       .order('id',ascending: true);
+  //   final List<Zamena> zamenaBuffer = [];
+  //   for (final element in data) {
+  //     final Zamena zamena = Zamena.fromMap(element);
+  //     zamenaBuffer.add(zamena);
+  //   }
+  //   return zamenaBuffer;
+  // }
 
-  static Future<List<Zamena>> loadZamenas({
-    required final List<int> groupsID,
-    required final DateTime start,
-    required final DateTime end
-  }) async {
-    if (groupsID.isEmpty == true) {
-      return [];
-    }
-    final client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client
-        .from('Zamenas')
-        .select()
-        .inFilter('group', groupsID)
-        .lte('date', end.toyyyymmdd())
-        .gte('date', start.toyyyymmdd())
-        .order('date');
+  // static Future<List<Zamena>> loadZamenas({
+  //   required final List<int> groupsID,
+  //   required final DateTime start,
+  //   required final DateTime end
+  // }) async {
+  //   if (groupsID.isEmpty == true) {
+  //     return [];
+  //   }
+  //   final client = GetIt.I.get<SupabaseClient>();
+  //   final List<dynamic> data = await client
+  //       .from('Zamenas')
+  //       .select()
+  //       .inFilter('group', groupsID)
+  //       .lte('date', end.toyyyymmdd())
+  //       .gte('date', start.toyyyymmdd())
+  //       .order('date');
 
-    final List<Zamena> zamenaBuffer = [];
-    for (final element in data) {
-      final Zamena zamena = Zamena.fromMap(element);
-      zamenaBuffer.add(zamena);
-    }
+  //   final List<Zamena> zamenaBuffer = [];
+  //   for (final element in data) {
+  //     final Zamena zamena = Zamena.fromMap(element);
+  //     zamenaBuffer.add(zamena);
+  //   }
 
-    return zamenaBuffer;
-  }
+  //   return zamenaBuffer;
+  // }
 }
