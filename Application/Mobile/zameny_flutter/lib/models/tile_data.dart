@@ -1,4 +1,4 @@
-import 'package:zameny_flutter/models/lesson_model.dart';
+import 'package:zameny_flutter/models/lesson/lesson_model.dart';
 
 sealed class TileData {
   final Lesson lesson;

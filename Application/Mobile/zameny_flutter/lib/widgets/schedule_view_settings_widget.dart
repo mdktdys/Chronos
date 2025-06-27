@@ -4,8 +4,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
-import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
-import 'package:zameny_flutter/config/enums/schedule_view_modes.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode_enum.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_modes_enum.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';

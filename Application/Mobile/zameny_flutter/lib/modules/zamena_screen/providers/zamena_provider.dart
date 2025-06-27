@@ -6,12 +6,15 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
 import 'package:zameny_flutter/new/notapi.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 part 'zamena_provider.freezed.dart';
 part 'zamena_provider.g.dart';
@@ -89,11 +92,22 @@ class ZamenasNotifier extends AsyncNotifier<(List<Zamena>,List<ZamenaFull>)> {
   @override
   FutureOr<(List<Zamena>,List<ZamenaFull>)> build() async {
     final DateTime date = ref.watch(zamenaScreenProvider.select((final state) => state.currentDate));
+    final DataRepository repository = GetIt.I.get<DataRepository>();
+    
+    final LessonFilter filter = LessonFilter(
+      startDate: date,
+      endDate: date,
+    );
+    
+    final ZamenaFullFilter zamenaFullFilter = ZamenaFullFilter(
+      startDate: date,
+      endDate: date,
+    );
+
     try {
       final result = await Future.wait([
-        Api.getZamenasByDate(date: date),
-        Api.getFullZamenasByDate(date),
-        Api.loadZamenaFileLinksByDate(date: date),
+        repository.getZamenas(filter),
+        repository.getZamenasFull(zamenaFullFilter),
       ].toList());
       return (result[0] as List<Zamena>,result[1] as List<ZamenaFull>);
     } catch (e) {

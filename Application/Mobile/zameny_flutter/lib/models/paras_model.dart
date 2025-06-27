@@ -1,5 +1,5 @@
-import 'package:zameny_flutter/models/lesson_model.dart';
-import 'package:zameny_flutter/models/zamena_full_model.dart';
+import 'package:zameny_flutter/models/lesson/lesson_model.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 
 class Paras {

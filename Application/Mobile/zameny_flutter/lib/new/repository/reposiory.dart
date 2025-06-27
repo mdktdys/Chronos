@@ -1,5 +1,6 @@
 import 'package:zameny_flutter/filters/paras_filter.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
 
 abstract class DataRepository {
   // Groups
@@ -49,7 +50,7 @@ abstract class DataRepository {
 
 
   // ZamenasFull
-  Future<List<ZamenaFull>> getZamenasFull();
+  Future<List<ZamenaFull>> getZamenasFull(final ZamenaFullFilter zamenafullFilter);
 
 
   // ZamenaFileLinks

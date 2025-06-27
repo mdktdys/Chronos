@@ -7,11 +7,12 @@ import 'package:mobkit_dashed_border/mobkit_dashed_border.dart';
 import 'package:skeletonizer/skeletonizer.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
-import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode_enum.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/extensions/string_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_header.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
@@ -19,7 +20,6 @@ import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/secrets.dart';
-import 'package:zameny_flutter/models/models.dart';
 
 class DayScheduleParasWidget extends ConsumerWidget {
   final DaySchedule daySchedule;

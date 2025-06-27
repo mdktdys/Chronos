@@ -7,6 +7,7 @@ import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
 import 'package:zameny_flutter/new/notapi.dart';
 import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
@@ -95,6 +96,12 @@ class DaySchedulesProvider {
       endDate: endDate,
     );
 
+    final ZamenaFullFilter zamenaFullFilter = ZamenaFullFilter(
+      group: [searchItem.id],
+      startDate: startdate,
+      endDate: endDate
+    );
+
     final result = await Future.wait([
       repository.getLessons(lessonFilters),
       repository.getZamenas(lessonFilters),
@@ -102,11 +109,7 @@ class DaySchedulesProvider {
         start: startdate,
         end: endDate
       ),
-      Api.getZamenasFull(
-        [searchItem.id],
-        startdate,
-        endDate
-      ),
+      repository.getZamenasFull(zamenaFullFilter),
       Api.getAlreadyFoundLinks(start: startdate, end: endDate),
       Api.getHolidays(startdate, endDate)
     ]);
@@ -175,9 +178,20 @@ class DaySchedulesProvider {
 
     final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
 
-    final LessonFilter filters = LessonFilter(group:  groups,startDate: startdate, endDate: endDate);
+    final LessonFilter filters = LessonFilter(
+      group: groups,
+      startDate: startdate,
+      endDate: endDate
+    );
+
+    final ZamenaFullFilter zamenaFullFilter = ZamenaFullFilter(
+      group: groups,
+      startDate: startdate,
+      endDate: endDate
+    );
+
     final result = await Future.wait([
-      Api.getZamenasFull(groups, startdate, endDate),
+      repository.getZamenasFull(zamenaFullFilter),
       Api.getLiquidation(groups, startdate, endDate),
       repository.getZamenas(filters),
       Api.getZamenaFileLinks(start: startdate, end: endDate),
@@ -250,13 +264,19 @@ class DaySchedulesProvider {
     final LessonFilter lessonFilter = LessonFilter(teacher: searchItem.id, startDate: startdate, endDate: endDate);
     final List<Lesson> lessons = await repository.getLessons(lessonFilter);
 
-    lessons.sort((final a, final b) => a.date.compareTo(b.date));
+    lessons.sort((final Lesson a, final Lesson b) => a.date.compareTo(b.date));
 
     final List<int> groups = List<int>.from(lessons.map((final Lesson e) => e.group));
     final LessonFilter filter = LessonFilter(group: groups, startDate: startdate, endDate: endDate);
+    
+    final ZamenaFullFilter zamenaFullFilter = ZamenaFullFilter(
+      group: groups,
+      startDate: startdate,
+      endDate: endDate,
+    );
 
     final result = await Future.wait([
-      Api.getZamenasFull(groups, startdate, endDate),
+      repository.getZamenasFull(zamenaFullFilter),
       Api.getLiquidation(groups, startdate, endDate),
       repository.getZamenas(filter),
       Api.getZamenaFileLinks(start: startdate, end: endDate),

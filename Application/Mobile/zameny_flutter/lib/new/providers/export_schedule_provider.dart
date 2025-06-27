@@ -12,18 +12,18 @@ import 'package:syncfusion_flutter_xlsio/xlsio.dart' as excel;
 
 import 'package:zameny_flutter/config/constants.dart';
 import 'package:zameny_flutter/config/delays.dart';
-import 'package:zameny_flutter/config/enums/export_schedule_type_exnum.dart';
+import 'package:zameny_flutter/config/enums/export_schedule_type_enum.dart';
 import 'package:zameny_flutter/config/extensions/color_extension.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/extensions/string_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
+import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/new/providers/groups_provider.dart';
 import 'package:zameny_flutter/new/providers/schedule_provider.dart';
 import 'package:zameny_flutter/new/providers/search_item_provider.dart';
 import 'package:zameny_flutter/new/providers/teacher_stats_provider.dart';
 import 'package:zameny_flutter/new/providers/timings_provider.dart';
 import 'package:zameny_flutter/new/sharing/sharing.dart';
-import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/widgets/button.dart';
 
 part 'export_schedule_provider.g.dart';

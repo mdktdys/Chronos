@@ -44,5 +44,5 @@ Future<void> registerServices() async {
   final DataRepository repository = FastAPIDataRepository();
   GetIt.I.registerSingleton<DataRepository>(repository);
 
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
 }

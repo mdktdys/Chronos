@@ -5,14 +5,15 @@ import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/filters/paras_filter.dart';
 import 'package:zameny_flutter/models/course/course_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
-import 'package:zameny_flutter/models/lesson_model.dart';
+import 'package:zameny_flutter/models/lesson/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/subscribtion_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
-import 'package:zameny_flutter/models/zamena_full_model.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/models/zamena_type_model.dart';
 import 'package:zameny_flutter/new/repository/reposiory.dart';
@@ -133,7 +134,7 @@ class SupabaseDataRepository implements DataRepository {
   }
 
   @override
-  Future<List<ZamenaFull>> getZamenasFull() {
+  Future<List<ZamenaFull>> getZamenasFull(final ZamenaFullFilter filter) {
     throw UnimplementedError();
   }
 

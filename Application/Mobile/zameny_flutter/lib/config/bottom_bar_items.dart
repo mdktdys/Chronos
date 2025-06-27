@@ -1,3 +1,4 @@
+import 'package:zameny_flutter/config/images.dart';
 
 class BottomBarModel {
   final int index;
@@ -20,40 +21,40 @@ class BottomBarModel {
 List<BottomBarModel> model = [
   BottomBarModel(
     index: 0,
-    activeicon: 'assets/icon/boldnotification.svg',
-    icon: 'assets/icon/notification.svg',
+    activeicon: Images.notificationBold,
+    icon: Images.notification,
     title: 'Звонки',
     path: 'timetable',
     enabled: true,
   ),
   BottomBarModel(
     index: 1,
-    icon: 'assets/icon/vuesax_linear_note.svg',
+    icon: Images.note,
     title: 'Расписание',
-    activeicon: 'assets/icon/note.svg',
+    activeicon: Images.noteBold,
     path: 'schedule',
     enabled: true,
   ),
   BottomBarModel(
     index: 2,
-    activeicon: 'assets/icon/zamena_bold.svg',
-    icon: 'assets/icon/zamena.svg',
+    activeicon: Images.zamenaBold,
+    icon: Images.zamena,
     title: 'Замены',
     path: 'zamenas',
     enabled: true,
   ),
   BottomBarModel(
-      index: 3,
-      activeicon: 'assets/icon/location_bold.svg',
-      icon: 'assets/icon/vuesax_linear_location.svg',
-      title: 'Карта',
-      path: 'map',
-      enabled: true,
-    ),
+    index: 3,
+    activeicon: Images.locationBold,
+    icon: Images.location,
+    title: 'Карта',
+    path: 'map',
+    enabled: true,
+  ),
   BottomBarModel(
     index: 4,
-    activeicon: 'assets/icon/setting-2.svg',
-    icon: 'assets/icon/vuesax_linear_setting-2.svg',
+    activeicon: Images.settingsBold,
+    icon: Images.settings,
     title: 'Настройки',
     path: 'settings',
     enabled: true,

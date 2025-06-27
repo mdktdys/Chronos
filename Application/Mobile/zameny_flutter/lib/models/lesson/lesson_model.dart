@@ -29,18 +29,39 @@ class LessonFilter extends Filter {
   List<MapEntry<String, String>> toQueryParams() {
     final params = <MapEntry<String, String>>[];
 
-    if (id != null) params.add(MapEntry('id', id.toString()));
-    if (number != null) params.add(MapEntry('number', number.toString()));
+    if (id != null) {
+      params.add(MapEntry('id', id.toString()));
+    } 
+
+    if (number != null) {
+      params.add(MapEntry('number', number.toString()));
+    }
+
     if (group != null) {
       for (final g in group!) {
         params.add(MapEntry('group', g.toString()));
       }
     }
-    if (startDate != null) params.add(MapEntry('start_date', startDate!.toyyyymmdd()));
-    if (endDate != null) params.add(MapEntry('end_date', endDate!.toyyyymmdd()));
-    if (course != null) params.add(MapEntry('course', course.toString()));
-    if (teacher != null) params.add(MapEntry('teacher', teacher.toString()));
-    if (cabinet != null) params.add(MapEntry('cabinet', cabinet.toString()));
+
+    if (startDate != null) {
+      params.add(MapEntry('start_date', startDate!.toyyyymmdd()));
+    } 
+
+    if (endDate != null) {
+      params.add(MapEntry('end_date', endDate!.toyyyymmdd()));
+    } 
+
+    if (course != null) {
+      params.add(MapEntry('course', course.toString()));
+    }
+    
+    if (teacher != null) {
+      params.add(MapEntry('teacher', teacher.toString()));
+    }
+
+    if (cabinet != null) {
+      params.add(MapEntry('cabinet', cabinet.toString()));
+    }
 
     return params;
   }

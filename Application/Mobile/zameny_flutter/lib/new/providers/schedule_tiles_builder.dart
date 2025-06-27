@@ -1,14 +1,12 @@
-import 'dart:developer';
-
 import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/config/enums/schedule_view_mode.dart';
-import 'package:zameny_flutter/models/lesson_model.dart';
+import 'package:zameny_flutter/config/enums/schedule_view_mode_enum.dart';
+import 'package:zameny_flutter/models/lesson/lesson_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/tile_data.dart';
-import 'package:zameny_flutter/models/zamena_full_model.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';

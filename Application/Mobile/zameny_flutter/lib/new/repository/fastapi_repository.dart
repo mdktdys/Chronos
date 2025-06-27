@@ -3,14 +3,15 @@ import 'package:dio/dio.dart';
 import 'package:zameny_flutter/filters/paras_filter.dart';
 import 'package:zameny_flutter/models/course/course_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
-import 'package:zameny_flutter/models/lesson_model.dart';
+import 'package:zameny_flutter/models/lesson/lesson_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
 import 'package:zameny_flutter/models/paras_model.dart';
 import 'package:zameny_flutter/models/subscribtion_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
-import 'package:zameny_flutter/models/zamena_full_model.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
+import 'package:zameny_flutter/models/zamena_full/zamena_full_model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 import 'package:zameny_flutter/models/zamena_type_model.dart';
 import 'package:zameny_flutter/new/repository/reposiory.dart';
@@ -91,8 +92,9 @@ class FastAPIDataRepository implements DataRepository {
   }
 
   @override
-  Future<List<LessonTimings>> getTimings() {
-    throw UnimplementedError();
+  Future<List<LessonTimings>> getTimings() async {
+    final Response response = await dio.get('$url/timings/');
+    return (response.data as List).map((final item) => LessonTimings.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override
@@ -113,8 +115,15 @@ class FastAPIDataRepository implements DataRepository {
   }
 
   @override
-  Future<List<ZamenaFull>> getZamenasFull() {
-    throw UnimplementedError();
+  Future<List<ZamenaFull>> getZamenasFull(final ZamenaFullFilter filter) async {
+    final List<MapEntry<String, String>> queryParams = filter.toQueryParams();
+    final String queryString = _buildQueryString(queryParams);
+
+    final Response response = await dio.get(
+      '$url/zamenas_full/?$queryString',
+    );
+
+    return (response.data as List).map((final item) => ZamenaFull.fromMap(item as Map<String, dynamic>)).toList();
   }
 
   @override

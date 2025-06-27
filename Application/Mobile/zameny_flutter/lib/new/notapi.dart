@@ -135,42 +135,42 @@ abstract class Api {
   //   return data.map((final json) => ZamenaFull.fromMap(json)).toList();
   // }
 
-  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate({
-    required final DateTime date,
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
+  // static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDate({
+  //   required final DateTime date,
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
 
-    final List<dynamic> data = await client
-        .from('ZamenaFileLinks')
-        .select('id,link,date,created_at')
-        .eq('date',date);
+  //   final List<dynamic> data = await client
+  //       .from('ZamenaFileLinks')
+  //       .select('id,link,date,created_at')
+  //       .eq('date',date);
 
-    final List<ZamenaFileLink> res = [];
-    for (final element in data) {
-      final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
-      res.add(zamenaLink);
-    }
-    return res;
-  }
+  //   final List<ZamenaFileLink> res = [];
+  //   for (final element in data) {
+  //     final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+  //     res.add(zamenaLink);
+  //   }
+  //   return res;
+  // }
 
-  static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDateRange({
-    required final DateTimeRange date,
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
+  // static Future<List<ZamenaFileLink>> loadZamenaFileLinksByDateRange({
+  //   required final DateTimeRange date,
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
 
-    final List<dynamic> data = await client
-        .from('ZamenaFileLinks')
-        .select('id,link,date,created_at')
-        .gte('date', date.start.toyyyymmdd())
-        .lte('date', date.end.toyyyymmdd());
+  //   final List<dynamic> data = await client
+  //       .from('ZamenaFileLinks')
+  //       .select('id,link,date,created_at')
+  //       .gte('date', date.start.toyyyymmdd())
+  //       .lte('date', date.end.toyyyymmdd());
 
-    final List<ZamenaFileLink> res = [];
-    for (final element in data) {
-      final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
-      res.add(zamenaLink);
-    }
-    return res;
-  }
+  //   final List<ZamenaFileLink> res = [];
+  //   for (final element in data) {
+  //     final ZamenaFileLink zamenaLink = ZamenaFileLink.fromMap(element);
+  //     res.add(zamenaLink);
+  //   }
+  //   return res;
+  // }
 
   static Future<List<int>> loadPracticeGroupsByDate({required final DateTime date}) async {
     final SupabaseClient client = GetIt.I.get<SupabaseClient>();
@@ -179,27 +179,27 @@ abstract class Api {
     return groupIds.map((final json) => json['group'] as int).toList();
   }
 
-  static Future<List<ZamenaFileLink>> getZamenaFileLinks({
-    required final DateTime start,
-    required final DateTime end
-  }) async {
-    final client = GetIt.I.get<SupabaseClient>();
+  // static Future<List<ZamenaFileLink>> getZamenaFileLinks({
+  //   required final DateTime start,
+  //   required final DateTime end
+  // }) async {
+  //   final client = GetIt.I.get<SupabaseClient>();
 
-    final List<dynamic> data = await client
-        .from('ZamenaFileLinks')
-        .select('id,link,date,created_at')
-        .lte('date', end.toyyyymmdd())
-        .gte('date', start.toyyyymmdd());
+  //   final List<dynamic> data = await client
+  //       .from('ZamenaFileLinks')
+  //       .select('id,link,date,created_at')
+  //       .lte('date', end.toyyyymmdd())
+  //       .gte('date', start.toyyyymmdd());
 
-    return data.map((final json) => ZamenaFileLink.fromMap(json)).toList();
-  }
+  //   return data.map((final json) => ZamenaFileLink.fromMap(json)).toList();
+  // }
 
   static Future<List<TelegramZamenaLinks>> getAlreadyFoundLinks({
     required final DateTime start,
     required final DateTime end
   }) async {
     final SupabaseClient client = GetIt.I.get<SupabaseClient>();
-    final List<dynamic> data = await client.from('AlreadyFoundsLinks').select('date,created_at').lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
+    final List<dynamic> data = await client.from('AlreadyFoundsLinks').select('date, created_at').lte('date', end.toyyyymmdd()).gte('date', start.toyyyymmdd());
     return data.map((final json) => TelegramZamenaLinks.fromMap(json)).toList();
   }
 

@@ -1,25 +1,43 @@
 abstract class Images{
+  static const String whale = 'assets/icon/whale.png';
+
+  // particles
   static const String autumnLeaves = 'assets/icon/autumnleave.png';
   static const String snowflake = 'assets/icon/snowflake.png';
 
   static const String teacher = 'assets/icon/teacher.svg';
-  static const String heart = 'assets/icon/heart.svg';
   static const String heartOutlined = 'assets/icon/heart_outlined.svg';
+  static const String heart = 'assets/icon/heart.svg';
 
   static const String chevron = 'assets/icon/chevron.svg';
 
+  // view modes
   static const String viewModeGrid = 'assets/icon/grid_grid.svg';
   static const String viewModeAuto = 'assets/icon/grid_auto.svg';
   static const String viewModeList = 'assets/icon/grid_list.svg';
 
-  static const String notification = 'assets/icon/notification.svg';
-  static const String export = 'assets/icon/export.svg';
+  // pages
   static const String notificationBold = 'assets/icon/boldnotification.svg';
+  static const String notification = 'assets/icon/notification.svg';
+
+  static const String note = 'assets/icon/vuesax_linear_note.svg';
+  static const String noteBold = 'assets/icon/note.svg';
+
+  static const String zamenaBold = 'assets/icon/zamena_bold.svg';
+  static const String zamena = 'assets/icon/zamena.svg';
+
+  static const String locationBold = 'assets/icon/location_bold.svg';
+  static const String location = 'assets/icon/vuesax_linear_location.svg';
+
+  static const String settingsBold = 'assets/icon/setting-2.svg';
+  static const String settings = 'assets/icon/vuesax_linear_setting-2.svg';
+  
+  // other
+  static const String export = 'assets/icon/export.svg';
   static const String teacherHat = 'assets/icon/vuesax_linear_teacher.svg';
   static const String send = 'assets/icon/vuesax_linear_send-2.svg';
   static const String code = 'assets/icon/vuesax_linear_message-programming.svg';
 
-  static const String whale = 'assets/icon/whale.png';
   static const String copy = 'assets/icon/link-2.svg';
   static const String excel = 'assets/icon/excel.svg';
   static const String stats = 'assets/icon/stats.svg';

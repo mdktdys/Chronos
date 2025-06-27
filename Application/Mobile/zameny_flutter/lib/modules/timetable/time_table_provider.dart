@@ -1,8 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
+import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/new/notapi.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 part 'time_table_provider.freezed.dart';
 part 'time_table_provider.g.dart';
@@ -36,5 +37,6 @@ class TimeTableNotifier extends _$TimeTableNotifier {
 
 
 final timingProvider = FutureProvider<List<LessonTimings>>((final ref) async {
-  return await Api.getTimings();
+  final DataRepository repository = GetIt.I.get<DataRepository>();
+  return await repository.getTimings();
 });

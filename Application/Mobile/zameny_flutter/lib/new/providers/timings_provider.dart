@@ -2,9 +2,10 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get_it/get_it.dart';
 
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/new/notapi.dart';
+import 'package:zameny_flutter/new/repository/reposiory.dart';
 
 final timingsProvider = AsyncNotifierProvider<TimingsNotifier, List<LessonTimings>>((){
   return TimingsNotifier();
@@ -14,7 +15,7 @@ class TimingsNotifier extends AsyncNotifier<List<LessonTimings>> {
 
   @override
   FutureOr<List<LessonTimings>> build() {
-    return Api.getTimings();
+    return GetIt.I.get<DataRepository>().getTimings();
   }
 
   static List<LessonTimings> fake() {
