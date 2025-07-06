@@ -13,8 +13,8 @@ import 'package:syncfusion_flutter_datepicker/datepicker.dart';
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/models/zamena_full/zamena_full_filter.dart';
-import 'package:zameny_flutter/new/notapi.dart';
-import 'package:zameny_flutter/new/repository/reposiory.dart';
+import 'package:zameny_flutter/repository/notapi.dart';
+import 'package:zameny_flutter/repository/reposiory.dart';
 
 part 'zamena_provider.freezed.dart';
 part 'zamena_provider.g.dart';

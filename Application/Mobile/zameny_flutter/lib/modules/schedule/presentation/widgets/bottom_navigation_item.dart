@@ -4,7 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class BottomNavigationItem extends ConsumerWidget {
   final int index;

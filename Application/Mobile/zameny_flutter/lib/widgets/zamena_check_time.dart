@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/zamena_timer_provider.dart';
+import 'package:zameny_flutter/providers/zamena_timer_provider.dart';
 import 'package:zameny_flutter/widgets/check_zamena_time_display.dart';
 
 class ZamenaCheckTime extends ConsumerStatefulWidget {

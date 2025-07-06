@@ -7,7 +7,6 @@ import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/telegram_zamena_link_model.dart';
 import 'package:zameny_flutter/models/zamenaFileLink_model.dart';
-import 'package:zameny_flutter/shared/tools.dart';
 import 'package:zameny_flutter/widgets/base_container.dart';
 import 'package:zameny_flutter/widgets/bottom_sheets/zamena_links_bottom_sheet.dart';
 
@@ -54,7 +53,7 @@ class DayScheduleHeader extends StatelessWidget {
                       style: context.styles.ubuntuInverseSurface24,
                     ),
                     Text(
-                      '${getMonthName(date.month)} ${date.day}',
+                      '${(date.toMonth())} ${date.day}',
                       maxLines: 1,
                       style: context.styles.ubuntu18.copyWith(color: Theme.of(context).colorScheme.inverseSurface.withValues(alpha: 0.7))
                     ),

@@ -8,11 +8,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/groups_provider.dart';
-import 'package:zameny_flutter/new/providers/search_item_provider.dart';
-import 'package:zameny_flutter/new/providers/search_provider.dart';
+import 'package:zameny_flutter/providers/groups_provider.dart';
+import 'package:zameny_flutter/providers/search_item_provider.dart';
+import 'package:zameny_flutter/providers/search_provider.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
-import 'package:zameny_flutter/shared/providers/navigation/navigation_provider.dart';
+import 'package:zameny_flutter/platform/navigation/navigation_provider.dart';
 import 'package:zameny_flutter/widgets/favorite_stripe_widget.dart';
 import 'package:zameny_flutter/widgets/search_item_chip.dart';
 

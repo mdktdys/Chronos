@@ -18,7 +18,7 @@ import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_header.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_practice_groups_block.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view.dart';
 import 'package:zameny_flutter/modules/zamena_screen/widget/zamena_view_chooser.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 import 'package:zameny_flutter/widgets/month_cell_widget.dart';
 import 'package:zameny_flutter/widgets/screen_appear_builder.dart.dart';
 

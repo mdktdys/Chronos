@@ -1,4 +1,3 @@
-
 import 'dart:async';
 
 import 'package:flutter/material.dart';
@@ -10,16 +9,15 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
 import 'package:zameny_flutter/models/group_model.dart';
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/models/paras_model.dart';
+import 'package:zameny_flutter/models/paras/paras_model.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
 import 'package:zameny_flutter/models/teacher_model.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_tiles_builder.dart';
-import 'package:zameny_flutter/new/providers/search_item_provider.dart';
-import 'package:zameny_flutter/new/providers/timings_provider.dart';
-import 'package:zameny_flutter/new/providers/today_day_schedule_provider.dart';
-
+import 'package:zameny_flutter/providers/schedule_provider.dart';
+import 'package:zameny_flutter/providers/schedule_tiles_builder.dart';
+import 'package:zameny_flutter/providers/search_item_provider.dart';
+import 'package:zameny_flutter/providers/timings_provider.dart';
+import 'package:zameny_flutter/providers/today_day_schedule_provider.dart';
 
 class CurrentLessonTimer extends ConsumerStatefulWidget {
   const CurrentLessonTimer({super.key});
@@ -59,10 +57,10 @@ class _CurrentLessonTimerState extends ConsumerState<CurrentLessonTimer> {
     final LessonTimings timing = getLessonTiming(obed)!;
     final bool isSaturday = DateTime.now().weekday == 6;
     final Duration left = isSaturday
-        ? timing.saturdayEnd.difference(DateTime.now())
-        : (obed
-            ? timing.obedEnd.difference(DateTime.now())
-            : timing.end.difference(DateTime.now()));
+      ? timing.saturdayEnd.difference(DateTime.now())
+      : (obed
+          ? timing.obedEnd.difference(DateTime.now())
+          : timing.end.difference(DateTime.now()));
 
     final int hours = left.inHours;
     final int minutes = left.inMinutes;

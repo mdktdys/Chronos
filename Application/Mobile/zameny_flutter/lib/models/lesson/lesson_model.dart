@@ -2,7 +2,7 @@
 import 'dart:convert';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/core/model.dart';
+import 'package:zameny_flutter/models/model.dart';
 import 'package:zameny_flutter/models/zamena_model.dart';
 
 class LessonFilter extends Filter {
@@ -45,16 +45,16 @@ class LessonFilter extends Filter {
 
     if (startDate != null) {
       params.add(MapEntry('start_date', startDate!.toyyyymmdd()));
-    } 
+    }
 
     if (endDate != null) {
       params.add(MapEntry('end_date', endDate!.toyyyymmdd()));
-    } 
+    }
 
     if (course != null) {
       params.add(MapEntry('course', course.toString()));
     }
-    
+
     if (teacher != null) {
       params.add(MapEntry('teacher', teacher.toString()));
     }

@@ -1,6 +1,6 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/core/model.dart';
+import 'package:zameny_flutter/models/model.dart';
 
 class MessagingClient extends Model {
   final int targetId;

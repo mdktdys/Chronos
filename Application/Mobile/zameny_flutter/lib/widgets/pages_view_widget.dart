@@ -4,10 +4,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/modules/map/view/map_screen.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/views/schedule_screen.dart';
-import 'package:zameny_flutter/modules/settings/settings_screen.dart';
 import 'package:zameny_flutter/modules/timetable/time_table_screen.dart';
 import 'package:zameny_flutter/modules/zamena_screen/zamena_screen.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/modules/settings/settings_screen.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class PagesViewWidget extends ConsumerWidget {
   const PagesViewWidget({super.key});

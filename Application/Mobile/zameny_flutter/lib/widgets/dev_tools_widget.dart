@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 import 'package:zameny_flutter/widgets/base_blank_widget.dart';
 
 class DevTools extends ConsumerWidget {

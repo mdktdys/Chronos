@@ -5,7 +5,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
-import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
+import 'package:zameny_flutter/providers/day_schedules_provider.dart';
 
 class Test extends ConsumerWidget {
   const Test({super.key});

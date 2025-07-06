@@ -3,8 +3,8 @@ import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
-import 'package:zameny_flutter/new/notapi.dart';
-import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/repository/notapi.dart';
+import 'package:zameny_flutter/providers/groups_provider.dart';
 
 part 'zamena_groups_practice_provider.g.dart';
 

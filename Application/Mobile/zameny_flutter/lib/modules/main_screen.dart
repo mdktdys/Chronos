@@ -6,8 +6,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'package:zameny_flutter/modules/schedule/presentation/views/main_screen_desktop.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/views/mobile/main_screen_mobile.dart';
-import 'package:zameny_flutter/new/providers/bottom_sheets_provider.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/bottom_sheets_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 import 'package:zameny_flutter/widgets/adaptive_layout.dart';
 
 class MainScreen extends ConsumerWidget {

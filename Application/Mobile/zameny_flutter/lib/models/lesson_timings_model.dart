@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:zameny_flutter/shared/tools.dart';
-
 class LessonTimings {
   int number;
   DateTime start;
@@ -75,13 +73,26 @@ class LessonTimings {
       number: map['number'] as int,
       start: formatTimeToDateTime(map['start'] as String),
       end: formatTimeToDateTime(map['end'] as String),
-      saturdayStart:formatTimeToDateTime(map['saturdayStart'] as String),
+      saturdayStart: formatTimeToDateTime(map['saturdayStart'] as String),
       saturdayEnd: formatTimeToDateTime(map['saturdayEnd'] as String),
       obedStart: formatTimeToDateTime(map['obedStart'] as String),
       obedEnd: formatTimeToDateTime(map['obedEnd'] as String),
     );
   }
 
-  factory LessonTimings.fromJson(final String source) =>
-      LessonTimings.fromMap(json.decode(source) as Map<String, dynamic>);
+  factory LessonTimings.fromJson(final String source) => LessonTimings.fromMap(json.decode(source) as Map<String, dynamic>);
+
+  static DateTime formatTimeToDateTime(final String time) {
+    final String hours = time.split(':')[0];
+    final String minuts = time.split(':')[1];
+    final DateTime current = DateTime.now();
+
+    return DateTime(
+      current.year,
+      current.month,
+      current.day,
+      int.parse(hours),
+      int.parse(minuts),
+    );
+  }
 }

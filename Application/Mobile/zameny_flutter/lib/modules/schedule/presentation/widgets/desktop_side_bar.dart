@@ -5,11 +5,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:zameny_flutter/config/bottom_bar_items.dart';
+import 'package:zameny_flutter/config/enums/bottom_bar_items.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
-import 'package:zameny_flutter/new/providers/search_item_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/search_item_provider.dart';
 
 class DesktopSideBar extends ConsumerStatefulWidget {
   const DesktopSideBar({super.key});

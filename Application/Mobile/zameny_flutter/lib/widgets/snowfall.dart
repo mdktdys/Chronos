@@ -5,7 +5,7 @@ import 'package:flutterfall/flutterfall.dart';
 
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
 import 'package:zameny_flutter/config/images.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class SnowFall extends ConsumerWidget {
   const SnowFall({

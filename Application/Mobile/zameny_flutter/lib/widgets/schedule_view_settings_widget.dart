@@ -8,7 +8,7 @@ import 'package:zameny_flutter/config/enums/schedule_view_mode_enum.dart';
 import 'package:zameny_flutter/config/enums/schedule_view_modes_enum.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
+import 'package:zameny_flutter/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/adaptive_layout.dart';
 import 'package:zameny_flutter/widgets/frame_less_button.dart';
 

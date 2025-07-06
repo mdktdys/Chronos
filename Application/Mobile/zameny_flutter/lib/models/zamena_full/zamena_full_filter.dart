@@ -1,5 +1,5 @@
 import 'package:zameny_flutter/config/extensions/datetime_extension.dart';
-import 'package:zameny_flutter/core/model.dart';
+import 'package:zameny_flutter/models/model.dart';
 
 class ZamenaFullFilter extends Filter {
   int? id;

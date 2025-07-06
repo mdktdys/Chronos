@@ -8,7 +8,7 @@ import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/search_item_model.dart';
-import 'package:zameny_flutter/new/providers/notifications_provider.dart';
+import 'package:zameny_flutter/providers/notifications_provider.dart';
 
 class SearchItemNotificationButton extends ConsumerWidget {
   final SearchItem? item;

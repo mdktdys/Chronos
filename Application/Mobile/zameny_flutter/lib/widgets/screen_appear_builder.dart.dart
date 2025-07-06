@@ -4,7 +4,7 @@ import 'package:flutter/rendering.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class ScreenAppearBuilder extends ConsumerWidget {
   final bool showNavbar;

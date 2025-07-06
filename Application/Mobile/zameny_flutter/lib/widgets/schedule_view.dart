@@ -6,9 +6,9 @@ import 'package:screenshot/screenshot.dart';
 
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/day_schedule_model.dart';
-import 'package:zameny_flutter/new/providers/day_schedules_provider.dart';
-import 'package:zameny_flutter/new/providers/schedule_provider.dart';
-import 'package:zameny_flutter/new/screens/schedule_days_screen.dart';
+import 'package:zameny_flutter/modules/schedule/schedule_days_screen.dart';
+import 'package:zameny_flutter/providers/day_schedules_provider.dart';
+import 'package:zameny_flutter/providers/schedule_provider.dart';
 import 'package:zameny_flutter/widgets/skeletonized_provider.dart';
 
 class ScheduleView extends ConsumerWidget {

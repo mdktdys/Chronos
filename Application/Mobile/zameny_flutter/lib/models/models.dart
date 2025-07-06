@@ -6,7 +6,6 @@ export 'holiday_model.dart';
 export 'lesson/lesson_model.dart';
 export 'lesson_timings_model.dart';
 export 'liquidation_model.dart';
-export 'paras_model.dart';
 export 'search_item_model.dart';
 export 'subscribtion_model.dart';
 export 'teacher_model.dart';

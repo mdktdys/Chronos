@@ -10,7 +10,7 @@ import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/config/images.dart';
 import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/modules/zamena_screen/providers/zamena_provider.dart';
-import 'package:zameny_flutter/new/providers/navigation_date_provider.dart';
+import 'package:zameny_flutter/providers/navigation_date_provider.dart';
 import 'package:zameny_flutter/widgets/month_cell_widget.dart';
 import 'package:zameny_flutter/widgets/toggle_week_button.dart';
 

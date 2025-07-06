@@ -3,7 +3,7 @@ import 'package:get_it/get_it.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 
 import 'package:zameny_flutter/models/lesson_timings_model.dart';
-import 'package:zameny_flutter/new/repository/reposiory.dart';
+import 'package:zameny_flutter/repository/reposiory.dart';
 
 part 'time_table_provider.freezed.dart';
 part 'time_table_provider.g.dart';

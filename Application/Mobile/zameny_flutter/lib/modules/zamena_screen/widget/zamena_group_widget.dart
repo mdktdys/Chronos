@@ -6,7 +6,7 @@ import 'package:zameny_flutter/config/theme/flex_color_scheme.dart';
 import 'package:zameny_flutter/models/models.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/course_tile.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/dayschedule_default_widget.dart';
-import 'package:zameny_flutter/new/providers/groups_provider.dart';
+import 'package:zameny_flutter/providers/groups_provider.dart';
 
 class ZamenaGroupWidget extends ConsumerWidget {
   final List<Zamena> groupZamenas;

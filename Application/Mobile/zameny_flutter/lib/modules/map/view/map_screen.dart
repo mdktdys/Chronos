@@ -7,7 +7,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:zameny_flutter/modules/map/providers/map_provider.dart';
 import 'package:zameny_flutter/modules/map/widgets/map_body.dart';
 import 'package:zameny_flutter/modules/map/widgets/map_floor_selector.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class MapScreen extends ConsumerWidget {
   const MapScreen({super.key});

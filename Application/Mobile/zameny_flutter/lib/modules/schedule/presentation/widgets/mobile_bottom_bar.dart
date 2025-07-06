@@ -5,10 +5,10 @@ import 'package:flutter/material.dart';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-import 'package:zameny_flutter/config/bottom_bar_items.dart';
+import 'package:zameny_flutter/config/enums/bottom_bar_items.dart';
 import 'package:zameny_flutter/config/delays.dart';
 import 'package:zameny_flutter/modules/schedule/presentation/widgets/bottom_navigation_item.dart';
-import 'package:zameny_flutter/new/providers/main_provider.dart';
+import 'package:zameny_flutter/providers/main_provider.dart';
 
 class AnimatedBottomBar extends ConsumerWidget {
   const AnimatedBottomBar({super.key});

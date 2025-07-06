@@ -9,10 +9,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:talker_flutter/talker_flutter.dart';
 
+import 'package:zameny_flutter/app.dart';
 import 'package:zameny_flutter/config/firebase_options.dart';
-import 'package:zameny_flutter/main/app.dart';
-import 'package:zameny_flutter/new/repository/fastapi_repository.dart';
-import 'package:zameny_flutter/new/repository/reposiory.dart';
+import 'package:zameny_flutter/repository/fastapi_repository.dart';
+import 'package:zameny_flutter/repository/reposiory.dart';
 import 'package:zameny_flutter/secrets.dart';
 
 void main() async {

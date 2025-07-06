@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 
-import 'package:zameny_flutter/config/typedefs.dart';
-
-
 class FrameLessButton extends StatelessWidget {
-  final OnClicked onClicked;
+  final Future<void> Function() onClicked;
   final bool isActive;
   final Widget child;
 
